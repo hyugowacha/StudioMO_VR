@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 7443960084869421331}
   - component: {fileID: 4815332386456976828}
   - component: {fileID: 7456472182493951116}
+  - component: {fileID: 5217339151824411639}
   m_Layer: 0
   m_Name: GuidedBullet
   m_TagString: Untagged
@@ -62,7 +63,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 9444a59edd40a0047b1f9aa6a638c839, type: 2}
+  - {fileID: 2100000, guid: 1c26decc6369b904f87d444d42442d91, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -105,3 +106,16 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &5217339151824411639
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8503084761029207797}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b2ca1e05a1513c14287f26200004051c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 3
