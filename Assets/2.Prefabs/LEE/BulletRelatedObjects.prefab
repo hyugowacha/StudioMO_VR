@@ -121,7 +121,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bulletPooling: {fileID: 2683349994792768806}
-  normalBulletPrefab: {fileID: -4311480979813801092, guid: bac4195dc03fe06428f0442d55522f27,
+  normalBulletPrefab: {fileID: 566846443331969305, guid: 2db426bc45ffe5044843d195cd81c705,
     type: 3}
   bulletParent: {fileID: 8700159607488267589}
   mapCenter: {fileID: 3378599634796905273}
@@ -447,7 +447,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bulletPooling: {fileID: 2683349994792768806}
-  normalBulletPrefab: {fileID: -4311480979813801092, guid: bac4195dc03fe06428f0442d55522f27,
+  normalBulletPrefab: {fileID: 566846443331969305, guid: 2db426bc45ffe5044843d195cd81c705,
     type: 3}
   bulletParent: {fileID: 8700159607488267589}
   mapCenter: {fileID: 3378599634796905273}
@@ -581,6 +581,7 @@ Transform:
   m_Children:
   - {fileID: 4846106302964483752}
   - {fileID: 4570998415937059860}
+  - {fileID: 6414449863760891384}
   m_Father: {fileID: 1096704820367216734}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &210626297532153865
@@ -596,19 +597,51 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   effects:
-  - effectName: MON002_Indicator
-    prefab: {fileID: 4411616956781530420, guid: c705a49b6eafb5249a6d204dc267de2c,
-      type: 3}
-    autoReleaseTime: 0
-    defaultCapacity: 50
-    maxSize: 100
-    parent: {fileID: 4846106302964483752}
   - effectName: VFX_MON001_Explode
-    prefab: {fileID: 6351759947785195843}
-    autoReleaseTime: 2
+    prefab: {fileID: 3334270714622040670, guid: 8e9b81d837456354aa9c7d317c34ac1c,
+      type: 3}
+    autoReleaseTime: 3
     defaultCapacity: 50
     maxSize: 100
     parent: {fileID: 4570998415937059860}
+  - effectName: VFX_MON005_Explode
+    prefab: {fileID: 3334270714622040670, guid: ee7526a5117f261428ec58bb834fedc7,
+      type: 3}
+    autoReleaseTime: 3
+    defaultCapacity: 50
+    maxSize: 100
+    parent: {fileID: 6414449863760891384}
+--- !u!1 &3785167980610764659
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6414449863760891384}
+  m_Layer: 0
+  m_Name: VFX_MON005_Explode
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6414449863760891384
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3785167980610764659}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 132648451577283326}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3807425660016838240
 GameObject:
   m_ObjectHideFlags: 0
@@ -730,7 +763,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bulletPooling: {fileID: 2683349994792768806}
-  normalBulletPrefab: {fileID: -4311480979813801092, guid: bac4195dc03fe06428f0442d55522f27,
+  normalBulletPrefab: {fileID: 566846443331969305, guid: 2db426bc45ffe5044843d195cd81c705,
     type: 3}
   bulletParent: {fileID: 8700159607488267589}
   mapCenter: {fileID: 3378599634796905273}
@@ -926,7 +959,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bulletPooling: {fileID: 2683349994792768806}
-  normalBulletPrefab: {fileID: -4311480979813801092, guid: bac4195dc03fe06428f0442d55522f27,
+  normalBulletPrefab: {fileID: 566846443331969305, guid: 2db426bc45ffe5044843d195cd81c705,
     type: 3}
   bulletParent: {fileID: 8700159607488267589}
   mapCenter: {fileID: 3378599634796905273}
@@ -1149,6 +1182,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1096704820367216734}
+  - component: {fileID: 6676825415715562799}
   m_Layer: 0
   m_Name: BulletRelatedObjects
   m_TagString: Untagged
@@ -1177,6 +1211,20 @@ Transform:
   - {fileID: 1057543587441836778}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6676825415715562799
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6478293145296870914}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 77b2863f88d238f4da75391ff5c99a81, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  csvFile: {fileID: 4900000, guid: c79c8b4ffafa1534d87d89a837476c3f, type: 3}
+  patternData: []
 --- !u!1 &6654719288181944040
 GameObject:
   m_ObjectHideFlags: 0
@@ -1221,7 +1269,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3ab890c403d1584aa17f7f4d3111bf8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  loader: {fileID: 0}
+  loader: {fileID: 6676825415715562799}
   spawnerManager: {fileID: 7646841160314410175}
   bpm: 110
 --- !u!1 &6748021379469309435

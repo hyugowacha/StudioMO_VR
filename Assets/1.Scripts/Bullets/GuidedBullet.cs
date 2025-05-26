@@ -9,12 +9,9 @@ public class GuidedBullet : MonoBehaviour, IBullet
 
     // 이동 방향
     Vector3 moveDirection;
-    
+
     // 이동 속도
     public float speed = 3f;
-    
-    // 인디케이터 오브젝트 (풀링 사용)
-    GameObject currentIndicatorInstance;
     #endregion
 
     #region 오브젝트 풀 관련
@@ -26,27 +23,23 @@ public class GuidedBullet : MonoBehaviour, IBullet
     // 풀에서 꺼내질 때 호출됨 (초기화)
     public void OnSpawn()
     {
-        // 기존 인디케이터 정리
-        if (currentIndicatorInstance != null)
-        {
-            EffectPoolManager.Instance.ReleaseEffect("MON002_Indicator", currentIndicatorInstance);
-            currentIndicatorInstance = null;
-        }
-
-        // 인디케이터 새로 꺼내서 위치 초기화
-        currentIndicatorInstance = EffectPoolManager.Instance.GetEffect("MON002_Indicator");
-        if (currentIndicatorInstance != null)
-        {
-            currentIndicatorInstance.transform.SetPositionAndRotation(transform.position, Quaternion.identity);
-            UpdateIndicator();
-        }
+        // 인디케이터 제거됨
     }
 
     // 발사 시 방향 설정
     public void Initialize(Vector3 direction)
     {
         moveDirection = direction.normalized;
+
+        // X축 기울어짐 방지: 수평 방향만 사용
+        Vector3 flatDir = new Vector3(direction.x, 0f, direction.z);
+
+        if (flatDir != Vector3.zero)
+        {
+            transform.rotation = Quaternion.LookRotation(flatDir);
+        }
     }
+
     #endregion
 
     #region Update & 충돌 처리
@@ -77,12 +70,7 @@ public class GuidedBullet : MonoBehaviour, IBullet
         // 사라짐 이펙트 출력
         EffectPoolManager.Instance.SpawnEffect("VFX_MON001_Explode", transform.position, Quaternion.identity);
 
-        // 인디케이터 반납
-        if (currentIndicatorInstance != null)
-        {
-            EffectPoolManager.Instance.ReleaseEffect("MON002_Indicator", currentIndicatorInstance);
-            currentIndicatorInstance = null;
-        }
+        // 인디케이터 제거됨
     }
     #endregion
 
@@ -90,34 +78,15 @@ public class GuidedBullet : MonoBehaviour, IBullet
     // 탄막 업데이트 부분
     void BulletUpdate()
     {
-        transform.position += moveDirection * speed * Time.deltaTime;
+        // Y 방향 제거 → 수평 방향(XZ)만 유지
+        Vector3 flatDir = new Vector3(moveDirection.x, 0f, moveDirection.z).normalized;
 
-        // 인디케이터 위치 갱신
-        if (currentIndicatorInstance != null)
-        {
-            UpdateIndicator();
-        }
-    }
+        // Y값 고정
+        Vector3 currentPos = transform.position;
+        currentPos += flatDir * speed * Time.deltaTime;
+        currentPos.y = transform.position.y; // Y 위치 고정
 
-    // Indicator VFX 위치 및 회전 갱신
-    void UpdateIndicator()
-    {
-        if (currentIndicatorInstance == null) return;
-
-        var lr = currentIndicatorInstance.GetComponent<LineRenderer>();
-        if (lr != null)
-        {
-            lr.SetPosition(0, transform.position);
-            lr.SetPosition(1, transform.position + moveDirection.normalized * 2f);
-        }
-
-        currentIndicatorInstance.transform.position = transform.position;
-
-        // 방향 벡터가 0이 아닌 경우에만 회전 계산
-        if (moveDirection != Vector3.zero)
-        {
-            currentIndicatorInstance.transform.rotation = Quaternion.LookRotation(moveDirection);
-        }
+        transform.position = currentPos;
     }
     #endregion
 }

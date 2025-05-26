@@ -24,28 +24,39 @@ public class GuidedBulletSpawner : MonoBehaviour
 
     public void FireGuidedBullet()
     {
-        Bounds _bounds = wallCollider.bounds;
-        Vector3 _spawnPos = transform.position;
+        // 콜라이더 범위
+        Bounds bounds = wallCollider.bounds;
 
-        bool _useX = _bounds.size.x > _bounds.size.z;
+        // 기본 스폰 위치는 현재 스포너의 위치
+        Vector3 spawnPos = transform.position;
 
-        if (_useX)
+        // 벽의 크기를 비교하여 랜덤 방향을 X축 또는 Z축 중 하나로 결정
+        // 가로 세로 구분법
+        bool useX = bounds.size.x > bounds.size.z;
+
+        if (useX)
         {
-            float _randX = Random.Range(_bounds.min.x, _bounds.max.x);
-            _spawnPos = new Vector3(_randX, transform.position.y, transform.position.z);
+            // X축 기준으로 랜덤 위치 지정 (Y는 현재 위치, Z는 고정)
+            float randX = Random.Range(bounds.min.x, bounds.max.x);
+            spawnPos = new Vector3(randX, transform.position.y, transform.position.z);
         }
         else
         {
-            float _randZ = Random.Range(_bounds.min.z, _bounds.max.z);
-            _spawnPos = new Vector3(transform.position.x, transform.position.y, _randZ);
+            // Z축 기준으로 랜덤 위치 지정 (Y는 현재 위치, X는 고정)
+            float randZ = Random.Range(bounds.min.z, bounds.max.z);
+            spawnPos = new Vector3(transform.position.x, transform.position.y, randZ);
         }
 
-        GuidedBullet _bullet = bulletPooling.GetBullet<GuidedBullet>();
-        _bullet.transform.position = _spawnPos;
+        // 탄막 풀에서 탄막(인식) 가져오기
+        GuidedBullet bullet = bulletPooling.GetBullet<GuidedBullet>();
 
-        // 정확히 플레이어를 향한 직선 방향
-        Vector3 _fireDir = (player.transform.position - _spawnPos).normalized;
+        // 탄막의 위치를 스폰 지점으로 설정
+        bullet.transform.position = spawnPos;
 
-        _bullet.Initialize(_fireDir);
+        // 플레이어를 향한 방향 벡터 계산 후 정규화
+        Vector3 fireDir = (player.transform.position - spawnPos).normalized;
+
+        // 방향 전달 및 탄막 초기화 (회전 포함)
+        bullet.Initialize(fireDir);
     }
 }

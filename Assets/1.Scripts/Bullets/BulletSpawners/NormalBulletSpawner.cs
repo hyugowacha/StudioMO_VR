@@ -28,29 +28,43 @@ public class NormalBulletSpawner : MonoBehaviour
 
     public void FireNormalBullet()
     {
-        Bounds _bounds = wallCollider.bounds;
-        Vector3 _spawnPos = transform.position;
+        // 콜라이더 범위
+        Bounds bounds = wallCollider.bounds;
 
-        bool _useX = _bounds.size.x > _bounds.size.z;
+        // 기본 스폰 위치는 스포너 오브젝트의 위치
+        Vector3 spawnPos = transform.position;
 
-        if (_useX)
+        // 벽의 크기를 기준으로 X축 또는 Z축 방향으로 퍼뜨릴지 결정
+        // 가로벽 혹은 세로벽 찾는거임
+        bool useX = bounds.size.x > bounds.size.z;
+
+        if (useX)
         {
-            float randX = Random.Range(_bounds.min.x, _bounds.max.x);
-            _spawnPos = new Vector3(randX, transform.position.y, transform.position.z);
+            // X축 기준으로 랜덤 위치 지정 (Y는 고정, Z는 현재 위치)
+            float randX = Random.Range(bounds.min.x, bounds.max.x);
+            spawnPos = new Vector3(randX, transform.position.y, transform.position.z);
         }
         else
         {
-            float randZ = Random.Range(_bounds.min.z, _bounds.max.z);
-            _spawnPos = new Vector3(transform.position.x, transform.position.y, randZ);
+            // Z축 기준으로 랜덤 위치 지정 (Y는 고정, X는 현재 위치)
+            float randZ = Random.Range(bounds.min.z, bounds.max.z);
+            spawnPos = new Vector3(transform.position.x, transform.position.y, randZ);
         }
 
-        NormalBullet _bullet = bulletPooling.GetBullet<NormalBullet>();
-        _bullet.transform.position = _spawnPos;
+        // 탄막 풀에서 일반 탄막 객체 가져오기
+        NormalBullet bullet = bulletPooling.GetBullet<NormalBullet>();
 
-        Vector3 _fireDir = (mapCenter.transform.position - _spawnPos).normalized;
-        float _angleOffset = Random.Range(minusAngle, plusAngle);
-        _fireDir = Quaternion.AngleAxis(_angleOffset, Vector3.up) * _fireDir;
+        // 탄막 위치 설정
+        bullet.transform.position = spawnPos;
 
-        _bullet.Initialize(_fireDir.normalized);
+        // 맵 중앙을 향한 방향 벡터 계산
+        Vector3 fireDir = (mapCenter.transform.position - spawnPos).normalized;
+
+        // 좌우 각도 랜덤 오프셋 적용 (Y축 회전만)
+        float angleOffset = Random.Range(minusAngle, plusAngle);
+        fireDir = Quaternion.AngleAxis(angleOffset, Vector3.up) * fireDir;
+
+        // 탄막 초기화 및 회전 적용
+        bullet.Initialize(fireDir.normalized);
     }
 }

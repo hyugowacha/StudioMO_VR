@@ -441,40 +441,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: BulletRelatedObjects
       objectReference: {fileID: 0}
-    - target: {fileID: 6645819448736150994, guid: cee8148478902274787c968a9c796dce,
-        type: 3}
-      propertyPath: loader
-      value: 
-      objectReference: {fileID: 746051519}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 6478293145296870914, guid: cee8148478902274787c968a9c796dce,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 746051519}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cee8148478902274787c968a9c796dce, type: 3}
---- !u!1 &746051518 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6478293145296870914, guid: cee8148478902274787c968a9c796dce,
-    type: 3}
-  m_PrefabInstance: {fileID: 746051517}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &746051519
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 746051518}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 77b2863f88d238f4da75391ff5c99a81, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  csvFile: {fileID: 4900000, guid: c79c8b4ffafa1534d87d89a837476c3f, type: 3}
-  patternData: []
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0
