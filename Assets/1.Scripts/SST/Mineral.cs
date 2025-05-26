@@ -33,7 +33,8 @@ public class Mineral : MonoBehaviourPunCallbacks
     private GameObject canvasObject;     // 슬라이더를 포함하는 UI 전체 오브젝트
 
     [Header("현재 채취 진행도를 보여주는 슬라이더"), SerializeField]
-    private Image progressImage;         // 채집 진행도를 표시하는 Image (fillAmount 사용)
+    //private Image progressImage;         // 채집 진행도를 표시하는 Image (fillAmount 사용)
+    private Slider progressSlider;
 
     private float progressValue = 0;     // 내부적으로 진행도를 0~100 사이 값으로 관리
 
@@ -107,9 +108,9 @@ public class Mineral : MonoBehaviourPunCallbacks
     // ▼ 슬라이더 UI의 fillAmount 값을 설정하고 잠깐 보여줬다가 사라지게 함
     private void ShowImageValue(float value)
     {
-        if (progressImage != null)
+        if (progressSlider != null)
         {
-            progressImage.fillAmount = value; // 0~1 사이 비율로 표시
+            progressSlider.value = value; // 0~1 사이 비율로 표시
         }
 
         StopAllCoroutines();         // 기존에 진행 중인 코루틴이 있다면 중지
