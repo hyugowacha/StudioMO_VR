@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.XR.Interaction.Toolkit;
 
 public static class ExtensionMethod
 {
@@ -47,7 +48,45 @@ public static class ExtensionMethod
         array = templates;
     }
 
-    public static void Set(this InputActionReference inputActionReference, bool value, Action<InputAction.CallbackContext> action)
+    public static void SetActive(this Transform transform, bool value)
+    {
+        if(transform != null)
+        {
+            transform.gameObject.SetActive(value);
+        }
+    }
+
+    public static void SetPositionAndRotation(this Transform transform, Vector3 position, Quaternion rotation, bool local)
+    {
+        if(transform != null)
+        {
+            if(local == false)
+            {
+                transform.SetPositionAndRotation(position, rotation);
+            }
+            else
+            {
+                transform.SetLocalPositionAndRotation(position, rotation);
+            }
+        }
+    }
+
+    public static void SetPositionAndRotation(this ActionBasedController actionBasedController, Vector3 position, Quaternion rotation, bool local)
+    {
+        if (actionBasedController != null)
+        {
+            if (local == false)
+            {
+                actionBasedController.transform.SetPositionAndRotation(position, rotation);
+            }
+            else
+            {
+                actionBasedController.transform.SetLocalPositionAndRotation(position, rotation);
+            }
+        }
+    }
+
+    public static void Set(this InputActionReference inputActionReference, Action<InputAction.CallbackContext> action, bool value)
     {
         if (inputActionReference != null && inputActionReference.action != null)
         {
