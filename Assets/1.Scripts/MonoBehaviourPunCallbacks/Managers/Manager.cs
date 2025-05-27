@@ -17,15 +17,15 @@ public abstract class Manager : MonoBehaviourPunCallbacks
 
     private static readonly Vector3 CameraOffsetPosition = new Vector3(0, 1.36144f, 0);
 
-    [Header(nameof(Manager))]
+    [Header("매니저 구간")]
     [SerializeField]
     private XROrigin xrOrigin;                                  //XR 오리진을 사용하기 위한 변수
     [SerializeReference]
     private DynamicMoveProvider dynamicMoveProvider;            //카메라 이동을 담당하는 프로바이더
     [SerializeField]
-    private ActionBasedController leftActionBasedController;    //왼쪽 컨트롤러
+    protected ActionBasedController leftActionBasedController;  //왼쪽 컨트롤러
     [SerializeField]
-    private ActionBasedController rightActionBasedController;   //오른쪽 컨트롤러
+    protected ActionBasedController rightActionBasedController; //오른쪽 컨트롤러
 
     [SerializeField]
     private TMP_FontAsset[] fontAssets = new TMP_FontAsset[Translation.count];
@@ -36,6 +36,7 @@ public abstract class Manager : MonoBehaviourPunCallbacks
     }
 
 #if UNITY_EDITOR
+    [Header("유니티 에디터 전용")]
     [SerializeField]
     private InputActionReference lookInputActionReference;
     private bool lookInputEnabled = false;
@@ -47,7 +48,7 @@ public abstract class Manager : MonoBehaviourPunCallbacks
     private static readonly Vector3 LeftControllerLocalPosition = new Vector3(-0.1f, -0.05f, 0.3f);
     private static readonly Vector3 RightControllerLocalPosition = new Vector3(+0.1f, -0.05f, 0.3f);
 
-    [Header("언어 변경"), SerializeField]
+    [SerializeField]
     private Translation.Language language = Translation.Language.Korean;
 
     protected virtual void OnValidate()
@@ -83,14 +84,8 @@ public abstract class Manager : MonoBehaviourPunCallbacks
         }
         if (this == instance)
         {
-            if (leftActionBasedController != null)
-            {
-                leftActionBasedController.gameObject.SetActive(true);
-            }
-            if (rightActionBasedController != null)
-            {
-                rightActionBasedController.gameObject.SetActive(true);
-            }
+            leftActionBasedController.SetActive(true);
+            rightActionBasedController.SetActive(true);
             ChangeText((Translation.Language)PlayerPrefs.GetInt(Translation.Preferences));
         }
     }
@@ -109,11 +104,11 @@ public abstract class Manager : MonoBehaviourPunCallbacks
 
     private void SetInputActionReferences(bool value)
     {
-        if (leftActionBasedController != null)
+        if (leftActionBasedController != null && leftActionBasedController.activateAction != null)
         {
             leftActionBasedController.activateAction.reference.Set(OnLeftFunction, value);
         }
-        if (rightActionBasedController != null)
+        if (rightActionBasedController != null && rightActionBasedController.activateAction != null)
         {
             rightActionBasedController.activateAction.reference.Set(OnRightFunction, value);
         }

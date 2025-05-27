@@ -56,7 +56,7 @@ public class NormalBullet : MonoBehaviour, IBullet
     {
         if (other.CompareTag("Player"))
         {
-            var player = other.GetComponentInParent<Player>();
+            var player = other.GetComponentInParent<Character>();
             if (player)
             {
                 player.Hit();

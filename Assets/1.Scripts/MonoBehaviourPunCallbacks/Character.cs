@@ -5,7 +5,7 @@ using Photon.Pun;
 [DisallowMultipleComponent]
 [RequireComponent(typeof(PhotonView))]
 [RequireComponent(typeof(Rigidbody))]
-public partial class Player : MonoBehaviourPunCallbacks
+public class Character : MonoBehaviourPunCallbacks
 {
     private bool _hasRigidbody = false;
 
@@ -48,7 +48,7 @@ public partial class Player : MonoBehaviourPunCallbacks
 
     private uint mineral = 0;   //Ã¤±¼ÇÑ ±¤¹°ÀÇ ¾ç
 
-    public static event Action<Player, uint> mineralReporter;
+    public static event Action<Character, uint> mineralReporter;
 
     private void Update()
     {
