@@ -44,6 +44,12 @@ public class Mineral : MonoBehaviourPunCallbacks
     [Header("미네랄 조각들"), SerializeField] 
     MeshRenderer[] pieceOfMinerals;
 
+    [Header("미네랄 조각들 위치"), SerializeField]
+    Transform[] pieceOfTransform;
+
+    [Header("파티클"), SerializeField]
+    private ParticleSystem debris;
+
     // ▼ 현재 채집 가능한 상태인지 외부에서 확인할 수 있는 읽기 전용 속성
     public bool collectable
     {
@@ -139,8 +145,35 @@ public class Mineral : MonoBehaviourPunCallbacks
     {
         for (int i = 0; i < pieceOfMinerals.Length; i++)
         {
-            pieceOfMinerals[i].enabled = i < currentValue;
+            // ▼ 광물 최대 채집 수에 따라서 미네랄 조각 활성화 갯수도 정함
+            bool isActive = i < currentValue;
+
+            // ▼ 조각이 꺼지는 순간에 파티클 실행
+            if (!isActive && pieceOfMinerals[i].enabled)
+            {
+                // ▼ 해당 인덱스 위치에서 파티클을 실행
+                PlayDebrisParticle(i);
+            }
+
+            pieceOfMinerals[i].enabled = isActive;
         }
+    }
+
+    // ▼ 광물 조각 파괴 시, Debris 파티클을 실행하는 함수
+    private void PlayDebrisParticle(int index)
+    {
+        if (debris == null || index >= pieceOfTransform.Length) return;
+
+        // ▼ 위치 이동
+        Transform target = pieceOfTransform[index];
+        debris.transform.position = target.position;
+        debris.transform.rotation = target.rotation;
+
+        // ▼ 중복 방지 초기화 ( 자식 파티클 포함 정지, 배출 멈추고, 남아 있던 입자도 즉시 제거 )
+        debris.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+
+        // ▼ 실행
+        debris.Play();
     }
 
     // ▼ 플레이어가 채집을 시도했을 때 실제로 자원을 얻는 로직
