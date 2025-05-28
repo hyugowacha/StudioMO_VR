@@ -128,7 +128,7 @@ public class Mineral : MonoBehaviourPunCallbacks
     }
 
     // ▼ 슬라이더 UI의 fillAmount 값을 설정하고 잠깐 보여줬다가 사라지게 함
-    private void ShowImageValue(float value)
+    private void ShowImageValue(float value, System.Action onCompleted = null)
     {
         if (progressSlider != null)
         {
@@ -136,7 +136,8 @@ public class Mineral : MonoBehaviourPunCallbacks
             DOTween.Kill(progressSlider);
 
             // ▼ 부드럽게 value 까지 증가 ( 0.3초 동안 )
-            progressSlider.DOValue(value, 0.3f).SetEase(Ease.OutQuad);
+            progressSlider.DOValue(value, 0.3f).SetEase(Ease.OutQuad)
+                .OnComplete(() => onCompleted?.Invoke());
         }
 
         StopAllCoroutines();         // 기존에 진행 중인 코루틴이 있다면 중지
@@ -224,34 +225,37 @@ public class Mineral : MonoBehaviourPunCallbacks
 
             progressValue += increaseValue; // 진행도 누적
 
-            // 게이지가 100 이상이면 채집 성공
-            if (progressValue >= ProgressCompleteValue)
+            // ▼ 진행도를 0 ~ 1 비율로 전환해서 슬라이더 값에 반영해 해당 함수 실행하고, 람다식 실행
+            ShowImageValue(progressValue / ProgressCompleteValue, () =>
             {
-                progressValue = 0; // 게이지 초기화
-                currentValue -= 1; // 광물 1개 소모
-                MineralPieceUpdate();
-
-                // 광물 다 떨어졌을 경우
-                if (currentValue == 0)
+                // 진행도가 100 이상이면 채집 성공
+                if (progressValue >= ProgressCompleteValue)
                 {
-                    if (chargingTime > 0)
+                    progressValue = 0; // 내부 진행도 초기화
+                    currentValue -= 1; // 광물 1개 소모
+                    MineralPieceUpdate();
+
+                    // 광물 다 떨어졌을 경우
+                    if (currentValue == 0)
                     {
-                        remainingTime = chargingTime; // 충전 시작
+                        if (chargingTime > 0)
+                        {
+                            remainingTime = chargingTime; // 충전 시작
+                        }
+                        else
+                        {
+                            currentValue = maxValue; // 충전 시간 없으면 즉시 복구
+                            MineralPieceUpdate();
+                        }
                     }
-                    else
-                    {
-                        currentValue = maxValue; // 충전 시간 없으면 즉시 복구
-                        MineralPieceUpdate();
-                    }
+
+                    // ▼ 슬라이더 값도 즉시 0으로 초기화 해서, 100 ~ 0 으로 가는 애니메이션 방지
+                    progressSlider.value = 0f;
+                    
+                    value = acquisitionAmount; // 플레이어가 실제로 얻는 양 반환
                 }
-
-                value = acquisitionAmount; // 플레이어가 실제로 얻는 양 반환
-            }
-
-            // 게이지 UI 반영
-            ShowImageValue(progressValue / ProgressCompleteValue);
+            });
         }
-
         return value; // 0 또는 실제 획득량 반환
     }
 }
