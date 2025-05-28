@@ -3,6 +3,18 @@ using UnityEngine;
 using UnityEngine.UI;
 using Photon.Pun;
 
+[System.Serializable]
+public class MineralPieceGroup
+{
+    // ▼ 이 비율 미만이면 광물 조각 꺼짐 (예: 0.75f = 75% 미만이면 꺼짐)
+    [Header("광물 조각 꺼질 값"), Range(0f, 1f)]
+    public float hideBelowRatio;
+
+    // ▼ 꺼질 광물 조각들
+    [Header("끌 광물 조각 Mesh")]
+    public MeshRenderer[] targetPieces;
+}
+
 // 이 컴포넌트는 하나만 붙을 수 있도록 제한합니다. (중복 방지)
 [DisallowMultipleComponent]
 
@@ -47,6 +59,10 @@ public class Mineral : MonoBehaviourPunCallbacks
     [Header("미네랄 조각들 위치"), SerializeField]
     Transform[] pieceOfTransform;
 
+    // ▼ 여러 비율에 따라 조각들을 꺼낼 수 있도록 구조체 배열로 만듬
+    [Header("비율에 따른 광물 조각 숨김 설정"), SerializeField]
+    private MineralPieceGroup[] hidePieceGroups;
+
     [Header("파티클"), SerializeField]
     private ParticleSystem debris;
 
@@ -61,7 +77,6 @@ public class Mineral : MonoBehaviourPunCallbacks
 
     private BoxCollider coll;
     
-
     // ▼ 채광 게이지 증가량 상수들 (기본 공격 / 크리티컬 히트 / 완료 한계값)
     private static readonly float ProgressMissValue = 25f;      // 일반 공격 시 게이지 증가량
     private static readonly float ProgressCriticalValue = 50f;  // 크리티컬 공격 시 증가량
@@ -143,19 +158,34 @@ public class Mineral : MonoBehaviourPunCallbacks
     // 현재 상태를 기준으로 미네랄 조각에 반영한다
     private void MineralPieceUpdate()
     {
-        for (int i = 0; i < pieceOfMinerals.Length; i++)
+        // ▼ 남아 있는 광물 수량을 최댓값으로 나누어서 0 ~ 1 사이의 남는 비율 계산
+        float remainRatio = (float)currentValue / maxValue;
+
+        // ▼ 먼저 모든 그룹을 순회하면서 조각들을 활성화 상태로 초기화
+        foreach (var group in hidePieceGroups)
         {
-            // ▼ 광물 최대 채집 수에 따라서 미네랄 조각 활성화 갯수도 정함
-            bool isActive = i < currentValue;
-
-            // ▼ 조각이 꺼지는 순간에 파티클 실행
-            if (!isActive && pieceOfMinerals[i].enabled)
+            foreach (var piece in group.targetPieces)
             {
-                // ▼ 해당 인덱스 위치에서 파티클을 실행
-                PlayDebrisParticle(i);
+                piece.enabled = true;       // 모든 조각을 일단 보이게 함
             }
+        }
 
-            pieceOfMinerals[i].enabled = isActive;
+        // ▼ 다시 모든 그룹을 순회하면서 비율 조건 보다 낮으면 해당 조각을 끔
+        foreach (var group in hidePieceGroups)
+        {
+            // ▼ 남은 채집수 비율이 정해진 광물 그룹 비율보다 작거나 같아지면 해당 광물 그룹 끔
+            if (remainRatio <= group.hideBelowRatio)
+            {
+                foreach (var piece in group.targetPieces)
+                {
+                    if (piece.enabled)
+                    {
+                        PlayDebrisParticle(piece.transform.GetSiblingIndex());
+                    }
+
+                    piece.enabled = false;
+                }
+            }
         }
     }
 
