@@ -2,6 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using Photon.Pun;
+using DG.Tweening;
 
 [System.Serializable]
 public class MineralPieceGroup
@@ -131,7 +132,11 @@ public class Mineral : MonoBehaviourPunCallbacks
     {
         if (progressSlider != null)
         {
-            progressSlider.value = value; // 0~1 사이 비율로 표시
+            // ▼ 기존 DOTween 코루틴 중지
+            DOTween.Kill(progressSlider);
+
+            // ▼ 부드럽게 value 까지 증가 ( 0.3초 동안 )
+            progressSlider.DOValue(value, 0.3f).SetEase(Ease.OutQuad);
         }
 
         StopAllCoroutines();         // 기존에 진행 중인 코루틴이 있다면 중지
