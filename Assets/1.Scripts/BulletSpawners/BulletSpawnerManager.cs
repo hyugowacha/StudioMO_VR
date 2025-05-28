@@ -38,4 +38,9 @@ public class BulletSpawnerManager : MonoBehaviour
             spawner.FireGuidedBullet();
         }
     }
+
+    public void SpawnPattern()
+    {
+
+    }
 }

@@ -18,11 +18,15 @@ public class BulletPatternExecutor : MonoBehaviour
     float _timer;                // 시간 누적용
     int _currentBeatIndex = 1;   // 현재 몇번째 beat인지 (1부터 시작)
 
-    #region Start, Update문
+    List<BulletSpawnData> timePatterns;
+    float nextIndex = 0;
+    float startTime;
+    bool initialized = false;
+
+     #region Start, Update문
     void Start()
     {
-        // BPM 기준으로 beat 간격 계산. 예: 60 / 120 → 0.5초마다 한 beat
-        _beatInterval = 60f / bpm;
+        InitiallizeBeatTiming();
     }
 
     void Update()
@@ -31,11 +35,25 @@ public class BulletPatternExecutor : MonoBehaviour
     }
     #endregion
 
+    public void InitiallizeBeatTiming()
+    {
+        startTime = Time.time;
+
+        timePatterns = new List<BulletSpawnData>(loader.patternBulletData);
+
+        // BPM 기준으로 beat 간격 계산. 예: 60 / 120 → 0.5초마다 한 beat
+        _beatInterval = 60f / bpm;
+        initialized = true;
+    }
+
+
     /// <summary>
     /// 시간 누적해서 BPM에 맞춰 탄막 실행함. 해당 beatIndex에 맞는 패턴만 찾아서 실행함.
     /// </summary>
     void ProcessBeatTiming()
     {
+        if (!initialized) { return; }
+
         _timer += Time.deltaTime;
 
         if (_timer >= _beatInterval)
@@ -43,9 +61,7 @@ public class BulletPatternExecutor : MonoBehaviour
             _timer -= _beatInterval;
 
             // 지금 beatIndex에 해당하는 데이터만 필터링
-            var matches = loader.patternData
-                .Where(d => d.beatIndex == _currentBeatIndex)
-                .ToList();
+            var matches = loader.patternData .Where(d => d.beatIndex == _currentBeatIndex).ToList();
 
             // 해당 beat에서 실행할 탄막이 있으면 모두 실행
             foreach (var data in matches)
@@ -57,6 +73,8 @@ public class BulletPatternExecutor : MonoBehaviour
             _currentBeatIndex++;
         }
     }
+
+    
 
     /// <summary>
     /// 개별 beat에서 발사할 탄막 처리
