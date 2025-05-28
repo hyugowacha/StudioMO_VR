@@ -6,6 +6,9 @@ using UnityEngine.InputSystem;
 using UnityEngine.XR.Interaction.Toolkit;
 using TMPro;
 
+/// <summary>
+/// 확장 메서드 
+/// </summary>
 public static class ExtensionMethod
 {
     public static void Sort<T>(ref T[] array) where T : UnityEngine.Object
@@ -39,9 +42,12 @@ public static class ExtensionMethod
         array = list.ToArray();
     }
 
-    public static void Sort<T>(ref T[] array, int length) where T : UnityEngine.Object
+    public static void Sort<T>(ref T[] array, int length, bool overlapping = false) where T : UnityEngine.Object
     {
-        Sort(ref array);
+        if (overlapping == false)
+        {
+            Sort(ref array);
+        }
         T[] templates = new T[length];
         for (int i = 0; i < Mathf.Clamp(array.Length, 0, length); i++)
         {

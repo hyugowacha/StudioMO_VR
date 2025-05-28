@@ -189,7 +189,6 @@ public class StageManager : Manager
 
     private void SetCurrentGathering(uint value)
     {
-        Debug.Log(value);
         currentMineralText.Set(value.ToString());
         currentMineralImage.Fill(goalMineralValue > 0 ? (float)value / goalMineralValue : 1);
     }
