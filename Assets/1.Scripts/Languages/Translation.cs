@@ -1,3 +1,6 @@
+using System;
+using UnityEngine;
+
 /// <summary>
 /// 각 나라별 언어로 번역해주는 클래스
 /// </summary>
@@ -15,7 +18,44 @@ public static class Translation
     {
         get
         {
-            return System.Enum.GetNames(typeof(Language)).Length;
+            return Enum.GetNames(typeof(Language)).Length;
+        }
+    }
+
+    /// <summary>
+    /// 텍스트의 각 언어별 번역을 저장하는 구조체
+    /// </summary>
+    [Serializable]
+    public struct Text
+    {
+        [SerializeField, Header("영어")]
+        private string english;
+
+        [SerializeField, Header("한국어")]
+        private string korean;
+
+        [SerializeField, Header("중국어")]
+        private string chinese;
+
+        [SerializeField, Header("일본어")]
+        private string japanese;
+
+        //각 언어별 번역을 반환하는 메서드
+        public string Get(Language language)
+        {
+            switch (language)
+            {
+                case Language.English:
+                    return english;
+                case Language.Korean:
+                    return korean;
+                case Language.Chinese:
+                    return chinese;
+                case Language.Japanese:
+                    return japanese;
+                default:
+                    return null;
+            }
         }
     }
 

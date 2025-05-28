@@ -1,9 +1,14 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.InputSystem;
 using UnityEngine.XR.Interaction.Toolkit;
+using TMPro;
 
+/// <summary>
+/// 확장 메서드 
+/// </summary>
 public static class ExtensionMethod
 {
     public static void Sort<T>(ref T[] array) where T : UnityEngine.Object
@@ -37,9 +42,12 @@ public static class ExtensionMethod
         array = list.ToArray();
     }
 
-    public static void Sort<T>(ref T[] array, int length) where T : UnityEngine.Object
+    public static void Sort<T>(ref T[] array, int length, bool overlapping = false) where T : UnityEngine.Object
     {
-        Sort(ref array);
+        if (overlapping == false)
+        {
+            Sort(ref array);
+        }
         T[] templates = new T[length];
         for (int i = 0; i < Mathf.Clamp(array.Length, 0, length); i++)
         {
@@ -71,6 +79,14 @@ public static class ExtensionMethod
         }
     }
 
+    public static void SetActive(this ActionBasedController actionBasedController, bool value)
+    {
+        if(actionBasedController != null)
+        {
+            actionBasedController.gameObject.SetActive(value);
+        }
+    }
+
     public static void SetPositionAndRotation(this ActionBasedController actionBasedController, Vector3 position, Quaternion rotation, bool local)
     {
         if (actionBasedController != null)
@@ -98,6 +114,42 @@ public static class ExtensionMethod
             {
                 inputActionReference.action.performed -= action;
             }
+        }
+    }
+
+    public static void Set(this InputActionReference inputActionReference, Action<InputAction.CallbackContext> performed, Action<InputAction.CallbackContext> canceled, bool value)
+    {
+        if (inputActionReference != null && inputActionReference.action != null)
+        {
+            if (value == true)
+            {
+                inputActionReference.action.performed += performed;
+                inputActionReference.action.canceled += canceled;
+            }
+            else
+            {
+                inputActionReference.action.performed -= performed;
+                inputActionReference.action.canceled -= canceled;
+            }
+        }
+    }
+
+    public static void Set(this TMP_Text tmpText, string value)
+    {
+        if (tmpText != null)
+        {
+            tmpText.text = value;
+        }
+    }
+    public static void Fill(this Image image, float value)
+    {
+        if (image != null)
+        {
+            if (image.type != Image.Type.Filled)
+            {
+                image.type = Image.Type.Filled;
+            }
+            image.fillAmount = value;
         }
     }
 }

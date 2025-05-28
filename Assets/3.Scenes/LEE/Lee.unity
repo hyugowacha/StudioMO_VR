@@ -123,6 +123,26 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &83603246 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6478293145296870914, guid: cee8148478902274787c968a9c796dce,
+    type: 3}
+  m_PrefabInstance: {fileID: 746051517}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &83603248
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 83603246}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 77b2863f88d238f4da75391ff5c99a81, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  csvFile: {fileID: 4900000, guid: c79c8b4ffafa1534d87d89a837476c3f, type: 3}
+  patternData: []
 --- !u!1 &330585543
 GameObject:
   m_ObjectHideFlags: 0
@@ -436,20 +456,72 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2101703494997394498, guid: cee8148478902274787c968a9c796dce,
+        type: 3}
+      propertyPath: normalBulletPrefab
+      value: 
+      objectReference: {fileID: 3506624416693514196, guid: 25e49bb6edf45f2448bc57beabb37c24,
+        type: 3}
+    - target: {fileID: 2408631249686086149, guid: cee8148478902274787c968a9c796dce,
+        type: 3}
+      propertyPath: normalBulletPrefab
+      value: 
+      objectReference: {fileID: 3506624416693514196, guid: 25e49bb6edf45f2448bc57beabb37c24,
+        type: 3}
+    - target: {fileID: 2857225171936984596, guid: cee8148478902274787c968a9c796dce,
+        type: 3}
+      propertyPath: normalBulletPrefab
+      value: 
+      objectReference: {fileID: 3506624416693514196, guid: 25e49bb6edf45f2448bc57beabb37c24,
+        type: 3}
+    - target: {fileID: 5324059050366143281, guid: cee8148478902274787c968a9c796dce,
+        type: 3}
+      propertyPath: guidedBulletPrefab
+      value: 
+      objectReference: {fileID: 3514438348378433874, guid: f5c642e1e1a7fd5448a948c1b823ce08,
+        type: 3}
     - target: {fileID: 6478293145296870914, guid: cee8148478902274787c968a9c796dce,
         type: 3}
       propertyPath: m_Name
       value: BulletRelatedObjects
       objectReference: {fileID: 0}
-    - target: {fileID: 6676825415715562799, guid: cee8148478902274787c968a9c796dce,
+    - target: {fileID: 6645819448736150994, guid: cee8148478902274787c968a9c796dce,
         type: 3}
-      propertyPath: patternCSVFile
+      propertyPath: loader
       value: 
-      objectReference: {fileID: 4900000, guid: 34dbc705fd4076d47a64d7def772e905, type: 3}
+      objectReference: {fileID: 83603248}
+    - target: {fileID: 6894913609686659391, guid: cee8148478902274787c968a9c796dce,
+        type: 3}
+      propertyPath: normalBulletPrefab
+      value: 
+      objectReference: {fileID: 3506624416693514196, guid: 25e49bb6edf45f2448bc57beabb37c24,
+        type: 3}
+    - target: {fileID: 7669456885974126513, guid: cee8148478902274787c968a9c796dce,
+        type: 3}
+      propertyPath: guidedBulletPrefab
+      value: 
+      objectReference: {fileID: 3514438348378433874, guid: f5c642e1e1a7fd5448a948c1b823ce08,
+        type: 3}
+    - target: {fileID: 7995791593906623766, guid: cee8148478902274787c968a9c796dce,
+        type: 3}
+      propertyPath: guidedBulletPrefab
+      value: 
+      objectReference: {fileID: 3514438348378433874, guid: f5c642e1e1a7fd5448a948c1b823ce08,
+        type: 3}
+    - target: {fileID: 8347611325782476698, guid: cee8148478902274787c968a9c796dce,
+        type: 3}
+      propertyPath: guidedBulletPrefab
+      value: 
+      objectReference: {fileID: 3514438348378433874, guid: f5c642e1e1a7fd5448a948c1b823ce08,
+        type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 6478293145296870914, guid: cee8148478902274787c968a9c796dce,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 83603248}
   m_SourcePrefab: {fileID: 100100000, guid: cee8148478902274787c968a9c796dce, type: 3}
 --- !u!1 &832575517
 GameObject:
