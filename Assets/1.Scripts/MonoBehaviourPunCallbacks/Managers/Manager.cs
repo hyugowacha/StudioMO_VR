@@ -62,7 +62,7 @@ public abstract class Manager : MonoBehaviourPunCallbacks
             if (this == instance)
             {
                 name = GetType().Name;
-                ExtensionMethod.Sort(ref fontAssets, Translation.count);
+                ExtensionMethod.Sort(ref fontAssets, Translation.count, true);
                 ChangeText(language);
             }
             UnityEditor.EditorApplication.delayCall += () =>
@@ -180,7 +180,7 @@ public abstract class Manager : MonoBehaviourPunCallbacks
         }
     }
 
-    //언어를 바꿔주는 추상 메서드
+    //언어를 변경하기 위한 메소드
     protected abstract void ChangeText();
 
     //왼쪽 컨트롤러 기능을 실행하는 추상 메서드
