@@ -40,18 +40,14 @@ public class StageManager : Manager
 
     [Header("남은 시간")]
     [SerializeField]
-    private Image currentTimeImage;                             //현재 시간 슬라이드바 이미지
-    [SerializeField]
-    private TMP_Text currentTimeText;                           //현재 시간 텍스트
+    private FillPanel timeFillPanel;                            //시간 패널
     private float currentTimeValue = 0.0f;                      //현재 시간 값
     [SerializeField, Range(0, int.MaxValue)]
     private float limitTimeValue = 0.0f;                        //제한 시간 값
 
     [Header("광물 획득 정보")]
     [SerializeField]
-    private Image currentMineralImage;                          //현재 광물 슬라이드바 이미지
-    [SerializeField]
-    private TMP_Text currentMineralText;                        //현재 광물 텍스트
+    private FillPanel mineralFillPanel;                         //광물 
     [SerializeField]
     private TMP_Text goalMineralText;                           //목표 광물 텍스트
     [SerializeField]
@@ -90,7 +86,7 @@ public class StageManager : Manager
                 }
             }
             currentTimeValue = limitTimeValue;
-            SetCurrentGathering(0);
+            mineralFillPanel?.Set(0, goalMineralValue);
         }
     }
 
@@ -120,8 +116,7 @@ public class StageManager : Manager
                 currentTimeValue = 0;   //게임 종료
             }
         }
-        currentTimeText.Set(currentTimeValue.ToString());
-        currentTimeImage.Fill(limitTimeValue > 0 ? currentTimeValue / limitTimeValue : 1);
+        timeFillPanel?.Set(currentTimeValue, limitTimeValue);
     }
 
     private void LateUpdate()
@@ -163,11 +158,11 @@ public class StageManager : Manager
     {
         if(value == true)
         {
-            Character.mineralReporter += (character, value) => { SetCurrentGathering(value); };
+            Character.mineralReporter += (character, value) => { mineralFillPanel?.Set(value, goalMineralValue); };
         }
         else
         {
-            Character.mineralReporter -= (character, value) => { SetCurrentGathering(value); };
+            Character.mineralReporter -= (character, value) => { mineralFillPanel?.Set(value, goalMineralValue); };
         }
         if (leftActionBasedController != null && leftActionBasedController.translateAnchorAction != null)
         {
@@ -185,12 +180,6 @@ public class StageManager : Manager
         {
             character?.UpdateMove(Vector2.zero);
         }
-    }
-
-    private void SetCurrentGathering(uint value)
-    {
-        currentMineralText.Set(value.ToString());
-        currentMineralImage.Fill(goalMineralValue > 0 ? (float)value / goalMineralValue : 1);
     }
 
     private bool CanPlaying()

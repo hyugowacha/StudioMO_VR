@@ -145,6 +145,10 @@ public static class ExtensionMethod
     {
         if (image != null)
         {
+            if (image.type != Image.Type.Filled)
+            {
+                image.type = Image.Type.Filled;
+            }
             image.fillAmount = value;
         }
     }
