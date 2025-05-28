@@ -19,6 +19,7 @@ public class BulletPatternLoader : MonoBehaviour
     [Tooltip("BulletSpawnData 구조로 파싱된 탄막 타이밍 정보")]
     public List<BulletSpawnData> patternData = new List<BulletSpawnData>();   // 최종적으로 게임에 사용할 데이터 리스트
 
+
     /// <summary>
     /// CSV 파일을 파싱하는 함수
     /// </summary>
