@@ -672,9 +672,9 @@ PrefabInstance:
       propertyPath: m_Name
       value: BulletRelatedObjects
       objectReference: {fileID: 0}
-    - target: {fileID: 6676825415715562799, guid: cee8148478902274787c968a9c796dce,
+    - target: {fileID: 6645819448736150994, guid: cee8148478902274787c968a9c796dce,
         type: 3}
-      propertyPath: csvFile
+      propertyPath: loader
       value: 
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -1856,6 +1856,11 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 5835cec086e6a7948b6ffe62cdaa7edf, type: 2}
   - {fileID: 11400000, guid: 7e4defada93fa8944a9bdf0c50dad9a4, type: 2}
   fillImage: {fileID: 5612858979245743895}
+  effect:
+    animator: {fileID: 0}
+    name: 
+    normalized: 0
+    direction: 0
 --- !u!1 &5612858979245743889
 GameObject:
   m_ObjectHideFlags: 0
