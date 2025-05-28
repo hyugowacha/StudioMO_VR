@@ -34,7 +34,7 @@ public abstract class Panel : MonoBehaviour
     }
 
 #if UNITY_EDITOR
-    private void OnValidate()
+    protected virtual void OnValidate()
     {
         ExtensionMethod.Sort(ref tmpFontAssets, Translation.count, true);
     }

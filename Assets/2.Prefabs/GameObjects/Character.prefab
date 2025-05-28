@@ -1021,7 +1021,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 1
+  m_Radius: 0.9
   m_Center: {x: 0, y: 0.1575, z: 0}
 --- !u!54 &3820665691081382963
 Rigidbody:
@@ -1065,7 +1065,7 @@ MonoBehaviour:
   headTransform: {fileID: 2491955614451225012}
   leftHandTransform: {fileID: 4863256304461801624}
   rightHandTransform: {fileID: 1919828657170651413}
-  moveSpeed: 10
+  moveSpeed: 5
   invincibleMode: 1
 --- !u!1 &5578653984774411108
 GameObject:
