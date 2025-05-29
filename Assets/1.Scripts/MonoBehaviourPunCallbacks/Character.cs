@@ -1,7 +1,11 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 
+/// <summary>
+/// 플레이어가 조종하는 캐릭터를 나타내는 클래스
+/// </summary>
 [DisallowMultipleComponent]
 [RequireComponent(typeof(PhotonView))]
 [RequireComponent(typeof(Rigidbody))]
@@ -23,7 +27,8 @@ public class Character : MonoBehaviourPunCallbacks
         }
     }
 
-    private Vector3 direction = Vector3.zero;
+    [Header("애니메이터"), SerializeField]
+    private Animator animator;
 
     [Header("머리"), SerializeField]
     private Transform headTransform;
@@ -32,6 +37,9 @@ public class Character : MonoBehaviourPunCallbacks
     [Header("오른손"), SerializeField]
     private Transform rightHandTransform;
 
+    //캐릭터의 이동 방향
+    private Vector3 direction = Vector3.zero;
+
     [Header("이동 속도"), SerializeField, Range(1, 5)]
     private float moveSpeed = 5;
     [Header("기절 지속 시간"), Range(0, int.MaxValue)]
@@ -39,28 +47,51 @@ public class Character : MonoBehaviourPunCallbacks
     [Header("무적 지속 시간"), Range(0, int.MaxValue)]
     private float invincibleTime = 3f;
 
+    //캐릭터가 탄막에 맞은 후 남은 면역 시간
+    private float remainingImmuneTime = 0;
+
+    //채굴한 광물의 양
+    private uint mineralCount = 0;
+
+    //캐릭터가 기절 상태인지 여부를 나타내는 프로퍼티
     public bool faintingState {
         private set;
         get;
     }
 
-    private float specialStateTime = 0;
 
-    private uint mineral = 0;   //채굴한 광물의 양
+    private static readonly string HitParameter = "hit";
+    private static readonly string GatheringParameter = "gathering";
+
+    private static List<Character> characters = new List<Character>();
+
+    public static IReadOnlyList<Character> list {
+        get
+        {
+            return characters.AsReadOnly();
+        }
+    }
 
     public static event Action<Character, uint> mineralReporter;
 
-    [Header("애니메이터"), SerializeField]
-    private Animator animator;
+    public override void OnEnable()
+    {
+        base.OnEnable();
+        characters.Add(this);
+    }
 
-    private static readonly string HitParameter = "hit";
+    public override void OnDisable()
+    {
+        base.OnDisable();
+        characters.Remove(this);
+    }
 
     private void Update()
     {
-        if(photonView.IsMine == true && specialStateTime > 0)
+        if(photonView.IsMine == true && remainingImmuneTime > 0)
         {
-            specialStateTime -= Time.deltaTime;
-            if (specialStateTime <= 0)
+            remainingImmuneTime -= Time.deltaTime;
+            if (remainingImmuneTime <= 0)
             {
                 if(faintingState == true)
                 {
@@ -72,11 +103,11 @@ public class Character : MonoBehaviourPunCallbacks
                     Debug.Log("무적 상태");
 #endif
                     faintingState = false;
-                    specialStateTime = invincibleTime;
+                    remainingImmuneTime = invincibleTime;
                 }
                 else
                 {
-                    specialStateTime = 0;
+                    remainingImmuneTime = 0;
                 }
             }
         }
@@ -142,11 +173,11 @@ public class Character : MonoBehaviourPunCallbacks
             return;
         }
 #endif
-        if (photonView.IsMine == true && faintingState == false && specialStateTime == 0)
+        if (photonView.IsMine == true && faintingState == false && remainingImmuneTime == 0)
         {
             direction = Vector3.zero;
             faintingState = true;
-            specialStateTime = faintingTime;
+            remainingImmuneTime = faintingTime;
             if (animator != null)
             {
                 animator.SetBool(HitParameter, true);
@@ -160,7 +191,11 @@ public class Character : MonoBehaviourPunCallbacks
     //광물을 획득한 현재 양을 적용시켜주는 함수
     public void AddMineral(uint value)
     {
-        mineral += value;
-        mineralReporter?.Invoke(this, mineral);
+        if (animator != null)
+        {
+            animator.SetTrigger(GatheringParameter);
+        }
+        mineralCount += value;
+        mineralReporter?.Invoke(this, mineralCount);
     }
 }
