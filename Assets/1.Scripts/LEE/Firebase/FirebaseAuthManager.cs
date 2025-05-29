@@ -5,15 +5,15 @@ using UnityEngine.UI;
 using Firebase;
 using Firebase.Auth;
 using System.Threading.Tasks;
+using TMPro;
 
 public class FirebaseAuthManager : MonoBehaviour
 {
     public Button StartBtn;
     public FirebaseUser user; //인증된 유저 정보. 웹개발로 치면 토큰같은 느낌
     public FirebaseAuth auth; //인증 진행을 위한 정보
-
-    public InputField emailField;
-    public InputField pwField;
+    public TMP_InputField emailField;
+    public TMP_InputField pwField;
 
 
     // private void Awake()

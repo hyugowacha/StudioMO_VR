@@ -11,6 +11,9 @@ public interface IBullet
 
     // 풀에서 꺼내졌을 때 초기화용 함수 (속도나 상태 초기화 같은 거)
     void OnSpawn();
+
+    // 탄막 객체에 대한 속도 조절
+    void ChangePitch(float val);
 }
 
 public class ObjectPoolingBullet : MonoBehaviour
@@ -25,7 +28,24 @@ public class ObjectPoolingBullet : MonoBehaviour
 
     // 탄 종류마다 풀 따로 관리하기 위한 딕셔너리
     private Dictionary<Type, object> _pools = new Dictionary<Type, object>();
+
+    //TODO: 탄막 다 관리 할 수 있도록 리스트 관리
     #endregion
+
+    private void OnEnable()
+    {
+        // 슬로우모션 클래스 구독
+    }
+
+    private void OnDisable()
+    {
+        // 슬로우모션 클래스 구독 취소
+    }
+
+    private void ChangePitch(float val)
+    {
+        //모든 탄막 
+    }
 
     /// <summary>
     /// 특정 탄 종류(T)에 대해 풀 하나 만들어주는 함수
