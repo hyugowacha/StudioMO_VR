@@ -87,7 +87,7 @@ public class GuidedBullet : MonoBehaviour, IBullet
 
         // Y값 고정
         Vector3 currentPos = transform.position;
-        currentPos += flatDir * speed * Time.deltaTime;
+        currentPos += flatDir * speed * Time.deltaTime * slowSpeed;
         currentPos.y = transform.position.y; // Y 위치 고정
 
         transform.position = currentPos;
