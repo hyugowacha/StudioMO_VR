@@ -113,7 +113,7 @@ Animator:
   m_GameObject: {fileID: 709264807926732204}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 8d5a55728d2051047a217dc7a7be0424, type: 3}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 5575a7ad2abc1bb41af34cab50eb524d, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -1066,7 +1066,8 @@ MonoBehaviour:
   leftHandTransform: {fileID: 4863256304461801624}
   rightHandTransform: {fileID: 1919828657170651413}
   moveSpeed: 5
-  invincibleMode: 1
+  animator: {fileID: 6124303429045882691}
+  invincibleMode: 0
 --- !u!1 &5578653984774411108
 GameObject:
   m_ObjectHideFlags: 0

@@ -9,21 +9,21 @@ public class Character : MonoBehaviourPunCallbacks
 {
     private bool _hasRigidbody = false;
 
-    private Rigidbody _rigidbody = null;
+    private new Rigidbody rigidbody = null;
 
     private Rigidbody getRigidbody {
         get
         {
             if(_hasRigidbody == false)
             {
-                _rigidbody = GetComponent<Rigidbody>();
+                rigidbody = GetComponent<Rigidbody>();
                 _hasRigidbody = true;
             }
-            return _rigidbody;
+            return rigidbody;
         }
     }
 
-    private Vector3 _direction = Vector3.zero;
+    private Vector3 direction = Vector3.zero;
 
     [Header("머리"), SerializeField]
     private Transform headTransform;
@@ -50,6 +50,11 @@ public class Character : MonoBehaviourPunCallbacks
 
     public static event Action<Character, uint> mineralReporter;
 
+    [Header("애니메이터"), SerializeField]
+    private Animator animator;
+
+    private static readonly string HitParameter = "hit";
+
     private void Update()
     {
         if(photonView.IsMine == true && specialStateTime > 0)
@@ -59,6 +64,10 @@ public class Character : MonoBehaviourPunCallbacks
             {
                 if(faintingState == true)
                 {
+                    if (animator != null)
+                    {
+                        animator.SetBool(HitParameter, false);
+                    }
 #if UNITY_EDITOR
                     Debug.Log("무적 상태");
 #endif
@@ -77,7 +86,7 @@ public class Character : MonoBehaviourPunCallbacks
     {
         if (photonView.IsMine == true)
         {
-            Vector3 position = getRigidbody.position + _direction.normalized * moveSpeed * Time.fixedDeltaTime;
+            Vector3 position = getRigidbody.position + direction.normalized * moveSpeed * Time.fixedDeltaTime;
             getRigidbody.MovePosition(position);
         }
     }
@@ -114,8 +123,8 @@ public class Character : MonoBehaviourPunCallbacks
     {
         if (photonView.IsMine == true && headTransform != null && faintingState == false)
         {
-            _direction = headTransform.right * input.x + headTransform.forward * input.y;
-            _direction.y = 0;
+            direction = headTransform.right * input.x + headTransform.forward * input.y;
+            direction.y = 0;
         }
     }
 
@@ -135,9 +144,13 @@ public class Character : MonoBehaviourPunCallbacks
 #endif
         if (photonView.IsMine == true && faintingState == false && specialStateTime == 0)
         {
-            _direction = Vector3.zero;
+            direction = Vector3.zero;
             faintingState = true;
             specialStateTime = faintingTime;
+            if (animator != null)
+            {
+                animator.SetBool(HitParameter, true);
+            }
 #if UNITY_EDITOR
             Debug.Log("기절함");
 #endif
