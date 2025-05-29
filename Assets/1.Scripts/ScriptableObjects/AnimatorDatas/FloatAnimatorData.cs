@@ -11,7 +11,7 @@ public class FloatAnimatorData : AnimatorData
 
     public override void Set(Animator animator, float value)
     {
-        if (animator != null)
+        if (animator != null && animator.gameObject.activeInHierarchy == true)
         {
             foreach (AnimatorControllerParameter param in animator.parameters)
             {
