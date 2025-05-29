@@ -15,5 +15,17 @@ public class BulletSpawnData
     public bool generateB;
     public string bGenerateSide;
     public int bGenerateAmount;
+
+    //ÆÐÅÏÇü Åº¸·
+
+    public float beatTiming;
+
+    public int bulletPresetID;
+    public int generatePreset;
+    public int bulletAmount;
+
+    public float fireAngle;
+    public float bulletAngle;
+    public float bulletRange;
 }
 
