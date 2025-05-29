@@ -110,8 +110,9 @@ public class StageManager : Manager
         if (currentTimeValue > 0)
         {
             currentTimeValue -= Time.deltaTime;
-            if (currentTimeValue < 0)
+            if (currentTimeValue <= 0)
             {
+                Character.slowMotionActor = 0; //슬로우 모션 액터 초기화
                 currentTimeValue = 0;   //게임 종료
             }
         }
@@ -139,17 +140,29 @@ public class StageManager : Manager
 
     protected override void ChangeText()
     {
+
     }
 
     protected override void OnLeftFunction(InputAction.CallbackContext callbackContext)
     {
+        if (CanPlaying() == true && character != null && character.faintingState == false) //faintingState를 허용할까?
+        {
+            if (callbackContext.performed == true)
+            {
+                character.ChangeSlowMotion(true);
+            }
+            else if (callbackContext.canceled == true)
+            {
+                character.ChangeSlowMotion(false);
+            }
+        }
     }
 
     protected override void OnRightFunction(InputAction.CallbackContext callbackContext)
     {
-        if (CanPlaying() == true && character != null && character.faintingState == false && pickaxe != null)
+        if (callbackContext.performed == true && CanPlaying() == true && character != null && character.faintingState == false && pickaxe != null)
         {
-            character.AddMineral(pickaxe.GetMineralCount());
+            character.AddMineral(pickaxe.GetMineralCount());    //곡괭이 질
         }
     }
 

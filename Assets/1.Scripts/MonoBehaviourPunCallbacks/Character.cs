@@ -7,8 +7,10 @@ using Photon.Pun;
 /// 플레이어가 조종하는 캐릭터를 나타내는 클래스
 /// </summary>
 [DisallowMultipleComponent]
-[RequireComponent(typeof(PhotonView))]
+[RequireComponent(typeof(Collider))]
 [RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(PhotonView))]
+[RequireComponent(typeof(PhotonTransformView))]
 public class Character : MonoBehaviourPunCallbacks
 {
     private bool _hasRigidbody = false;
@@ -59,10 +61,6 @@ public class Character : MonoBehaviourPunCallbacks
         get;
     }
 
-
-    private static readonly string HitParameter = "hit";
-    private static readonly string GatheringParameter = "gathering";
-
     private static List<Character> characters = new List<Character>();
 
     public static IReadOnlyList<Character> list {
@@ -73,6 +71,11 @@ public class Character : MonoBehaviourPunCallbacks
     }
 
     public static event Action<Character, uint> mineralReporter;
+
+    public static int slowMotionActor = 0;
+
+    private static readonly string HitParameter = "hit";
+    private static readonly string GatheringParameter = "gathering";
 
     public override void OnEnable()
     {
@@ -115,7 +118,7 @@ public class Character : MonoBehaviourPunCallbacks
 
     private void FixedUpdate()
     {
-        if (photonView.IsMine == true)
+        if (photonView.IsMine == true && direction != Vector3.zero)
         {
             Vector3 position = getRigidbody.position + direction.normalized * moveSpeed * Time.fixedDeltaTime;
             getRigidbody.MovePosition(position);
@@ -156,6 +159,25 @@ public class Character : MonoBehaviourPunCallbacks
         {
             direction = headTransform.right * input.x + headTransform.forward * input.y;
             direction.y = 0;
+        }
+    }
+
+    public void ChangeSlowMotion(bool enabled)
+    {
+        switch (enabled)
+        {
+            case true:
+                if (slowMotionActor == 0)
+                {
+                    slowMotionActor = PhotonNetwork.LocalPlayer.ActorNumber;
+                }
+                break;
+            case false:
+                if (slowMotionActor == PhotonNetwork.LocalPlayer.ActorNumber)
+                {
+                    slowMotionActor = 0;
+                }
+                break;
         }
     }
 
