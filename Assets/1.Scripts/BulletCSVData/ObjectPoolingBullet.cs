@@ -81,9 +81,6 @@ public class ObjectPoolingBullet : MonoBehaviour
     /// <summary>
     /// 탄막 타입별 풀 생성 및 등록
     /// </summary>
-    /// <typeparam name="T">탄막 컴포넌트 타입</typeparam>
-    /// <param name="prefab">탄막 프리팹</param>
-    /// <param name="parent">부모 트랜스폼</param>
     public void CreatePool<T>(T prefab, Transform parent = null) where T : Component, IBullet
     {
         ObjectPool<T> localPool = null;
@@ -97,14 +94,15 @@ public class ObjectPoolingBullet : MonoBehaviour
                 // 현재 Pitch 값 즉시 반영
                 bullet.ChangePitch(_currentPitch);
 
-                // 관리 리스트에 추가
+                // 관리 리스트에 추가 (없으면 Type에 추가)
                 if (!_allCreatedBullets.ContainsKey(typeof(T)))
+                {
                     _allCreatedBullets[typeof(T)] = new List<IBullet>();
-
+                }
                 _allCreatedBullets[typeof(T)].Add(bullet);
+
                 return bullet;
             },
-
             actionOnGet: (bullet) =>
             {
                 bullet.SetPool(localPool);           // 풀 정보 전달
@@ -112,20 +110,39 @@ public class ObjectPoolingBullet : MonoBehaviour
                 bullet.OnSpawn();                    // 초기화
                 bullet.ChangePitch(_currentPitch);   // Pitch 적용
             },
-
             actionOnRelease: (bullet) =>
             {
                 bullet.gameObject.SetActive(false);  // 비활성화
             },
-
             actionOnDestroy: (bullet) => Destroy(bullet.gameObject),
-
             collectionCheck: false,
             defaultCapacity: defaultCapacity,
             maxSize: maxSize
         );
 
         _pools[typeof(T)] = localPool; // 딕셔너리에 등록
+
+        PreloadPool(localPool, defaultCapacity); // 여기서 바로 풀 채우기
+    }
+
+    /// <summary>
+    /// 풀을 미리 원하는 개수만큼 생성해서 채워두는 함수
+    /// </summary>
+    private void PreloadPool<T>(ObjectPool<T> pool, int count) where T : Component, IBullet
+    {
+        List<T> tempList = new();
+
+        // 미리 꺼냈다가 다시 넣기
+        for (int i = 0; i < count; i++)
+        {
+            var obj = pool.Get();
+            tempList.Add(obj);
+        }
+
+        foreach (var obj in tempList)
+        {
+            pool.Release(obj);
+        }
     }
     #endregion
 
