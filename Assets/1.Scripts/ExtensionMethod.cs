@@ -57,6 +57,22 @@ public static class ExtensionMethod
         array = templates;
     }
 
+    public static void SetParameter(this Animator animator, string name)
+    {
+        if (animator != null)
+        {
+            animator.SetTrigger(name);
+        }
+    }
+
+    public static void SetParameter(this Animator animator, string name, bool value)
+    {
+        if (animator != null)
+        {
+            animator.SetBool(name, value);
+        }
+    }
+
     public static void SetActive(this Transform transform, bool value)
     {
         if(transform != null)

@@ -11,7 +11,7 @@ using Photon.Pun;
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(PhotonView))]
 [RequireComponent(typeof(PhotonTransformView))]
-public class Character : MonoBehaviourPunCallbacks
+public class Character : MonoBehaviourPunCallbacks, IPunObservable
 {
     private bool _hasRigidbody = false;
 
@@ -31,17 +31,12 @@ public class Character : MonoBehaviourPunCallbacks
 
     [Header("애니메이터"), SerializeField]
     private Animator animator;
-
     [Header("머리"), SerializeField]
     private Transform headTransform;
     [Header("왼손"), SerializeField]
     private Transform leftHandTransform;
     [Header("오른손"), SerializeField]
     private Transform rightHandTransform;
-
-    //캐릭터의 이동 방향
-    private Vector3 direction = Vector3.zero;
-
     [Header("이동 속도"), SerializeField, Range(1, 5)]
     private float moveSpeed = 5;
     [Header("기절 지속 시간"), Range(0, int.MaxValue)]
@@ -52,8 +47,14 @@ public class Character : MonoBehaviourPunCallbacks
     //캐릭터가 탄막에 맞은 후 남은 면역 시간
     private float remainingImmuneTime = 0;
 
+    //캐릭터의 슬로우 모션 시간
+    private float remainingSlowMotionTime = SlowMotion.MaximumLimitValue;
+
     //채굴한 광물의 양
-    private uint mineralCount = 0;
+    public uint mineralCount {
+        private set;
+        get;
+    }
 
     //캐릭터가 기절 상태인지 여부를 나타내는 프로퍼티
     public bool faintingState {
@@ -70,12 +71,61 @@ public class Character : MonoBehaviourPunCallbacks
         }
     }
 
-    public static event Action<Character, uint> mineralReporter;
-
-    public static int slowMotionActor = 0;
-
     private static readonly string HitParameter = "hit";
+    private static readonly string SlowMotionParameter = "slowmotion";
     private static readonly string GatheringParameter = "gathering";
+
+    private void Update()
+    {
+        if(photonView.IsMine == true)
+        {
+            float deltaTime = Time.deltaTime;
+            if (remainingImmuneTime > 0)
+            {
+                remainingImmuneTime -= deltaTime;
+                if (remainingImmuneTime <= 0)
+                {
+                    if (faintingState == true)
+                    {
+                        ApplyFainting(false);
+                        remainingImmuneTime = invincibleTime;
+                    }
+                    else
+                    {
+                        remainingImmuneTime = 0;
+                    }
+                }
+            }
+            bool slowMotionOwner = SlowMotion.IsOwner(PhotonNetwork.LocalPlayer);
+            switch (slowMotionOwner)
+            {
+                case true:
+                    if(remainingSlowMotionTime > 0)
+                    {
+                        remainingSlowMotionTime -= deltaTime * SlowMotion.ConsumeValue;
+                    }
+                    if (remainingSlowMotionTime < 0)
+                    {
+                        remainingSlowMotionTime = 0;
+                    }
+                    if (remainingSlowMotionTime == 0)
+                    {
+                        RequestSlowMotion(false);
+                    }
+                    break;
+                case false:
+                    if (remainingSlowMotionTime < SlowMotion.MaximumLimitValue)
+                    {
+                        remainingSlowMotionTime += deltaTime;
+                        if (remainingSlowMotionTime > SlowMotion.MaximumLimitValue)
+                        {
+                            remainingSlowMotionTime = SlowMotion.MaximumLimitValue;
+                        }
+                    }
+                    break;
+            }
+        }
+    }
 
     public override void OnEnable()
     {
@@ -89,39 +139,68 @@ public class Character : MonoBehaviourPunCallbacks
         characters.Remove(this);
     }
 
-    private void Update()
+    //기절 상태를 설정하는 메서드
+    [PunRPC]
+    private void SetFainting(bool value)
     {
-        if(photonView.IsMine == true && remainingImmuneTime > 0)
+        faintingState = value;
+        animator.SetParameter(HitParameter, value);
+    }
+
+    //기절 상태를 적용하는 메서드
+    private void ApplyFainting(bool value)
+    {
+        SetFainting(value);
+        if (PhotonNetwork.InRoom == true)
         {
-            remainingImmuneTime -= Time.deltaTime;
-            if (remainingImmuneTime <= 0)
-            {
-                if(faintingState == true)
-                {
-                    if (animator != null)
-                    {
-                        animator.SetBool(HitParameter, false);
-                    }
-#if UNITY_EDITOR
-                    Debug.Log("무적 상태");
-#endif
-                    faintingState = false;
-                    remainingImmuneTime = invincibleTime;
-                }
-                else
-                {
-                    remainingImmuneTime = 0;
-                }
-            }
+            photonView.RPC(nameof(SetFainting), RpcTarget.Others, value);
         }
     }
 
-    private void FixedUpdate()
+    //슬로우 모션을 설정하는 메서드
+    [PunRPC]
+    private void SetSlowMotion(int actor, bool enabled)
     {
-        if (photonView.IsMine == true && direction != Vector3.zero)
+        SlowMotion.Set(actor, enabled);
+        animator.SetParameter(SlowMotionParameter, enabled);
+    }
+
+    //슬로우 모션을 적용하는 메서드
+    [PunRPC]
+    private void ApplySlowMotion(int actor, bool enabled)
+    {
+        SetSlowMotion(actor, enabled);
+        if (PhotonNetwork.InRoom == true)
         {
-            Vector3 position = getRigidbody.position + direction.normalized * moveSpeed * Time.fixedDeltaTime;
-            getRigidbody.MovePosition(position);
+            photonView.RPC(nameof(SetSlowMotion), RpcTarget.Others, actor, enabled);
+        }
+    }
+
+    //슬로우 모션 사용을 마스터에게 요청하는 메서드
+    private void RequestSlowMotion(bool enabled)
+    {
+        int actorNumber = PhotonNetwork.LocalPlayer.ActorNumber;
+        if (PhotonNetwork.InRoom == true && PhotonNetwork.IsMasterClient == false)
+        {
+            photonView.RPC(nameof(ApplySlowMotion), RpcTarget.MasterClient, actorNumber, enabled);
+        }
+        else
+        {
+            ApplySlowMotion(actorNumber, enabled);
+        }
+    }
+
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        if (stream.IsWriting)
+        {
+            stream.SendNext(remainingImmuneTime);
+            stream.SendNext(remainingSlowMotionTime);
+        }
+        else
+        {
+            remainingImmuneTime = (float)stream.ReceiveNext();
+            remainingSlowMotionTime = (float)stream.ReceiveNext();
         }
     }
 
@@ -157,27 +236,10 @@ public class Character : MonoBehaviourPunCallbacks
     {
         if (photonView.IsMine == true && headTransform != null && faintingState == false)
         {
-            direction = headTransform.right * input.x + headTransform.forward * input.y;
+            Vector3 direction = headTransform.right * input.x + headTransform.forward * input.y;
             direction.y = 0;
-        }
-    }
-
-    public void ChangeSlowMotion(bool enabled)
-    {
-        switch (enabled)
-        {
-            case true:
-                if (slowMotionActor == 0)
-                {
-                    slowMotionActor = PhotonNetwork.LocalPlayer.ActorNumber;
-                }
-                break;
-            case false:
-                if (slowMotionActor == PhotonNetwork.LocalPlayer.ActorNumber)
-                {
-                    slowMotionActor = 0;
-                }
-                break;
+            float moveSpeed = this.moveSpeed * Time.deltaTime * SlowMotion.speed;
+            getRigidbody.MovePosition(getRigidbody.position + direction.normalized * moveSpeed);
         }
     }
 
@@ -186,38 +248,45 @@ public class Character : MonoBehaviourPunCallbacks
     private bool invincibleMode = false;
 #endif
 
-    //탄막에 맞으면 발동하는 함수
+    //탄막에 맞으면 발동하는 메서드
     public void Hit()
     {
-#if UNITY_EDITOR
-        if (invincibleMode == true)
-        {
-            return;
-        }
-#endif
         if (photonView.IsMine == true && faintingState == false && remainingImmuneTime == 0)
         {
-            direction = Vector3.zero;
-            faintingState = true;
-            remainingImmuneTime = faintingTime;
-            if (animator != null)
-            {
-                animator.SetBool(HitParameter, true);
-            }
 #if UNITY_EDITOR
-            Debug.Log("기절함");
+            if (invincibleMode == true)
+            {
+                return;
+            }
 #endif
+            ApplyFainting(true);
+            remainingImmuneTime = faintingTime;
+            if(SlowMotion.IsOwner(PhotonNetwork.LocalPlayer) == true)
+            {
+                RequestSlowMotion(false);
+            }
         }
     }
 
-    //광물을 획득한 현재 양을 적용시켜주는 함수
+    //슬로우 모션을 활성화하거나 비활성화하는 메서드
+    public void SetSlowMotion(bool enabled)
+    {
+        if((enabled == true && faintingState == false && SlowMotion.actor == 0 && remainingSlowMotionTime >= SlowMotion.MinimumUseValue) || (enabled == false && SlowMotion.IsOwner(PhotonNetwork.LocalPlayer) == true))
+        {
+            RequestSlowMotion(enabled);
+        }
+    }
+
+    //광물을 획득한 현재 양을 적용시켜주는 메서드
     public void AddMineral(uint value)
     {
-        if (animator != null)
-        {
-            animator.SetTrigger(GatheringParameter);
-        }
+        animator.SetParameter(GatheringParameter);
         mineralCount += value;
-        mineralReporter?.Invoke(this, mineralCount);
+    }
+
+    //슬로우 모션 정규화 값을 반환하는 메서드
+    public float GetSlowMotionRatio()
+    {
+        return remainingSlowMotionTime / SlowMotion.MaximumLimitValue;
     }
 }
