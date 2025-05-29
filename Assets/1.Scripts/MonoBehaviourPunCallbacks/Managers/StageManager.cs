@@ -11,6 +11,8 @@ public class StageManager : Manager
     [SerializeField]
     private Character character;                                //조종할 캐릭터
 
+    private Vector2 moveInput = Vector2.zero;                   //이동 입력 값
+
     private bool hasBulletPatternLoader = false;
 
     private BulletPatternLoader bulletPatternLoader = null;     //탄막 생성기
@@ -55,6 +57,9 @@ public class StageManager : Manager
     [SerializeField]
     private StageData test;
 
+    [SerializeField]
+    private UnityEngine.UI.Image fillImage;
+
     protected override void Start()
     {
         base.Start();
@@ -85,7 +90,6 @@ public class StageManager : Manager
                 }
             }
             currentTimeValue = limitTimeValue;
-            mineralFillPanel?.Set(0, goalMineralValue);
         }
     }
 
@@ -112,11 +116,19 @@ public class StageManager : Manager
             currentTimeValue -= Time.deltaTime;
             if (currentTimeValue <= 0)
             {
-                Character.slowMotionActor = 0; //슬로우 모션 액터 초기화
+                character?.SetSlowMotion(false); //시간이 끝나면 슬로우 모션 해제
                 currentTimeValue = 0;   //게임 종료
             }
         }
         timeFillPanel?.Set(currentTimeValue, limitTimeValue);
+    }
+
+    private void FixedUpdate()
+    {
+        if (HasTimeLeft() == true)
+        {
+            character?.UpdateMove(moveInput);
+        }
     }
 
     private void LateUpdate()
@@ -135,6 +147,7 @@ public class StageManager : Manager
             {
                 character.UpdateRightHand(rightActionBasedController.transform.position + rightHandOffset, rightActionBasedController.transform.rotation);
             }
+            fillImage.Fill(character.GetSlowMotionRatio());
         }
     }
 
@@ -145,57 +158,53 @@ public class StageManager : Manager
 
     protected override void OnLeftFunction(InputAction.CallbackContext callbackContext)
     {
-        if (CanPlaying() == true && character != null && character.faintingState == false) //faintingState를 허용할까?
+        if (HasTimeLeft() == true)
         {
             if (callbackContext.performed == true)
             {
-                character.ChangeSlowMotion(true);
+                character?.SetSlowMotion(true);
             }
             else if (callbackContext.canceled == true)
             {
-                character.ChangeSlowMotion(false);
+                character?.SetSlowMotion(false);
             }
         }
     }
 
     protected override void OnRightFunction(InputAction.CallbackContext callbackContext)
     {
-        if (callbackContext.performed == true && CanPlaying() == true && character != null && character.faintingState == false && pickaxe != null)
+        if (callbackContext.performed == true && HasTimeLeft() == true && character != null && character.faintingState == false && pickaxe != null)
         {
             character.AddMineral(pickaxe.GetMineralCount());    //곡괭이 질
         }
     }
 
+    //입력 시스템과 관련된 바인딩을 연결 및 해제에 사용하는 메서드 
     private void SetBinding(bool value)
     {
-        if(value == true)
-        {
-            Character.mineralReporter += (character, value) => { mineralFillPanel?.Set(value, goalMineralValue); };
-        }
-        else
-        {
-            Character.mineralReporter -= (character, value) => { mineralFillPanel?.Set(value, goalMineralValue); };
-        }
         if (leftActionBasedController != null && leftActionBasedController.translateAnchorAction != null)
         {
-            leftActionBasedController.translateAnchorAction.reference.Set(OnMove, OnMove, value);
+            leftActionBasedController.translateAnchorAction.reference.Set(ApplyLeftDirectionInput, ApplyLeftDirectionInput, value);
         }
     }
 
-    private void OnMove(InputAction.CallbackContext callbackContext)
+    //왼쪽 방향 입력을 적용하는 메서드
+    private void ApplyLeftDirectionInput(InputAction.CallbackContext callbackContext)
     {
         if(callbackContext.performed == true)
         {
-            character?.UpdateMove(callbackContext.ReadValue<Vector2>());
+            moveInput = callbackContext.ReadValue<Vector2>();
         }
         else if(callbackContext.canceled == true)
         {
-            character?.UpdateMove(Vector2.zero);
+            moveInput = Vector2.zero;
         }
     }
 
-    private bool CanPlaying()
+    //게임 진행 시간이 남았는지 여부를 알려주는 메서드
+    private bool HasTimeLeft()
     {
+        return true;
         return currentTimeValue > 0 || currentTimeValue == limitTimeValue;
     }
 }
