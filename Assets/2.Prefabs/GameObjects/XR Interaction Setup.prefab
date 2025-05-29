@@ -146,7 +146,7 @@ GameObject:
   - component: {fileID: 689599408267798535}
   - component: {fileID: 4420363745092619846}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: ClearScoreNumText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4877,7 +4877,7 @@ GameObject:
   - component: {fileID: 4346932125513212057}
   - component: {fileID: 3710469442801271182}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: ClearScoreText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4932,8 +4932,9 @@ MonoBehaviour:
       m_Calls: []
   m_text: Clear Score
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 68f4c9b3bc6412c4ab362180f172f96c, type: 2}
+  m_sharedMaterial: {fileID: 2081446301306759604, guid: 68f4c9b3bc6412c4ab362180f172f96c,
+    type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -4963,7 +4964,7 @@ MonoBehaviour:
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 1
+  m_fontStyle: 0
   m_HorizontalAlignment: 1
   m_VerticalAlignment: 256
   m_textAlignment: 65535
@@ -6717,7 +6718,7 @@ GameObject:
   - component: {fileID: 4070569781072573221}
   - component: {fileID: 6552056052839509356}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: MyScoreNumText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7606,7 +7607,7 @@ GameObject:
   - component: {fileID: 9182580079099336842}
   - component: {fileID: 4879874766733345778}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: MyScoreText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7661,8 +7662,9 @@ MonoBehaviour:
       m_Calls: []
   m_text: My Score
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 68f4c9b3bc6412c4ab362180f172f96c, type: 2}
+  m_sharedMaterial: {fileID: 2081446301306759604, guid: 68f4c9b3bc6412c4ab362180f172f96c,
+    type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -7692,7 +7694,7 @@ MonoBehaviour:
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 1
+  m_fontStyle: 0
   m_HorizontalAlignment: 1
   m_VerticalAlignment: 256
   m_textAlignment: 65535
@@ -7815,7 +7817,7 @@ GameObject:
   - component: {fileID: 1928955125273809341}
   - component: {fileID: 484647391332211457}
   m_Layer: 5
-  m_Name: Box
+  m_Name: MyScoreBox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7943,7 +7945,7 @@ GameObject:
   - component: {fileID: 3692058232858243361}
   - component: {fileID: 6228963257473240096}
   m_Layer: 5
-  m_Name: Box
+  m_Name: CollectionGoalBox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
