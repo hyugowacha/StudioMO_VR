@@ -13,13 +13,19 @@ public class BulletSpawnerManager : MonoBehaviour
     // GuidedBullet용 스포너를 side 값 기준으로 관리
     public Dictionary<int, GuidedBulletSpawner> guidedSpawners = new();
 
+    public Dictionary<int, AnglePatternSpawner> angleSpawners = new();
+
+    public Dictionary<int, RangePatternSpawner> rangeSpawners = new();
+
     /// <summary>
     /// 지정된 side 방향에서 NormalBullet을 지정된 개수만큼 발사
     /// </summary>
     public void SpawnNormal(int side, int amount)
     {
         if (!normalSpawners.ContainsKey(side)) return;
+
         var spawner = normalSpawners[side];
+
         for (int i = 0; i < amount; i++)
         {
             spawner.FireNormalBullet();
@@ -32,15 +38,28 @@ public class BulletSpawnerManager : MonoBehaviour
     public void SpawnGuided(int side, int amount)
     {
         if (!guidedSpawners.ContainsKey(side)) return;
+
         var spawner = guidedSpawners[side];
+
         for (int i = 0; i < amount; i++)
         {
             spawner.FireGuidedBullet();
         }
     }
 
-    public void SpawnPattern()
+    public void SpawnPatternAngle(int side, int amount ,int[] preset, float fireAngle, float bulletAngle)
     {
+        if(!angleSpawners.ContainsKey(side)) return;
 
+        var spawner = angleSpawners[side];
+
+        
+    }
+
+    public void SpawnPatternRange(int side, int amount, int[] preset, float fireAngle, float bulletRange)
+    {
+        if(!rangeSpawners.ContainsKey(side)) return;
+
+        var spawner = rangeSpawners[side];
     }
 }

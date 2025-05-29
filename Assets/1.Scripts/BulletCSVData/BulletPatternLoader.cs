@@ -58,7 +58,7 @@ public class BulletPatternLoader : MonoBehaviour
     {
         if(patternBulletCSVfile == null)
         {
-            Debug.LogError("ÆÄ½Ì ¿À·ù");
+            Debug.LogError("ÆÄ½Ì ¿À·ù 2");
             return;
         }
 
