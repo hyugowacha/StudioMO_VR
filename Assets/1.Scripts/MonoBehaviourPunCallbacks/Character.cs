@@ -32,8 +32,8 @@ public class Character : MonoBehaviourPunCallbacks
     [Header("오른손"), SerializeField]
     private Transform rightHandTransform;
 
-    [Header("이동 속도"), SerializeField, Range(1, int.MaxValue)]
-    private float moveSpeed = 10;
+    [Header("이동 속도"), SerializeField, Range(1, 5)]
+    private float moveSpeed = 5;
     [Header("기절 지속 시간"), Range(0, int.MaxValue)]
     private float faintingTime = 30f;
     [Header("무적 지속 시간"), Range(0, int.MaxValue)]

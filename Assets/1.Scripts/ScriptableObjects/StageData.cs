@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 /// <summary>
@@ -10,48 +9,11 @@ public class StageData : ScriptableObject
     //현재 로딩할 스테이지 데이터
     public static StageData current = null;
 
-    /// <summary>
-    /// 텍스트의 각 언어별 번역을 저장하는 구조체
-    /// </summary>
-    [Serializable]
-    private struct Text
-    {
-        [SerializeField, Header("영어")]
-        private string english;
-
-        [SerializeField, Header("한국어")]
-        private string korean;
-
-        [SerializeField, Header("중국어")]
-        private string chinese;
-
-        [SerializeField, Header("일본어")]
-        private string japanese;
-
-        //각 언어별 번역을 반환하는 메서드
-        public string Get(Translation.Language language)
-        {
-            switch (language)
-            {
-                case Translation.Language.English:
-                    return english;
-                case Translation.Language.Korean:
-                    return korean;
-                case Translation.Language.Chinese:
-                    return chinese;
-                case Translation.Language.Japanese:
-                    return japanese;
-                default:
-                    return null;
-            }
-        }
-    }
-
     [Header("음악명"), SerializeField]
-    private Text musicText;
+    private Translation.Text musicText;
 
     [Header("스토리"), SerializeField]
-    private Text storyText;
+    private Translation.Text storyText;
 
     [Header("배경음악"), SerializeField]
     private AudioClip audioClip;
