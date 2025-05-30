@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.InputSystem;
 using UnityEngine.XR.Interaction.Toolkit;
 using TMPro;
-using UnityEngine.Rendering;
+using DG.Tweening;
 
 /// <summary>
 /// 확장 메서드 
@@ -158,6 +158,15 @@ public static class ExtensionMethod
             tmpText.text = value;
         }
     }
+
+    public static void Set(this Image image, Color color)
+    {
+        if (image != null)
+        {
+            image.color = color;
+        }
+    }
+
     public static void Fill(this Image image, float value)
     {
         if (image != null)
@@ -167,6 +176,15 @@ public static class ExtensionMethod
                 image.type = Image.Type.Filled;
             }
             image.fillAmount = value;
+        }
+    }
+
+
+    public static void Stop(this Tween tween)
+    {
+        if (tween != null && tween.IsActive() == true)
+        {
+            tween.Kill();
         }
     }
 }
