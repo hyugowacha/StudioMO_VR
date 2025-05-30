@@ -13,6 +13,7 @@ public class BulletSpawnerManager : MonoBehaviour
     // GuidedBullet용 스포너를 side 값 기준으로 관리
     public Dictionary<int, GuidedBulletSpawner> guidedSpawners = new();
 
+
     public Dictionary<int, AnglePatternSpawner> angleSpawners = new();
 
     public Dictionary<int, RangePatternSpawner> rangeSpawners = new();
@@ -52,6 +53,11 @@ public class BulletSpawnerManager : MonoBehaviour
         if(!angleSpawners.ContainsKey(side)) return;
 
         var spawner = angleSpawners[side];
+        
+        for(int i= 0; i < amount; i++)
+        {
+            
+        }
 
         
     }
@@ -61,5 +67,10 @@ public class BulletSpawnerManager : MonoBehaviour
         if(!rangeSpawners.ContainsKey(side)) return;
 
         var spawner = rangeSpawners[side];
+
+        for(int i= 0; i < amount; i++)
+        {
+
+        }
     }
 }
