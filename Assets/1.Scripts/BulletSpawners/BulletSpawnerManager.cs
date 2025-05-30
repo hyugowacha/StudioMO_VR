@@ -48,29 +48,37 @@ public class BulletSpawnerManager : MonoBehaviour
         }
     }
 
-    public void SpawnPatternAngle(int side, int amount ,int[] preset, float fireAngle, float bulletAngle)
+    public void SpawnPatternAngle(int side, int amount ,int preset, float fireAngle, float bulletAngle)
     {
         if(!angleSpawners.ContainsKey(side)) return;
-
         var spawner = angleSpawners[side];
-        
-        for(int i= 0; i < amount; i++)
+
+        float centerIndex = (amount - 1) / 2f;
+        Debug.Log(amount);
+
+        for (int i= 0; i < amount; i++)
         {
-            
+            float offsetAngle = bulletAngle * (i - centerIndex);
+            spawner.CalculateSpawnPosition(side);
+             spawner.FireAnglePatternBullet(side, preset, fireAngle, fireAngle + offsetAngle);
         }
 
         
     }
 
-    public void SpawnPatternRange(int side, int amount, int[] preset, float fireAngle, float bulletRange)
+    public void SpawnPatternRange(int side, int amount, int preset, float fireAngle, float bulletRange)
     {
-        if(!rangeSpawners.ContainsKey(side)) return;
+        if (!rangeSpawners.ContainsKey(side)) return;
 
         var spawner = rangeSpawners[side];
 
+        float centerIndex = (amount - 1) / 2f;
+
         for(int i= 0; i < amount; i++)
         {
-
+            float offset = bulletRange * (i - centerIndex);
+            spawner.CalculateSpawnPosition(side);
+            spawner.FireRangePatternBullet(side, preset, fireAngle, offset);
         }
     }
 }

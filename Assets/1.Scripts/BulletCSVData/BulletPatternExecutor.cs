@@ -93,7 +93,6 @@ public class BulletPatternExecutor : MonoBehaviour
 
         foreach(var data in duePatterns)
         {
-            Debug.Log(data);
             ExecutePattern(data);
             timePatterns.Remove(data);
         }
@@ -126,21 +125,29 @@ public class BulletPatternExecutor : MonoBehaviour
      
     void ExecutePattern(BulletSpawnData data)
     {
+        int index = 0;
+
+        int[] presets = ReturnPreset(data.generatePreset);
+
         if (data.bulletPresetID == 1)
         {
-            foreach(int side in ReturnPreset(data.generatePreset))
+            foreach(int side in ReturnSide(data.generatePreset))
             {
-                spawnerManager.SpawnPatternAngle(side, data.bulletAmount, ReturnPreset(data.generatePreset), 
+                spawnerManager.SpawnPatternAngle(side, data.bulletAmount, presets[index], 
                     data.fireAngle, data.bulletAngle);
+
+                index++;
             }
         }
 
         if(data.bulletPresetID == 2)
         {
-            foreach (int side in ReturnPreset(data.generatePreset))
+            foreach (int side in ReturnSide(data.generatePreset))
             {
-                spawnerManager.SpawnPatternRange(side, data.bulletAmount, ReturnPreset(data.generatePreset),
+                spawnerManager.SpawnPatternRange(side, data.bulletAmount, presets[index],
                     data.fireAngle, data.bulletRange);
+
+                index++;
             }
         }
     }

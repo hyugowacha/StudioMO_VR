@@ -449,6 +449,7 @@ GameObject:
   - component: {fileID: 2893333270847640379}
   - component: {fileID: 8740847984141528756}
   - component: {fileID: 3432748481019608082}
+  - component: {fileID: 361739504679437047}
   m_Layer: 9
   m_Name: MON001_Burnduri
   m_TagString: Monster
@@ -634,3 +635,16 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &361739504679437047
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8470377270446183419}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9853ec411ddd60442b7c713dface6e7c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 3
