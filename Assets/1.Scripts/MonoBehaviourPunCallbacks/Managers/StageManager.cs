@@ -69,6 +69,7 @@ public class StageManager : Manager
         base.Start();
         if (instance == this)
         {
+            StageData.SetCurrentStage(0);
             SetMoveSpeed(0);
             SetFixedPosition(character != null ? character.transform.position : Vector3.zero);
             StageData stageData = test;         //StageData stageData = StageData.current;
@@ -159,7 +160,7 @@ public class StageManager : Manager
             else
             {
                 bool faintingState = character.faintingState;
-                if (ratio >= SlowMotion.MinimumUseValue + SlowMotion.RecoverRate && faintingState == false)
+                if (ratio >= SlowMotion.MinimumUseValue /*+ SlowMotion.RecoverRate*/ && faintingState == false)
                 {
                     slowMotionPanel?.Fill(ratio, SegmentPanel.IncreasingColor, true);
                 }
