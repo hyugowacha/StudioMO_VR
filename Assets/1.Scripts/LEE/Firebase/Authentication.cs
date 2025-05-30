@@ -5,6 +5,7 @@ using Firebase.Auth;
 using Firebase.Database;
 using Firebase.Extensions;
 using Photon.Pun;
+using UnityEngine;
 
 public static class Authentication
 {
@@ -55,11 +56,13 @@ public static class Authentication
         // 필요한 Firebase 의존성 확인 및 해결
         FirebaseApp.CheckAndFixDependenciesAsync().ContinueWithOnMainThread(task =>
         {
+            // task.Result로 비동기 작업 결과를 받아옴: 현재 Firebase 의존성 상태
             DependencyStatus dependencyStatus = task.Result;
 
-            // Firebase가 정상 작동 가능한 상태면 Auth 인스턴스를 얻음
+            // Firebase가 정상 작동 가능한 상태인지 확인
             if (dependencyStatus == DependencyStatus.Available)
             {
+                // Firebase 인증 객체 초기화 (로그인/회원가입에 필요한 인스턴스 획득)
                 firebaseAuth = FirebaseAuth.DefaultInstance;
             }
 
@@ -68,183 +71,163 @@ public static class Authentication
         });
     }
 
-
-    // 회원가입 또는 로그인 처리 함수
-    public static void Sign(string identification, string password, bool creation, Action<State> action = null)
+    // 로그인 기능 함수
+    public static void SignIn(string ID, string PW, Action<State> callback)
     {
-        if (firebaseAuth != null)
+        firebaseAuth.SignInWithEmailAndPasswordAsync(ID, PW).ContinueWithOnMainThread(task =>
         {
-            if (creation == true) // 회원가입 요청인 경우
+            if (task.IsFaulted || task.IsCanceled)
             {
-                firebaseAuth.CreateUserWithEmailAndPasswordAsync(identification, password).ContinueWithOnMainThread(task =>
+                foreach (Exception exception in task.Exception.Flatten().InnerExceptions)
                 {
-                    if (task.IsFaulted == true || task.IsCanceled == true) // 실패 처리
+                    if (exception is FirebaseException firebaseEx &&
+                        (AuthError)firebaseEx.ErrorCode == AuthError.InvalidEmail)
                     {
-                        foreach (Exception exception in task.Exception.Flatten().InnerExceptions)
-                        {
-                            if (exception is FirebaseException firebaseException)
-                            {
-                                AuthError authError = (AuthError)firebaseException.ErrorCode;
-
-                                // 이메일이 이미 존재하는 경우
-                                switch (authError)
-                                {
-                                    case AuthError.EmailAlreadyInUse:
-                                        action?.Invoke(State.SignUpAlready);
-                                        return;
-                                }
-                            }
-                        }
-
-                        // 기타 실패
-                        action?.Invoke(State.SignUpFailure);
+                        callback?.Invoke(State.SignInInvalidEmail);
+                        return;
                     }
-                    else // 회원가입 성공
-                    {
-                        // 해당 유저 노드에 빈 세션 노드를 생성
-                        FirebaseDatabase.DefaultInstance.RootReference.Child(UsersTag).Child(task.Result.User.UserId).Child(SessionTag).SetValueAsync("");
+                }
 
-                        action?.Invoke(State.SignUpSuccess);
-                    }
-                });
+                callback?.Invoke(State.SignInFailure);
             }
-            else // 로그인 요청인 경우
+            else
             {
-                firebaseAuth.SignInWithEmailAndPasswordAsync(identification, password).ContinueWithOnMainThread(task =>
+                FirebaseUser user = task.Result.User;
+                if (user == null)
                 {
-                    if (task.IsFaulted == true || task.IsCanceled == true)
+                    callback?.Invoke(State.SignInFailure);
+                    return;
+                }
+
+                string userId = user.UserId;
+                string sessionToken = Guid.NewGuid().ToString();
+                databaseReference = FirebaseDatabase.DefaultInstance.RootReference.Child(UsersTag).Child(userId);
+
+                HandleSessionTransaction(userId, sessionToken, ID, callback);
+            }
+        });
+    }
+
+    // 회원가입 함수
+    public static void SignUp(string ID, string PW, string email, Action<State> callback)
+    {
+        // ID는 실제로 이메일 형식으로 변환되어 사용된 상태로 들어옴 (예: asd@StudioMO.com)
+        firebaseAuth.CreateUserWithEmailAndPasswordAsync(ID, PW).ContinueWithOnMainThread(task =>
+        {
+            if (task.IsFaulted || task.IsCanceled)
+            {
+                foreach (Exception exception in task.Exception.Flatten().InnerExceptions)
+                {
+                    if (exception is FirebaseException firebaseEx &&
+                        (AuthError)firebaseEx.ErrorCode == AuthError.EmailAlreadyInUse)
                     {
-                        foreach (Exception exception in task.Exception.Flatten().InnerExceptions)
-                        {
-                            if (exception is FirebaseException firebaseEx)
-                            {
-                                AuthError authError = (AuthError)firebaseEx.ErrorCode;
-
-                                // 이메일 형식 오류 처리
-                                switch (authError)
-                                {
-                                    case AuthError.InvalidEmail:
-                                        action?.Invoke(State.SignInInvalidEmail);
-                                        return;
-                                }
-                            }
-                        }
-
-                        action?.Invoke(State.SignInFailure); // 그 외 로그인 실패
+                        callback?.Invoke(State.SignUpAlready);
+                        return;
                     }
-                    else
-                    {
-                        FirebaseUser firebaseUser = task.Result.User;
+                }
 
-                        if (firebaseUser == null)
+                callback?.Invoke(State.SignUpFailure);
+            }
+            else
+            {
+                // 유저 고유 UID
+                string userId = task.Result.User.UserId;
+
+                // 저장할 유저 데이터
+                Dictionary<string, object> userData = new Dictionary<string, object>
+            {
+                { "ID", ID.Split('@')[0] },  // ID (ex: asd)
+                { "Email", email },          // 실제 이메일 (ex: qwer@naver.com)
+                { "Session", "" }            // 세션 초기화
+            };
+
+                // Firebase Realtime Database에 유저 정보 저장
+                FirebaseDatabase.DefaultInstance.RootReference
+                    .Child(UsersTag)
+                    .Child(userId)
+                    .SetValueAsync(userData)
+                    .ContinueWithOnMainThread(dbTask =>
+                    {
+                        if (dbTask.IsFaulted || dbTask.IsCanceled)
                         {
-                            action?.Invoke(State.SignInFailure); // 유저 정보 없음
+                            callback?.Invoke(State.SignUpFailure);
                         }
                         else
                         {
-                            // 유저 UID와 고유 세션 토큰 생성
-                            string userId = task.Result.User.UserId;
-                            string sessionToken = Guid.NewGuid().ToString();
-
-                            // 해당 유저 경로 참조
-                            databaseReference = FirebaseDatabase.DefaultInstance.RootReference.Child(UsersTag).Child(userId);
-
-                            // 세션 중복 검사 (트랜잭션 사용)
-                            databaseReference.Child(SessionTag).RunTransaction(mutableData =>
-                            {
-                                // 현재 세션 데이터 읽기
-                                Dictionary<string, object> data = mutableData.Value as Dictionary<string, object>;
-
-                                // 세션이 없다면 (처음 로그인), 내가 소유
-                                if (data == null || data.ContainsKey(TokenTag) == false)
-                                {
-                                    mutableData.Value = new Dictionary<string, object>
-                                    {
-                                        { TokenTag, sessionToken },
-                                        { TimestampTag, ServerValue.Timestamp } // Firebase 서버 시간 저장
-                                    };
-
-                                    return TransactionResult.Success(mutableData);
-                                }
-
-                                // 이미 누군가 로그인해서 세션 존재함
-                                return TransactionResult.Abort();
-                            }).ContinueWithOnMainThread(task =>
-                            {
-                                if (task.IsCanceled || task.IsFaulted)
-                                {
-                                    firebaseAuth.SignOut(); // 실패 시 로그아웃
-                                    action?.Invoke(State.SignInFailure);
-                                }
-                                else
-                                {
-                                    DataSnapshot snapshot = task.Result;
-
-                                    // 트랜잭션이 성공했는지 확인
-                                    if (snapshot == null || snapshot.Value == null)
-                                    {
-                                        firebaseAuth.SignOut();
-                                        action?.Invoke(State.SignInAlready); // 세션 탈취 혹은 중복
-                                    }
-                                    else
-                                    {
-                                        Dictionary<string, object> resultData = snapshot.Value as Dictionary<string, object>;
-
-                                        // 세션이 내 것이 아닐 경우 (토큰 비교)
-                                        if (resultData == null || resultData.ContainsKey(TokenTag) == false || resultData[TokenTag].ToString() != sessionToken)
-                                        {
-                                            firebaseAuth.SignOut();
-                                            action?.Invoke(State.SignInAlready);
-                                        }
-                                        else // 트랜잭션 성공 + 토큰 일치 = 로그인 성공
-                                        {
-                                            PhotonNetwork.NickName = identification; // 포톤 닉네임 설정
-
-                                            // 로그아웃 시 이 세션 자동 제거 설정
-                                            databaseReference.Child(SessionTag).OnDisconnect().SetValue("");
-
-                                            action?.Invoke(State.SignInSuccess);
-
-                                            // 세션 유지 및 감시용 리스너 등록
-                                            sessionListener = (object sender, ValueChangedEventArgs arguments) =>
-                                            {
-                                                if (arguments.DatabaseError == null)
-                                                {
-                                                    if (arguments.Snapshot.Exists == false)
-                                                    {
-                                                        // 세션 노드가 삭제됨 (로그아웃됨)
-                                                        firebaseAuth.SignOut();
-                                                        CleanupSessionListener();
-                                                    }
-                                                    else
-                                                    {
-                                                        Dictionary<string, object> data = arguments.Snapshot.Value as Dictionary<string, object>;
-
-                                                        // 세션 탈취 감지: 내 토큰이 아닌 경우
-                                                        if (data != null && data.TryGetValue(TokenTag, out object serverTokenObject) && serverTokenObject.ToString() != sessionToken)
-                                                        {
-                                                            firebaseAuth.SignOut();
-                                                            CleanupSessionListener();
-                                                        }
-                                                    }
-                                                }
-                                            };
-
-                                            // 리스너 Firebase에 등록
-                                            databaseReference.Child(SessionTag).ValueChanged += sessionListener;
-                                        }
-                                    }
-                                }
-                            });
+                            callback?.Invoke(State.SignUpSuccess);
                         }
-                    }
-                });
+                    });
             }
-        }
-        else
-        {
-            // 인증 시스템 초기화되지 않은 상태
-            action?.Invoke(State.EmptyAccount);
-        }
+        });
     }
+
+    private static void HandleSessionTransaction(string userId, string sessionToken, string email, Action<State> callback)
+    {
+        databaseReference.Child(SessionTag).RunTransaction(mutableData =>
+        {
+            Dictionary<string, object> data = mutableData.Value as Dictionary<string, object>;
+
+            if (data == null || data.ContainsKey(TokenTag) == false)
+            {
+                mutableData.Value = new Dictionary<string, object>
+            {
+                { TokenTag, sessionToken },
+                { TimestampTag, ServerValue.Timestamp }
+            };
+
+                return TransactionResult.Success(mutableData);
+            }
+
+            return TransactionResult.Abort();
+        }).ContinueWithOnMainThread(task =>
+        {
+            if (task.IsCanceled || task.IsFaulted)
+            {
+                firebaseAuth.SignOut();
+                callback?.Invoke(State.SignInFailure);
+                return;
+            }
+
+            DataSnapshot snapshot = task.Result;
+
+            Dictionary<string, object> resultData = snapshot?.Value as Dictionary<string, object>;
+            if (resultData == null || resultData.ContainsKey(TokenTag) == false || resultData[TokenTag].ToString() != sessionToken)
+            {
+                firebaseAuth.SignOut();
+                callback?.Invoke(State.SignInAlready);
+                return;
+            }
+
+            PhotonNetwork.NickName = email;
+            databaseReference.Child(SessionTag).OnDisconnect().SetValue("");
+
+            callback?.Invoke(State.SignInSuccess);
+            RegisterSessionListener(sessionToken);
+        });
+    }
+
+    private static void RegisterSessionListener(string sessionToken)
+    {
+        sessionListener = (object sender, ValueChangedEventArgs args) =>
+        {
+            if (args.DatabaseError != null) return;
+
+            if (!args.Snapshot.Exists)
+            {
+                firebaseAuth.SignOut();
+                CleanupSessionListener();
+                return;
+            }
+
+            var data = args.Snapshot.Value as Dictionary<string, object>;
+            if (data != null && data.TryGetValue(TokenTag, out object tokenObj) && tokenObj.ToString() != sessionToken)
+            {
+                firebaseAuth.SignOut();
+                CleanupSessionListener();
+            }
+        };
+
+        databaseReference.Child(SessionTag).ValueChanged += sessionListener;
+    }
+
 }
