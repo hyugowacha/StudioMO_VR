@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using TMPro;
 using DG.Tweening;
+using Photon.Pun;
 
 [RequireComponent(typeof(BulletPatternLoader))]
 public class StageManager : Manager
@@ -41,7 +42,11 @@ public class StageManager : Manager
     [SerializeField]
     private Character character;                                //조종할 캐릭터
 
-    [Header("남은 시간")]
+    [Header("슬로우 모션 정보")]
+    [SerializeField]
+    private SegmentPanel slowMotionPanel;                       //슬로우 모션 패널
+
+    [Header("남은 시간 정보")]
     [SerializeField]
     private FillPanel timeFillPanel;                            //시간 패널
     private float currentTimeValue = 0.0f;                      //현재 시간 값
@@ -58,9 +63,6 @@ public class StageManager : Manager
 
     [SerializeField]
     private StageData test;
-
-    [SerializeField]
-    private UnityEngine.UI.Image fillImage;
 
     protected override void Start()
     {
@@ -149,12 +151,29 @@ public class StageManager : Manager
             {
                 character.UpdateRightHand(rightActionBasedController.transform.position + rightHandOffset, rightActionBasedController.transform.rotation);
             }
-            fillImage.Fill(character.GetSlowMotionRatio());
+            float ratio = character.GetSlowMotionRatio();
+            if(SlowMotion.IsOwner(PhotonNetwork.LocalPlayer) == true)
+            {
+                slowMotionPanel?.Fill(ratio, SegmentPanel.DecreasingColor, true);
+            }
+            else
+            {
+                bool faintingState = character.faintingState;
+                if (ratio >= SlowMotion.MinimumUseValue + SlowMotion.RecoverRate && faintingState == false)
+                {
+                    slowMotionPanel?.Fill(ratio, SegmentPanel.IncreasingColor, true);
+                }
+                else
+                {
+                    slowMotionPanel?.Fill(ratio, SegmentPanel.LethargyColor, faintingState == false);
+                }
+            }
+          
         }
     }
 
     protected override void ChangeText()
-    {
+    {   
 
     }
 

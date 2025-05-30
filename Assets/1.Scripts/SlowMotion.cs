@@ -7,26 +7,32 @@ using Photon.Realtime;
 /// </summary>
 public static class SlowMotion
 {
-    //슬로우 모션이 활성화되기까지의 딜레이 시간
-    public static readonly float ActiveDelay = 0.2f;
+    //슬로우 모션이 적용 전의 속도
+    public static readonly float BeforeSpeed = 1f;
 
-    //슬로우 모션 적용 전의 값
-    public static readonly float BeforeValue = 1f;
-
-    //슬로우 모션 적용 후의 값
-    public static readonly float AfterValue = 0.2f;
+    //슬로우 모션이 적용 후의 속도
+    public static readonly float AfterSpeed = 0.2f;
 
     //슬로우 모션 적용 시간
     public static readonly float ApplySpeed = 0.5f;
 
+    //그립 버튼을 누른 후 슬로우 모션을 동작하기까지 걸리는 시간
+    public static readonly float ActiveDelay = 0.2f;
+
+    //슬로우 모션을 사용 후 다시 충전할 수 있게 걸리는 시간
+    public static readonly float ChargingDelay = 0.3f;
+
     //슬로우 모션 사용 최소 한도
-    public static readonly float MinimumUseValue = 0.1f;
+    public static readonly float MinimumUseValue = 0.2f;
 
     //슬로우 모션 에너지 최대 한도
-    public static readonly float MaximumLimitValue = 1f;
+    public static readonly float MaximumFillValue = 1f;
 
     //슬로우 모션을 사용하기 위해 소모되는 에너지 배율
-    public static readonly float ConsumeValue = 0.2f;
+    public static readonly float ConsumeRate = 0.2f;
+
+    //슬로우 모션이 회복되는 속도 배율
+    public static readonly float RecoverRate = 0.1f;
 
     //슬로우 모션을 점진적으로 적용하기 위한 Tween 객체
     private static Tween currentTween = null;
@@ -44,7 +50,7 @@ public static class SlowMotion
     public static float speed {
         private set;
         get;
-    } = BeforeValue;
+    } = BeforeSpeed;
 
     //슬로우 모션 속도를 점진적으로 변경하는 함수
     public static void Apply(float before, float after, float duration)
@@ -66,13 +72,13 @@ public static class SlowMotion
                 if (SlowMotion.actor == 0 && actor != SlowMotion.actor)
                 {
                     SlowMotion.actor = actor;
-                    Apply(BeforeValue, AfterValue, ApplySpeed);
+                    Apply(BeforeSpeed, AfterSpeed, ApplySpeed);
                 }
                 break;
             case false:
                 if(SlowMotion.actor != 0 && actor == SlowMotion.actor)
                 {
-                    speed = BeforeValue;
+                    speed = BeforeSpeed;
                     action?.Invoke(speed);
 
                     SlowMotion.actor = 0;
