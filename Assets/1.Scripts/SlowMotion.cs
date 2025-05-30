@@ -7,6 +7,9 @@ using Photon.Realtime;
 /// </summary>
 public static class SlowMotion
 {
+    //슬로우 모션이 활성화되기까지의 딜레이 시간
+    public static readonly float ActiveDelay = 0.2f;
+
     //슬로우 모션 적용 전의 값
     public static readonly float BeforeValue = 1f;
 
@@ -19,10 +22,10 @@ public static class SlowMotion
     //슬로우 모션 사용 최소 한도
     public static readonly float MinimumUseValue = 0.1f;
 
-    //슬로우 모션 최대 한도
+    //슬로우 모션 에너지 최대 한도
     public static readonly float MaximumLimitValue = 1f;
 
-    //슬로우 모션을 사용하기 위해 소모되는 값
+    //슬로우 모션을 사용하기 위해 소모되는 에너지 배율
     public static readonly float ConsumeValue = 0.2f;
 
     //슬로우 모션을 점진적으로 적용하기 위한 Tween 객체
@@ -46,10 +49,7 @@ public static class SlowMotion
     //슬로우 모션 속도를 점진적으로 변경하는 함수
     public static void Apply(float before, float after, float duration)
     {
-        if (currentTween != null && currentTween.IsActive() == true)
-        {
-            currentTween.Kill();
-        }
+        currentTween.Stop();
         speed = before;
         currentTween = DOTween.To(() => speed, x => speed = x, after, duration).SetEase(Ease.Linear).OnUpdate(() =>
         {

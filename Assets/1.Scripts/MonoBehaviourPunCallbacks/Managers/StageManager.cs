@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using TMPro;
+using DG.Tweening;
 
 [RequireComponent(typeof(BulletPatternLoader))]
 public class StageManager : Manager
@@ -9,9 +10,17 @@ public class StageManager : Manager
 
     [Header("스테이지 매니저 구간")]
     [SerializeField]
-    private Character character;                                //조종할 캐릭터
+    private AudioSource audioSource;                            //배경음악 오디오 소스
+
+    [SerializeField]
+    private Vector3 leftHandOffset;                             //왼쪽 손잡이 간격
+    [SerializeField]
+    private Vector3 rightHandOffset;                            //오른쪽 손잡이 간격
 
     private Vector2 moveInput = Vector2.zero;                   //이동 입력 값
+    private Tween slowMotionTween = null;                       //슬로우 모션 트윈
+    [SerializeField]
+    private Pickaxe pickaxe;                                    //곡괭이
 
     private bool hasBulletPatternLoader = false;
 
@@ -30,14 +39,7 @@ public class StageManager : Manager
     }
 
     [SerializeField]
-    private AudioSource audioSource;                            //배경음악
-
-    [SerializeField]
-    private Pickaxe pickaxe;                                    //곡괭이
-    [SerializeField]
-    private Vector3 leftHandOffset;                             //왼쪽 손잡이 간격
-    [SerializeField]
-    private Vector3 rightHandOffset;                            //오른쪽 손잡이 간격
+    private Character character;                                //조종할 캐릭터
 
     [Header("남은 시간")]
     [SerializeField]
@@ -162,10 +164,11 @@ public class StageManager : Manager
         {
             if (callbackContext.performed == true)
             {
-                character?.SetSlowMotion(true);
+                slowMotionTween = DOVirtual.DelayedCall(SlowMotion.ActiveDelay, () => { character?.SetSlowMotion(true); });
             }
             else if (callbackContext.canceled == true)
             {
+                slowMotionTween.Stop();
                 character?.SetSlowMotion(false);
             }
         }
@@ -204,7 +207,6 @@ public class StageManager : Manager
     //게임 진행 시간이 남았는지 여부를 알려주는 메서드
     private bool HasTimeLeft()
     {
-        return true;
-        return currentTimeValue > 0 || currentTimeValue == limitTimeValue;
+        return true;        return currentTimeValue > 0 || currentTimeValue == limitTimeValue;
     }
 }
