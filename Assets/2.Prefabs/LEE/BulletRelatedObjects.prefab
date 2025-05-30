@@ -1182,7 +1182,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1096704820367216734}
-  - component: {fileID: 3080325330833889613}
   m_Layer: 0
   m_Name: BulletRelatedObjects
   m_TagString: Untagged
@@ -1211,20 +1210,6 @@ Transform:
   - {fileID: 1057543587441836778}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3080325330833889613
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6478293145296870914}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 77b2863f88d238f4da75391ff5c99a81, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  csvFile: {fileID: 4900000, guid: c79c8b4ffafa1534d87d89a837476c3f, type: 3}
-  patternData: []
 --- !u!1 &6654719288181944040
 GameObject:
   m_ObjectHideFlags: 0
@@ -1269,7 +1254,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3ab890c403d1584aa17f7f4d3111bf8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  loader: {fileID: 3080325330833889613}
+  loader: {fileID: 0}
   spawnerManager: {fileID: 7646841160314410175}
   bpm: 110
 --- !u!1 &6748021379469309435
