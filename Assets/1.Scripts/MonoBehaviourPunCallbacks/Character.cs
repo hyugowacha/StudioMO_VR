@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
+using DG.Tweening;
 
 /// <summary>
 /// 플레이어가 조종하는 캐릭터를 나타내는 클래스
@@ -48,7 +49,7 @@ public class Character : MonoBehaviourPunCallbacks, IPunObservable
     private float remainingImmuneTime = 0;
 
     //캐릭터의 슬로우 모션 시간
-    private float remainingSlowMotionTime = SlowMotion.MaximumLimitValue;
+    private float remainingSlowMotionTime = SlowMotion.MaximumFillValue;
 
     //채굴한 광물의 양
     public uint mineralCount {
@@ -61,6 +62,8 @@ public class Character : MonoBehaviourPunCallbacks, IPunObservable
         private set;
         get;
     }
+
+    private Tween slowMotionChargingDelayer = null;
 
     private static List<Character> characters = new List<Character>();
 
@@ -100,9 +103,9 @@ public class Character : MonoBehaviourPunCallbacks, IPunObservable
             switch (slowMotionOwner)
             {
                 case true:
-                    if(remainingSlowMotionTime > 0)
+                    if (remainingSlowMotionTime > 0)
                     {
-                        remainingSlowMotionTime -= deltaTime * SlowMotion.ConsumeValue;
+                        remainingSlowMotionTime -= deltaTime * SlowMotion.ConsumeRate;
                     }
                     if (remainingSlowMotionTime < 0)
                     {
@@ -114,12 +117,12 @@ public class Character : MonoBehaviourPunCallbacks, IPunObservable
                     }
                     break;
                 case false:
-                    if (remainingSlowMotionTime < SlowMotion.MaximumLimitValue)
+                    if (slowMotionChargingDelayer == null && remainingSlowMotionTime < SlowMotion.MaximumFillValue)
                     {
-                        remainingSlowMotionTime += deltaTime;
-                        if (remainingSlowMotionTime > SlowMotion.MaximumLimitValue)
+                        remainingSlowMotionTime += deltaTime * SlowMotion.RecoverRate;
+                        if (remainingSlowMotionTime > SlowMotion.MaximumFillValue)
                         {
-                            remainingSlowMotionTime = SlowMotion.MaximumLimitValue;
+                            remainingSlowMotionTime = SlowMotion.MaximumFillValue;
                         }
                     }
                     break;
@@ -163,6 +166,11 @@ public class Character : MonoBehaviourPunCallbacks, IPunObservable
     {
         SlowMotion.Set(actor, enabled);
         animator.SetParameter(SlowMotionParameter, enabled);
+        slowMotionChargingDelayer.Stop();
+        if (enabled == false)
+        {
+            slowMotionChargingDelayer = DOVirtual.DelayedCall(SlowMotion.ChargingDelay, () => { slowMotionChargingDelayer = null; });
+        }
     }
 
     //슬로우 모션을 적용하는 메서드
@@ -287,6 +295,6 @@ public class Character : MonoBehaviourPunCallbacks, IPunObservable
     //슬로우 모션 정규화 값을 반환하는 메서드
     public float GetSlowMotionRatio()
     {
-        return remainingSlowMotionTime / SlowMotion.MaximumLimitValue;
+        return remainingSlowMotionTime / SlowMotion.MaximumFillValue;
     }
 }
