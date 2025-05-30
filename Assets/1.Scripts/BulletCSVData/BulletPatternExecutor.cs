@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Linq;
 using System.Collections.Generic;
+using UnityEngine.Rendering;
 
 public class BulletPatternExecutor : MonoBehaviour
 {
@@ -18,24 +19,46 @@ public class BulletPatternExecutor : MonoBehaviour
     float _timer;                // 시간 누적용
     int _currentBeatIndex = 1;   // 현재 몇번째 beat인지 (1부터 시작)
 
-    #region Start, Update문
+    List<BulletSpawnData> timePatterns; //패턴형 탄막 정보 리스트
+    float nextIndex = 1;
+    float startTime; 
+
+    bool initialized = false;
+
+    
+
+     #region Start, Update문
     void Start()
     {
-        // BPM 기준으로 beat 간격 계산. 예: 60 / 120 → 0.5초마다 한 beat
-        _beatInterval = 60f / bpm;
+        InitiallizeBeatTiming();
     }
 
     void Update()
     {
         ProcessBeatTiming();
+        ProcessPatternTiming();
     }
     #endregion
+
+    public void InitiallizeBeatTiming()
+    {
+        startTime = Time.time;
+
+        timePatterns = new List<BulletSpawnData>(loader.patternBulletData);
+
+        // BPM 기준으로 beat 간격 계산. 예: 60 / 120 → 0.5초마다 한 beat
+        _beatInterval = 60f / bpm;
+        initialized = true;
+    }
+
 
     /// <summary>
     /// 시간 누적해서 BPM에 맞춰 탄막 실행함. 해당 beatIndex에 맞는 패턴만 찾아서 실행함.
     /// </summary>
     void ProcessBeatTiming()
     {
+        if (!initialized) { return; }
+
         _timer += Time.deltaTime;
 
         if (_timer >= _beatInterval)
@@ -43,9 +66,7 @@ public class BulletPatternExecutor : MonoBehaviour
             _timer -= _beatInterval;
 
             // 지금 beatIndex에 해당하는 데이터만 필터링
-            var matches = loader.patternData
-                .Where(d => d.beatIndex == _currentBeatIndex)
-                .ToList();
+            var matches = loader.patternData .Where(d => d.beatIndex == _currentBeatIndex).ToList();
 
             // 해당 beat에서 실행할 탄막이 있으면 모두 실행
             foreach (var data in matches)
@@ -57,6 +78,27 @@ public class BulletPatternExecutor : MonoBehaviour
             _currentBeatIndex++;
         }
     }
+
+    ///<summary>
+    ///게임 시작 시간을 기반으로 그 시간이 되었을 때 탄막 실행
+    ///</summary>
+    void ProcessPatternTiming()
+    {
+        if (!initialized) { return; }
+
+        float elapsed = Time.time - startTime;
+
+        var duePatterns = timePatterns.Where(p => p.beatTiming / 1000f <= elapsed).ToList();
+
+
+        foreach(var data in duePatterns)
+        {
+            Debug.Log(data);
+            ExecutePattern(data);
+            timePatterns.Remove(data);
+        }
+    }
+
 
     /// <summary>
     /// 개별 beat에서 발사할 탄막 처리
@@ -81,6 +123,27 @@ public class BulletPatternExecutor : MonoBehaviour
             }
         }
     }
+     
+    void ExecutePattern(BulletSpawnData data)
+    {
+        if (data.bulletPresetID == 1)
+        {
+            foreach(int side in ReturnPreset(data.generatePreset))
+            {
+                spawnerManager.SpawnPatternAngle(side, data.bulletAmount, ReturnPreset(data.generatePreset), 
+                    data.fireAngle, data.bulletAngle);
+            }
+        }
+
+        if(data.bulletPresetID == 2)
+        {
+            foreach (int side in ReturnPreset(data.generatePreset))
+            {
+                spawnerManager.SpawnPatternRange(side, data.bulletAmount, ReturnPreset(data.generatePreset),
+                    data.fireAngle, data.bulletRange);
+            }
+        }
+    }
 
     /// <summary>
     /// side 문자열을 숫자 인덱스 배열로 변환 {예: "1234" -> [1,2,3,4]}
@@ -99,4 +162,44 @@ public class BulletPatternExecutor : MonoBehaviour
 
         return result.ToArray();
     }
+
+    int[] ReturnSide(int raw)
+    {
+        if(string.IsNullOrWhiteSpace(raw.ToString())) return new int[0];
+
+        List<int> sideResult = new(); //벽면 방향(사이드) 리스트
+
+        int sideValue = raw / 100;
+
+        #region
+        if (sideValue == 1) sideResult.Add(1);
+        if (sideValue == 2) sideResult.Add(2);
+        if (sideValue == 3) sideResult.Add(3);
+        if (sideValue == 4) sideResult.Add(4);
+
+        #endregion
+        return sideResult.ToArray();
+    }
+
+    int[] ReturnPreset(int raw)
+    {
+        if (string.IsNullOrWhiteSpace(raw.ToString())) return new int[0];
+
+        List<int> presetResult = new();
+
+        int presetValue = raw % 100;
+
+        if(presetValue == 1) presetResult.Add(1);
+        if(presetValue == 2) presetResult.Add(2);
+        if(presetValue == 3) presetResult.Add(3);
+        if(presetValue == 4) presetResult.Add(4);
+        if(presetValue == 5) presetResult.Add(5);
+        if(presetValue == 6) presetResult.Add(6);
+        if(presetValue == 7) presetResult.Add(7);
+        if(presetValue == 8) presetResult.Add(8);
+        if(presetValue == 9) presetResult.Add(9);
+
+        return presetResult.ToArray();
+    }
+
 }
