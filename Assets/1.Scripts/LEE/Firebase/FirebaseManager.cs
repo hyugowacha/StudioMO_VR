@@ -11,19 +11,21 @@ public class FirebaseManager : MonoBehaviour
     [SerializeField] private Canvas loginCanvas;            // 로그인 캔버스
     [SerializeField] private TMP_InputField loginInputID;   // ID 입력창
     [SerializeField] private TMP_InputField loginInputPW;   // 비밀번호 입력창
-    [SerializeField] private Button singUpCanvasButton;     // 회원가입 창 버튼
+    [SerializeField] private Button signUpCanvasButton;     // 회원가입 창 버튼
     [SerializeField] private Button findAccountButton;      // 계정찾기 창 버튼
-    [SerializeField] private Button singInButton;           // 로그인 버튼
+    [SerializeField] private Button signInButton;           // 로그인 버튼
+    [SerializeField] private Button gameoverButton;         // 게임 종료 버튼
 
-    [Header("SingUpCanvas 관련 필드")]
-    [SerializeField] private Canvas singUpCanvas;               // 새로운 캔버스
-    [SerializeField] private TMP_InputField singUpInputID;      // 아이디 입력
-    [SerializeField] private TMP_InputField singUpInputPW;      // 비밀번호 입력
-    [SerializeField] private TMP_InputField singUpInputPWCheck; // 비밀번호 확인 입력
-    [SerializeField] private TMP_InputField singUpInputEmail;   // 이메일 입력
+    [Header("SigngUpCanvas 관련 필드")]
+    [SerializeField] private Canvas signUpCanvas;               // 새로운 캔버스
+    [SerializeField] private TMP_InputField signUpInputID;      // 아이디 입력
+    [SerializeField] private TMP_InputField signUpInputPW;      // 비밀번호 입력
+    [SerializeField] private TMP_InputField signUpInputPWCheck; // 비밀번호 확인 입력
+    [SerializeField] private TMP_InputField signUpInputEmail;   // 이메일 입력
     [SerializeField] private Button checkButton;                // ID 중복 확인 버튼
     [SerializeField] private Button okBuuton;                   // 회원가입 버튼
-    [SerializeField] private Button cancelBuuton;               // 캔버스 닫기 취소 버튼
+    [SerializeField] private Button signUpCancelBuuton;               // 캔버스 닫기 취소 버튼
+    [SerializeField] private Image checkImg;                    // 중복 확인 이미지
 
     [Header("FindAccountImg 관련 필드")]
     // 아이디 찾기 필드들
@@ -77,14 +79,15 @@ public class FirebaseManager : MonoBehaviour
     private void Start()
     {
         // 로그인 관련 버튼 이벤트 등록
-        singUpCanvasButton.onClick.AddListener(OnClickGoToSignUp);      // 회원가입 창 열기
-        singInButton.onClick.AddListener(OnClickSignIn);                // 로그인
+        signUpCanvasButton.onClick.AddListener(OnClickGoToSignUp);      // 회원가입 창 열기
+        signInButton.onClick.AddListener(OnClickSignIn);                // 로그인
         findAccountButton.onClick.AddListener(OnClickFindAccount);      // 계정찾기 (추후 구현 예정)
+        gameoverButton.onClick.AddListener(GameOver);
 
         // 회원가입 관련 버튼 이벤트 등록
         checkButton.onClick.AddListener(OnClickCheckDuplicate);         // 아이디 중복 확인 (추후 구현 예정)
         okBuuton.onClick.AddListener(OnClickSignUp);                    // 회원가입 실행
-        cancelBuuton.onClick.AddListener(OnClickBackToLogin);           // 로그인 화면으로 되돌아감
+        signUpCancelBuuton.onClick.AddListener(OnClickBackToLogin);           // 로그인 화면으로 되돌아감
 
         // 계정찾기 관련 버튼 이벤트 등록
         findID_okButton.onClick.AddListener(OnClickFindID);
@@ -97,13 +100,22 @@ public class FirebaseManager : MonoBehaviour
         newPW_OKbutton.onClick.AddListener(OnClickResetPWConfirm);
         newPW_CancelButton.onClick.AddListener(OnClickResetPWCancel);
     }
+
+    private void GameOver()
+    {
+        Application.Quit();
+    }
     #endregion
 
     #region 로그인_LoginCanvas안에서 행해지는 함수들
+    // 로그인 관련 캔버스
     public void OnClickBackToLogin()
     {
-        singUpCanvas.gameObject.SetActive(false);
+        signUpCanvas.gameObject.SetActive(false);
         loginCanvas.gameObject.SetActive(true);
+
+        // 중복 확인 이미지 비활성화
+        checkImg.gameObject.SetActive(false);
     }
 
     /// <summary>
@@ -112,7 +124,7 @@ public class FirebaseManager : MonoBehaviour
     public void OnClickSignIn()
     {
         string ID = GetEmail(loginInputID.text);   // 입력한 ID로 이메일 생성
-        string PW = loginInputPW.text;    // 비밀번호 입력값
+        string PW = loginInputPW.text;             // 비밀번호 입력값
 
         // 로그인 요청
         Authentication.SignIn(ID, PW, result =>
@@ -140,28 +152,49 @@ public class FirebaseManager : MonoBehaviour
         LogWarning("계정찾기 기능은 아직 구현되지 않았습니다.");
     }
 
+    // 회원가입 시 중복 확인 함수
     private void OnClickCheckDuplicate()
     {
-        LogWarning("ID 중복 확인 기능은 아직 구현되지 않았습니다.");
+        string enteredID = signUpInputID.text.Trim();
+
+        if (string.IsNullOrEmpty(enteredID))
+        {
+            LogWarning("아이디를 입력해주세요.");
+            return;
+        }
+
+        Authentication.CheckDuplicateID(enteredID, isDuplicate =>
+        {
+            checkImg.gameObject.SetActive(true);
+            
+            if (isDuplicate)
+            {
+                checkImg.color = Color.red;
+            }
+            else
+            {
+                checkImg.color = Color.green;
+            }
+        });
     }
 
     //X 버튼 클릭 시 게임 오버
     #endregion
 
-    #region 회원가입_SingUpCanvas안에서 행해지는 함수들
+    #region 회원가입_SignUpCanvas안에서 행해지는 함수들
     public void OnClickGoToSignUp()
     {
         loginCanvas.gameObject.SetActive(false);
-        singUpCanvas.gameObject.SetActive(true);
+        signUpCanvas.gameObject.SetActive(true);
     }
     /// <summary>
     /// 회원가입 버튼 클릭 시 호출됨
     /// </summary>
     public void OnClickSignUp()
     {
-        string ID = GetEmail(singUpInputID.text);   // 입력한 ID로 이메일 생성
-        string PW = singUpInputPW.text;    // 비밀번호 입력값
-        string email = singUpInputEmail.text;
+        string ID = GetEmail(signUpInputID.text);   // 입력한 ID로 이메일 생성
+        string PW = signUpInputPW.text;    // 비밀번호 입력값
+        string email = signUpInputEmail.text;
 
         // 회원가입 요청
         Authentication.SignUp(ID, PW, email, result =>

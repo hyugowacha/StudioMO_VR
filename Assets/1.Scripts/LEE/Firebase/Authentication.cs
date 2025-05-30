@@ -74,35 +74,49 @@ public static class Authentication
     // 로그인 기능 함수
     public static void SignIn(string ID, string PW, Action<State> callback)
     {
+        // Firebase에 이메일 기반 로그인 요청 보냄
         firebaseAuth.SignInWithEmailAndPasswordAsync(ID, PW).ContinueWithOnMainThread(task =>
         {
+            // 로그인 실패 또는 취소 된 경우
             if (task.IsFaulted || task.IsCanceled)
             {
+                // 실패 원인 중 이메일 형식 오류 확인
                 foreach (Exception exception in task.Exception.Flatten().InnerExceptions)
                 {
                     if (exception is FirebaseException firebaseEx &&
                         (AuthError)firebaseEx.ErrorCode == AuthError.InvalidEmail)
                     {
+                        // 이메일 형식 잘못된 경우 콜백 호출
                         callback?.Invoke(State.SignInInvalidEmail);
                         return;
                     }
                 }
 
+                // 그 외 로그인 실패
                 callback?.Invoke(State.SignInFailure);
             }
             else
             {
+                // 로그인 성공 -> 유저 객체 가져오기
                 FirebaseUser user = task.Result.User;
+
                 if (user == null)
                 {
+                    // 유저 객체가 null이면 실패 처리
                     callback?.Invoke(State.SignInFailure);
                     return;
                 }
 
+                // 유저 고유 ID
                 string userId = user.UserId;
+
+                // 세션을 위한 고유 토큰 생성
                 string sessionToken = Guid.NewGuid().ToString();
+                
+                // 로그인한 유저의 DB 경로 참조
                 databaseReference = FirebaseDatabase.DefaultInstance.RootReference.Child(UsersTag).Child(userId);
 
+                // 중복 로그인 방지를 위한 세션 트랜잭션 처리
                 HandleSessionTransaction(userId, sessionToken, ID, callback);
             }
         });
@@ -158,6 +172,40 @@ public static class Authentication
                         }
                     });
             }
+        });
+    }
+
+    // 회원가입 중복 확인 함수
+    public static void CheckDuplicateID(string enteredID, Action<bool> callback)
+    {
+        if (string.IsNullOrEmpty(enteredID))
+        {
+            callback?.Invoke(true); // 빈 값은 중복으로 간주
+            return;
+        }
+
+        // Users 전체 조회
+        FirebaseDatabase.DefaultInstance.GetReference("Users").GetValueAsync().ContinueWithOnMainThread(task =>
+        {
+            if (task.IsFaulted || task.IsCanceled)
+            {
+                callback?.Invoke(true); // 오류도 중복으로 간주 (보안상)
+                return;
+            }
+
+            DataSnapshot snapshot = task.Result;
+            bool isDuplicate = false;
+
+            foreach (var user in snapshot.Children)
+            {
+                if (user.Child("ID").Value != null && user.Child("ID").Value.ToString() == enteredID)
+                {
+                    isDuplicate = true;
+                    break;
+                }
+            }
+
+            callback?.Invoke(isDuplicate);
         });
     }
 
