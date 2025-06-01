@@ -61,6 +61,7 @@ public class StageManager : Manager
         base.Start();
         if (instance == this)
         {
+            SetFixedPosition(character != null ? character.transform.position: Vector3.zero);
             SetMoveSpeed(0);//            StageData.SetCurrentStage(0);
             if (StageData.current != null)
             {
@@ -84,16 +85,6 @@ public class StageManager : Manager
                 }
             }
             currentTimeValue = limitTimeValue;
-            if (character != null)
-            {
-                SetFixedPosition(character.transform.position);
-                mineralPanel?.Set(goalMineralCount, character.mineralCount);
-            }
-            else
-            {
-                SetFixedPosition(Vector3.zero);
-                mineralPanel?.Set(goalMineralCount, 0);
-            }
         }
     }
 
@@ -143,6 +134,7 @@ public class StageManager : Manager
 
     private void LateUpdate()
     {
+        uint mineralCount = 0;
         if (character != null)
         {
             if (Camera.main != null)
@@ -175,7 +167,9 @@ public class StageManager : Manager
             {
                 slowMotionPanel?.Fill(ratio, null);
             }
+            mineralCount = character.mineralCount;
         }
+        mineralPanel?.Set(goalMineralCount, mineralCount);
     }
 
     protected override void ChangeText()
@@ -226,20 +220,11 @@ public class StageManager : Manager
         switch (value)
         {
             case true:
-                Mineral.miningAction += (actor, value) => { AddMineral(value); };
+                Mineral.miningAction += (actor, value) => { character?.AddMineral(value); };
                 break;
             case false:
-                Mineral.miningAction -= (actor, value) => { AddMineral(value); };
+                Mineral.miningAction -= (actor, value) => { character?.AddMineral(value); };
                 break;
-        }
-    }
-
-    private void AddMineral(uint value)
-    {
-        if (character != null)
-        {
-            character.AddMineral(value);
-            mineralPanel?.Set(goalMineralCount, character.mineralCount);
         }
     }
 

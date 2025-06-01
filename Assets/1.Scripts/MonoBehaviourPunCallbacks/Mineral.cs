@@ -351,7 +351,7 @@ public class Mineral : MonoBehaviourPunCallbacks
         }
         else
         {
-            miningAction?.Invoke(actor, 0);
+            miningAction?.Invoke(actor, 0); //0 값으로 호출하는 이유는 대상 액터의 광물 채집 수행이 정상적으로 동작했음을 알리려 하기 때문
         }
     }
 
