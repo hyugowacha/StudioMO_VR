@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028352, g: 0.22571376, b: 0.30692244, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -142,9 +142,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bulletPooling: {fileID: 2099030523}
-  normalBullet: {fileID: 361739504679437047, guid: 5704d5e047b21014b83a73011ad895cb,
+  rangePatternBullet: {fileID: -7235076883994881024, guid: ad8e13dcce9a275409f979e54538a5d3,
     type: 3}
-  bulletParent: {fileID: 1576733631}
+  bulletParent: {fileID: 1573936872}
   wallCollider: {fileID: 50419509}
   fireAngle: 0
 --- !u!114 &50419505
@@ -160,9 +160,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bulletPooling: {fileID: 2099030523}
-  normalBullet: {fileID: 361739504679437047, guid: 5704d5e047b21014b83a73011ad895cb,
+  anglePatternBullet: {fileID: -5814235743389041899, guid: 5704d5e047b21014b83a73011ad895cb,
     type: 3}
-  bulletParent: {fileID: 1576733631}
+  bulletParent: {fileID: 238670775}
   wallCollider: {fileID: 50419509}
   fireAngle: 0
 --- !u!65 &50419509 stripped
@@ -193,6 +193,37 @@ MonoBehaviour:
   patternCSVFile: {fileID: 4900000, guid: 34dbc705fd4076d47a64d7def772e905, type: 3}
   patternData: []
   patternBulletData: []
+--- !u!1 &238670774
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 238670775}
+  m_Layer: 0
+  m_Name: AnglePatternBullet
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &238670775
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 238670774}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2099030524}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &330585543
 GameObject:
   m_ObjectHideFlags: 0
@@ -574,6 +605,16 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 3506624416693514196, guid: 25e49bb6edf45f2448bc57beabb37c24,
         type: 3}
+    - target: {fileID: 3041577200029044450, guid: cee8148478902274787c968a9c796dce,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5289963468282589678, guid: cee8148478902274787c968a9c796dce,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5324059050366143281, guid: cee8148478902274787c968a9c796dce,
         type: 3}
       propertyPath: guidedBulletPrefab
@@ -616,7 +657,15 @@ PrefabInstance:
         type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 5715421227583453887, guid: cee8148478902274787c968a9c796dce,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 238670775}
+    - targetCorrespondingSourceObject: {fileID: 5715421227583453887, guid: cee8148478902274787c968a9c796dce,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1573936872}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 6478293145296870914, guid: cee8148478902274787c968a9c796dce,
         type: 3}
@@ -754,9 +803,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bulletPooling: {fileID: 2099030523}
-  normalBullet: {fileID: 361739504679437047, guid: 5704d5e047b21014b83a73011ad895cb,
+  rangePatternBullet: {fileID: -7235076883994881024, guid: ad8e13dcce9a275409f979e54538a5d3,
     type: 3}
-  bulletParent: {fileID: 1576733631}
+  bulletParent: {fileID: 1573936872}
   wallCollider: {fileID: 1209222688}
   fireAngle: 0
 --- !u!114 &1209222684
@@ -772,9 +821,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bulletPooling: {fileID: 2099030523}
-  normalBullet: {fileID: 361739504679437047, guid: 5704d5e047b21014b83a73011ad895cb,
+  anglePatternBullet: {fileID: -5814235743389041899, guid: 5704d5e047b21014b83a73011ad895cb,
     type: 3}
-  bulletParent: {fileID: 1576733631}
+  bulletParent: {fileID: 238670775}
   wallCollider: {fileID: 1209222688}
   fireAngle: 0
 --- !u!65 &1209222688 stripped
@@ -802,9 +851,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bulletPooling: {fileID: 2099030523}
-  normalBullet: {fileID: 361739504679437047, guid: 5704d5e047b21014b83a73011ad895cb,
+  anglePatternBullet: {fileID: -5814235743389041899, guid: 5704d5e047b21014b83a73011ad895cb,
     type: 3}
-  bulletParent: {fileID: 1576733631}
+  bulletParent: {fileID: 238670775}
   wallCollider: {fileID: 1347974808}
   fireAngle: 0
 --- !u!114 &1347974804
@@ -820,9 +869,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bulletPooling: {fileID: 2099030523}
-  normalBullet: {fileID: 361739504679437047, guid: 5704d5e047b21014b83a73011ad895cb,
+  rangePatternBullet: {fileID: -7235076883994881024, guid: ad8e13dcce9a275409f979e54538a5d3,
     type: 3}
-  bulletParent: {fileID: 1576733631}
+  bulletParent: {fileID: 2094709718}
   wallCollider: {fileID: 1347974808}
   fireAngle: 0
 --- !u!65 &1347974808 stripped
@@ -831,12 +880,37 @@ BoxCollider:
     type: 3}
   m_PrefabInstance: {fileID: 746051517}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &1576733631 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 8700159607488267589, guid: cee8148478902274787c968a9c796dce,
-    type: 3}
-  m_PrefabInstance: {fileID: 746051517}
+--- !u!1 &1573936871
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1573936872}
+  m_Layer: 0
+  m_Name: RangePatternBullet
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1573936872
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1573936871}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2099030524}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2094709710 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 656519584863844933, guid: cee8148478902274787c968a9c796dce,
@@ -856,9 +930,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bulletPooling: {fileID: 2099030523}
-  normalBullet: {fileID: 361739504679437047, guid: 5704d5e047b21014b83a73011ad895cb,
+  anglePatternBullet: {fileID: -5814235743389041899, guid: 5704d5e047b21014b83a73011ad895cb,
     type: 3}
-  bulletParent: {fileID: 1576733631}
+  bulletParent: {fileID: 238670775}
   wallCollider: {fileID: 2094709717}
   fireAngle: 0
 --- !u!114 &2094709713
@@ -874,14 +948,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bulletPooling: {fileID: 2099030523}
-  normalBullet: {fileID: 361739504679437047, guid: 5704d5e047b21014b83a73011ad895cb,
+  rangePatternBullet: {fileID: -7235076883994881024, guid: ad8e13dcce9a275409f979e54538a5d3,
     type: 3}
-  bulletParent: {fileID: 1576733631}
+  bulletParent: {fileID: 1573936872}
   wallCollider: {fileID: 2094709717}
   fireAngle: 0
 --- !u!65 &2094709717 stripped
 BoxCollider:
   m_CorrespondingSourceObject: {fileID: 373154182424033467, guid: cee8148478902274787c968a9c796dce,
+    type: 3}
+  m_PrefabInstance: {fileID: 746051517}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &2094709718 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1996177251712743555, guid: cee8148478902274787c968a9c796dce,
     type: 3}
   m_PrefabInstance: {fileID: 746051517}
   m_PrefabAsset: {fileID: 0}
@@ -897,6 +977,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9af33fef91ebf9c4f8df26061a06e289, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!4 &2099030524 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5715421227583453887, guid: cee8148478902274787c968a9c796dce,
+    type: 3}
+  m_PrefabInstance: {fileID: 746051517}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

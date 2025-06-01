@@ -52,7 +52,7 @@ public class SpawnerInitializer : MonoBehaviour
 
             manager.angleSpawners[tag.side] = spawner;
             
-            spawner.bulletPooling.CreatePool(spawner.normalBullet,spawner.bulletParent);
+            spawner.bulletPooling.CreatePool(spawner.anglePatternBullet, spawner.bulletParent);
         }
 
         foreach (var spawner in rangeSpawners)
@@ -66,7 +66,7 @@ public class SpawnerInitializer : MonoBehaviour
 
             manager.rangeSpawners[tag.side] = spawner;
 
-            spawner.bulletPooling.CreatePool(spawner.normalBullet, spawner.bulletParent);
+            spawner.bulletPooling.CreatePool(spawner.rangePatternBullet, spawner.bulletParent);
         }
     }
 }

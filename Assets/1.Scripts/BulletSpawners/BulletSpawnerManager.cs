@@ -54,7 +54,6 @@ public class BulletSpawnerManager : MonoBehaviour
         var spawner = angleSpawners[side];
 
         float centerIndex = (amount - 1) / 2f;
-        Debug.Log(amount);
 
         for (int i= 0; i < amount; i++)
         {
