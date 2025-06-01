@@ -142,6 +142,13 @@ public class Character : MonoBehaviourPunCallbacks, IPunObservable
         characters.Remove(this);
     }
 
+    [PunRPC]
+    private void SetMineral(uint value)
+    {
+        mineralCount = value;
+        animator.SetParameter(GatheringParameter);
+    }
+
     //기절 상태를 설정하는 메서드
     [PunRPC]
     private void SetFainting(bool value)
@@ -166,7 +173,7 @@ public class Character : MonoBehaviourPunCallbacks, IPunObservable
     {
         SlowMotion.Set(actor, enabled);
         animator.SetParameter(SlowMotionParameter, enabled);
-        slowMotionChargingDelayer.Stop();
+        slowMotionChargingDelayer.Kill();
         if (enabled == false)
         {
             slowMotionChargingDelayer = DOVirtual.DelayedCall(SlowMotion.ChargingDelay, () => { slowMotionChargingDelayer = null; });
@@ -200,7 +207,7 @@ public class Character : MonoBehaviourPunCallbacks, IPunObservable
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
-        if (stream.IsWriting)
+        if (photonView.IsMine == true)
         {
             stream.SendNext(remainingImmuneTime);
             stream.SendNext(remainingSlowMotionTime);
@@ -279,7 +286,7 @@ public class Character : MonoBehaviourPunCallbacks, IPunObservable
     //슬로우 모션을 활성화하거나 비활성화하는 메서드
     public void SetSlowMotion(bool enabled)
     {
-        if((enabled == true && faintingState == false && SlowMotion.actor == 0 && remainingSlowMotionTime >= SlowMotion.MinimumUseValue) || (enabled == false && SlowMotion.IsOwner(PhotonNetwork.LocalPlayer) == true))
+        if((enabled == true && faintingState == false && SlowMotion.actor == null && remainingSlowMotionTime >= SlowMotion.MinimumUseValue) || (enabled == false && SlowMotion.IsOwner(PhotonNetwork.LocalPlayer) == true))
         {
             RequestSlowMotion(enabled);
         }
@@ -288,8 +295,12 @@ public class Character : MonoBehaviourPunCallbacks, IPunObservable
     //광물을 획득한 현재 양을 적용시켜주는 메서드
     public void AddMineral(uint value)
     {
-        animator.SetParameter(GatheringParameter);
-        mineralCount += value;
+        uint count = mineralCount + value;
+        SetMineral(count);
+        if(PhotonNetwork.InRoom == true)
+        {
+            photonView.RPC(nameof(SetMineral), RpcTarget.Others, count);
+        }
     }
 
     //슬로우 모션 정규화 값을 반환하는 메서드

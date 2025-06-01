@@ -159,6 +159,34 @@ public static class ExtensionMethod
         }
     }
 
+    public static void Set(this TMP_Text tmpText, string value, Color color)
+    {
+        if (tmpText != null)
+        {
+            tmpText.color = color;
+            tmpText.text = value;
+        }
+    }
+
+    public static void Set(this TMP_Text tmpText, string value, TMP_FontAsset fontAsset)
+    {
+        if (tmpText != null)
+        {
+            tmpText.font = fontAsset;
+            tmpText.text = value;
+        }
+    }
+
+    public static void Set(this TMP_Text tmpText, string value, TMP_FontAsset fontAsset, Color color)
+    {
+        if (tmpText != null)
+        {
+            tmpText.font = fontAsset;
+            tmpText.color = color;
+            tmpText.text = value;
+        }
+    }
+
     public static void Set(this Image image, Color color)
     {
         if (image != null)
@@ -176,15 +204,6 @@ public static class ExtensionMethod
                 image.type = Image.Type.Filled;
             }
             image.fillAmount = value;
-        }
-    }
-
-
-    public static void Stop(this Tween tween)
-    {
-        if (tween != null && tween.IsActive() == true)
-        {
-            tween.Kill();
         }
     }
 }

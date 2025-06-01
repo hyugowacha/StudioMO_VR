@@ -41,7 +41,7 @@ public static class SlowMotion
     public static event Action<float> action = null;
 
     //슬로우 모션을 쓰고 있는 액터의 인덱스
-    public static int actor {
+    public static int? actor {
         private set;
         get;
     }
@@ -55,7 +55,7 @@ public static class SlowMotion
     //슬로우 모션 속도를 점진적으로 변경하는 함수
     public static void Apply(float before, float after, float duration)
     {
-        currentTween.Stop();
+        currentTween.Kill();
         speed = before;
         currentTween = DOTween.To(() => speed, x => speed = x, after, duration).SetEase(Ease.Linear).OnUpdate(() =>
         {
@@ -69,19 +69,19 @@ public static class SlowMotion
         switch(enabled)
         {
             case true:
-                if (SlowMotion.actor == 0 && actor != SlowMotion.actor)
+                if (SlowMotion.actor == null)
                 {
                     SlowMotion.actor = actor;
                     Apply(BeforeSpeed, AfterSpeed, ApplySpeed);
                 }
                 break;
             case false:
-                if(SlowMotion.actor != 0 && actor == SlowMotion.actor)
+                if(SlowMotion.actor == actor)
                 {
+                    SlowMotion.actor = null;
+                    currentTween.Kill();
                     speed = BeforeSpeed;
                     action?.Invoke(speed);
-
-                    SlowMotion.actor = 0;
                 }
                 break;
         }

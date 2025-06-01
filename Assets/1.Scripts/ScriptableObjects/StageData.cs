@@ -32,7 +32,6 @@ public class StageData : ScriptableObject
 
 #if UNITY_EDITOR
     private readonly static string AssetsText = "Assets";
-    private readonly static string ResourcesText = "Resources";
     private readonly static string SlashText = "/";
 #endif
     private readonly static string FolderText = nameof(StageData) + "s";
@@ -88,10 +87,10 @@ public class StageData : ScriptableObject
         {
 #if UNITY_EDITOR
             bool refresh = false;
-            string resourcesFolderPath = AssetsText + SlashText + ResourcesText;
+            string resourcesFolderPath = AssetsText + SlashText + nameof(Resources);
             if (AssetDatabase.IsValidFolder(resourcesFolderPath) == false)
             {
-                AssetDatabase.CreateFolder(AssetsText, ResourcesText);
+                AssetDatabase.CreateFolder(AssetsText, nameof(Resources));
                 refresh = true;
             }
             if (AssetDatabase.IsValidFolder(resourcesFolderPath + SlashText + FolderText) == false)
@@ -107,9 +106,10 @@ public class StageData : ScriptableObject
                 AssetDatabase.Refresh();
             }
 #endif
-            StageData[] stageDatas = Resources.LoadAll<StageData>(FolderText);
+            stageDatas = Resources.LoadAll<StageData>(FolderText);
         }
         int length = stageDatas != null ? stageDatas.Length : 0;
+        Debug.Log(length);
         if (level >= 0 && level < length)
         {
 #if UNITY_EDITOR
@@ -140,8 +140,8 @@ public class StageData : ScriptableObject
     }
 
     //다음 스테이지 레벨로 올라 갈 수 있는지 여부를 반환하는 함수
-    public static bool IsNextLevelAvailable()
+    public static bool IsNextLevelAvailable(int level)
     {
-        return current == GetStageData(PlayerPrefs.GetInt(ReachingLevel));
+        return current == GetStageData(level);
     }
 }
