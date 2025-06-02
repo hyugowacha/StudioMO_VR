@@ -55,6 +55,7 @@ public class FirebaseManager : MonoBehaviour
     [SerializeField] private Button findPW_cancelButton;        // FindAccountImg 관련 다 닫기 및 초기화
 
     // 비밀번호 새로 입력하기 필드들
+    [SerializeField] private GameObject newPWImg;
     [SerializeField] private TMP_InputField newPW_Input;        // 새로운 비밀번호
     [SerializeField] private TMP_InputField newPW_InputCheck;   // 새로운 비밀번호 동일한지 확인
     [SerializeField] private Button newPW_OKbutton;             // 새로운 비밀번호 확인 버튼
@@ -347,7 +348,6 @@ public class FirebaseManager : MonoBehaviour
                 LogWarning("해당 이메일로 등록된 ID를 찾을 수 없습니다.");
             }
         });
-
     }
 
     /// <summary>
@@ -385,9 +385,25 @@ public class FirebaseManager : MonoBehaviour
             return;
         }
 
-        // TODO: Firebase에서 해당 이메일로 비밀번호 초기화 이메일 발송
-        LogWarning($"'{email}'로 비밀번호 재설정 메일 보내는 기능은 아직 구현되지 않았습니다.");
+        if (!IsValidEmail(email))
+        {
+            LogWarning("올바른 이메일 형식을 입력해주세요.");
+            return;
+        }
+
+        Authentication.FindPWbyIDAndEmail(id, email, success =>
+        {
+            if (success)
+            {
+                Log($"<b>{email}</b>로 비밀번호 재설정 링크를 보냈습니다.");
+            }
+            else
+            {
+                LogWarning("ID와 이메일 정보가 일치하지 않거나 메일 전송에 실패했습니다.");
+            }
+        });
     }
+
 
     private void OnClickFindPWCancel()
     {
@@ -458,7 +474,7 @@ public class FirebaseManager : MonoBehaviour
     private string GetEmail(string id)
     {
         string ID = id.Trim(); // 공백 제거
-        return $"{ID}@StudioMO.com";
+        return $"{ID}@naver.com";
     }
 
     /// <summary>

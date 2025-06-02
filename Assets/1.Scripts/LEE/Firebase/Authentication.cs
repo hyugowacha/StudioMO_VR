@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Firebase;
 using Firebase.Auth;
 using Firebase.Database;
 using Firebase.Extensions;
 using Photon.Pun;
+using UnityEngine;
 
 public static class Authentication
 {
@@ -28,6 +30,7 @@ public static class Authentication
     private static readonly string SessionTag = "Session";
     private static readonly string TokenTag = "Token";
     private static readonly string TimestampTag = "Timestamp";
+
 
     // Firebase 인증 객체
     private static FirebaseAuth firebaseAuth = null;
@@ -305,5 +308,51 @@ public static class Authentication
             callback?.Invoke(null); // 못 찾았음
         });
     }
+
+    // 비밀번호 찾기
+    public static void FindPWbyIDAndEmail(string id, string email, Action<bool> callback)
+    {
+        if (string.IsNullOrWhiteSpace(id) || string.IsNullOrWhiteSpace(email))
+        {
+            callback?.Invoke(false);
+            return;
+        }
+
+        // Users 전체 조회
+        FirebaseDatabase.DefaultInstance.GetReference("Users").GetValueAsync().ContinueWithOnMainThread(task =>
+        {
+            if (task.IsFaulted || task.IsCanceled)
+            {
+                callback?.Invoke(false);
+                return;
+            }
+
+            DataSnapshot snapshot = task.Result;
+
+            foreach (var user in snapshot.Children)
+            {
+                string dbID = user.Child("ID").Value?.ToString();
+                string dbEmail = user.Child("Email").Value?.ToString();
+
+                if (dbID == id && dbEmail == email)
+                {
+                    // 이메일로 비밀번호 재설정 메일 전송
+                    FirebaseAuth.DefaultInstance.SendPasswordResetEmailAsync(email)
+                        .ContinueWithOnMainThread(emailTask =>
+                        {
+                            if (emailTask.IsFaulted || emailTask.IsCanceled)
+                                callback?.Invoke(false);
+                            else
+                                callback?.Invoke(true);
+                        });
+                    return;
+                }
+            }
+
+            // 일치하는 정보 없음
+            callback?.Invoke(false);
+        });
+    }
+
 
 }
