@@ -322,7 +322,7 @@ public class Character : MonoBehaviourPunCallbacks, IPunObservable
     //슬로우 모션을 활성화하거나 비활성화하는 메서드
     public void SetSlowMotion(bool enabled)
     {
-        if((enabled == true && faintingState == false && SlowMotion.actor == null && remainingSlowMotionTime >= SlowMotion.MinimumUseValue) || (enabled == false && SlowMotion.IsOwner(PhotonNetwork.LocalPlayer) == true))
+        if ((enabled == true && faintingState == false && SlowMotion.actor == null && remainingSlowMotionTime >= SlowMotion.MinimumUseValue) || (enabled == false && SlowMotion.IsOwner(PhotonNetwork.LocalPlayer) == true))
         {
             RequestSlowMotion(enabled);
         }

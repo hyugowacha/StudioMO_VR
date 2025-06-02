@@ -106,11 +106,11 @@ public abstract class Manager : MonoBehaviourPunCallbacks
     {
         if (leftActionBasedController != null && leftActionBasedController.activateAction != null)
         {
-            leftActionBasedController.activateAction.reference.Set(OnLeftFunction, value);
+            leftActionBasedController.activateAction.reference.Set(OnLeftFunction, OnLeftFunction, value);
         }
         if (rightActionBasedController != null && rightActionBasedController.activateAction != null)
         {
-            rightActionBasedController.activateAction.reference.Set(OnRightFunction, value);
+            rightActionBasedController.activateAction.reference.Set(OnRightFunction, OnRightFunction, value);
         }
         ResetControllerPositionAndRotation();
 #if UNITY_EDITOR

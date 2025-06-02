@@ -120,7 +120,7 @@ public class StageManager : Manager
         }
         if (currentTimeValue > 0)
         {
-            currentTimeValue -= Time.deltaTime /** SlowMotion.speed*/;
+            currentTimeValue -= Time.deltaTime * SlowMotion.speed;
             if (currentTimeValue <= 0)
             {
                 currentTimeValue = 0;   //게임 종료
@@ -199,7 +199,7 @@ public class StageManager : Manager
             {
                 slowMotionTween = DOVirtual.DelayedCall(SlowMotion.ActiveDelay, () => { character?.SetSlowMotion(true); });
             }
-            else if (callbackContext.canceled == true)
+            else if (callbackContext.canceled)
             {
                 slowMotionTween.Kill();
                 character?.SetSlowMotion(false);
@@ -215,7 +215,7 @@ public class StageManager : Manager
             {
                 pickaxe.grip = true;
             }
-            else if (callbackContext.canceled == true)
+            if (callbackContext.canceled)
             {
                 pickaxe.grip = false;
             }
@@ -233,6 +233,13 @@ public class StageManager : Manager
         {
             case true:
                 Mineral.miningAction += (actor, value) => { character?.AddMineral(value); };
+                SlowMotion.action += (speed) => 
+                {
+                    if(audioSource != null)
+                    {
+                        audioSource.pitch = speed;
+                    }
+                };
                 if (pickaxe != null)
                 {
                     pickaxe.vibrationAction += (amplitude, duration) => { SendHapticImpulse(amplitude, duration, true); };
@@ -240,6 +247,13 @@ public class StageManager : Manager
                 break;
             case false:
                 Mineral.miningAction -= (actor, value) => { character?.AddMineral(value); };
+                SlowMotion.action -= (speed) =>
+                {
+                    if (audioSource != null)
+                    {
+                        audioSource.pitch = speed;
+                    }
+                };
                 if (pickaxe != null)
                 {
                     pickaxe.vibrationAction -= (amplitude, duration) => { SendHapticImpulse(amplitude, duration, true); };
