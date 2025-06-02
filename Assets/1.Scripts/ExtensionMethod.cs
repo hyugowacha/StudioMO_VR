@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.InputSystem;
 using UnityEngine.XR.Interaction.Toolkit;
 using TMPro;
+using DG.Tweening;
 
 /// <summary>
 /// 확장 메서드 
@@ -56,9 +57,25 @@ public static class ExtensionMethod
         array = templates;
     }
 
+    public static void SetParameter(this Animator animator, string name)
+    {
+        if (animator != null)
+        {
+            animator.SetTrigger(name);
+        }
+    }
+
+    public static void SetParameter(this Animator animator, string name, bool value)
+    {
+        if (animator != null)
+        {
+            animator.SetBool(name, value);
+        }
+    }
+
     public static void SetActive(this Transform transform, bool value)
     {
-        if(transform != null)
+        if (transform != null)
         {
             transform.gameObject.SetActive(value);
         }
@@ -66,9 +83,9 @@ public static class ExtensionMethod
 
     public static void SetPositionAndRotation(this Transform transform, Vector3 position, Quaternion rotation, bool local)
     {
-        if(transform != null)
+        if (transform != null)
         {
-            if(local == false)
+            if (local == false)
             {
                 transform.SetPositionAndRotation(position, rotation);
             }
@@ -81,7 +98,7 @@ public static class ExtensionMethod
 
     public static void SetActive(this ActionBasedController actionBasedController, bool value)
     {
-        if(actionBasedController != null)
+        if (actionBasedController != null)
         {
             actionBasedController.gameObject.SetActive(value);
         }
