@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Pool;
 
+/// <summary>
+/// 패턴형 탄막(거리) 클래스
+/// </summary>
 public class RangePatternBullet : MonoBehaviour, IBullet
 {
-    #region 탄막 필드
+    #region 패턴형 탄막(거리) 필드
     // 탄막을 관리하는 오브젝트 풀
     IObjectPool<RangePatternBullet> _rangePatternBulletPool;
 

@@ -48,6 +48,18 @@ public class BulletSpawnerManager : MonoBehaviour
         }
     }
 
+
+    /// <summary>
+    /// 패턴형 탄막(각도) 스폰 함수
+    /// </summary>
+    #region 매개변수
+    /// <param name="side">벽 방면</param>
+    /// <param name="amount">탄막 발사 개수</param>
+    /// <param name="preset">탄막 발사 위치</param>
+    /// <param name="fireAngle">발사각</param>
+    /// <param name="bulletAngle">탄막 간 각도</param>
+    #endregion
+
     public void SpawnPatternAngle(int side, int amount ,int preset, float fireAngle, float bulletAngle)
     {
         if(!angleSpawners.ContainsKey(side)) return;
@@ -61,9 +73,18 @@ public class BulletSpawnerManager : MonoBehaviour
             spawner.CalculateSpawnPosition(side);
              spawner.FireAnglePatternBullet(side, preset, fireAngle, fireAngle + offsetAngle);
         }
-
-        
     }
+
+    /// <summary>
+    /// 패턴형 탄막(거리) 스폰 함수
+    /// </summary>
+    #region 매개변수
+    /// <param name="side">벽 방면</param>
+    /// <param name="amount">탄막 발사 개수</param>
+    /// <param name="preset">탄막 발사 위치</param>
+    /// <param name="fireAngle">발사각</param>
+    /// <param name="bulletRange">탄막 간 거리</param>
+    #endregion 
 
     public void SpawnPatternRange(int side, int amount, int preset, float fireAngle, float bulletRange)
     {

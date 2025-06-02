@@ -128,7 +128,7 @@ public class BulletPatternExecutor : MonoBehaviour
 
         int[] presets = ReturnPreset(data.generatePreset);
 
-        if (data.bulletPresetID == 1)
+        if (data.bulletPresetID == 1) //프리셋 아이디가 1일 경우
         {
             foreach(int side in ReturnSide(data.generatePreset))
             {
@@ -139,7 +139,7 @@ public class BulletPatternExecutor : MonoBehaviour
             }
         }
 
-        if(data.bulletPresetID == 2)
+        if(data.bulletPresetID == 2) //프리셋 아이디가 2일 경우
         {
             foreach (int side in ReturnSide(data.generatePreset))
             {
@@ -177,13 +177,14 @@ public class BulletPatternExecutor : MonoBehaviour
 
         int sideValue = raw / 100;
 
-        #region
+        #region 사이드 체크
         if (sideValue == 1) sideResult.Add(1);
         if (sideValue == 2) sideResult.Add(2);
         if (sideValue == 3) sideResult.Add(3);
         if (sideValue == 4) sideResult.Add(4);
 
         #endregion
+
         return sideResult.ToArray();
     }
 
@@ -195,7 +196,8 @@ public class BulletPatternExecutor : MonoBehaviour
 
         int presetValue = raw % 100;
 
-        if(presetValue == 1) presetResult.Add(1);
+        #region 프리셋 숫자 체크 (1~9까지)
+        if (presetValue == 1) presetResult.Add(1);
         if(presetValue == 2) presetResult.Add(2);
         if(presetValue == 3) presetResult.Add(3);
         if(presetValue == 4) presetResult.Add(4);
@@ -204,6 +206,7 @@ public class BulletPatternExecutor : MonoBehaviour
         if(presetValue == 7) presetResult.Add(7);
         if(presetValue == 8) presetResult.Add(8);
         if(presetValue == 9) presetResult.Add(9);
+        #endregion
 
         return presetResult.ToArray();
     }

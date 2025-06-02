@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Pool;
 
+/// <summary>
+/// 패턴형 탄막(각도) 클래스
+/// </summary>
 public class AnglePatternBullet : MonoBehaviour, IBullet
 {
-
-    #region 탄막 필드
+    #region 패턴형 탄막(각도) 필드
     // 탄막을 관리하는 오브젝트 풀
     IObjectPool<AnglePatternBullet> _AnglePatternBulletPool;
 
