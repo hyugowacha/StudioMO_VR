@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028352, g: 0.22571376, b: 0.30692244, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -142,7 +142,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bulletPooling: {fileID: 2099030523}
-  rangePatternBullet: {fileID: -7235076883994881024, guid: ad8e13dcce9a275409f979e54538a5d3,
+  rangePatternBullet: {fileID: 3465485197423747118, guid: 5704d5e047b21014b83a73011ad895cb,
     type: 3}
   bulletParent: {fileID: 1573936872}
   wallCollider: {fileID: 50419509}
@@ -537,6 +537,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2037978067026455746, guid: cee8148478902274787c968a9c796dce,
+        type: 3}
+      propertyPath: side
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 2101703494997394498, guid: cee8148478902274787c968a9c796dce,
         type: 3}
       propertyPath: normalBulletPrefab
@@ -608,12 +613,12 @@ PrefabInstance:
     - target: {fileID: 3041577200029044450, guid: cee8148478902274787c968a9c796dce,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5289963468282589678, guid: cee8148478902274787c968a9c796dce,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5324059050366143281, guid: cee8148478902274787c968a9c796dce,
         type: 3}
@@ -655,6 +660,16 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 3514438348378433874, guid: f5c642e1e1a7fd5448a948c1b823ce08,
         type: 3}
+    - target: {fileID: 8533692819106360156, guid: cee8148478902274787c968a9c796dce,
+        type: 3}
+      propertyPath: side
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8595449043710101410, guid: cee8148478902274787c968a9c796dce,
+        type: 3}
+      propertyPath: side
+      value: 3
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -803,7 +818,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bulletPooling: {fileID: 2099030523}
-  rangePatternBullet: {fileID: -7235076883994881024, guid: ad8e13dcce9a275409f979e54538a5d3,
+  rangePatternBullet: {fileID: 3465485197423747118, guid: 5704d5e047b21014b83a73011ad895cb,
     type: 3}
   bulletParent: {fileID: 1573936872}
   wallCollider: {fileID: 1209222688}
@@ -869,7 +884,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bulletPooling: {fileID: 2099030523}
-  rangePatternBullet: {fileID: -7235076883994881024, guid: ad8e13dcce9a275409f979e54538a5d3,
+  rangePatternBullet: {fileID: 3465485197423747118, guid: 5704d5e047b21014b83a73011ad895cb,
     type: 3}
   bulletParent: {fileID: 2094709718}
   wallCollider: {fileID: 1347974808}
@@ -948,7 +963,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bulletPooling: {fileID: 2099030523}
-  rangePatternBullet: {fileID: -7235076883994881024, guid: ad8e13dcce9a275409f979e54538a5d3,
+  rangePatternBullet: {fileID: 3465485197423747118, guid: 5704d5e047b21014b83a73011ad895cb,
     type: 3}
   bulletParent: {fileID: 1573936872}
   wallCollider: {fileID: 2094709717}

@@ -22,8 +22,6 @@ public class AnglePatternSpawner : MonoBehaviour
         Vector3 min = wallCollider.bounds.min;
         Vector3 max = wallCollider.bounds.max;
 
-        float centerZ = (min.z + max.z) / 2f;
-
         float inset = 0.1f;
         Vector3[] positions = new Vector3[9];
 
@@ -37,13 +35,13 @@ public class AnglePatternSpawner : MonoBehaviour
                     positions[i] = new Vector3(Mathf.Lerp(min.x, max.x, t), min.y, min.z + inset);
                     break;
                 case 2: // Left
-                    positions[i] = new Vector3(min.x + inset, Mathf.Lerp(min.y, max.y, t), centerZ);
+                    positions[i] = new Vector3(min.x - inset, min.y, Mathf.Lerp(min.z, max.z, t));
                     break;
                 case 3: // Right
-                    positions[i] = new Vector3(max.x - inset, Mathf.Lerp(min.y, max.y, t), centerZ);
+                    positions[i] = new Vector3(max.x + inset, min.y, Mathf.Lerp(min.z, max.z, t));
                     break;
                 case 4: // Top
-                    positions[i] = new Vector3(Mathf.Lerp(min.x, max.x, t), max.y, max.z - inset);
+                    positions[i] = new Vector3(Mathf.Lerp(min.x, max.x, t), min.y, max.z - inset);
                     break;
             }
         }
@@ -53,7 +51,7 @@ public class AnglePatternSpawner : MonoBehaviour
 
     public void FireAnglePatternBullet(int side, int preset, float fireAngle, float offset)
     {
-        Debug.Log("각도 발사");
+        //Debug.Log($"각도 발사 : {side}, {preset}, {fireAngle}, {offset}");
 
         int index = Mathf.Clamp(preset - 1, 0, 8);
         Vector3 spawnPos = spawnPositions[side][index];
@@ -67,21 +65,21 @@ public class AnglePatternSpawner : MonoBehaviour
 
         switch (side)
         {
-            case 1:
+            case 1: //bottom
                 baseDir = Vector3.forward;
                 break;
-            case 2:
-                baseDir = Vector3.left;
-                break;
-            case 3:
+            case 2: //left
                 baseDir = Vector3.right;
                 break;
-            case 4:
+            case 3: //right
+                baseDir = Vector3.left;
+                break;
+            case 4: //top
                 baseDir = Vector3.back;
                 break;
         }
 
-        float totalAngle = fireAngle + offset;
+            float totalAngle = fireAngle + offset;
         Vector3 fireDir = Quaternion.Euler(0f, totalAngle, 0f) * baseDir;
 
         bullet.Initialize(fireDir.normalized);

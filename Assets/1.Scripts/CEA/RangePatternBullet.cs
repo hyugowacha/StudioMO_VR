@@ -5,7 +5,7 @@ using UnityEngine.Pool;
 
 public class RangePatternBullet : MonoBehaviour, IBullet
 {
-    #region 탄막(비인식) 필드
+    #region 탄막 필드
     // 탄막을 관리하는 오브젝트 풀
     IObjectPool<RangePatternBullet> _rangePatternBulletPool;
 

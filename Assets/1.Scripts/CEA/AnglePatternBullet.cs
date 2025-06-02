@@ -6,7 +6,7 @@ using UnityEngine.Pool;
 public class AnglePatternBullet : MonoBehaviour, IBullet
 {
 
-    #region 탄막(비인식) 필드
+    #region 탄막 필드
     // 탄막을 관리하는 오브젝트 풀
     IObjectPool<AnglePatternBullet> _AnglePatternBulletPool;
 
