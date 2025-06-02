@@ -75,10 +75,90 @@ public class Character : MonoBehaviourPunCallbacks
 
     private void FixedUpdate()
     {
+        base.OnEnable();
+        characters.Add(this);
+    }
+
+    public override void OnDisable()
+    {
+        base.OnDisable();
+        characters.Remove(this);
+    }
+
+    [PunRPC]
+    private void SetMineral(uint value)
+    {
+        mineralCount = value;
+        animator.SetParameter(GatheringParameter);
+    }
+
+    //기절 상태를 설정하는 메서드
+    [PunRPC]
+    private void SetFainting(bool value)
+    {
+        faintingState = value;
+        animator.SetParameter(HitParameter, value);
+    }
+
+    //기절 상태를 적용하는 메서드
+    private void ApplyFainting(bool value)
+    {
+        SetFainting(value);
+        if (PhotonNetwork.InRoom == true)
+        {
+            photonView.RPC(nameof(SetFainting), RpcTarget.Others, value);
+        }
+    }
+
+    //슬로우 모션을 설정하는 메서드
+    [PunRPC]
+    private void SetSlowMotion(int actor, bool enabled)
+    {
+        SlowMotion.Set(actor, enabled);
+        animator.SetParameter(SlowMotionParameter, enabled);
+        slowMotionChargingDelayer.Kill();
+        if (enabled == false)
+        {
+            slowMotionChargingDelayer = DOVirtual.DelayedCall(SlowMotion.ChargingDelay, () => { slowMotionChargingDelayer = null; });
+        }
+    }
+
+    //슬로우 모션을 적용하는 메서드
+    [PunRPC]
+    private void ApplySlowMotion(int actor, bool enabled)
+    {
+        SetSlowMotion(actor, enabled);
+        if (PhotonNetwork.InRoom == true)
+        {
+            photonView.RPC(nameof(SetSlowMotion), RpcTarget.Others, actor, enabled);
+        }
+    }
+
+    //슬로우 모션 사용을 마스터에게 요청하는 메서드
+    private void RequestSlowMotion(bool enabled)
+    {
+        int actorNumber = PhotonNetwork.LocalPlayer.ActorNumber;
+        if (PhotonNetwork.InRoom == true && PhotonNetwork.IsMasterClient == false)
+        {
+            photonView.RPC(nameof(ApplySlowMotion), RpcTarget.MasterClient, actorNumber, enabled);
+        }
+        else
+        {
+            ApplySlowMotion(actorNumber, enabled);
+        }
+    }
+
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
         if (photonView.IsMine == true)
         {
-            Vector3 position = getRigidbody.position + _direction.normalized * moveSpeed * Time.fixedDeltaTime;
-            getRigidbody.MovePosition(position);
+            stream.SendNext(remainingImmuneTime);
+            stream.SendNext(remainingSlowMotionTime);
+        }
+        else
+        {
+            remainingImmuneTime = (float)stream.ReceiveNext();
+            remainingSlowMotionTime = (float)stream.ReceiveNext();
         }
     }
 
@@ -133,21 +213,38 @@ public class Character : MonoBehaviourPunCallbacks
             return;
         }
 #endif
-        if (photonView.IsMine == true && faintingState == false && specialStateTime == 0)
+            ApplyFainting(true);
+            remainingImmuneTime = faintingTime;
+            if(SlowMotion.IsOwner(PhotonNetwork.LocalPlayer) == true)
+            {
+                RequestSlowMotion(false);
+            }
+        }
+    }
+
+    //슬로우 모션을 활성화하거나 비활성화하는 메서드
+    public void SetSlowMotion(bool enabled)
+    {
+        if((enabled == true && faintingState == false && SlowMotion.actor == null && remainingSlowMotionTime >= SlowMotion.MinimumUseValue) || (enabled == false && SlowMotion.IsOwner(PhotonNetwork.LocalPlayer) == true))
         {
-            _direction = Vector3.zero;
-            faintingState = true;
-            specialStateTime = faintingTime;
-#if UNITY_EDITOR
-            Debug.Log("기절함");
-#endif
+            RequestSlowMotion(enabled);
         }
     }
 
     //광물을 획득한 현재 양을 적용시켜주는 함수
     public void AddMineral(uint value)
     {
-        mineral += value;
-        mineralReporter?.Invoke(this, mineral);
+        uint count = mineralCount + value;
+        SetMineral(count);
+        if(PhotonNetwork.InRoom == true)
+        {
+            photonView.RPC(nameof(SetMineral), RpcTarget.Others, count);
+        }
+    }
+
+    //슬로우 모션 정규화 값을 반환하는 메서드
+    public float GetSlowMotionRatio()
+    {
+        return remainingSlowMotionTime / SlowMotion.MaximumFillValue;
     }
 }

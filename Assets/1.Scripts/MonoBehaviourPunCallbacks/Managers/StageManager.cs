@@ -1,7 +1,8 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
-using TMPro;
+using DG.Tweening;
+using Photon.Pun;
 
 [RequireComponent(typeof(BulletPatternLoader))]
 public class StageManager : Manager
@@ -28,55 +29,44 @@ public class StageManager : Manager
         }
     }
 
-    [SerializeField]
-    private AudioSource audioSource;                            //배경음악
+    [Header("조종할 캐릭터"), SerializeField]
+    private Character character;                                //조종할 캐릭터
 
-    [SerializeField]
-    private Pickaxe pickaxe;                                    //곡괭이
-    [SerializeField]
-    private Vector3 leftHandOffset;                             //왼쪽 손잡이 간격
-    [SerializeField]
-    private Vector3 rightHandOffset;                            //오른쪽 손잡이 간격
+    [Header("슬로우 모션 정보"), SerializeField]
+    private SegmentPanel slowMotionPanel;                       //슬로우 모션 표시 패널
 
-    [Header("남은 시간")]
-    [SerializeField]
-    private FillPanel timeFillPanel;                            //시간 패널
+    [Header("남은 시간 정보"), SerializeField]
+    private FillPanel timeGagePanel;                            //남은 시간 표시 패널
     private float currentTimeValue = 0.0f;                      //현재 시간 값
-    [SerializeField, Range(0, int.MaxValue)]
     private float limitTimeValue = 0.0f;                        //제한 시간 값
 
-    [Header("광물 획득 정보")]
-    [SerializeField]
-    private FillPanel mineralFillPanel;                         //광물 
-    [SerializeField]
-    private TMP_Text goalMineralText;                           //목표 광물 텍스트
-    [SerializeField]
-    private uint goalMineralValue = 0;                          //목표 광물 값
+    [Header("광물 획득 정보"), SerializeField]
+    private PairPanel mineralPanel;                             //광물 획득 표시 패널
+    private uint goalMineralCount = 0;                          //목표 광물 개수
 
-    [SerializeField]
-    private StageData test;
+    [Header("결과창 정보"), SerializeField]
+    private ResultPanel resultPanel;                            //결과창 표시 패널
 
     protected override void Start()
     {
         base.Start();
         if (instance == this)
         {
-            SetMoveSpeed(0);
-            SetFixedPosition(character != null ? character.transform.position : Vector3.zero);
-            StageData stageData = test;         //StageData stageData = StageData.current;
-            if (stageData != null)
+            SetFixedPosition(character != null ? character.transform.position: Vector3.zero);
+            SetMoveSpeed(0);//            StageData.SetCurrentStage(0);
+            if (StageData.current != null)
             {
-                GameObject gameObject = stageData.GetMapObject();
+                GameObject gameObject = StageData.current.GetMapObject();
                 if (gameObject != null)
                 {
                     Instantiate(gameObject, Vector3.zero, Quaternion.identity);
                 }
-                goalMineralValue = stageData.GetGoalMinValue();
-                TextAsset bulletTextAsset = stageData.GetBulletTextAsset();
+                goalMineralCount = StageData.current.GetGoalMinValue();
+                TextAsset bulletTextAsset = StageData.current.GetBulletTextAsset();
                 getBulletPatternLoader.SetCSVData(bulletTextAsset);
                 if (audioSource != null)
                 {
-                    AudioClip audioClip = stageData.GetAudioClip();
+                    AudioClip audioClip = StageData.current.GetAudioClip();
                     if (audioClip != null)
                     {
                         audioSource.clip = audioClip;
@@ -110,17 +100,25 @@ public class StageManager : Manager
         }
         if (currentTimeValue > 0)
         {
-            currentTimeValue -= Time.deltaTime;
-            if (currentTimeValue < 0)
+            currentTimeValue -= Time.deltaTime /** SlowMotion.speed*/;
+            if (currentTimeValue <= 0)
             {
                 currentTimeValue = 0;   //게임 종료
+                uint count = 0;
+                if (character != null)
+                {
+                    character.SetSlowMotion(false); //시간이 끝나면 슬로우 모션 해제
+                    count = character.mineralCount;
+                }
+                resultPanel?.Open(goalMineralCount, count);
             }
         }
-        timeFillPanel?.Set(currentTimeValue, limitTimeValue);
+        timeGagePanel?.Set(currentTimeValue, limitTimeValue);
     }
 
     private void LateUpdate()
     {
+        uint mineralCount = 0;
         if (character != null)
         {
             if (Camera.main != null)
@@ -135,22 +133,64 @@ public class StageManager : Manager
             {
                 character.UpdateRightHand(rightActionBasedController.transform.position + rightHandOffset, rightActionBasedController.transform.rotation);
             }
+            bool faintingState = character.faintingState;
+            if(faintingState == true && pickaxe != null && pickaxe.grip == true)
+            {
+                pickaxe.grip = false;
+            }
+            float ratio = character.GetSlowMotionRatio();
+            if(SlowMotion.IsOwner(PhotonNetwork.LocalPlayer) == true)
+            {
+                slowMotionPanel?.Fill(ratio, false);
+            }
+            else if (ratio >= SlowMotion.MinimumUseValue /*+ SlowMotion.RecoverRate*/ && faintingState == false)
+            {
+                slowMotionPanel?.Fill(ratio, true);
+            }
+            else
+            {
+                slowMotionPanel?.Fill(ratio, null);
+            }
+            mineralCount = character.mineralCount;
         }
+        mineralPanel?.Set(goalMineralCount, mineralCount);
     }
 
     protected override void ChangeText()
     {
+        slowMotionPanel?.ChangeText();
+        timeGagePanel?.ChangeText();
+        mineralPanel?.ChangeText();
     }
 
     protected override void OnLeftFunction(InputAction.CallbackContext callbackContext)
     {
+        if (HasTimeLeft() == true)
+        {
+            if (callbackContext.performed == true)
+            {
+                slowMotionTween = DOVirtual.DelayedCall(SlowMotion.ActiveDelay, () => { character?.SetSlowMotion(true); });
+            }
+            else if (callbackContext.canceled == true)
+            {
+                slowMotionTween.Kill();
+                character?.SetSlowMotion(false);
+            }
+        }
     }
 
     protected override void OnRightFunction(InputAction.CallbackContext callbackContext)
     {
-        if (CanPlaying() == true && character != null && character.faintingState == false && pickaxe != null)
+        if (HasTimeLeft() == true && pickaxe != null)
         {
-            character.AddMineral(pickaxe.GetMineralCount());
+            if (callbackContext.performed == true && character != null && character.faintingState == false)
+            {
+                pickaxe.grip = true;
+            }
+            else if (callbackContext.canceled == true)
+            {
+                pickaxe.grip = false;
+            }
         }
     }
 
@@ -166,11 +206,21 @@ public class StageManager : Manager
         }
         if (leftActionBasedController != null && leftActionBasedController.translateAnchorAction != null)
         {
-            leftActionBasedController.translateAnchorAction.reference.Set(OnMove, OnMove, value);
+            leftActionBasedController.translateAnchorAction.reference.Set(ApplyMoveDirectionInput, ApplyMoveDirectionInput, value);
+        }
+        switch (value)
+        {
+            case true:
+                Mineral.miningAction += (actor, value) => { character?.AddMineral(value); };
+                break;
+            case false:
+                Mineral.miningAction -= (actor, value) => { character?.AddMineral(value); };
+                break;
         }
     }
 
-    private void OnMove(InputAction.CallbackContext callbackContext)
+    //왼쪽 방향 입력을 적용하는 메서드
+    private void ApplyMoveDirectionInput(InputAction.CallbackContext callbackContext)
     {
         if(callbackContext.performed == true)
         {
