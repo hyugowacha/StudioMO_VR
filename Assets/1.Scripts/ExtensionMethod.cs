@@ -5,7 +5,6 @@ using UnityEngine.UI;
 using UnityEngine.InputSystem;
 using UnityEngine.XR.Interaction.Toolkit;
 using TMPro;
-using DG.Tweening;
 
 /// <summary>
 /// 확장 메서드 
