@@ -20,7 +20,6 @@ public class BulletPatternExecutor : MonoBehaviour
     int _currentBeatIndex = 1;   // 현재 몇번째 beat인지 (1부터 시작)
 
     List<BulletSpawnData> timePatterns; //패턴형 탄막 정보 리스트
-    float nextIndex = 1;
     float startTime; 
 
     bool initialized = false;

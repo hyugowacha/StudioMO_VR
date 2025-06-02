@@ -9,7 +9,7 @@ public class RangePatternSpawner : MonoBehaviour
 
     public ObjectPoolingBullet bulletPooling;
 
-    public NormalBullet normalBullet;
+    public RangePatternBullet rangePatternBullet;
 
     public Transform bulletParent;
 
@@ -68,7 +68,7 @@ public class RangePatternSpawner : MonoBehaviour
                 break;
         }
 
-        NormalBullet bullet = bulletPooling.GetBullet<NormalBullet>();
+        RangePatternBullet bullet = bulletPooling.GetBullet<RangePatternBullet>();
         bullet.transform.position = spawnPos + offsetVector;
         bullet.transform.SetParent(bulletParent);
 

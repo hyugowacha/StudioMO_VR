@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Collections.LowLevel.Unsafe;
 using UnityEngine;
 
 public class AnglePatternSpawner : MonoBehaviour
@@ -8,7 +9,7 @@ public class AnglePatternSpawner : MonoBehaviour
 
     public ObjectPoolingBullet bulletPooling;
 
-    public NormalBullet normalBullet;
+    public AnglePatternBullet anglePatternBullet;
 
     public Transform bulletParent;
 
@@ -21,6 +22,9 @@ public class AnglePatternSpawner : MonoBehaviour
         Vector3 min = wallCollider.bounds.min;
         Vector3 max = wallCollider.bounds.max;
 
+        float centerZ = (min.z + max.z) / 2f;
+
+        float inset = 0.1f;
         Vector3[] positions = new Vector3[9];
 
         for (int i = 0; i < 9; i++)
@@ -30,16 +34,16 @@ public class AnglePatternSpawner : MonoBehaviour
             switch (side)
             {
                 case 1: // Bottom
-                    positions[i] = new Vector3(Mathf.Lerp(min.x, max.x, t), min.y, min.z);
+                    positions[i] = new Vector3(Mathf.Lerp(min.x, max.x, t), min.y, min.z + inset);
                     break;
                 case 2: // Left
-                    positions[i] = new Vector3(min.x, Mathf.Lerp(min.y, max.y, t), min.z);
+                    positions[i] = new Vector3(min.x + inset, Mathf.Lerp(min.y, max.y, t), centerZ);
                     break;
                 case 3: // Right
-                    positions[i] = new Vector3(max.x, Mathf.Lerp(min.y, max.y, t), min.z);
+                    positions[i] = new Vector3(max.x - inset, Mathf.Lerp(min.y, max.y, t), centerZ);
                     break;
                 case 4: // Top
-                    positions[i] = new Vector3(Mathf.Lerp(min.x, max.x, t), max.y, min.z);
+                    positions[i] = new Vector3(Mathf.Lerp(min.x, max.x, t), max.y, max.z - inset);
                     break;
             }
         }
@@ -50,29 +54,37 @@ public class AnglePatternSpawner : MonoBehaviour
     public void FireAnglePatternBullet(int side, int preset, float fireAngle, float offset)
     {
         Debug.Log("각도 발사");
-        Vector3 spawnPos = spawnPositions[side][preset];
 
-        Vector3 offsetVector = Vector3.zero;
+        int index = Mathf.Clamp(preset - 1, 0, 8);
+        Vector3 spawnPos = spawnPositions[side][index];
+
+        AnglePatternBullet bullet = bulletPooling.GetBullet<AnglePatternBullet>();
+
+        bullet.transform.position = spawnPos;
+        bullet.transform.SetParent(bulletParent);
+
+        Vector3 baseDir = Vector3.forward;
 
         switch (side)
         {
             case 1:
-            case 4:
-                offsetVector = new Vector3(offset, 0, 0);
+                baseDir = Vector3.forward;
                 break;
-
             case 2:
+                baseDir = Vector3.left;
+                break;
             case 3:
-                offsetVector = new Vector3(0, offset, 0);
+                baseDir = Vector3.right;
+                break;
+            case 4:
+                baseDir = Vector3.back;
                 break;
         }
 
-        NormalBullet bullet = bulletPooling.GetBullet<NormalBullet>();
-        bullet.transform.position = spawnPos + offsetVector;
-        bullet.transform.SetParent(bulletParent);
-
-        Vector3 fireDir = Quaternion.Euler(0f, fireAngle, 0f) * Vector3.forward;
+        float totalAngle = fireAngle + offset;
+        Vector3 fireDir = Quaternion.Euler(0f, totalAngle, 0f) * baseDir;
 
         bullet.Initialize(fireDir.normalized);
+        Debug.DrawRay(spawnPos, fireDir * 3f, Color.red, 1f);
     }
 }
