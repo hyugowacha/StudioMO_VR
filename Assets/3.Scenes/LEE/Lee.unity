@@ -136,7 +136,7 @@ GameObject:
   - component: {fileID: 37733879}
   - component: {fileID: 37733878}
   m_Layer: 5
-  m_Name: SignUpInputFieldEmail
+  m_Name: SignUpInputFieldSchool
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -253,7 +253,7 @@ MonoBehaviour:
   m_CaretWidth: 1
   m_ReadOnly: 0
   m_RichText: 1
-  m_GlobalFontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_GlobalFontAsset: {fileID: 11400000, guid: 4b8aa5f6588df0c47803a2a6bb4b6761, type: 2}
   m_OnFocusSelectAll: 1
   m_ResetOnDeActivation: 1
   m_RestoreOriginalTextOnEscape: 1
@@ -2830,7 +2830,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: ID
+  m_text: ID@StudioMO.com
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -4785,7 +4785,7 @@ MonoBehaviour:
   signUpInputID: {fileID: 1033623871}
   signUpInputPW: {fileID: 288516373}
   signUpInputPWCheck: {fileID: 553463962}
-  signUpInputEmail: {fileID: 37733878}
+  signUpInputSchool: {fileID: 37733878}
   checkButton: {fileID: 1705605443}
   okBuuton: {fileID: 1104927177}
   signUpCancelBuuton: {fileID: 1254861105}
@@ -4800,12 +4800,12 @@ MonoBehaviour:
   findID: {fileID: 2004015066}
   findPW: {fileID: 120751427}
   findPWButton: {fileID: 353208338}
-  findID_EmailInput: {fileID: 1505470623}
+  findID_SchoolInput: {fileID: 0}
   findID_okButton: {fileID: 274312648}
   findID_cancelButton: {fileID: 1173791233}
   findIDButton: {fileID: 712684647}
   findPW_IDInput: {fileID: 1551886092}
-  findPW_EmailInput: {fileID: 1243397788}
+  findPW_SchoolInput: {fileID: 0}
   findPW_okButton: {fileID: 159910201}
   findPW_cancelButton: {fileID: 1875891590}
   newPWImg: {fileID: 0}
@@ -5663,7 +5663,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &941975661
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6503,14 +6503,14 @@ MonoBehaviour:
   m_VerticalScrollbarEventHandler: {fileID: 0}
   m_LayoutGroup: {fileID: 0}
   m_ScrollSensitivity: 1
-  m_ContentType: 0
+  m_ContentType: 6
   m_InputType: 0
   m_AsteriskChar: 42
-  m_KeyboardType: 0
+  m_KeyboardType: 7
   m_LineType: 0
   m_HideMobileInput: 0
   m_HideSoftKeyboard: 0
-  m_CharacterValidation: 0
+  m_CharacterValidation: 7
   m_RegexValue: 
   m_GlobalPointSize: 14
   m_CharacterLimit: 0
@@ -7594,10 +7594,11 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Email@Email.com
+  m_text: "\uC11C\uC6B8\uACE0\uB4F1\uD559\uAD50"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 4b8aa5f6588df0c47803a2a6bb4b6761, type: 2}
+  m_sharedMaterial: {fileID: -7853904899199214455, guid: 4b8aa5f6588df0c47803a2a6bb4b6761,
+    type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -8224,7 +8225,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uC544\uC774\uB514"
+  m_text: "\uC544\uC774\uB514 (\uC774\uBA54\uC77C \uD615\uC2DD\uC744 \uC9C0\uCF1C\uC8FC\uC138\uC694.)"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 4b8aa5f6588df0c47803a2a6bb4b6761, type: 2}
   m_sharedMaterial: {fileID: -7853904899199214455, guid: 4b8aa5f6588df0c47803a2a6bb4b6761,
@@ -8288,7 +8289,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: 0, y: 0, z: -43.574093, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -10607,9 +10608,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uBCF8 \uC774\uBA54\uC77C\uC740 \uC544\uC774\uB514/\uBE44\uBC00\uBC88\uD638
-    \uCC3E\uAE30\uC5D0 \uC0AC\uC6A9\uB420 \uC774\uBA54\uC77C\uC774\uB2C8 \uC815\uD655\uD558\uAC8C
-    \uC785\uB825\uBC14\uB78D\uB2C8\uB2E4."
+  m_text: "\uACE0\uB4F1\uD559\uAD50 \uBAA8\uAD50\uB294 \uACC4\uC815 \uCC3E\uAE30\uC5D0
+    \uC0AC\uC6A9\uB420 \uD78C\uD2B8\uC774\uBBC0\uB85C \uC815\uD655\uD558\uAC8C \uC785\uB825\uBC14\uB78D\uB2C8\uB2E4.\n"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 4b8aa5f6588df0c47803a2a6bb4b6761, type: 2}
   m_sharedMaterial: {fileID: -7853904899199214455, guid: 4b8aa5f6588df0c47803a2a6bb4b6761,
@@ -11843,7 +11843,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1732182926
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13761,7 +13761,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uC774\uBA54\uC77C"
+  m_text: "\uACE0\uB4F1\uD559\uAD50 \uBAA8\uAD50"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 4b8aa5f6588df0c47803a2a6bb4b6761, type: 2}
   m_sharedMaterial: {fileID: -7853904899199214455, guid: 4b8aa5f6588df0c47803a2a6bb4b6761,
@@ -14179,7 +14179,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: ID
+  m_text: ID@StudioMO.com
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}

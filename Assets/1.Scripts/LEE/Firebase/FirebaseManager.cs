@@ -16,14 +16,14 @@ public class FirebaseManager : MonoBehaviour
     [SerializeField] private Button gameoverButton;         // 게임 종료 버튼
 
     [Header("SigngUpCanvas 관련 필드")]
-    [SerializeField] private Canvas signUpCanvas;               // 새로운 캔버스
-    [SerializeField] private TMP_InputField signUpInputID;      // 아이디 입력
-    [SerializeField] private TMP_InputField signUpInputPW;      // 비밀번호 입력
-    [SerializeField] private TMP_InputField signUpInputPWCheck; // 비밀번호 확인 입력
-    [SerializeField] private TMP_InputField signUpInputEmail;   // 이메일 입력
-    [SerializeField] private Button checkButton;                // ID 중복 확인 버튼
-    [SerializeField] private Button okBuuton;                   // 회원가입 버튼
-    [SerializeField] private Button signUpCancelBuuton;         // 캔버스 닫기 취소 버튼
+    [SerializeField] private Canvas signUpCanvas;                // 새로운 캔버스
+    [SerializeField] private TMP_InputField signUpInputID;       // 아이디 입력
+    [SerializeField] private TMP_InputField signUpInputPW;       // 비밀번호 입력
+    [SerializeField] private TMP_InputField signUpInputPWCheck;  // 비밀번호 확인 입력
+    [SerializeField] private TMP_InputField signUpInputSchool;   // 고등학교 모교
+    [SerializeField] private Button checkButton;                 // ID 중복 확인 버튼
+    [SerializeField] private Button okBuuton;                    // 회원가입 버튼
+    [SerializeField] private Button signUpCancelBuuton;          // 캔버스 닫기 취소 버튼
     [SerializeField] private Image IDcheckImg0;                    // 중복 확인 이미지
     [SerializeField] private Image PWcheckImg0;                    // 중복 확인 이미지
     [SerializeField] private Image PWcheckImg1;                    // 중복 확인 이미지
@@ -42,17 +42,17 @@ public class FirebaseManager : MonoBehaviour
     [SerializeField] private GameObject findPW;
 
     // 아이디 찾기 필드들
-    [SerializeField] private Button findPWButton;               // 비밀번호 찾기 UI
-    [SerializeField] private TMP_InputField findID_EmailInput;  // 이메일 입력으로 아이디 찾기
-    [SerializeField] private Button findID_okButton;            // EmailInput입력 한 후 okButton클릭
-    [SerializeField] private Button findID_cancelButton;        // FindAccountImg 관련 다 닫기 및 초기화
+    [SerializeField] private Button findPWButton;                // 비밀번호 찾기 UI
+    [SerializeField] private TMP_InputField findID_SchoolInput;  // 고등학교 모교 입력으로 아이디 찾기
+    [SerializeField] private Button findID_okButton;             // SchooInput입력 한 후 okButton클릭
+    [SerializeField] private Button findID_cancelButton;         // FindAccountImg 관련 다 닫기 및 초기화
 
     // 비밀번호 찾기 필드들
-    [SerializeField] private Button findIDButton;               // 아이디 찾기 UI
-    [SerializeField] private TMP_InputField findPW_IDInput;     // ID 입력창
-    [SerializeField] private TMP_InputField findPW_EmailInput;  // Email 입력창
-    [SerializeField] private Button findPW_okButton;            // 비번 찾기 버튼
-    [SerializeField] private Button findPW_cancelButton;        // FindAccountImg 관련 다 닫기 및 초기화
+    [SerializeField] private Button findIDButton;                // 아이디 찾기 UI
+    [SerializeField] private TMP_InputField findPW_IDInput;      // ID 입력창
+    [SerializeField] private TMP_InputField findPW_SchoolInput;  // SchoolInput 입력창
+    [SerializeField] private Button findPW_okButton;             // 비번 찾기 버튼
+    [SerializeField] private Button findPW_cancelButton;         // FindAccountImg 관련 다 닫기 및 초기화
 
     // 비밀번호 새로 입력하기 필드들
     [SerializeField] private GameObject newPWImg;
@@ -146,7 +146,7 @@ public class FirebaseManager : MonoBehaviour
     /// </summary>
     public void OnClickSignIn()
     {
-        string ID = GetEmail(loginInputID.text);   // 입력한 ID로 이메일 생성
+        string ID = loginInputID.text;   // 입력한 ID로 이메일 생성
         string PW = loginInputPW.text;             // 비밀번호 입력값
 
         // 로그인 요청
@@ -179,7 +179,6 @@ public class FirebaseManager : MonoBehaviour
     {
         warningText.text = "";
         loginWarning.SetActive(false);
-        Debug.Log("ddddd");
     }
     #endregion
 
@@ -192,7 +191,7 @@ public class FirebaseManager : MonoBehaviour
         signUpInputID.text = "";
         signUpInputPW.text = "";
         signUpInputPWCheck.text = "";
-        signUpInputEmail.text = "";
+        signUpInputSchool.text = "";
 
         signUpCanvas.gameObject.SetActive(false);
         loginCanvas.gameObject.SetActive(true);
@@ -208,32 +207,19 @@ public class FirebaseManager : MonoBehaviour
     /// </summary>
     public void OnClickSignUp()
     {
-        // 조건 검사: 이미지 상태 + 이메일 형식
         bool isIDOK = IDcheckImg0.color == Color.green;
         bool isPWValid = PWcheckImg0.color == Color.green;
         bool isPWMatch = PWcheckImg1.color == Color.green;
 
-        string email = signUpInputEmail.text.Trim();
-        bool isEmailValid = IsValidEmail(email);
-
-        if (!(isIDOK && isPWValid && isPWMatch && _checkOK && isEmailValid))
-        {
-            if (!isEmailValid)
-            {
-                LogWarning("올바른 이메일 형식을 입력해주세요.");
-            }
-            else
-            {
-                LogWarning("입력 항목을 모두 확인해주세요. (아이디 중복, 비밀번호 유효성, 비밀번호 일치, 이메일 형식 등)");
-            }
-            return;
-        }
+        string hintSchool = signUpInputSchool.text;
 
         // 실제 회원가입 로직
-        string ID = GetEmail(signUpInputID.text);   // 입력한 ID → 이메일 형식 변환
+        string ID = signUpInputID.text.Trim();
         string PW = signUpInputPW.text;
 
-        Authentication.SignUp(ID, PW, email, result =>
+        bool isEmailValid = IsValidEmail(ID);
+
+        Authentication.SignUp(ID, PW, hintSchool, result =>
         {
             switch (result)
             {
@@ -322,33 +308,27 @@ public class FirebaseManager : MonoBehaviour
     /// </summary>
     private void OnClickFindID()
     {
-        // 공백 제거
-        string email = findID_EmailInput.text.Trim();
-        
-        if (string.IsNullOrEmpty(email))
+        string schoolName = findID_SchoolInput.text.Trim();
+
+        if (string.IsNullOrEmpty(schoolName))
         {
-            LogWarning("이메일을 입력해주세요.");
+            LogWarning("모교 이름을 입력해주세요.");
             return;
         }
 
-        if (!IsValidEmail(email))
-        {
-            LogWarning("올바른 이메일 형식을 입력해주세요.");
-            return;
-        }
-
-        Authentication.FindIDByEmail(email, resultID =>
+        Authentication.FindIDBySchoolName(schoolName, resultID =>
         {
             if (!string.IsNullOrEmpty(resultID))
             {
-                Log($"해당 이메일로 등록된 ID는 <b>{resultID}</b> 입니다.");
+                Log($"<b>{schoolName}</b> 모교 이름으로 등록된 이메일(ID)은 <b>{resultID}</b> 입니다.");
             }
             else
             {
-                LogWarning("해당 이메일로 등록된 ID를 찾을 수 없습니다.");
+                LogWarning("해당 모교 이름으로 등록된 ID를 찾을 수 없습니다.");
             }
         });
     }
+
 
     /// <summary>
     /// ID 찾기 취소 버튼 눌렀을 때
@@ -356,7 +336,7 @@ public class FirebaseManager : MonoBehaviour
     private void OnClickFindIDCancel()
     {
         // 입력값 초기화
-        findID_EmailInput.text = "";
+        findID_SchoolInput.text = "";
         findAccountImg.SetActive(false);
     }
 
@@ -371,44 +351,45 @@ public class FirebaseManager : MonoBehaviour
     #endregion
 
     #region 계정 찾기 중 PW찾기 안에서 행해지는 함수들
-    /// <summary>
-    /// ID + Email 입력 후 비밀번호 새로 입력하기
+    /// </summary>
+    /// 로그인 ID와 학교 이름으로 비밀번호 찾기
     /// </summary>
     private void OnClickFindPW()
     {
-        string id = findPW_IDInput.text.Trim();
-        string email = findPW_EmailInput.text.Trim();
+        string id = findPW_IDInput.text.Trim();             // 이메일(ID)
+        string schoolName = findPW_SchoolInput.text.Trim(); // 모교 이름
 
-        if (string.IsNullOrEmpty(id) || string.IsNullOrEmpty(email))
+        if (string.IsNullOrEmpty(id) || string.IsNullOrEmpty(schoolName))
         {
-            LogWarning("ID와 이메일을 모두 입력해주세요.");
+            LogWarning("이메일(ID)과 모교 이름을 모두 입력해주세요.");
             return;
         }
 
-        if (!IsValidEmail(email))
+        if (!IsValidEmail(id))
         {
-            LogWarning("올바른 이메일 형식을 입력해주세요.");
+            LogWarning("이메일 형식이 올바르지 않습니다.");
             return;
         }
 
-        Authentication.FindPWbyIDAndEmail(id, email, success =>
+        Authentication.FindPWbyIDAndSchoolName(id, schoolName, success =>
         {
             if (success)
             {
-                Log($"<b>{email}</b>로 비밀번호 재설정 링크를 보냈습니다.");
+                Log($"<b>{id}</b>로 비밀번호 재설정 이메일을 보냈습니다.");
             }
             else
             {
-                LogWarning("ID와 이메일 정보가 일치하지 않거나 메일 전송에 실패했습니다.");
+                LogWarning("ID와 모교 정보가 일치하지 않거나 메일 전송에 실패했습니다.");
             }
         });
     }
 
 
+
     private void OnClickFindPWCancel()
     {
         findPW_IDInput.text = "";
-        findPW_EmailInput.text = "";
+        findPW_SchoolInput.text = "";
         findAccountImg.SetActive(false);
     }
 
@@ -464,36 +445,6 @@ public class FirebaseManager : MonoBehaviour
         newPW_Input.text = "";
         newPW_InputCheck.text = "";
         // UI 숨기기 처리 필요시 여기에
-    }
-    #endregion
-
-    #region ID 및 email 형식 변환 함수들
-    /// <summary>
-    /// 입력된 ID를 이메일 형식으로 변환해 반환 (asd -> asd@StudioMO.com)
-    /// </summary>
-    private string GetEmail(string id)
-    {
-        string ID = id.Trim(); // 공백 제거
-        return $"{ID}@naver.com";
-    }
-
-    /// <summary>
-    /// 입력된 email을 ID 형식으로 반환함 (asd@StudioMO.com -> asd)
-    /// </summary>
-    /// <param name="email"></param>
-    /// <returns></returns>
-    private string SetEmail(string email)
-    {
-        string trimmedEmail = email.Trim(); // 앞뒤 공백 제거
-
-        int atIndex = trimmedEmail.IndexOf('@'); // @의 위치 찾기
-
-        if (atIndex > 0)
-        {
-            return trimmedEmail.Substring(0, atIndex); // @ 앞 부분만 반환
-        }
-
-        return trimmedEmail; // @가 없으면 원본 반환
     }
     #endregion
 

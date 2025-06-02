@@ -125,7 +125,7 @@ public static class Authentication
     }
 
     // 회원가입 함수
-    public static void SignUp(string ID, string PW, string email, Action<State> callback)
+    public static void SignUp(string ID, string PW, string hintSchool, Action<State> callback)
     {
         // ID는 실제로 이메일 형식으로 변환되어 사용된 상태로 들어옴 (예: asd@StudioMO.com)
         firebaseAuth.CreateUserWithEmailAndPasswordAsync(ID, PW).ContinueWithOnMainThread(task =>
@@ -151,11 +151,12 @@ public static class Authentication
 
                 // 저장할 유저 데이터
                 Dictionary<string, object> userData = new Dictionary<string, object>
-            {
-                { "ID", ID.Split('@')[0] },  // ID (ex: asd)
-                { "Email", email },          // 실제 이메일 (ex: qwer@naver.com)
-                { "Session", "" }            // 세션 초기화
-            };
+                {
+                    { "ID", ID },                    // ID는 이메일로 저장
+                    { "SchoolName", hintSchool },    // 학교 이름
+                    { "Session", "" }                // 일단 비움
+                };
+
 
                 // Firebase Realtime Database에 유저 정보 저장
                 FirebaseDatabase.DefaultInstance.RootReference
@@ -281,7 +282,7 @@ public static class Authentication
     }
 
     // 아이디 찾기
-    public static void FindIDByEmail(string email, Action<string> callback)
+    public static void FindIDBySchoolName(string schoolName, Action<string> callback)
     {
         FirebaseDatabase.DefaultInstance.GetReference("Users").GetValueAsync().ContinueWithOnMainThread(task =>
         {
@@ -295,30 +296,30 @@ public static class Authentication
 
             foreach (var user in snapshot.Children)
             {
-                string userEmail = user.Child("Email").Value?.ToString();
-                string userID = user.Child("ID").Value?.ToString();
+                string dbSchool = user.Child("SchoolName").Value?.ToString();
+                string dbID = user.Child("ID").Value?.ToString();
 
-                if (userEmail == email)
+                if (dbSchool == schoolName)
                 {
-                    callback?.Invoke(userID); // 매칭 성공
+                    callback?.Invoke(dbID);
                     return;
                 }
             }
 
-            callback?.Invoke(null); // 못 찾았음
+            callback?.Invoke(null);
         });
     }
 
+
     // 비밀번호 찾기
-    public static void FindPWbyIDAndEmail(string id, string email, Action<bool> callback)
+    public static void FindPWbyIDAndSchoolName(string id, string schoolName, Action<bool> callback)
     {
-        if (string.IsNullOrWhiteSpace(id) || string.IsNullOrWhiteSpace(email))
+        if (string.IsNullOrWhiteSpace(id) || string.IsNullOrWhiteSpace(schoolName))
         {
             callback?.Invoke(false);
             return;
         }
 
-        // Users 전체 조회
         FirebaseDatabase.DefaultInstance.GetReference("Users").GetValueAsync().ContinueWithOnMainThread(task =>
         {
             if (task.IsFaulted || task.IsCanceled)
@@ -332,27 +333,23 @@ public static class Authentication
             foreach (var user in snapshot.Children)
             {
                 string dbID = user.Child("ID").Value?.ToString();
-                string dbEmail = user.Child("Email").Value?.ToString();
+                string dbSchoolName = user.Child("SchoolName").Value?.ToString();
 
-                if (dbID == id && dbEmail == email)
+                if (dbID == id && dbSchoolName == schoolName)
                 {
-                    // 이메일로 비밀번호 재설정 메일 전송
-                    FirebaseAuth.DefaultInstance.SendPasswordResetEmailAsync(email)
+                    // 이메일(ID)로 비밀번호 재설정 링크 발송
+                    FirebaseAuth.DefaultInstance.SendPasswordResetEmailAsync(id)
                         .ContinueWithOnMainThread(emailTask =>
                         {
-                            if (emailTask.IsFaulted || emailTask.IsCanceled)
-                                callback?.Invoke(false);
-                            else
-                                callback?.Invoke(true);
+                            callback?.Invoke(!(emailTask.IsFaulted || emailTask.IsCanceled));
                         });
                     return;
                 }
             }
 
-            // 일치하는 정보 없음
+            // 일치하는 사용자 없음
             callback?.Invoke(false);
         });
     }
-
 
 }
