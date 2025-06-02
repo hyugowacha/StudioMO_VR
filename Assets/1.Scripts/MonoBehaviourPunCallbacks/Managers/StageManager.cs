@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.InputSystem;
 using DG.Tweening;
 using Photon.Pun;
@@ -11,7 +10,17 @@ public class StageManager : Manager
 
     [Header("스테이지 매니저 구간")]
     [SerializeField]
-    private Character character;                                //조종할 캐릭터
+    private AudioSource audioSource;                            //배경음악 오디오 소스
+
+    [SerializeField]
+    private Vector3 leftHandOffset;                             //왼쪽 손잡이 간격
+    [SerializeField]
+    private Vector3 rightHandOffset;                            //오른쪽 손잡이 간격
+
+    private Vector2 moveInput = Vector2.zero;                   //이동 입력 값
+    private Tween slowMotionTween = null;                       //슬로우 모션 트윈
+    [SerializeField]
+    private Pickaxe pickaxe;                                    //곡괭이
 
     private bool hasBulletPatternLoader = false;
 
@@ -57,7 +66,7 @@ public class StageManager : Manager
         base.Start();
         if (instance == this)
         {
-            SetFixedPosition(character != null ? character.transform.position: Vector3.zero);
+            SetFixedPosition(character != null ? character.transform.position : Vector3.zero);
             SetMoveSpeed(0);
             StageData stageData = StageData.current;
 #if UNITY_EDITOR
@@ -88,7 +97,6 @@ public class StageManager : Manager
                 }
             }
             currentTimeValue = limitTimeValue;
-            mineralFillPanel?.Set(0, goalMineralValue);
         }
     }
 
@@ -128,6 +136,14 @@ public class StageManager : Manager
         timeGagePanel?.Set(currentTimeValue, limitTimeValue);
     }
 
+    private void FixedUpdate()
+    {
+        if (HasTimeLeft() == true)
+        {
+            character?.UpdateMove(moveInput);
+        }
+    }
+
     private void LateUpdate()
     {
         uint mineralCount = 0;
@@ -146,12 +162,12 @@ public class StageManager : Manager
                 character.UpdateRightHand(rightActionBasedController.transform.position + rightHandOffset, rightActionBasedController.transform.rotation);
             }
             bool faintingState = character.faintingState;
-            if(faintingState == true && pickaxe != null && pickaxe.grip == true)
+            if (faintingState == true && pickaxe != null && pickaxe.grip == true)
             {
                 pickaxe.grip = false;
             }
             float ratio = character.GetSlowMotionRatio();
-            if(SlowMotion.IsOwner(PhotonNetwork.LocalPlayer) == true)
+            if (SlowMotion.IsOwner(PhotonNetwork.LocalPlayer) == true)
             {
                 slowMotionPanel?.Fill(ratio, false);
             }
@@ -206,16 +222,9 @@ public class StageManager : Manager
         }
     }
 
+    //입력 시스템과 관련된 바인딩을 연결 및 해제에 사용하는 메서드 
     private void SetBinding(bool value)
     {
-        if(value == true)
-        {
-            Character.mineralReporter += (character, value) => { mineralFillPanel?.Set(value, goalMineralValue); };
-        }
-        else
-        {
-            Character.mineralReporter -= (character, value) => { mineralFillPanel?.Set(value, goalMineralValue); };
-        }
         if (leftActionBasedController != null && leftActionBasedController.translateAnchorAction != null)
         {
             leftActionBasedController.translateAnchorAction.reference.Set(ApplyMoveDirectionInput, ApplyMoveDirectionInput, value);
@@ -243,18 +252,19 @@ public class StageManager : Manager
     //왼쪽 방향 입력을 적용하는 메서드
     private void ApplyMoveDirectionInput(InputAction.CallbackContext callbackContext)
     {
-        if(callbackContext.performed == true)
+        if (callbackContext.performed == true)
         {
-            character?.UpdateMove(callbackContext.ReadValue<Vector2>());
+            moveInput = callbackContext.ReadValue<Vector2>();
         }
-        else if(callbackContext.canceled == true)
+        else if (callbackContext.canceled == true)
         {
-            character?.UpdateMove(Vector2.zero);
+            moveInput = Vector2.zero;
         }
     }
 
-    private bool CanPlaying()
+    //게임 진행 시간이 남았는지 여부를 알려주는 메서드
+    private bool HasTimeLeft()
     {
-        return currentTimeValue > 0 || currentTimeValue == limitTimeValue;
+        return true; return currentTimeValue > 0 || currentTimeValue == limitTimeValue;
     }
 }
