@@ -66,6 +66,24 @@ public class Pickaxe : MonoBehaviour
         }
     }
 
+    [Serializable]
+    private struct Vibration
+    {
+        public float amplitude; //진동 강도
+        public float duration; //진동 지속 시간
+
+        public Vibration(float amplitude, float duration)
+        {
+            this.amplitude = amplitude;
+            this.duration = duration;
+        }
+    }
+
+    [SerializeField]
+    private Vibration standardVibration = new Vibration(0.5f, 1f);
+
+    public event Action<float, float> vibrationAction = null; //진동을 발생시키는 액션
+
     private readonly static float ComboDelayRatio = 0.7f;
 
 #if UNITY_EDITOR
@@ -109,6 +127,7 @@ public class Pickaxe : MonoBehaviour
                         mineral.Mine(position, PhotonNetwork.LocalPlayer.ActorNumber);
                         list.Remove(mineral);
                         Rest();
+                        vibrationAction?.Invoke(standardVibration.amplitude, standardVibration.duration);
                     }
                 });
             }
@@ -117,6 +136,7 @@ public class Pickaxe : MonoBehaviour
                 mineral.Mine(position, PhotonNetwork.LocalPlayer.ActorNumber, true);
                 list.Remove(mineral);
                 Rest();
+                vibrationAction?.Invoke(standardVibration.amplitude, standardVibration.duration);
             }
         }
     }

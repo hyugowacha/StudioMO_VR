@@ -1,6 +1,7 @@
 using System;
 using DG.Tweening;
 using Photon.Realtime;
+using UnityEngine;
 
 /// <summary>
 /// 슬로우 모션을 제어하는 클래스
@@ -53,7 +54,7 @@ public static class SlowMotion
     } = BeforeSpeed;
 
     //슬로우 모션 속도를 점진적으로 변경하는 함수
-    public static void Apply(float before, float after, float duration)
+    private static void Play(float before, float after, float duration)
     {
         currentTween.Kill();
         speed = before;
@@ -72,7 +73,7 @@ public static class SlowMotion
                 if (SlowMotion.actor == null)
                 {
                     SlowMotion.actor = actor;
-                    Apply(BeforeSpeed, AfterSpeed, ApplySpeed);
+                    Play(BeforeSpeed, AfterSpeed, ApplySpeed);
                 }
                 break;
             case false:
@@ -85,6 +86,15 @@ public static class SlowMotion
                 }
                 break;
         }
+    }
+
+    //슬로우 모션 동기화를 적용하기 위한 함수
+    public static void Set(int actor, float speed)
+    {
+        SlowMotion.actor = actor;
+        float value = Mathf.Clamp(speed, AfterSpeed, BeforeSpeed);
+        float rate = (value - AfterSpeed) / (BeforeSpeed - AfterSpeed); // 0 ~ 1
+        Play(value, AfterSpeed, ApplySpeed * rate);
     }
 
     //현재 플레이어가 슬로우 모션의 영향력을 가지고 있는지 여부를 확인하는 함수

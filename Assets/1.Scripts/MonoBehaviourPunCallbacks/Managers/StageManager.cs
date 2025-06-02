@@ -47,26 +47,38 @@ public class StageManager : Manager
     [Header("결과창 정보"), SerializeField]
     private ResultPanel resultPanel;                            //결과창 표시 패널
 
+#if UNITY_EDITOR
+    [Header("스테이지 데이터 테스트"), SerializeField]
+    private StageData stageData;
+#endif
+
     protected override void Start()
     {
         base.Start();
         if (instance == this)
         {
             SetFixedPosition(character != null ? character.transform.position: Vector3.zero);
-            SetMoveSpeed(0);//            StageData.SetCurrentStage(0);
-            if (StageData.current != null)
+            SetMoveSpeed(0);
+            StageData stageData = StageData.current;
+#if UNITY_EDITOR
+            if (stageData == null)
             {
-                GameObject gameObject = StageData.current.GetMapObject();
+                stageData = this.stageData;
+            }
+#endif
+            if (stageData != null)
+            {
+                GameObject gameObject = stageData.GetMapObject();
                 if (gameObject != null)
                 {
                     Instantiate(gameObject, Vector3.zero, Quaternion.identity);
                 }
-                goalMineralCount = StageData.current.GetGoalMinValue();
-                TextAsset bulletTextAsset = StageData.current.GetBulletTextAsset();
+                goalMineralCount = stageData.GetGoalMinValue();
+                TextAsset bulletTextAsset = stageData.GetBulletTextAsset();
                 getBulletPatternLoader.SetCSVData(bulletTextAsset);
                 if (audioSource != null)
                 {
-                    AudioClip audioClip = StageData.current.GetAudioClip();
+                    AudioClip audioClip = stageData.GetAudioClip();
                     if (audioClip != null)
                     {
                         audioSource.clip = audioClip;
@@ -212,11 +224,20 @@ public class StageManager : Manager
         {
             case true:
                 Mineral.miningAction += (actor, value) => { character?.AddMineral(value); };
+                if (pickaxe != null)
+                {
+                    pickaxe.vibrationAction += (amplitude, duration) => { SendHapticImpulse(amplitude, duration, true); };
+                }
                 break;
             case false:
                 Mineral.miningAction -= (actor, value) => { character?.AddMineral(value); };
+                if (pickaxe != null)
+                {
+                    pickaxe.vibrationAction -= (amplitude, duration) => { SendHapticImpulse(amplitude, duration, true); };
+                }
                 break;
         }
+
     }
 
     //왼쪽 방향 입력을 적용하는 메서드

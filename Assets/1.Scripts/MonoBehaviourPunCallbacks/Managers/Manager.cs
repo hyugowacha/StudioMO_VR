@@ -180,6 +180,35 @@ public abstract class Manager : MonoBehaviourPunCallbacks
         }
     }
 
+    protected void SendHapticImpulse(float amplitude, float duration, bool? handle)
+    {
+        if (handle == null)
+        {
+            if (rightActionBasedController != null)
+            {
+                rightActionBasedController.SendHapticImpulse(amplitude, duration);
+            }
+            if (leftActionBasedController != null)
+            {
+                leftActionBasedController.SendHapticImpulse(amplitude, duration);
+            }
+        }
+        else if (handle == true)
+        {
+            if (rightActionBasedController != null)
+            {
+                rightActionBasedController.SendHapticImpulse(amplitude, duration);
+            }
+        }
+        else
+        {
+            if (leftActionBasedController != null)
+            {
+                leftActionBasedController.SendHapticImpulse(amplitude, duration);
+            }
+        }
+    }
+
     //언어를 변경하기 위한 메소드
     protected abstract void ChangeText();
 

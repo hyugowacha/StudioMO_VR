@@ -423,6 +423,7 @@ MonoBehaviour:
   timeGagePanel: {fileID: 6757837063256033896}
   mineralPanel: {fileID: 4783575393437540251}
   resultPanel: {fileID: 1615713232}
+  stageData: {fileID: 0}
 --- !u!1 &383915011
 GameObject:
   m_ObjectHideFlags: 0
@@ -475,6 +476,9 @@ MonoBehaviour:
   chisel: {fileID: 995619775}
   comboDelay: 0.1
   restDelay: 1
+  standardVibration:
+    amplitude: 0.5
+    duration: 1
 --- !u!1001 &725783958
 PrefabInstance:
   m_ObjectHideFlags: 0
