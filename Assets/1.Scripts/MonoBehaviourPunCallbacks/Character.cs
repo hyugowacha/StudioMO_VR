@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 using DG.Tweening;
+using Photon.Realtime;
 
 /// <summary>
 /// 플레이어가 조종하는 캐릭터를 나타내는 클래스
@@ -142,10 +143,45 @@ public class Character : MonoBehaviourPunCallbacks, IPunObservable
         characters.Remove(this);
     }
 
-    [PunRPC]
-    private void SetMineral(uint value)
+    public override void OnPlayerEnteredRoom(Player player)
     {
-        mineralCount = value;
+        if (photonView.IsMine == true)
+        {
+            int convert = ExtensionMethod.Convert(mineralCount);
+            photonView.RPC(nameof(SetCharacterState), player, convert, faintingState);
+            if(SlowMotion.actor != null)
+            {
+                photonView.RPC(nameof(SetSlowMotionState), player, SlowMotion.actor, SlowMotion.speed);
+            }
+        }
+    }
+
+    public override void OnPlayerLeftRoom(Player player)
+    {
+        Debug.Log(player.ActorNumber);
+        if (SlowMotion.IsOwner(player) == true)
+        {
+
+        }
+    }
+
+    [PunRPC]
+    private void SetCharacterState(int mineralCount, bool faintingState)
+    {
+        this.mineralCount = ExtensionMethod.Convert(mineralCount);
+        SetFainting(faintingState);
+    }
+
+    [PunRPC]
+    private void SetSlowMotionState(int actor, float speed)
+    {
+        SlowMotion.Set(actor, speed);
+    }
+
+    [PunRPC]
+    private void SetMineral(int value)
+    {
+        mineralCount = ExtensionMethod.Convert(value);
         animator.SetParameter(GatheringParameter);
     }
 
@@ -191,7 +227,7 @@ public class Character : MonoBehaviourPunCallbacks, IPunObservable
         }
     }
 
-    //슬로우 모션 사용을 마스터에게 요청하는 메서드
+    //슬로우 모션 사용을 마스터에게 허락을 요청하는 메서드
     private void RequestSlowMotion(bool enabled)
     {
         int actorNumber = PhotonNetwork.LocalPlayer.ActorNumber;
@@ -296,10 +332,11 @@ public class Character : MonoBehaviourPunCallbacks, IPunObservable
     public void AddMineral(uint value)
     {
         uint count = mineralCount + value;
-        SetMineral(count);
+        int convert = ExtensionMethod.Convert(count);
+        SetMineral(convert);
         if(PhotonNetwork.InRoom == true)
         {
-            photonView.RPC(nameof(SetMineral), RpcTarget.Others, count);
+            photonView.RPC(nameof(SetMineral), RpcTarget.Others, convert);
         }
     }
 

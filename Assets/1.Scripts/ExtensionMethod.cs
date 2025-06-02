@@ -206,4 +206,14 @@ public static class ExtensionMethod
             image.fillAmount = value;
         }
     }
+
+    public static int Convert(uint value)
+    {
+        return (int)(value + int.MinValue);
+    }
+
+    public static uint Convert(int value)
+    {
+        return (uint)(value - int.MinValue);
+    }
 }
