@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 using DG.Tweening;
+using Photon.Realtime;
 
 /// <summary>
 /// 플레이어가 조종하는 캐릭터를 나타내는 클래스
@@ -142,6 +143,48 @@ public class Character : MonoBehaviourPunCallbacks, IPunObservable
         characters.Remove(this);
     }
 
+    public override void OnPlayerEnteredRoom(Player player)
+    {
+        if (photonView.IsMine == true)
+        {
+            int convert = ExtensionMethod.Convert(mineralCount);
+            photonView.RPC(nameof(SetCharacterState), player, convert, faintingState);
+            if(SlowMotion.actor != null)
+            {
+                photonView.RPC(nameof(SetSlowMotionState), player, SlowMotion.actor, SlowMotion.speed);
+            }
+        }
+    }
+
+    public override void OnPlayerLeftRoom(Player player)
+    {
+        Debug.Log(player.ActorNumber);
+        if (SlowMotion.IsOwner(player) == true)
+        {
+
+        }
+    }
+
+    [PunRPC]
+    private void SetCharacterState(int mineralCount, bool faintingState)
+    {
+        this.mineralCount = ExtensionMethod.Convert(mineralCount);
+        SetFainting(faintingState);
+    }
+
+    [PunRPC]
+    private void SetSlowMotionState(int actor, float speed)
+    {
+        SlowMotion.Set(actor, speed);
+    }
+
+    [PunRPC]
+    private void SetMineral(int value)
+    {
+        mineralCount = ExtensionMethod.Convert(value);
+        animator.SetParameter(GatheringParameter);
+    }
+
     //기절 상태를 설정하는 메서드
     [PunRPC]
     private void SetFainting(bool value)
@@ -166,7 +209,7 @@ public class Character : MonoBehaviourPunCallbacks, IPunObservable
     {
         SlowMotion.Set(actor, enabled);
         animator.SetParameter(SlowMotionParameter, enabled);
-        slowMotionChargingDelayer.Stop();
+        slowMotionChargingDelayer.Kill();
         if (enabled == false)
         {
             slowMotionChargingDelayer = DOVirtual.DelayedCall(SlowMotion.ChargingDelay, () => { slowMotionChargingDelayer = null; });
@@ -184,7 +227,7 @@ public class Character : MonoBehaviourPunCallbacks, IPunObservable
         }
     }
 
-    //슬로우 모션 사용을 마스터에게 요청하는 메서드
+    //슬로우 모션 사용을 마스터에게 허락을 요청하는 메서드
     private void RequestSlowMotion(bool enabled)
     {
         int actorNumber = PhotonNetwork.LocalPlayer.ActorNumber;
@@ -200,7 +243,7 @@ public class Character : MonoBehaviourPunCallbacks, IPunObservable
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
-        if (stream.IsWriting)
+        if (photonView.IsMine == true)
         {
             stream.SendNext(remainingImmuneTime);
             stream.SendNext(remainingSlowMotionTime);
@@ -279,7 +322,7 @@ public class Character : MonoBehaviourPunCallbacks, IPunObservable
     //슬로우 모션을 활성화하거나 비활성화하는 메서드
     public void SetSlowMotion(bool enabled)
     {
-        if((enabled == true && faintingState == false && SlowMotion.actor == 0 && remainingSlowMotionTime >= SlowMotion.MinimumUseValue) || (enabled == false && SlowMotion.IsOwner(PhotonNetwork.LocalPlayer) == true))
+        if((enabled == true && faintingState == false && SlowMotion.actor == null && remainingSlowMotionTime >= SlowMotion.MinimumUseValue) || (enabled == false && SlowMotion.IsOwner(PhotonNetwork.LocalPlayer) == true))
         {
             RequestSlowMotion(enabled);
         }
@@ -288,8 +331,13 @@ public class Character : MonoBehaviourPunCallbacks, IPunObservable
     //광물을 획득한 현재 양을 적용시켜주는 메서드
     public void AddMineral(uint value)
     {
-        animator.SetParameter(GatheringParameter);
-        mineralCount += value;
+        uint count = mineralCount + value;
+        int convert = ExtensionMethod.Convert(count);
+        SetMineral(convert);
+        if(PhotonNetwork.InRoom == true)
+        {
+            photonView.RPC(nameof(SetMineral), RpcTarget.Others, convert);
+        }
     }
 
     //슬로우 모션 정규화 값을 반환하는 메서드

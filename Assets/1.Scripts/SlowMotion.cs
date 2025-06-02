@@ -1,6 +1,7 @@
 using System;
 using DG.Tweening;
 using Photon.Realtime;
+using UnityEngine;
 
 /// <summary>
 /// 슬로우 모션을 제어하는 클래스
@@ -41,7 +42,7 @@ public static class SlowMotion
     public static event Action<float> action = null;
 
     //슬로우 모션을 쓰고 있는 액터의 인덱스
-    public static int actor {
+    public static int? actor {
         private set;
         get;
     }
@@ -53,9 +54,9 @@ public static class SlowMotion
     } = BeforeSpeed;
 
     //슬로우 모션 속도를 점진적으로 변경하는 함수
-    public static void Apply(float before, float after, float duration)
+    private static void Play(float before, float after, float duration)
     {
-        currentTween.Stop();
+        currentTween.Kill();
         speed = before;
         currentTween = DOTween.To(() => speed, x => speed = x, after, duration).SetEase(Ease.Linear).OnUpdate(() =>
         {
@@ -69,22 +70,31 @@ public static class SlowMotion
         switch(enabled)
         {
             case true:
-                if (SlowMotion.actor == 0 && actor != SlowMotion.actor)
+                if (SlowMotion.actor == null)
                 {
                     SlowMotion.actor = actor;
-                    Apply(BeforeSpeed, AfterSpeed, ApplySpeed);
+                    Play(BeforeSpeed, AfterSpeed, ApplySpeed);
                 }
                 break;
             case false:
-                if(SlowMotion.actor != 0 && actor == SlowMotion.actor)
+                if(SlowMotion.actor == actor)
                 {
+                    SlowMotion.actor = null;
+                    currentTween.Kill();
                     speed = BeforeSpeed;
                     action?.Invoke(speed);
-
-                    SlowMotion.actor = 0;
                 }
                 break;
         }
+    }
+
+    //슬로우 모션 동기화를 적용하기 위한 함수
+    public static void Set(int actor, float speed)
+    {
+        SlowMotion.actor = actor;
+        float value = Mathf.Clamp(speed, AfterSpeed, BeforeSpeed);
+        float rate = (value - AfterSpeed) / (BeforeSpeed - AfterSpeed); // 0 ~ 1
+        Play(value, AfterSpeed, ApplySpeed * rate);
     }
 
     //현재 플레이어가 슬로우 모션의 영향력을 가지고 있는지 여부를 확인하는 함수

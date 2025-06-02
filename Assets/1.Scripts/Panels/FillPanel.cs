@@ -4,7 +4,7 @@ using UnityEngine.UI;
 using TMPro;
 
 /// <summary>
-/// 특정 수치 값이 이미지로 메우는 연출이 있는 패널 클래스
+/// 특정 정규값 수치를 채움과 비움으로 표시하는 패널
 /// </summary>
 public class FillPanel : Panel
 {
@@ -23,11 +23,6 @@ public class FillPanel : Panel
 
     private double currentValue = 0;
     private double maxValue = 0;
-
-    private static readonly char ZeroPlaceholder = '0';
-    private static readonly string ColonLetter = ":";
-    private static readonly string SlashLetter = "/";
-    private static readonly string DecimalPlaceLetter = "F";
 
 #if UNITY_EDITOR
     protected override void OnValidate()
@@ -66,7 +61,14 @@ public class FillPanel : Panel
         {
             stringBuilder.Append(currentValue.ToString(DecimalPlaceLetter + 0) + SlashLetter + maxValue.ToString(DecimalPlaceLetter + 0));
         }
-        figureText.Set(stringBuilder.ToString());
+        if (tmpFontAsset != null)
+        {
+            figureText.Set(stringBuilder.ToString(), tmpFontAsset);
+        }
+        else
+        {
+            figureText.Set(stringBuilder.ToString());
+        }
     }
 
     //값의 변화에 따라 이미지 연출이 실행되는 메서드
