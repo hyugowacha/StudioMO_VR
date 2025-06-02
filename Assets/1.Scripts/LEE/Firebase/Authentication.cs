@@ -5,7 +5,6 @@ using Firebase.Auth;
 using Firebase.Database;
 using Firebase.Extensions;
 using Photon.Pun;
-using UnityEngine;
 
 public static class Authentication
 {
@@ -276,6 +275,35 @@ public static class Authentication
         };
 
         databaseReference.Child(SessionTag).ValueChanged += sessionListener;
+    }
+
+    // 아이디 찾기
+    public static void FindIDByEmail(string email, Action<string> callback)
+    {
+        FirebaseDatabase.DefaultInstance.GetReference("Users").GetValueAsync().ContinueWithOnMainThread(task =>
+        {
+            if (task.IsFaulted || task.IsCanceled)
+            {
+                callback?.Invoke(null);
+                return;
+            }
+
+            DataSnapshot snapshot = task.Result;
+
+            foreach (var user in snapshot.Children)
+            {
+                string userEmail = user.Child("Email").Value?.ToString();
+                string userID = user.Child("ID").Value?.ToString();
+
+                if (userEmail == email)
+                {
+                    callback?.Invoke(userID); // 매칭 성공
+                    return;
+                }
+            }
+
+            callback?.Invoke(null); // 못 찾았음
+        });
     }
 
 }

@@ -1,7 +1,6 @@
 using UnityEngine;
 using TMPro;
 using Firebase;
-using Firebase.Auth;
 using UnityEngine.UI;
 
 public class FirebaseManager : MonoBehaviour
@@ -11,9 +10,9 @@ public class FirebaseManager : MonoBehaviour
     [SerializeField] private Canvas loginCanvas;            // 로그인 캔버스
     [SerializeField] private TMP_InputField loginInputID;   // ID 입력창
     [SerializeField] private TMP_InputField loginInputPW;   // 비밀번호 입력창
+    [SerializeField] private Button signInButton;           // 로그인 버튼
     [SerializeField] private Button signUpCanvasButton;     // 회원가입 창 버튼
     [SerializeField] private Button findAccountButton;      // 계정찾기 창 버튼
-    [SerializeField] private Button signInButton;           // 로그인 버튼
     [SerializeField] private Button gameoverButton;         // 게임 종료 버튼
 
     [Header("SigngUpCanvas 관련 필드")]
@@ -24,10 +23,24 @@ public class FirebaseManager : MonoBehaviour
     [SerializeField] private TMP_InputField signUpInputEmail;   // 이메일 입력
     [SerializeField] private Button checkButton;                // ID 중복 확인 버튼
     [SerializeField] private Button okBuuton;                   // 회원가입 버튼
-    [SerializeField] private Button signUpCancelBuuton;               // 캔버스 닫기 취소 버튼
-    [SerializeField] private Image checkImg;                    // 중복 확인 이미지
+    [SerializeField] private Button signUpCancelBuuton;         // 캔버스 닫기 취소 버튼
+    [SerializeField] private Image IDcheckImg0;                    // 중복 확인 이미지
+    [SerializeField] private Image PWcheckImg0;                    // 중복 확인 이미지
+    [SerializeField] private Image PWcheckImg1;                    // 중복 확인 이미지
+    bool _checkOK = false;
+
+    [Header("경고 창")]
+    [SerializeField] private GameObject loginWarning;
+    [SerializeField] private TMP_Text warningText;
+    [SerializeField] private Button logingWarning_OK;
+    [SerializeField] private Button logingWarning_cancel;
 
     [Header("FindAccountImg 관련 필드")]
+    // 계정찾기 UI
+    [SerializeField] private GameObject findAccountImg;
+    [SerializeField] private GameObject findID;
+    [SerializeField] private GameObject findPW;
+
     // 아이디 찾기 필드들
     [SerializeField] private Button findPWButton;               // 비밀번호 찾기 UI
     [SerializeField] private TMP_InputField findID_EmailInput;  // 이메일 입력으로 아이디 찾기
@@ -87,7 +100,9 @@ public class FirebaseManager : MonoBehaviour
         // 회원가입 관련 버튼 이벤트 등록
         checkButton.onClick.AddListener(OnClickCheckDuplicate);         // 아이디 중복 확인 (추후 구현 예정)
         okBuuton.onClick.AddListener(OnClickSignUp);                    // 회원가입 실행
-        signUpCancelBuuton.onClick.AddListener(OnClickBackToLogin);           // 로그인 화면으로 되돌아감
+        signUpCancelBuuton.onClick.AddListener(OnClickBackToLogin);     // 로그인 화면으로 되돌아감
+        signUpInputPW.onValueChanged.AddListener(OnPasswordChanged);
+        signUpInputPWCheck.onValueChanged.AddListener(OnPasswordChanged);
 
         // 계정찾기 관련 버튼 이벤트 등록
         findID_okButton.onClick.AddListener(OnClickFindID);
@@ -99,6 +114,10 @@ public class FirebaseManager : MonoBehaviour
         // 비밀번호 새로 덮어쓰기 버튼
         newPW_OKbutton.onClick.AddListener(OnClickResetPWConfirm);
         newPW_CancelButton.onClick.AddListener(OnClickResetPWCancel);
+
+        // 경고창 관련 버튼 이벤트 등록
+        logingWarning_OK.onClick.AddListener(CancelWarningIMG);
+        logingWarning_cancel.onClick.AddListener(CancelWarningIMG);
     }
 
     private void GameOver()
@@ -107,15 +126,18 @@ public class FirebaseManager : MonoBehaviour
     }
     #endregion
 
-    #region 로그인_LoginCanvas안에서 행해지는 함수들
-    // 로그인 관련 캔버스
-    public void OnClickBackToLogin()
+    #region 로그인_LoginCanvas안에서 행해지는 함수
+    // 회원가입 창으로 이동
+    public void OnClickGoToSignUp()
     {
-        signUpCanvas.gameObject.SetActive(false);
-        loginCanvas.gameObject.SetActive(true);
+        loginCanvas.gameObject.SetActive(false);
+        signUpCanvas.gameObject.SetActive(true);
+    }
 
-        // 중복 확인 이미지 비활성화
-        checkImg.gameObject.SetActive(false);
+    // 계정 찾기 팝업 활성화
+    private void OnClickFindAccount()
+    {
+        findAccountImg.SetActive(true);
     }
 
     /// <summary>
@@ -135,24 +157,102 @@ public class FirebaseManager : MonoBehaviour
                     Log("로그인 성공");
                     break;
                 case Authentication.State.SignInAlready:
-                    LogWarning("이미 로그인된 계정입니다");
+                    loginWarning.SetActive(true);
+                    warningText.text = "이미 로그인된 계정입니다";
                     break;
                 case Authentication.State.SignInInvalidEmail:
-                    LogWarning("이메일 형식이 올바르지 않습니다");
+                    loginWarning.SetActive(true);
+                    warningText.text = "이메일 형식이 올바르지 않습니다.";
                     break;
                 default:
-                    LogError("로그인 실패");
+                    loginWarning.SetActive(true);
+                    warningText.text = "아이디 혹은 비밀번호가 일치하지 않습니다.";
+                    break;
+            }
+        });
+    }
+    #endregion
+
+    #region 로그인 실패 시 팝업창
+    private void CancelWarningIMG()
+    {
+        warningText.text = "";
+        loginWarning.SetActive(false);
+        Debug.Log("ddddd");
+    }
+    #endregion
+
+    #region 회원가입_SignUpCanvas안에서 행해지는 함수들
+    /// <summary>
+    /// 로그인 캔버스로 돌아갈 때 초기화 함수
+    /// </summary>
+    public void OnClickBackToLogin()
+    {
+        signUpInputID.text = "";
+        signUpInputPW.text = "";
+        signUpInputPWCheck.text = "";
+        signUpInputEmail.text = "";
+
+        signUpCanvas.gameObject.SetActive(false);
+        loginCanvas.gameObject.SetActive(true);
+
+        // 중복 확인 이미지 비활성화
+        IDcheckImg0.gameObject.SetActive(false);
+        PWcheckImg0.gameObject.SetActive(false);
+        PWcheckImg1.gameObject.SetActive(false);
+    }
+
+    /// <summary>
+    /// 회원가입 버튼 클릭 시 호출됨
+    /// </summary>
+    public void OnClickSignUp()
+    {
+        // 조건 검사: 이미지 상태 + 이메일 형식
+        bool isIDOK = IDcheckImg0.color == Color.green;
+        bool isPWValid = PWcheckImg0.color == Color.green;
+        bool isPWMatch = PWcheckImg1.color == Color.green;
+
+        string email = signUpInputEmail.text.Trim();
+        bool isEmailValid = IsValidEmail(email);
+
+        if (!(isIDOK && isPWValid && isPWMatch && _checkOK && isEmailValid))
+        {
+            if (!isEmailValid)
+            {
+                LogWarning("올바른 이메일 형식을 입력해주세요.");
+            }
+            else
+            {
+                LogWarning("입력 항목을 모두 확인해주세요. (아이디 중복, 비밀번호 유효성, 비밀번호 일치, 이메일 형식 등)");
+            }
+            return;
+        }
+
+        // 실제 회원가입 로직
+        string ID = GetEmail(signUpInputID.text);   // 입력한 ID → 이메일 형식 변환
+        string PW = signUpInputPW.text;
+
+        Authentication.SignUp(ID, PW, email, result =>
+        {
+            switch (result)
+            {
+                case Authentication.State.SignUpSuccess:
+                    Log("회원가입 성공");
+                    OnClickBackToLogin();
+                    break;
+                case Authentication.State.SignUpAlready:
+                    LogWarning("이미 존재하는 계정입니다");
+                    break;
+                default:
+                    LogError("회원가입 실패");
                     break;
             }
         });
     }
 
-    private void OnClickFindAccount()
-    {
-        LogWarning("계정찾기 기능은 아직 구현되지 않았습니다.");
-    }
-
-    // 회원가입 시 중복 확인 함수
+    /// <summary>
+    /// 회원가입 시 중복 확인 함수
+    /// </summary>
     private void OnClickCheckDuplicate()
     {
         string enteredID = signUpInputID.text.Trim();
@@ -165,57 +265,54 @@ public class FirebaseManager : MonoBehaviour
 
         Authentication.CheckDuplicateID(enteredID, isDuplicate =>
         {
-            checkImg.gameObject.SetActive(true);
-            
             if (isDuplicate)
             {
-                checkImg.color = Color.red;
+                _checkOK = false;
+                IDcheckImg0.color = Color.red;
             }
             else
             {
-                checkImg.color = Color.green;
+                _checkOK = true;
+                IDcheckImg0.color = Color.green;
             }
+
+            IDcheckImg0.gameObject.SetActive(true);
         });
     }
 
-    //X 버튼 클릭 시 게임 오버
-    #endregion
-
-    #region 회원가입_SignUpCanvas안에서 행해지는 함수들
-    public void OnClickGoToSignUp()
-    {
-        loginCanvas.gameObject.SetActive(false);
-        signUpCanvas.gameObject.SetActive(true);
-    }
     /// <summary>
-    /// 회원가입 버튼 클릭 시 호출됨
+    /// 이메일 확인 함수
     /// </summary>
-    public void OnClickSignUp()
+    /// <param name="email"></param>
+    /// <returns></returns>
+    private bool IsValidEmail(string email)
     {
-        string ID = GetEmail(signUpInputID.text);   // 입력한 ID로 이메일 생성
-        string PW = signUpInputPW.text;    // 비밀번호 입력값
-        string email = signUpInputEmail.text;
-
-        // 회원가입 요청
-        Authentication.SignUp(ID, PW, email, result =>
-        {
-            switch (result)
-            {
-                case Authentication.State.SignUpSuccess:
-                    Log("회원가입 성공");
-                    break;
-                case Authentication.State.SignUpAlready:
-                    LogWarning("이미 존재하는 계정입니다");
-                    break;
-                default:
-                    LogError("회원가입 실패");
-                    break;
-            }
-        });
+        // 이메일 패턴
+        return System.Text.RegularExpressions.Regex.IsMatch(email,
+            @"^[^@\s]+@[^@\s]+\.[^@\s]+$");
     }
 
-    //TODO: 중복화인 기능
-    //TODO: 캔버스 X 버튼 기능
+    /// <summary>
+    /// 중복 확인 비민번호 규칙
+    /// </summary>
+    /// <param name="_"></param>
+    private void OnPasswordChanged(string _)
+    {
+        string pw = signUpInputPW.text.Trim();
+        string pwCheck = signUpInputPWCheck.text.Trim();
+
+        // Firebase 비밀번호 규칙 검사 (길이 6자 이상)
+        bool isValidPassword = pw.Length >= 6;
+        PWcheckImg0.gameObject.SetActive(true);
+        PWcheckImg0.color = isValidPassword ? Color.green : Color.red;
+
+        // 두 비밀번호가 일치하는지 검사
+        bool isMatch = !string.IsNullOrWhiteSpace(pw) &&
+                       !string.IsNullOrWhiteSpace(pwCheck) &&
+                       pw == pwCheck;
+        PWcheckImg1.gameObject.SetActive(true);
+        PWcheckImg1.color = isMatch ? Color.green : Color.red;
+    }
     #endregion
 
     #region 계정 찾기 중 ID찾기 안에서 행해지는 함수들
@@ -229,13 +326,28 @@ public class FirebaseManager : MonoBehaviour
         
         if (string.IsNullOrEmpty(email))
         {
-            // 입력 안했을 때 경고
             LogWarning("이메일을 입력해주세요.");
             return;
         }
 
-        // TODO: 추후 Firebase에서 이메일 기반 ID 찾기 기능 연결
-        LogWarning($"'{email}' 이메일로 등록된 ID 찾기 기능은 아직 구현되지 않았습니다.");
+        if (!IsValidEmail(email))
+        {
+            LogWarning("올바른 이메일 형식을 입력해주세요.");
+            return;
+        }
+
+        Authentication.FindIDByEmail(email, resultID =>
+        {
+            if (!string.IsNullOrEmpty(resultID))
+            {
+                Log($"해당 이메일로 등록된 ID는 <b>{resultID}</b> 입니다.");
+            }
+            else
+            {
+                LogWarning("해당 이메일로 등록된 ID를 찾을 수 없습니다.");
+            }
+        });
+
     }
 
     /// <summary>
@@ -245,9 +357,16 @@ public class FirebaseManager : MonoBehaviour
     {
         // 입력값 초기화
         findID_EmailInput.text = "";
-        Log("ID 찾기 창 닫기 실행");
+        findAccountImg.SetActive(false);
+    }
 
-        // TODO: 관련 UI 비활성화 처리 필요시 추가
+    /// <summary>
+    /// PW 찾기로 전환 버튼
+    /// </summary>
+    private void OnClickFindIDChangeToFindPW()
+    {
+        findID.SetActive(false);
+        findPW.SetActive(true);
     }
     #endregion
 
@@ -274,8 +393,13 @@ public class FirebaseManager : MonoBehaviour
     {
         findPW_IDInput.text = "";
         findPW_EmailInput.text = "";
-        Log("PW 찾기 창 닫기 실행");
-        // 필요 시 관련 UI 비활성화
+        findAccountImg.SetActive(false);
+    }
+
+    private void OnClickFindPWChangeToID()
+    {
+        findPW.SetActive(false);
+        findID.SetActive(true);
     }
     #endregion
 
@@ -386,3 +510,4 @@ public class FirebaseManager : MonoBehaviour
     }
     #endregion
 }
+ 
