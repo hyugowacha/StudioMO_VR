@@ -55,21 +55,21 @@ public class ResultPanel : Panel
     //패널의 비교값을 반영하고 화면에 표시하기 위한 메서드(매개변수로 Action이 추가로 붙을지도 모른다)
     public void Open(double target, double progress)
     {
-        Open(() =>
-        {
-            bool? value = (target == progress) ? null : target < progress;
-            if (digitScale > 0)      //자연수만 출력
-            {
-                SetText(((decimal)target).ToString(new string(ZeroPlaceholder, digitScale + 1)), ((decimal)progress).ToString(new string(ZeroPlaceholder, digitScale + 1)), value);
-            }
-            else if (digitScale < 0) //소수
-            {
-                SetText(target.ToString(DecimalPlaceLetter + -digitScale), progress.ToString(DecimalPlaceLetter + -digitScale), value);
-            }
-            else
-            {
-                SetText(target.ToString(DecimalPlaceLetter + 0), progress.ToString(DecimalPlaceLetter + 0), value);
-            }
-        });
+        //Open(() =>
+        //{
+        //    bool? value = (target == progress) ? null : target < progress;
+        //    if (digitScale > 0)      //자연수만 출력
+        //    {
+        //        SetText(((decimal)target).ToString(new string(ZeroPlaceholder, digitScale + 1)), ((decimal)progress).ToString(new string(ZeroPlaceholder, digitScale + 1)), value);
+        //    }
+        //    else if (digitScale < 0) //소수
+        //    {
+        //        SetText(target.ToString(DecimalPlaceLetter + -digitScale), progress.ToString(DecimalPlaceLetter + -digitScale), value);
+        //    }
+        //    else
+        //    {
+        //        SetText(target.ToString(DecimalPlaceLetter + 0), progress.ToString(DecimalPlaceLetter + 0), value);
+        //    }
+        //});
     }
 }

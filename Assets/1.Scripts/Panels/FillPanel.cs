@@ -13,8 +13,7 @@ public class FillPanel : Panel
     private Image fillImage;
     [Header("현재 값을 알려주는 텍스트"), SerializeField]
     private TMP_Text figureText;
-    [Header("현재 자릿수 설정"), SerializeField]
-    private sbyte digitScale;
+ 
     [Header("수치 값 설명에 대한 언어별 번역"), SerializeField]
     private Translation.Text translationText;
 
@@ -80,34 +79,34 @@ public class FillPanel : Panel
 
     private void SetText(double current, double max)
     {
-        currentValue = current;
-        maxValue = max;
-        StringBuilder stringBuilder = new StringBuilder();
-        string description = translationText.Get(Translation.language);
-        if (string.IsNullOrEmpty(description) == false)
-        {
-            stringBuilder.Append(description + ColonLetter);
-        }
-        if (digitScale > 0)      //자연수만 출력
-        {
-            stringBuilder.Append(((decimal)currentValue).ToString(new string(ZeroPlaceholder, digitScale + 1)) + SlashLetter + ((decimal)maxValue).ToString(new string(ZeroPlaceholder, digitScale + 1)));
-        }
-        else if(digitScale < 0) //소수
-        {
-            stringBuilder.Append(currentValue.ToString(DecimalPlaceLetter + -digitScale) + SlashLetter + maxValue.ToString(DecimalPlaceLetter + -digitScale));
-        }
-        else
-        {
-            stringBuilder.Append(currentValue.ToString(DecimalPlaceLetter + 0) + SlashLetter + maxValue.ToString(DecimalPlaceLetter + 0));
-        }
-        if (tmpFontAsset != null)
-        {
-            figureText.Set(stringBuilder.ToString(), tmpFontAsset);
-        }
-        else
-        {
-            figureText.Set(stringBuilder.ToString());
-        }
+        //currentValue = current;
+        //maxValue = max;
+        //StringBuilder stringBuilder = new StringBuilder();
+        //string description = translationText.Get(Translation.language);
+        //if (string.IsNullOrEmpty(description) == false)
+        //{
+        //    stringBuilder.Append(description + ColonLetter);
+        //}
+        //if (digitScale > 0)      //자연수만 출력
+        //{
+        //    stringBuilder.Append(((decimal)currentValue).ToString(new string(ZeroPlaceholder, digitScale + 1)) + SlashLetter + ((decimal)maxValue).ToString(new string(ZeroPlaceholder, digitScale + 1)));
+        //}
+        //else if(digitScale < 0) //소수
+        //{
+        //    stringBuilder.Append(currentValue.ToString(DecimalPlaceLetter + -digitScale) + SlashLetter + maxValue.ToString(DecimalPlaceLetter + -digitScale));
+        //}
+        //else
+        //{
+        //    stringBuilder.Append(currentValue.ToString(DecimalPlaceLetter + 0) + SlashLetter + maxValue.ToString(DecimalPlaceLetter + 0));
+        //}
+        //if (tmpFontAsset != null)
+        //{
+        //    figureText.Set(stringBuilder.ToString(), tmpFontAsset);
+        //}
+        //else
+        //{
+        //    figureText.Set(stringBuilder.ToString());
+        //}
     }
 
     //값의 변화에 따라 이미지 연출이 실행되는 메서드

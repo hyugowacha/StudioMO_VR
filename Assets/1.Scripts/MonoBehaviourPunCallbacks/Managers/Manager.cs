@@ -27,7 +27,7 @@ public abstract class Manager : MonoBehaviourPunCallbacks
     [SerializeField]
     protected ActionBasedController rightActionBasedController; //오른쪽 컨트롤러
 
-    [SerializeField]
+    [Header("언어별 대응 폰트 에셋들") ,SerializeField]
     private TMP_FontAsset[] fontAssets = new TMP_FontAsset[Translation.count];
 
     protected TMP_FontAsset currentFontAsset {

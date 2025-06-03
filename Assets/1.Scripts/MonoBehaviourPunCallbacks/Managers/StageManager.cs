@@ -6,17 +6,19 @@ using Photon.Pun;
 [RequireComponent(typeof(BulletPatternLoader))]
 public class StageManager : Manager
 {
+#if UNITY_EDITOR
+    [SerializeField]
+    private StageData stageData;
+#endif
+
     public static readonly string SceneName = "StageScene";
 
-    [Header("스테이지 매니저 구간")]
-    [SerializeField]
-    private AudioSource audioSource;                            //배경음악 오디오 소스
-
+    [Header("스테이지 매니저 구간"), SerializeField]
+    private Character character;                                //조종할 캐릭터
     [SerializeField]
     private Vector3 leftHandOffset;                             //왼쪽 손잡이 간격
     [SerializeField]
     private Vector3 rightHandOffset;                            //오른쪽 손잡이 간격
-
     private Vector2 moveInput = Vector2.zero;                   //이동 입력 값
     private Tween slowMotionTween = null;                       //슬로우 모션 트윈
     [SerializeField]
@@ -38,28 +40,23 @@ public class StageManager : Manager
         }
     }
 
-    [Header("조종할 캐릭터"), SerializeField]
-    private Character character;                                //조종할 캐릭터
+    [Header("캔버스 내용들"), SerializeField]
+    private AudioSource audioSource;                            //배경음악 오디오 소스
+    [SerializeField]
+    private PhasePanel phasePanel;                              //게임 준비, 시작, 종료를 표시하는 패널
+    private bool stop = true;                                   //게임 진행이 가능한지 여부를 알려주는 변수
 
-    [Header("슬로우 모션 정보"), SerializeField]
+    [SerializeField]
     private SegmentPanel slowMotionPanel;                       //슬로우 모션 표시 패널
 
-    [Header("남은 시간 정보"), SerializeField]
+    [SerializeField]
     private FillPanel timeGagePanel;                            //남은 시간 표시 패널
     private float currentTimeValue = 0.0f;                      //현재 시간 값
     private float limitTimeValue = 0.0f;                        //제한 시간 값
 
-    [Header("광물 획득 정보"), SerializeField]
-    private PairPanel mineralPanel;                             //광물 획득 표시 패널
+    [SerializeField]
+    //private PairPanel mineralPanel;                             //광물 획득 표시 패널
     private uint goalMineralCount = 0;                          //목표 광물 개수
-
-    [Header("결과창 정보"), SerializeField]
-    private ResultPanel resultPanel;                            //결과창 표시 패널
-
-#if UNITY_EDITOR
-    [Header("스테이지 데이터 테스트"), SerializeField]
-    private StageData stageData;
-#endif
 
     protected override void Start()
     {
@@ -97,6 +94,7 @@ public class StageManager : Manager
                 }
             }
             currentTimeValue = limitTimeValue;
+            //stop = false;
         }
     }
 
@@ -118,7 +116,7 @@ public class StageManager : Manager
         {
             SetFixedPosition(character.transform.position);
         }
-        if (currentTimeValue > 0)
+        if (currentTimeValue > 0 && stop == false)
         {
             currentTimeValue -= Time.deltaTime * SlowMotion.speed;
             if (currentTimeValue <= 0)
@@ -130,7 +128,7 @@ public class StageManager : Manager
                     character.SetSlowMotion(false); //시간이 끝나면 슬로우 모션 해제
                     count = character.mineralCount;
                 }
-                resultPanel?.Open(goalMineralCount, count);
+                stop = true;
             }
         }
         timeGagePanel?.Set(currentTimeValue, limitTimeValue);
@@ -138,7 +136,7 @@ public class StageManager : Manager
 
     private void FixedUpdate()
     {
-        if (HasTimeLeft() == true)
+        if (stop == false)
         {
             character?.UpdateMove(moveInput);
         }
@@ -181,19 +179,19 @@ public class StageManager : Manager
             }
             mineralCount = character.mineralCount;
         }
-        mineralPanel?.Set(goalMineralCount, mineralCount);
+        //mineralPanel?.Set(goalMineralCount, mineralCount);
     }
 
     protected override void ChangeText()
     {
         slowMotionPanel?.ChangeText();
         timeGagePanel?.ChangeText();
-        mineralPanel?.ChangeText();
+        //mineralPanel?.ChangeText();
     }
 
     protected override void OnLeftFunction(InputAction.CallbackContext callbackContext)
     {
-        if (HasTimeLeft() == true)
+        if (stop == false)
         {
             if (callbackContext.performed == true)
             {
@@ -209,7 +207,7 @@ public class StageManager : Manager
 
     protected override void OnRightFunction(InputAction.CallbackContext callbackContext)
     {
-        if (HasTimeLeft() == true && pickaxe != null)
+        if (stop == false && pickaxe != null)
         {
             if (callbackContext.performed == true && character != null && character.faintingState == false)
             {
@@ -274,11 +272,5 @@ public class StageManager : Manager
         {
             moveInput = Vector2.zero;
         }
-    }
-
-    //게임 진행 시간이 남았는지 여부를 알려주는 메서드
-    private bool HasTimeLeft()
-    {
-        return true; return currentTimeValue > 0 || currentTimeValue == limitTimeValue;
     }
 }
