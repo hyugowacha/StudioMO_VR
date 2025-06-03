@@ -19,8 +19,7 @@ public abstract class Panel : MonoBehaviour
         {
             if (hasRectTransform == false)
             {
-                rectTransform = GetComponent<RectTransform>();
-                hasRectTransform = true;
+                hasRectTransform = TryGetComponent(out rectTransform);
             }
             return rectTransform;
         }
@@ -54,11 +53,11 @@ public abstract class Panel : MonoBehaviour
 #endif
 
     //대상 숫자의 단위를 설정한 자릿수 변수에 맞게 문자열로 반환해주는 메소드
-    private string GetNumberText(double value)
+    protected string GetNumberText(double value)
     {
         if (digitScale > 0)      //자연수만 출력
         {
-            return ((decimal)value).ToString(new string(ZeroPlaceholder, digitScale + 1));
+            return value.ToString(new string(ZeroPlaceholder, digitScale + 1));
         }
         else if (digitScale < 0) //소수
         {

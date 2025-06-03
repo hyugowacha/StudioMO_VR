@@ -44,19 +44,21 @@ public class StageManager : Manager
     private AudioSource audioSource;                            //배경음악 오디오 소스
     [SerializeField]
     private PhasePanel phasePanel;                              //게임 준비, 시작, 종료를 표시하는 패널
+    [SerializeField, Range(0, int.MaxValue)]
+    private float startDelay = 3;                               //게임 시작 딜레이
     private bool stop = true;                                   //게임 진행이 가능한지 여부를 알려주는 변수
 
     [SerializeField]
-    private SegmentPanel slowMotionPanel;                       //슬로우 모션 표시 패널
+    private TimerPanel slowMotionPanel;                          //슬로우 모션 표시 패널
 
     [SerializeField]
-    private FillPanel timeGagePanel;                            //남은 시간 표시 패널
-    private float currentTimeValue = 0.0f;                      //현재 시간 값
-    private float limitTimeValue = 0.0f;                        //제한 시간 값
+    private TimerPanel timerPanel;                              //남은 시간 표시 패널
+    private float remainingTime = 0.0f;                         //남은 시간
+    private float limitTime = 0.0f;                             //제한 시간
 
     [SerializeField]
-    //private PairPanel mineralPanel;                             //광물 획득 표시 패널
-    private uint goalMineralCount = 0;                          //목표 광물 개수
+    private ScorePanel scorePanel;                              //광물 점수 표시 패널
+    private StageData.Score score;                              //목표 광물 개수
 
     protected override void Start()
     {
@@ -79,7 +81,7 @@ public class StageManager : Manager
                 {
                     Instantiate(gameObject, Vector3.zero, Quaternion.identity);
                 }
-                goalMineralCount = stageData.GetGoalMinValue();
+                score = stageData.GetScore();
                 TextAsset bulletTextAsset = stageData.GetBulletTextAsset();
                 getBulletPatternLoader.SetCSVData(bulletTextAsset);
                 if (audioSource != null)
@@ -88,13 +90,15 @@ public class StageManager : Manager
                     if (audioClip != null)
                     {
                         audioSource.clip = audioClip;
-                        limitTimeValue = audioClip.length;
+                        limitTime = audioClip.length;
                         audioSource.Play();
                     }
                 }
             }
-            currentTimeValue = limitTimeValue;
-            //stop = false;
+            limitTime = 10f;
+            remainingTime = limitTime;
+            phasePanel?.Open();
+            DOVirtual.DelayedCall(startDelay, () => stop = false);
         }
     }
 
@@ -116,22 +120,23 @@ public class StageManager : Manager
         {
             SetFixedPosition(character.transform.position);
         }
-        if (currentTimeValue > 0 && stop == false)
+        if (remainingTime > 0 && stop == false)
         {
-            currentTimeValue -= Time.deltaTime * SlowMotion.speed;
-            if (currentTimeValue <= 0)
+            remainingTime -= Time.deltaTime * SlowMotion.speed;
+            if (remainingTime <= 0)
             {
-                currentTimeValue = 0;   //게임 종료
-                uint count = 0;
+                remainingTime = 0;   //게임 종료
+                stop = true;
+                uint totalScore = 0;
                 if (character != null)
                 {
                     character.SetSlowMotion(false); //시간이 끝나면 슬로우 모션 해제
-                    count = character.mineralCount;
+                    totalScore = character.mineralCount;
                 }
-                stop = true;
+                phasePanel?.Open(totalScore, score.GetClearValue(), score.GetAddValue());
             }
         }
-        timeGagePanel?.Set(currentTimeValue, limitTimeValue);
+        timerPanel?.Open(remainingTime, limitTime);
     }
 
     private void FixedUpdate()
@@ -165,27 +170,27 @@ public class StageManager : Manager
                 pickaxe.grip = false;
             }
             float ratio = character.GetSlowMotionRatio();
-            if (SlowMotion.IsOwner(PhotonNetwork.LocalPlayer) == true)
-            {
-                slowMotionPanel?.Fill(ratio, false);
-            }
-            else if (ratio >= SlowMotion.MinimumUseValue /*+ SlowMotion.RecoverRate*/ && faintingState == false)
-            {
-                slowMotionPanel?.Fill(ratio, true);
-            }
-            else
-            {
-                slowMotionPanel?.Fill(ratio, null);
-            }
+            //if (SlowMotion.IsOwner(PhotonNetwork.LocalPlayer) == true)
+            //{
+            //    slowMotionPanel?.Fill(ratio, false);
+            //}
+            //else if (ratio >= SlowMotion.MinimumUseValue /*+ SlowMotion.RecoverRate*/ && faintingState == false)
+            //{
+            //    slowMotionPanel?.Fill(ratio, true);
+            //}
+            //else
+            //{
+            //    slowMotionPanel?.Fill(ratio, null);
+            //}
             mineralCount = character.mineralCount;
         }
-        //mineralPanel?.Set(goalMineralCount, mineralCount);
+        scorePanel?.Open(mineralCount, score.GetClearValue(), score.GetAddValue());
     }
 
     protected override void ChangeText()
     {
         slowMotionPanel?.ChangeText();
-        timeGagePanel?.ChangeText();
+        timerPanel?.ChangeText();
         //mineralPanel?.ChangeText();
     }
 
