@@ -2,6 +2,7 @@ using UnityEngine;
 using TMPro;
 using Firebase;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 public class FirebaseManager : MonoBehaviour
 {
@@ -16,17 +17,17 @@ public class FirebaseManager : MonoBehaviour
     [SerializeField] private Button gameoverButton;         // 게임 종료 버튼
 
     [Header("SigngUpCanvas 관련 필드")]
-    [SerializeField] private Canvas signUpCanvas;                // 새로운 캔버스
-    [SerializeField] private TMP_InputField signUpInputID;       // 아이디 입력
-    [SerializeField] private TMP_InputField signUpInputPW;       // 비밀번호 입력
-    [SerializeField] private TMP_InputField signUpInputPWCheck;  // 비밀번호 확인 입력
-    [SerializeField] private TMP_InputField signUpInputSchool;   // 고등학교 모교
-    [SerializeField] private Button checkButton;                 // ID 중복 확인 버튼
-    [SerializeField] private Button okBuuton;                    // 회원가입 버튼
-    [SerializeField] private Button signUpCancelBuuton;          // 캔버스 닫기 취소 버튼
-    [SerializeField] private Image IDcheckImg0;                    // 중복 확인 이미지
-    [SerializeField] private Image PWcheckImg0;                    // 중복 확인 이미지
-    [SerializeField] private Image PWcheckImg1;                    // 중복 확인 이미지
+    [SerializeField] private Canvas signUpCanvas;                   // 새로운 캔버스
+    [SerializeField] private TMP_InputField signUpInputID;          // 아이디 입력
+    [SerializeField] private TMP_InputField signUpInputPW;          // 비밀번호 입력
+    [SerializeField] private TMP_InputField signUpInputPWCheck;     // 비밀번호 확인 입력
+    [SerializeField] private TMP_InputField signUpInputSchool;      // 고등학교 모교
+    [SerializeField] private Button checkButton;                    // ID 중복 확인 버튼
+    [SerializeField] private Button SignUpOkBuuton;                       // 회원가입 버튼
+    [SerializeField] private Button signUpCancelBuuton;             // 캔버스 닫기 취소 버튼
+    [SerializeField] private Image IDcheckImg0;                     // 중복 확인 이미지
+    [SerializeField] private Image PWcheckImg0;                     // 중복 확인 이미지
+    [SerializeField] private Image PWcheckImg1;                     // 중복 확인 이미지
     bool _checkOK = false;
 
     [Header("경고 창")]
@@ -35,31 +36,22 @@ public class FirebaseManager : MonoBehaviour
     [SerializeField] private Button logingWarning_OK;
     [SerializeField] private Button logingWarning_cancel;
 
-    [Header("FindAccountImg 관련 필드")]
-    // 계정찾기 UI
-    [SerializeField] private GameObject findAccountImg;
-    [SerializeField] private GameObject findID;
-    [SerializeField] private GameObject findPW;
-
+    [Header("FindAccountID 관련 필드")]
     // 아이디 찾기 필드들
+    [SerializeField] private GameObject findID;
     [SerializeField] private Button findPWButton;                // 비밀번호 찾기 UI
     [SerializeField] private TMP_InputField findID_SchoolInput;  // 고등학교 모교 입력으로 아이디 찾기
     [SerializeField] private Button findID_okButton;             // SchooInput입력 한 후 okButton클릭
     [SerializeField] private Button findID_cancelButton;         // FindAccountImg 관련 다 닫기 및 초기화
 
+    [Header("FindAccountPW 관련 필드")]
     // 비밀번호 찾기 필드들
+    [SerializeField] private GameObject findPW;
     [SerializeField] private Button findIDButton;                // 아이디 찾기 UI
     [SerializeField] private TMP_InputField findPW_IDInput;      // ID 입력창
     [SerializeField] private TMP_InputField findPW_SchoolInput;  // SchoolInput 입력창
     [SerializeField] private Button findPW_okButton;             // 비번 찾기 버튼
     [SerializeField] private Button findPW_cancelButton;         // FindAccountImg 관련 다 닫기 및 초기화
-
-    // 비밀번호 새로 입력하기 필드들
-    [SerializeField] private GameObject newPWImg;
-    [SerializeField] private TMP_InputField newPW_Input;        // 새로운 비밀번호
-    [SerializeField] private TMP_InputField newPW_InputCheck;   // 새로운 비밀번호 동일한지 확인
-    [SerializeField] private Button newPW_OKbutton;             // 새로운 비밀번호 확인 버튼
-    [SerializeField] private Button newPW_CancelButton;         // FindAccountImg 관련 다 닫기 및 초기화
 
     [Header("로그 결과 텍스트")]
     [SerializeField] private TMP_Text logText; // 결과 메시지를 출력할 텍스트 UI
@@ -95,26 +87,29 @@ public class FirebaseManager : MonoBehaviour
         // 로그인 관련 버튼 이벤트 등록
         signUpCanvasButton.onClick.AddListener(OnClickGoToSignUp);      // 회원가입 창 열기
         signInButton.onClick.AddListener(OnClickSignIn);                // 로그인
-        findAccountButton.onClick.AddListener(OnClickFindAccount);      // 계정찾기 (추후 구현 예정)
-        gameoverButton.onClick.AddListener(GameOver);
+        findAccountButton.onClick.AddListener(OnClickFindAccount);      // 계정찾기
+        gameoverButton.onClick.AddListener(GameOver);                   // X 버튼 클릭
 
         // 회원가입 관련 버튼 이벤트 등록
-        checkButton.onClick.AddListener(OnClickCheckDuplicate);         // 아이디 중복 확인 (추후 구현 예정)
-        okBuuton.onClick.AddListener(OnClickSignUp);                    // 회원가입 실행
-        signUpCancelBuuton.onClick.AddListener(OnClickBackToLogin);     // 로그인 화면으로 되돌아감
-        signUpInputPW.onValueChanged.AddListener(OnPasswordChanged);
-        signUpInputPWCheck.onValueChanged.AddListener(OnPasswordChanged);
+        checkButton.onClick.AddListener(OnClickCheckDuplicate);             // 아이디 중복 확인 버튼 
+        signUpCancelBuuton.onClick.AddListener(OnClickBackToLogin);         // 취소 버튼 로그인 화면으로 되돌아감
+        SignUpOkBuuton.onClick.AddListener(OnClickSignUp);                  // 확인 버튼 (회원가입 실행)   
+        signUpInputPW.onValueChanged.AddListener(OnPasswordChanged);        // 올바른 비밀번호
+        signUpInputPWCheck.onValueChanged.AddListener(OnPasswordChanged);   // 비밀번호 확인 시스템
 
-        // 계정찾기 관련 버튼 이벤트 등록
-        findID_okButton.onClick.AddListener(OnClickFindID);
-        findID_cancelButton.onClick.AddListener(OnClickFindIDCancel);
-        
+        // ID 찾기 버튼 이벤트 등록
+        findID_okButton.onClick.AddListener(OnClickFindID);                 // ID 찾기의 확인 버튼
+        findID_cancelButton.onClick.AddListener(OnClickFindIDCancel);       // ID 찾기의 취소 버튼
+        findPWButton.onClick.AddListener(OnClickFindIDChangeToFindPW);      // PW 찾기 화면 전환
+
+        // PW 찾기 버튼 이벤트 등록
         findPW_okButton.onClick.AddListener(OnClickFindPW);
         findPW_cancelButton.onClick.AddListener(OnClickFindPWCancel);
+        findIDButton.onClick.AddListener(OnClickFindPWChangeToID);
 
         // 비밀번호 새로 덮어쓰기 버튼
-        newPW_OKbutton.onClick.AddListener(OnClickResetPWConfirm);
-        newPW_CancelButton.onClick.AddListener(OnClickResetPWCancel);
+        //newPW_OKbutton.onClick.AddListener(OnClickResetPWConfirm);
+        //newPW_CancelButton.onClick.AddListener(OnClickResetPWCancel);
 
         // 경고창 관련 버튼 이벤트 등록
         logingWarning_OK.onClick.AddListener(CancelWarningIMG);
@@ -138,7 +133,7 @@ public class FirebaseManager : MonoBehaviour
     // 계정 찾기 팝업 활성화
     private void OnClickFindAccount()
     {
-        findAccountImg.SetActive(true);
+        findID.SetActive(true);
     }
 
     /// <summary>
@@ -158,27 +153,31 @@ public class FirebaseManager : MonoBehaviour
                     Log("로그인 성공");
                     break;
                 case Authentication.State.SignInAlready:
-                    loginWarning.SetActive(true);
-                    warningText.text = "이미 로그인된 계정입니다";
+                    WarningLogSetActiveTrue("이미 로그인 된 계정입니다.");
                     break;
                 case Authentication.State.SignInInvalidEmail:
-                    loginWarning.SetActive(true);
-                    warningText.text = "이메일 형식이 올바르지 않습니다.";
+                    WarningLogSetActiveTrue("ID의 이메일 형식이 올바르지 않습니다.");
                     break;
                 default:
-                    loginWarning.SetActive(true);
-                    warningText.text = "아이디 혹은 비밀번호가 일치하지 않습니다.";
+                    WarningLogSetActiveTrue("ID 혹은 PW가 일치 하지 않습니다.");
                     break;
             }
         });
     }
     #endregion
 
-    #region 로그인 실패 시 팝업창
+    #region 팝업창 관련 함수
     private void CancelWarningIMG()
     {
         warningText.text = "";
         loginWarning.SetActive(false);
+    }
+
+    private string WarningLogSetActiveTrue(string text)
+    {
+        loginWarning.SetActive(true);
+        warningText.text = text;
+        return warningText.text;
     }
     #endregion
 
@@ -211,7 +210,12 @@ public class FirebaseManager : MonoBehaviour
         bool isPWValid = PWcheckImg0.color == Color.green;
         bool isPWMatch = PWcheckImg1.color == Color.green;
 
-        string hintSchool = signUpInputSchool.text;
+        // 핵심 조치 (IME 조합 종료)
+        EventSystem.current.SetSelectedGameObject(null);
+        signUpInputSchool.ForceLabelUpdate();
+
+        string hintSchool = signUpInputSchool.text.Replace("\n", "").Replace("\r", "").Trim();
+        Debug.Log("입력값: [" + hintSchool + "] / 길이: " + hintSchool.Length);
 
         // 실제 회원가입 로직
         string ID = signUpInputID.text.Trim();
@@ -308,7 +312,11 @@ public class FirebaseManager : MonoBehaviour
     /// </summary>
     private void OnClickFindID()
     {
-        string schoolName = findID_SchoolInput.text.Trim();
+        // 핵심 조치 (IME 조합 종료)
+        EventSystem.current.SetSelectedGameObject(null);
+        findID_SchoolInput.ForceLabelUpdate();
+
+        string schoolName = findID_SchoolInput.text.Replace("\n", "").Replace("\r", "").Trim();
 
         if (string.IsNullOrEmpty(schoolName))
         {
@@ -329,7 +337,6 @@ public class FirebaseManager : MonoBehaviour
         });
     }
 
-
     /// <summary>
     /// ID 찾기 취소 버튼 눌렀을 때
     /// </summary>
@@ -337,7 +344,7 @@ public class FirebaseManager : MonoBehaviour
     {
         // 입력값 초기화
         findID_SchoolInput.text = "";
-        findAccountImg.SetActive(false);
+        findID.SetActive(false);
     }
 
     /// <summary>
@@ -356,8 +363,12 @@ public class FirebaseManager : MonoBehaviour
     /// </summary>
     private void OnClickFindPW()
     {
+        // 핵심 조치 (IME 조합 종료)
+        EventSystem.current.SetSelectedGameObject(null);
+        findPW_SchoolInput.ForceLabelUpdate();
+
         string id = findPW_IDInput.text.Trim();             // 이메일(ID)
-        string schoolName = findPW_SchoolInput.text.Trim(); // 모교 이름
+        string schoolName = findPW_SchoolInput.text.Replace("\n", "").Replace("\r", "").Trim();
 
         if (string.IsNullOrEmpty(id) || string.IsNullOrEmpty(schoolName))
         {
@@ -384,67 +395,17 @@ public class FirebaseManager : MonoBehaviour
         });
     }
 
-
-
     private void OnClickFindPWCancel()
     {
         findPW_IDInput.text = "";
         findPW_SchoolInput.text = "";
-        findAccountImg.SetActive(false);
+        findPW.SetActive(false);
     }
 
     private void OnClickFindPWChangeToID()
     {
         findPW.SetActive(false);
         findID.SetActive(true);
-    }
-    #endregion
-
-    #region 계정 찾기 중_ PW찾기 중_ 비밀번호 덮어쓰기 함수들
-    /// <summary>
-    /// 비밀번호 재설정 확인 버튼 클릭 시 호출됨
-    /// </summary>
-    private void OnClickResetPWConfirm()
-    {
-        string newPW = newPW_Input.text.Trim();
-        string newPWCheck = newPW_InputCheck.text.Trim();
-
-        if (string.IsNullOrEmpty(newPW) || string.IsNullOrEmpty(newPWCheck))
-        {
-            LogWarning("비밀번호와 확인란을 모두 입력해주세요.");
-            return;
-        }
-
-        if (newPW != newPWCheck)
-        {
-            LogWarning("비밀번호가 일치하지 않습니다.");
-            return;
-        }
-
-        // TODO: Firebase에 비밀번호 변경 요청 보내기
-        LogWarning("비밀번호 재설정 기능은 아직 구현되지 않았습니다.");
-
-        // 성공 시 UI 닫고 초기화
-        resetPWUI_Clear();
-    }
-
-    /// <summary>
-    /// 비밀번호 재설정 취소 버튼 클릭 시 호출됨
-    /// </summary>
-    private void OnClickResetPWCancel()
-    {
-        resetPWUI_Clear();
-        Log("비밀번호 재설정 취소됨");
-    }
-
-    /// <summary>
-    /// 재설정 UI 초기화 함수
-    /// </summary>
-    private void resetPWUI_Clear()
-    {
-        newPW_Input.text = "";
-        newPW_InputCheck.text = "";
-        // UI 숨기기 처리 필요시 여기에
     }
     #endregion
 

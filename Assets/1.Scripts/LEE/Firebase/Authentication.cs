@@ -212,6 +212,77 @@ public static class Authentication
         });
     }
 
+    // 아이디 찾기
+    public static void FindIDBySchoolName(string schoolName, Action<string> callback)
+    {
+        FirebaseDatabase.DefaultInstance.GetReference("Users").GetValueAsync().ContinueWithOnMainThread(task =>
+        {
+            if (task.IsFaulted || task.IsCanceled)
+            {
+                callback?.Invoke(null);
+                return;
+            }
+
+            DataSnapshot snapshot = task.Result;
+
+            foreach (var user in snapshot.Children)
+            {
+                string dbSchool = user.Child("SchoolName").Value?.ToString();
+                string dbID = user.Child("ID").Value?.ToString();
+
+                if (dbSchool == schoolName)
+                {
+                    callback?.Invoke(dbID);
+                    return;
+                }
+            }
+
+            callback?.Invoke(null);
+        });
+    }
+
+    // 비밀번호 찾기
+    public static void FindPWbyIDAndSchoolName(string id, string schoolName, Action<bool> callback)
+    {
+        if (string.IsNullOrWhiteSpace(id) || string.IsNullOrWhiteSpace(schoolName))
+        {
+            callback?.Invoke(false);
+            return;
+        }
+
+        FirebaseDatabase.DefaultInstance.GetReference("Users").GetValueAsync().ContinueWithOnMainThread(task =>
+        {
+            if (task.IsFaulted || task.IsCanceled)
+            {
+                callback?.Invoke(false);
+                return;
+            }
+
+            DataSnapshot snapshot = task.Result;
+
+            foreach (var user in snapshot.Children)
+            {
+                string dbID = user.Child("ID").Value?.ToString();
+                string dbSchoolName = user.Child("SchoolName").Value?.ToString();
+
+                if (dbID == id && dbSchoolName == schoolName)
+                {
+                    // 이메일(ID)로 비밀번호 재설정 링크 발송
+                    FirebaseAuth.DefaultInstance.SendPasswordResetEmailAsync(id)
+                        .ContinueWithOnMainThread(emailTask =>
+                        {
+                            callback?.Invoke(!(emailTask.IsFaulted || emailTask.IsCanceled));
+                        });
+                    return;
+                }
+            }
+
+            // 일치하는 사용자 없음
+            callback?.Invoke(false);
+        });
+    }
+
+    // 로그인 중복 체크 함수 (추후 해석)
     private static void HandleSessionTransaction(string userId, string sessionToken, string email, Action<State> callback)
     {
         databaseReference.Child(SessionTag).RunTransaction(mutableData =>
@@ -257,6 +328,7 @@ public static class Authentication
         });
     }
 
+    // 중복 로그인 자동 로그아웃 함수 (추후 해석) 
     private static void RegisterSessionListener(string sessionToken)
     {
         sessionListener = (object sender, ValueChangedEventArgs args) =>
@@ -279,77 +351,6 @@ public static class Authentication
         };
 
         databaseReference.Child(SessionTag).ValueChanged += sessionListener;
-    }
-
-    // 아이디 찾기
-    public static void FindIDBySchoolName(string schoolName, Action<string> callback)
-    {
-        FirebaseDatabase.DefaultInstance.GetReference("Users").GetValueAsync().ContinueWithOnMainThread(task =>
-        {
-            if (task.IsFaulted || task.IsCanceled)
-            {
-                callback?.Invoke(null);
-                return;
-            }
-
-            DataSnapshot snapshot = task.Result;
-
-            foreach (var user in snapshot.Children)
-            {
-                string dbSchool = user.Child("SchoolName").Value?.ToString();
-                string dbID = user.Child("ID").Value?.ToString();
-
-                if (dbSchool == schoolName)
-                {
-                    callback?.Invoke(dbID);
-                    return;
-                }
-            }
-
-            callback?.Invoke(null);
-        });
-    }
-
-
-    // 비밀번호 찾기
-    public static void FindPWbyIDAndSchoolName(string id, string schoolName, Action<bool> callback)
-    {
-        if (string.IsNullOrWhiteSpace(id) || string.IsNullOrWhiteSpace(schoolName))
-        {
-            callback?.Invoke(false);
-            return;
-        }
-
-        FirebaseDatabase.DefaultInstance.GetReference("Users").GetValueAsync().ContinueWithOnMainThread(task =>
-        {
-            if (task.IsFaulted || task.IsCanceled)
-            {
-                callback?.Invoke(false);
-                return;
-            }
-
-            DataSnapshot snapshot = task.Result;
-
-            foreach (var user in snapshot.Children)
-            {
-                string dbID = user.Child("ID").Value?.ToString();
-                string dbSchoolName = user.Child("SchoolName").Value?.ToString();
-
-                if (dbID == id && dbSchoolName == schoolName)
-                {
-                    // 이메일(ID)로 비밀번호 재설정 링크 발송
-                    FirebaseAuth.DefaultInstance.SendPasswordResetEmailAsync(id)
-                        .ContinueWithOnMainThread(emailTask =>
-                        {
-                            callback?.Invoke(!(emailTask.IsFaulted || emailTask.IsCanceled));
-                        });
-                    return;
-                }
-            }
-
-            // 일치하는 사용자 없음
-            callback?.Invoke(false);
-        });
     }
 
 }
