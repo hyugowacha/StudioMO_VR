@@ -19,8 +19,7 @@ public abstract class Panel : MonoBehaviour
         {
             if (hasRectTransform == false)
             {
-                rectTransform = GetComponent<RectTransform>();
-                hasRectTransform = true;
+                hasRectTransform = TryGetComponent(out rectTransform);
             }
             return rectTransform;
         }
@@ -40,9 +39,10 @@ public abstract class Panel : MonoBehaviour
         private set;
     }
 
+    [Header("현재 자릿수 설정"), SerializeField]
+    private sbyte digitScale;
+
     protected static readonly char ZeroPlaceholder = '0';
-    protected static readonly string ColonLetter = ":";
-    protected static readonly string SlashLetter = "/";
     protected static readonly string DecimalPlaceLetter = "F";
 
 #if UNITY_EDITOR
@@ -52,11 +52,28 @@ public abstract class Panel : MonoBehaviour
     }
 #endif
 
+    //대상 숫자의 단위를 설정한 자릿수 변수에 맞게 문자열로 반환해주는 메소드
+    protected string GetNumberText(double value)
+    {
+        if (digitScale > 0)      //자연수만 출력
+        {
+            return value.ToString(new string(ZeroPlaceholder, digitScale + 1));
+        }
+        else if (digitScale < 0) //소수
+        {
+            return value.ToString(DecimalPlaceLetter + -digitScale);
+        }
+        else
+        {
+            return value.ToString(DecimalPlaceLetter + 0);
+        }
+    }
+
     //패널을 화면에 표시하기 위한 메소드
-    public virtual void Open(Action action = null)
+    public virtual void Open()
     {
         openTween.Kill();
-        openTween = DOVirtual.DelayedCall(openDelay, () => { action?.Invoke(); gameObject.SetActive(true); });
+        openTween = DOVirtual.DelayedCall(openDelay, () => { gameObject.SetActive(true); });
     }
 
     //패널을 화면에서 숨기기 위한 메소드

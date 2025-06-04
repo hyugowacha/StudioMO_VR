@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 #if UNITY_EDITOR
@@ -25,8 +26,29 @@ public class StageData : ScriptableObject
     [Header("탄막 테스트 에셋"), SerializeField]
     private TextAsset bulletTextAsset;
 
-    [Header("목표 채취량"), SerializeField]
-    private uint goalMinValue = 50;
+    [Serializable]
+    public struct Score
+    {
+        [SerializeField]
+        private uint clearValue;
+        [SerializeField]
+        private uint addValue;
+
+        //클리어 목표 점수를 반환하는 메서드
+        public uint GetClearValue()
+        {
+            return clearValue;
+        }
+
+        //추가 점수를 반환하는 메서드
+        public uint GetAddValue()
+        {
+            return addValue;
+        }
+    }
+
+    [Header("점수"), SerializeField]
+    private Score score;
 
     private static StageData[] stageDatas = null;
 
@@ -36,11 +58,6 @@ public class StageData : ScriptableObject
 #endif
     private readonly static string FolderText = nameof(StageData) + "s";
 
-    //목표 채취량을 반환하는 메서드
-    public uint GetGoalMinValue()
-    {
-        return goalMinValue;
-    }
 
     //언어별 음악명 텍스트를 반환하는 메서드
     public string GetMusicText(Translation.Language language)
@@ -52,6 +69,12 @@ public class StageData : ScriptableObject
     public string GetStoryText(Translation.Language language)
     {
         return storyText.Get(language);
+    }
+    
+    //클리어 목표 점수를 반환하는 메서드
+    public Score GetScore()
+    {
+        return score;
     }
 
     //탄막 테스트 에셋을 반환하는 메서드

@@ -5,7 +5,6 @@ using UnityEngine.UI;
 using UnityEngine.InputSystem;
 using UnityEngine.XR.Interaction.Toolkit;
 using TMPro;
-using DG.Tweening;
 
 /// <summary>
 /// 확장 메서드 
@@ -187,11 +186,32 @@ public static class ExtensionMethod
         }
     }
 
+    public static void Set(this Image image, Sprite sprite)
+    {
+        if (image != null)
+        {
+            image.sprite = sprite;
+        }
+    }
+
     public static void Set(this Image image, Color color)
     {
         if (image != null)
         {
             image.color = color;
+        }
+    }
+
+    public static void Fill(this Image image, Color color, float value)
+    {
+        if (image != null)
+        {
+            if (image.type != Image.Type.Filled)
+            {
+                image.type = Image.Type.Filled;
+            }
+            image.color = color;
+            image.fillAmount = value;
         }
     }
 
