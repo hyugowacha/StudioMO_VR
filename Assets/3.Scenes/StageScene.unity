@@ -767,12 +767,14 @@ MonoBehaviour:
   leftHandOffset: {x: 0, y: 0, z: 0}
   rightHandOffset: {x: 0, y: 0, z: 0}
   pickaxe: {fileID: 383915013}
+  vignetteController: {fileID: 0}
+  enableVignette: 0
   audioSource: {fileID: 1690689689052333257}
   phasePanel: {fileID: 0}
   startDelay: 3
   slowMotionPanel: {fileID: 0}
-  timerPanel: {fileID: 9101277440106356572}
-  scorePanel: {fileID: 281496050025415832}
+  timerPanel: {fileID: 0}
+  scorePanel: {fileID: 0}
 --- !u!1 &383915011
 GameObject:
   m_ObjectHideFlags: 0
@@ -1980,18 +1982,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 16401610eb78b6544a948882f67e8c3d, type: 3}
---- !u!114 &281496050025415832 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8250550204794243060, guid: 16401610eb78b6544a948882f67e8c3d,
-    type: 3}
-  m_PrefabInstance: {fileID: 281496050025415831}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2cc8a47c42191a74580778deb2bbbcef, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!224 &870328650367190666 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 6011083313060158186, guid: 16401610eb78b6544a948882f67e8c3d,
@@ -2220,21 +2210,6 @@ PrefabInstance:
     - target: {fileID: 1697022158957833793, guid: 99d1fdbf8c7943d40b7e251dd187825e,
         type: 3}
       propertyPath: sceneViewId
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 3237962548480457371, guid: 99d1fdbf8c7943d40b7e251dd187825e,
-        type: 3}
-      propertyPath: m_IsTrigger
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4039014431498145511, guid: 99d1fdbf8c7943d40b7e251dd187825e,
-        type: 3}
-      propertyPath: sceneViewId
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 5094992337695965932, guid: 99d1fdbf8c7943d40b7e251dd187825e,
-        type: 3}
-      propertyPath: sceneViewId
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5540131540651068354, guid: 99d1fdbf8c7943d40b7e251dd187825e,
@@ -2291,16 +2266,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6538331087419072085, guid: 99d1fdbf8c7943d40b7e251dd187825e,
-        type: 3}
-      propertyPath: invincibleMode
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8568786527279822262, guid: 99d1fdbf8c7943d40b7e251dd187825e,
-        type: 3}
-      propertyPath: sceneViewId
-      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2732,18 +2697,6 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 7354364358307474752}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &9101277440106356572 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8010802215246519493, guid: f3919d7766a71d64bb383fc0da6685d7,
-    type: 3}
-  m_PrefabInstance: {fileID: 7354364358307474752}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1678f824e2e49324a9e52009226f23fd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

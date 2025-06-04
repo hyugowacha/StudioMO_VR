@@ -287,6 +287,6 @@ public class StageManager : Manager
 
     public void EnableBool(bool enable) //vigentte 온오프하는 메서드
     {
-        vignetteController.SetVignetteActive(enableVignette);
+        //vignetteController.SetVignetteActive(enableVignette);
     }
 }
