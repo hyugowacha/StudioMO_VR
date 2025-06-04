@@ -41,11 +41,11 @@ public class StageManager : Manager
 
     [Header("캔버스 내용들"), SerializeField]
     private AudioSource audioSource;                            //배경음악 오디오 소스
-    [SerializeField]
-    private PhasePanel phasePanel;                              //게임 준비, 시작, 종료를 표시하는 패널
+    private bool stop = true;                                   //게임 진행이 가능한지 여부를 알려주는 변수
     [SerializeField, Range(0, int.MaxValue)]
     private float startDelay = 3;                               //게임 시작 딜레이
-    private bool stop = true;                                   //게임 진행이 가능한지 여부를 알려주는 변수
+    [SerializeField]
+    private PhasePanel phasePanel;                              //게임 준비, 시작, 종료를 표시하는 패널
 
     [SerializeField]
     private TimerPanel slowMotionPanel;                          //슬로우 모션 표시 패널
