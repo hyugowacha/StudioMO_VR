@@ -1,8 +1,12 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Photon.Pun;
 using DG.Tweening;
+using System;
+using static UnityEngine.Rendering.DebugUI;
+using Photon.Realtime;
 
 [System.Serializable]
 public class MineralPieceGroup
@@ -29,7 +33,7 @@ public class MineralPieceGroup
 [RequireComponent(typeof(PhotonView))]
 
 // Photon이 제공하는 콜백들을 사용할 수 있도록 MonoBehaviourPunCallbacks 상속
-public class Mineral : MonoBehaviourPunCallbacks
+public class Mineral : MonoBehaviourPunCallbacks, IPunObservable
 {
     [Header("광물 최대한도")]
     [SerializeField] uint maxValue; // 광물이 채워질 수 있는 최대 수량
@@ -75,8 +79,6 @@ public class Mineral : MonoBehaviourPunCallbacks
             return currentValue > 0; // 광물이 1개 이상 남아있어야 채집 가능
         }
     }
-
-    private BoxCollider coll;
     
     // ▼ 채광 게이지 증가량 상수들 (기본 공격 / 크리티컬 히트 / 완료 한계값)
     private static readonly float ProgressMissValue = 25f;      // 일반 공격 시 게이지 증가량
@@ -84,31 +86,30 @@ public class Mineral : MonoBehaviourPunCallbacks
     private static readonly float ProgressCompleteValue = 100f; // 이 값 도달 시 채집 성공
 
     // ▼ 시작 시 최대치로 초기화
-    private void Awake()
+    private void Start()
     {
-        currentValue = maxValue;
-        coll = GetComponent<BoxCollider>();
+        if (photonView.IsMine == true)
+        {
+            Regenerate();
+        }
     }
 
     // ▼ 매 프레임마다 실행되는 업데이트 함수
     private void Update()
     {
         // 로직 테스트 용
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            GetMineral(false);
-        }
-
-        // 이 오브젝트가 나의 것일 때만 실행 (PhotonView 소유자만)
-        if (photonView.IsMine && remainingTime > 0)
+        //if (Input.GetKeyDown(KeyCode.Space))
+        //{
+        //    GetMineral(false);
+        //}
+        if (photonView.IsMine == true && remainingTime > 0)
         {
             remainingTime -= Time.deltaTime; // 매 프레임마다 충전시간 감소
             if (remainingTime <= 0)
             {
                 // 충전 완료 시 → 다시 채집 가능 상태로
                 remainingTime = 0;
-                currentValue = maxValue;
-                MineralPieceUpdate();
+                Regenerate();
             }
         }
     }
@@ -127,8 +128,16 @@ public class Mineral : MonoBehaviourPunCallbacks
         StopAllCoroutines(); // 실행 중인 코루틴 전부 중지
     }
 
+    public override void OnPlayerEnteredRoom(Player player)
+    {
+        if (photonView.IsMine == true)
+        {
+            photonView.RPC(nameof(SetState), player, ExtensionMethod.Convert(currentValue), progressValue);
+        }
+    }
+
     // ▼ 슬라이더 UI의 fillAmount 값을 설정하고 잠깐 보여줬다가 사라지게 함
-    private void ShowImageValue(float value)
+    private void ShowImageValue(float value, System.Action onCompleted = null)
     {
         if (progressSlider != null)
         {
@@ -136,7 +145,8 @@ public class Mineral : MonoBehaviourPunCallbacks
             DOTween.Kill(progressSlider);
 
             // ▼ 부드럽게 value 까지 증가 ( 0.3초 동안 )
-            progressSlider.DOValue(value, 0.3f).SetEase(Ease.OutQuad);
+            progressSlider.DOValue(value, 0.3f).SetEase(Ease.OutQuad)
+                .OnComplete(() => onCompleted?.Invoke());
         }
 
         StopAllCoroutines();         // 기존에 진행 중인 코루틴이 있다면 중지
@@ -215,7 +225,6 @@ public class Mineral : MonoBehaviourPunCallbacks
     public uint GetMineral(bool perfectHit)
     {
         uint value = 0;
-
         // 현재 광물이 남아 있다면 채집 시도 가능
         if (currentValue > 0)
         {
@@ -224,15 +233,179 @@ public class Mineral : MonoBehaviourPunCallbacks
 
             progressValue += increaseValue; // 진행도 누적
 
-            // 게이지가 100 이상이면 채집 성공
+            // ▼ 진행도를 0 ~ 1 비율로 전환해서 슬라이더 값에 반영해 해당 함수 실행하고, 람다식 실행
+            ShowImageValue(progressValue / ProgressCompleteValue, () =>
+            {
+                // 진행도가 100 이상이면 채집 성공
+                if (progressValue >= ProgressCompleteValue)
+                {
+                    progressValue = 0; // 내부 진행도 초기화
+                    currentValue -= 1; // 광물 1개 소모
+                    MineralPieceUpdate();
+
+                    // 광물 다 떨어졌을 경우
+                    if (currentValue == 0)
+                    {
+                        if (chargingTime > 0)
+                        {
+                            remainingTime = chargingTime; // 충전 시작
+                        }
+                        else
+                        {
+                            currentValue = maxValue; // 충전 시간 없으면 즉시 복구
+                            MineralPieceUpdate();
+                        }
+                    }
+
+                    // ▼ 슬라이더 값도 즉시 0으로 초기화 해서, 100 ~ 0 으로 가는 애니메이션 방지
+                    progressSlider.value = 0f;
+                    
+                    value = acquisitionAmount; // 플레이어가 실제로 얻는 양 반환
+                }
+            });
+        }
+        return value; // 0 또는 실제 획득량 반환
+    }
+
+    [Header("슬라이더 게이지의 보간 속도"),SerializeField, Range(0, int.MaxValue)]
+    private float sliderFillSpeed = 0.3f;
+
+    [SerializeField]
+    private ParticleSystem hitParticle;
+    [SerializeField]
+    private ParticleSystem dustParticle;
+
+    private static List<ParticleSystem> hitParticleSystems = new List<ParticleSystem>();
+    private static List<ParticleSystem> dustParticleSystems = new List<ParticleSystem>();
+
+    public static event Action<int, uint> miningAction = null;
+
+    private void Regenerate()
+    {
+        int convert = ExtensionMethod.Convert(maxValue);
+        SetCount(convert);
+        if (PhotonNetwork.InRoom == true)
+        {
+            photonView.RPC(nameof(SetCount), RpcTarget.Others, convert); // 다른 플레이어에게도 광물 수량 갱신
+        }
+    }
+
+    //타격 파티클을 보여주는 로직
+    private void ShowHitParticle(Vector3 position)
+    {
+        int count = hitParticleSystems.Count;
+        for (int i = 0; i < count; i++)
+        {
+            if (hitParticleSystems[i] != null && hitParticleSystems[i].isPlaying == false)
+            {
+                hitParticleSystems[i].transform.position = position;
+                hitParticleSystems[i].Play(true);
+                return;
+            }
+        }
+        if (hitParticle != null)
+        {
+            ParticleSystem particleSystem = Instantiate(hitParticle, position, Quaternion.identity);
+            hitParticleSystems.Add(particleSystem);
+        }
+    }
+
+    //먼지 파티클을 보여주는 로직
+    private void ShowDustParticle(Vector3 position)
+    {
+        int count = dustParticleSystems.Count;
+        for (int i = 0; i < count; i++)
+        {
+            if (dustParticleSystems[i] != null && dustParticleSystems[i].isPlaying == false)
+            {
+                dustParticleSystems[i].transform.position = position;
+                dustParticleSystems[i].Play(true);
+                return;
+            }
+        }
+        if (dustParticle != null)
+        {
+            ParticleSystem particleSystem = Instantiate(hitParticle, position, Quaternion.identity);
+            dustParticleSystems.Add(particleSystem);
+        }
+    }
+
+    [PunRPC]
+    private void SetCount(int remainCount)
+    {
+        uint convert = ExtensionMethod.Convert(remainCount);
+        if (currentValue != convert)
+        {
+            currentValue = convert;
+            MineralPieceUpdate();
+        }
+    }
+
+    [PunRPC]
+    private void SetState(int remainCount, float progressValue)
+    {
+        this.progressValue = progressValue;
+        SetCount(remainCount);
+    }
+
+    [PunRPC]
+    private void ApplyMining(Vector3 position, int actor, int remainCount, int gatherAmount, float value)
+    {
+        if (progressSlider != null)
+        {
+            // ▼ 기존 DOTween 코루틴 중지
+            DOTween.Kill(progressSlider);
+            // ▼ 부드럽게 value 까지 증가 (sliderFillSpeed초 동안)
+            if (progressValue <= value)
+            {
+                progressSlider.DOValue(value / ProgressCompleteValue, sliderFillSpeed).SetEase(Ease.OutQuad);
+            }
+            // ▼ 값이 최대치로 증가했다가 원점으로 초기화 후 해당 값만큼 이동
+            else if (value > 0)
+            {
+                float halfDuration = sliderFillSpeed * 0.5f;
+                progressSlider.DOValue(1, halfDuration).SetEase(Ease.OutQuad).OnComplete(() =>
+                {
+                    progressSlider.value = 0;
+                    progressSlider.DOValue(value / ProgressCompleteValue, halfDuration).SetEase(Ease.OutQuad);
+                });
+            }
+            // ▼ 값이 최대치로 증가
+            else
+            {
+                progressSlider.DOValue(1, sliderFillSpeed).SetEase(Ease.OutQuad);
+            }
+        }
+        StopAllCoroutines();            // 기존에 진행 중인 코루틴이 있다면 중지
+        StartCoroutine(ShowCanvas()); // 새로운 코루틴으로 보여주기 시작
+        ShowHitParticle(position);
+        ShowDustParticle(transform.position);
+        SetState(remainCount, value);
+        miningAction?.Invoke(actor, ExtensionMethod.Convert(gatherAmount));
+    }
+
+    // ▼ 플레이어의 채집을 허락하는 로직
+    [PunRPC]
+    private void RequestMining(Vector3 position, int actor, bool perfectHit)
+    {
+        // 현재 광물이 남아 있다면 채집 시도 가능
+        if (currentValue > 0 || maxValue == currentValue)
+        {
+            // 크리티컬 히트면 50, 아니면 25 만큼 진행도 증가
+            float increaseValue = perfectHit ? ProgressCriticalValue : ProgressMissValue;
+            float progressValue = this.progressValue + increaseValue;
+            uint remainCount = currentValue;
+            uint gatherAmount = 0;
             if (progressValue >= ProgressCompleteValue)
             {
-                progressValue = 0; // 게이지 초기화
-                currentValue -= 1; // 광물 1개 소모
-                MineralPieceUpdate();
-
+                progressValue = 0; //이전에 모았던 내용을 무시하고 아예 초기화
+                //progressValue -= ProgressCompleteValue; //이전에 모았던 잔여량을 감안해서 차감
+                if (maxValue > 0 && remainCount > 0)
+                {
+                    remainCount -= 1;
+                }
                 // 광물 다 떨어졌을 경우
-                if (currentValue == 0)
+                if (remainCount == 0)
                 {
                     if (chargingTime > 0)
                     {
@@ -240,18 +413,52 @@ public class Mineral : MonoBehaviourPunCallbacks
                     }
                     else
                     {
-                        currentValue = maxValue; // 충전 시간 없으면 즉시 복구
-                        MineralPieceUpdate();
+                        remainCount = maxValue; // 충전 시간 없으면 즉시 복구
                     }
                 }
-
-                value = acquisitionAmount; // 플레이어가 실제로 얻는 양 반환
+                gatherAmount = acquisitionAmount;   //획득량
             }
-
-            // 게이지 UI 반영
-            ShowImageValue(progressValue / ProgressCompleteValue);
+            int convert1 = ExtensionMethod.Convert(remainCount);
+            int convert2 = ExtensionMethod.Convert(gatherAmount);
+            ApplyMining(position, actor, convert1, convert2, progressValue);
+            if (PhotonNetwork.InRoom == true)
+            {
+                photonView.RPC(nameof(ApplyMining), RpcTarget.Others, position, actor, convert1, convert2, progressValue);
+            }
         }
+        else
+        {
+#if UNITY_EDITOR
+            Debug.LogWarning("광물이 부족하여 채집할 수 없습니다. 충전 중입니다.");
+#endif
+        }
+    }
 
-        return value; // 0 또는 실제 획득량 반환
+    // ▼ 방 안에서 조종 권한이 있는 이 객체의 멤버 변수 내용이 변경될 때 다른 플레이어에게 그 값을 동기화 시키기 위한 함수
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        if (photonView.IsMine == true)
+        {
+            stream.SendNext(remainingTime);
+        }
+        else
+        {
+            remainingTime = (float)stream.ReceiveNext();
+        }
+    }
+
+    // ▼ 플레이어가 채집을 시도했을 때 동작하는 로직
+    public void Mine(Vector3 position, int actor, bool perfectHit = false)
+    {
+        //방에 있고 내가 이 객체의 소유자가 아니라면
+        if (PhotonNetwork.InRoom == true && photonView.IsMine == false)
+        {
+            photonView.RPC(nameof(RequestMining), photonView.Owner, position, actor, perfectHit);
+        }
+        //싱글 플레이 및 본인이 방장의 위치에 있다면
+        else
+        {
+            RequestMining(position, actor, perfectHit);
+        }
     }
 }

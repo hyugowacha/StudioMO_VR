@@ -1,16 +1,33 @@
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.InputSystem;
-using TMPro;
+using DG.Tweening;
+using Photon.Pun;
+using UnityEngine.XR.Interaction.Toolkit;
 
 [RequireComponent(typeof(BulletPatternLoader))]
 public class StageManager : Manager
 {
+#if UNITY_EDITOR
+    [SerializeField]
+    private StageData stageData;
+#endif
+
     public static readonly string SceneName = "StageScene";
 
-    [Header("스테이지 매니저 구간")]
-    [SerializeField]
+    [Header("스테이지 매니저 구간"), SerializeField]
     private Character character;                                //조종할 캐릭터
+    [SerializeField]
+    private Vector3 leftHandOffset;                             //왼쪽 손잡이 간격
+    [SerializeField]
+    private Vector3 rightHandOffset;                            //오른쪽 손잡이 간격
+    private Vector2 moveInput = Vector2.zero;                   //이동 입력 값
+    private Tween slowMotionTween = null;                       //슬로우 모션 트윈
+    [SerializeField]
+    private Pickaxe pickaxe;                                    //곡괭이
+    [SerializeField]
+    private TunnelingVignetteController vignetteController;     //비네트 (상태이상 표시)
+
+    ITunnelingVignetteProvider provider;
 
     private bool hasBulletPatternLoader = false;
 
@@ -28,46 +45,41 @@ public class StageManager : Manager
         }
     }
 
+    [Header("캔버스 내용들"), SerializeField]
+    private AudioSource audioSource;                            //배경음악 오디오 소스
     [SerializeField]
-    private AudioSource audioSource;                            //배경음악
-
-    [SerializeField]
-    private Pickaxe pickaxe;                                    //곡괭이
-    [SerializeField]
-    private Vector3 leftHandOffset;                             //왼쪽 손잡이 간격
-    [SerializeField]
-    private Vector3 rightHandOffset;                            //오른쪽 손잡이 간격
-
-    [Header("남은 시간")]
-    [SerializeField]
-    private Image currentTimeImage;                             //현재 시간 슬라이드바 이미지
-    [SerializeField]
-    private TMP_Text currentTimeText;                           //현재 시간 텍스트
-    private float currentTimeValue = 0.0f;                      //현재 시간 값
+    private PhasePanel phasePanel;                              //게임 준비, 시작, 종료를 표시하는 패널
     [SerializeField, Range(0, int.MaxValue)]
-    private float limitTimeValue = 0.0f;                        //제한 시간 값
-
-    [Header("광물 획득 정보")]
-    [SerializeField]
-    private Image currentMineralImage;                          //현재 광물 슬라이드바 이미지
-    [SerializeField]
-    private TMP_Text currentMineralText;                        //현재 광물 텍스트
-    [SerializeField]
-    private TMP_Text goalMineralText;                           //목표 광물 텍스트
-    [SerializeField]
-    private uint goalMineralValue = 0;                          //목표 광물 값
+    private float startDelay = 3;                               //게임 시작 딜레이
+    private bool stop = true;                                   //게임 진행이 가능한지 여부를 알려주는 변수
 
     [SerializeField]
-    private StageData test;
+    private TimerPanel slowMotionPanel;                          //슬로우 모션 표시 패널
+
+    [SerializeField]
+    private TimerPanel timerPanel;                              //남은 시간 표시 패널
+    private float remainingTime = 0.0f;                         //남은 시간
+    private float limitTime = 0.0f;                             //제한 시간
+
+    [SerializeField]
+    private ScorePanel scorePanel;                              //광물 점수 표시 패널
+    private StageData.Score score;                              //목표 광물 개수
 
     protected override void Start()
     {
         base.Start();
         if (instance == this)
         {
-            SetMoveSpeed(0);
+            provider = new VignetteProvider();
             SetFixedPosition(character != null ? character.transform.position : Vector3.zero);
-            StageData stageData = test;         //StageData stageData = StageData.current;
+            SetMoveSpeed(0);
+            StageData stageData = StageData.current;
+#if UNITY_EDITOR
+            if (stageData == null)
+            {
+                stageData = this.stageData;
+            }
+#endif
             if (stageData != null)
             {
                 GameObject gameObject = stageData.GetMapObject();
@@ -75,7 +87,7 @@ public class StageManager : Manager
                 {
                     Instantiate(gameObject, Vector3.zero, Quaternion.identity);
                 }
-                goalMineralValue = stageData.GetGoalMinValue();
+                score = stageData.GetScore();
                 TextAsset bulletTextAsset = stageData.GetBulletTextAsset();
                 getBulletPatternLoader.SetCSVData(bulletTextAsset);
                 if (audioSource != null)
@@ -84,13 +96,15 @@ public class StageManager : Manager
                     if (audioClip != null)
                     {
                         audioSource.clip = audioClip;
-                        limitTimeValue = audioClip.length;
+                        limitTime = audioClip.length;
                         audioSource.Play();
                     }
                 }
             }
-            currentTimeValue = limitTimeValue;
-            SetCurrentGathering(0);
+            limitTime = 10f;
+            remainingTime = limitTime;
+            phasePanel?.Open();
+            DOVirtual.DelayedCall(startDelay, () => stop = false);  
         }
     }
 
@@ -112,20 +126,36 @@ public class StageManager : Manager
         {
             SetFixedPosition(character.transform.position);
         }
-        if (currentTimeValue > 0)
+        if (remainingTime > 0 && stop == false)
         {
-            currentTimeValue -= Time.deltaTime;
-            if (currentTimeValue < 0)
+            remainingTime -= Time.deltaTime * SlowMotion.speed;
+            if (remainingTime <= 0)
             {
-                currentTimeValue = 0;   //게임 종료
+                remainingTime = 0;   //게임 종료
+                stop = true;
+                uint totalScore = 0;
+                if (character != null)
+                {
+                    character.SetSlowMotion(false); //시간이 끝나면 슬로우 모션 해제
+                    totalScore = character.mineralCount;
+                }
+                phasePanel?.Open(totalScore, score.GetClearValue(), score.GetAddValue());
             }
         }
-        currentTimeText.Set(currentTimeValue.ToString());
-        currentTimeImage.Fill(limitTimeValue > 0 ? currentTimeValue / limitTimeValue : 1);
+        timerPanel?.Open(remainingTime, limitTime);
+    }
+
+    private void FixedUpdate()
+    {
+        if (stop == false)
+        {
+            character?.UpdateMove(moveInput);
+        }
     }
 
     private void LateUpdate()
     {
+        uint mineralCount = 0;
         if (character != null)
         {
             if (Camera.main != null)
@@ -140,61 +170,152 @@ public class StageManager : Manager
             {
                 character.UpdateRightHand(rightActionBasedController.transform.position + rightHandOffset, rightActionBasedController.transform.rotation);
             }
+            bool faintingState = character.faintingState;
+            if (faintingState == true && pickaxe != null && pickaxe.grip == true)
+            {
+                pickaxe.grip = false;
+            }
+            float ratio = character.GetSlowMotionRatio();
+            //if (SlowMotion.IsOwner(PhotonNetwork.LocalPlayer) == true)
+            //{
+            //    slowMotionPanel?.Fill(ratio, false);
+            //}
+            //else if (ratio >= SlowMotion.MinimumUseValue /*+ SlowMotion.RecoverRate*/ && faintingState == false)
+            //{
+            //    slowMotionPanel?.Fill(ratio, true);
+            //}
+            //else
+            //{
+            //    slowMotionPanel?.Fill(ratio, null);
+            //}
+            mineralCount = character.mineralCount;
         }
+        scorePanel?.Open(mineralCount, score.GetClearValue(), score.GetAddValue());
     }
 
     protected override void ChangeText()
     {
+        slowMotionPanel?.ChangeText();
+        timerPanel?.ChangeText();
+        //mineralPanel?.ChangeText();
     }
 
     protected override void OnLeftFunction(InputAction.CallbackContext callbackContext)
     {
+        if (stop == false)
+        {
+            if (callbackContext.performed == true)
+            {
+                slowMotionTween = DOVirtual.DelayedCall(SlowMotion.ActiveDelay, () => { character?.SetSlowMotion(true); });
+            }
+            else if (callbackContext.canceled)
+            {
+                slowMotionTween.Kill();
+                character?.SetSlowMotion(false);
+            }
+        }
     }
 
     protected override void OnRightFunction(InputAction.CallbackContext callbackContext)
     {
-        if (CanPlaying() == true && character != null && character.faintingState == false && pickaxe != null)
+        if (stop == false && pickaxe != null)
         {
-            character.AddMineral(pickaxe.GetMineralCount());
+            if (callbackContext.performed == true && character != null && character.faintingState == false)
+            {
+                pickaxe.grip = true;
+            }
+            if (callbackContext.canceled)
+            {
+                pickaxe.grip = false;
+            }
         }
     }
 
+    //입력 시스템과 관련된 바인딩을 연결 및 해제에 사용하는 메서드 
     private void SetBinding(bool value)
     {
-        if(value == true)
+        if (leftActionBasedController != null && leftActionBasedController.translateAnchorAction != null)
         {
-            Character.mineralReporter += (character, value) => { SetCurrentGathering(value); };
+            leftActionBasedController.translateAnchorAction.reference.Set(ApplyMoveDirectionInput, ApplyMoveDirectionInput, value);
+        }
+        switch (value)
+        {
+            case true:
+                Mineral.miningAction += (actor, value) => { character?.AddMineral(value); };
+                SlowMotion.action += (speed) => 
+                {
+                    if(audioSource != null)
+                    {
+                        audioSource.pitch = speed;
+                    }
+                };
+                if (pickaxe != null)
+                {
+                    pickaxe.vibrationAction += (amplitude, duration) => { SendHapticImpulse(amplitude, duration, true); };
+                }
+                break;
+            case false:
+                Mineral.miningAction -= (actor, value) => { character?.AddMineral(value); };
+                SlowMotion.action -= (speed) =>
+                {
+                    if (audioSource != null)
+                    {
+                        audioSource.pitch = speed;
+                    }
+                };
+                if (pickaxe != null)
+                {
+                    pickaxe.vibrationAction -= (amplitude, duration) => { SendHapticImpulse(amplitude, duration, true); };
+                }
+                break;
+        }
+
+    }
+
+    //왼쪽 방향 입력을 적용하는 메서드
+    private void ApplyMoveDirectionInput(InputAction.CallbackContext callbackContext)
+    {
+        if (callbackContext.performed == true)
+        {
+            moveInput = callbackContext.ReadValue<Vector2>();
+        }
+        else if (callbackContext.canceled == true)
+        {
+            moveInput = Vector2.zero;
+        }
+    }
+    
+    //비네트를 켜고 끄는 함수 (플레이어 상태이상 시)
+    public void ToggleVignette(bool enable)
+    {
+        if (enable)
+        {
+            vignetteController.BeginTunnelingVignette(provider);
         }
         else
         {
-            Character.mineralReporter -= (character, value) => { SetCurrentGathering(value); };
-        }
-        if (leftActionBasedController != null && leftActionBasedController.translateAnchorAction != null)
-        {
-            leftActionBasedController.translateAnchorAction.reference.Set(OnMove, OnMove, value);
+            vignetteController.EndTunnelingVignette(provider);
         }
     }
 
-    private void OnMove(InputAction.CallbackContext callbackContext)
-    {
-        if(callbackContext.performed == true)
-        {
-            character?.UpdateMove(callbackContext.ReadValue<Vector2>());
-        }
-        else if(callbackContext.canceled == true)
-        {
-            character?.UpdateMove(Vector2.zero);
-        }
-    }
+    
+}
 
-    private void SetCurrentGathering(uint value)
-    {
-        currentMineralText.Set(value.ToString());
-        currentMineralImage.Fill(goalMineralValue > 0 ? (float)value / goalMineralValue : 1);
-    }
+//비네트 provider
+public class VignetteProvider : ITunnelingVignetteProvider
+{
+    public VignetteParameters vignetteParameters { get; }
 
-    private bool CanPlaying()
+    public VignetteProvider()
     {
-        return currentTimeValue > 0 || currentTimeValue == limitTimeValue;
+        vignetteParameters = new VignetteParameters
+        {
+            apertureSize = 0.685f,
+            featheringEffect = 0.282f,
+            easeInTime = 0.45f,
+            easeOutTime = 0.3f,
+            easeInTimeLock = false,
+            easeOutDelayTime = 0f
+        };
     }
 }

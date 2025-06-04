@@ -56,9 +56,25 @@ public static class ExtensionMethod
         array = templates;
     }
 
+    public static void SetParameter(this Animator animator, string name)
+    {
+        if (animator != null)
+        {
+            animator.SetTrigger(name);
+        }
+    }
+
+    public static void SetParameter(this Animator animator, string name, bool value)
+    {
+        if (animator != null)
+        {
+            animator.SetBool(name, value);
+        }
+    }
+
     public static void SetActive(this Transform transform, bool value)
     {
-        if(transform != null)
+        if (transform != null)
         {
             transform.gameObject.SetActive(value);
         }
@@ -66,9 +82,9 @@ public static class ExtensionMethod
 
     public static void SetPositionAndRotation(this Transform transform, Vector3 position, Quaternion rotation, bool local)
     {
-        if(transform != null)
+        if (transform != null)
         {
-            if(local == false)
+            if (local == false)
             {
                 transform.SetPositionAndRotation(position, rotation);
             }
@@ -81,7 +97,7 @@ public static class ExtensionMethod
 
     public static void SetActive(this ActionBasedController actionBasedController, bool value)
     {
-        if(actionBasedController != null)
+        if (actionBasedController != null)
         {
             actionBasedController.gameObject.SetActive(value);
         }
@@ -141,11 +157,83 @@ public static class ExtensionMethod
             tmpText.text = value;
         }
     }
+
+    public static void Set(this TMP_Text tmpText, string value, Color color)
+    {
+        if (tmpText != null)
+        {
+            tmpText.color = color;
+            tmpText.text = value;
+        }
+    }
+
+    public static void Set(this TMP_Text tmpText, string value, TMP_FontAsset fontAsset)
+    {
+        if (tmpText != null)
+        {
+            tmpText.font = fontAsset;
+            tmpText.text = value;
+        }
+    }
+
+    public static void Set(this TMP_Text tmpText, string value, TMP_FontAsset fontAsset, Color color)
+    {
+        if (tmpText != null)
+        {
+            tmpText.font = fontAsset;
+            tmpText.color = color;
+            tmpText.text = value;
+        }
+    }
+
+    public static void Set(this Image image, Sprite sprite)
+    {
+        if (image != null)
+        {
+            image.sprite = sprite;
+        }
+    }
+
+    public static void Set(this Image image, Color color)
+    {
+        if (image != null)
+        {
+            image.color = color;
+        }
+    }
+
+    public static void Fill(this Image image, Color color, float value)
+    {
+        if (image != null)
+        {
+            if (image.type != Image.Type.Filled)
+            {
+                image.type = Image.Type.Filled;
+            }
+            image.color = color;
+            image.fillAmount = value;
+        }
+    }
+
     public static void Fill(this Image image, float value)
     {
         if (image != null)
         {
+            if (image.type != Image.Type.Filled)
+            {
+                image.type = Image.Type.Filled;
+            }
             image.fillAmount = value;
         }
+    }
+
+    public static int Convert(uint value)
+    {
+        return (int)(value + int.MinValue);
+    }
+
+    public static uint Convert(int value)
+    {
+        return (uint)(value - int.MinValue);
     }
 }

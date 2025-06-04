@@ -1,62 +1,44 @@
-using System.Collections.Generic;
-using System.Linq;
+using System;
 using UnityEngine;
+using DG.Tweening;
 
 //곡괭이 클래스 객체의 하위 오브젝트에 붙어 광물과의 충돌을 감지하는 클래스
 [DisallowMultipleComponent]
-[RequireComponent(typeof(BoxCollider))]
+[RequireComponent(typeof(Collider))]
+
 public class HitBox : MonoBehaviour
 {
-    private Dictionary<Mineral, bool> minerals = new Dictionary<Mineral, bool>();
+    private Tween tween = null;
+
+    public event Action<HitBox, Mineral, Vector3> action = null;
 
     private static readonly string ContactTagName = "Interactable";
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag == ContactTagName)
+        if (other.tag == ContactTagName && tween == null)
         {
-            Mineral mineral = other.GetComponent<Mineral>();
-            if (mineral != null && minerals.ContainsKey(mineral) == false)
+            Vector3 position = this.transform.position;
+            Transform transform = other.transform;
+            while (true)
             {
-                minerals.Add(mineral, false);
-            }
-        }
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.tag == ContactTagName)
-        {
-            Mineral mineral = other.GetComponent<Mineral>();
-            if (mineral != null && minerals.ContainsKey(mineral) == true)
-            {
-                minerals.Remove(mineral);
-            }
-        }
-    }
-
-    public IEnumerable<Mineral> GetMinerals()
-    {
-        List<Mineral> list = new List<Mineral>();
-        Dictionary<Mineral, bool> dictionary = minerals.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
-        foreach (KeyValuePair<Mineral, bool> keyValuePair in dictionary)
-        {
-            Mineral mineral = keyValuePair.Key;
-            if (keyValuePair.Value == false)
-            {
-                if (mineral.collectable == true)
+                action?.Invoke(this, transform.GetComponent<Mineral>(), position);
+                if(transform.parent == null)
                 {
-                    list.Add(mineral);
-                    minerals[mineral] = true;
+                    break;
+                }
+                else
+                {
+                    transform = transform.parent;
                 }
             }
-            else
-            {
-#if UNITY_EDITOR
-                Debug.LogWarning(mineral.name + ":채집한 광물을 다시 채집하려면 곡괭이가 광물 콜라이더를 벗어났다가 다시 다가가야 합니다.");
-#endif
-            }
         }
-        return list;
+    }
+
+    //일시적으로 충돌 판정을 쉬어주는 메서드
+    public void Rest(float duration)
+    {
+        tween.Kill();
+        tween = DOVirtual.DelayedCall(duration, () => { tween = null; });
     }
 }

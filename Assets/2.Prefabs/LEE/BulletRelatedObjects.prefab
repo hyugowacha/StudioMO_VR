@@ -15,6 +15,8 @@ GameObject:
   - component: {fileID: 2101703494997394498}
   - component: {fileID: 7669456885974126513}
   - component: {fileID: 8595449043710101410}
+  - component: {fileID: 8516709921596419244}
+  - component: {fileID: 9096813360349131111}
   m_Layer: 0
   m_Name: Cube (3)
   m_TagString: Untagged
@@ -160,7 +162,43 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c4b9fb615970a98449ba7c3511449c54, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  side: 4
+  side: 3
+--- !u!114 &8516709921596419244
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 656519584863844933}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5c41f3a39f7a0934cb9374bcf6c0a620, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bulletPooling: {fileID: 2683349994792768806}
+  rangePatternBullet: {fileID: 3465485197423747118, guid: 5704d5e047b21014b83a73011ad895cb,
+    type: 3}
+  bulletParent: {fileID: 1359283471417940586}
+  wallCollider: {fileID: 373154182424033467}
+  fireAngle: 0
+--- !u!114 &9096813360349131111
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 656519584863844933}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fbfcc97cfe14b0b4991c1aba145ff6ac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bulletPooling: {fileID: 2683349994792768806}
+  anglePatternBullet: {fileID: -5814235743389041899, guid: 5704d5e047b21014b83a73011ad895cb,
+    type: 3}
+  bulletParent: {fileID: 2166552862952356285}
+  wallCollider: {fileID: 373154182424033467}
+  fireAngle: 0
 --- !u!1 &695480578148426380
 GameObject:
   m_ObjectHideFlags: 0
@@ -274,6 +312,8 @@ Transform:
   m_Children:
   - {fileID: 8700159607488267589}
   - {fileID: 2919043267028672090}
+  - {fileID: 2166552862952356285}
+  - {fileID: 1359283471417940586}
   m_Father: {fileID: 1096704820367216734}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2683349994792768806
@@ -341,6 +381,8 @@ GameObject:
   - component: {fileID: 2408631249686086149}
   - component: {fileID: 8347611325782476698}
   - component: {fileID: 4360913265431846909}
+  - component: {fileID: 7628207508544233662}
+  - component: {fileID: 6390920240962302767}
   m_Layer: 0
   m_Name: Cube
   m_TagString: Untagged
@@ -487,6 +529,42 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   side: 1
+--- !u!114 &7628207508544233662
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2832618059774130309}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fbfcc97cfe14b0b4991c1aba145ff6ac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bulletPooling: {fileID: 2683349994792768806}
+  anglePatternBullet: {fileID: -5814235743389041899, guid: 5704d5e047b21014b83a73011ad895cb,
+    type: 3}
+  bulletParent: {fileID: 2166552862952356285}
+  wallCollider: {fileID: 33885078876045380}
+  fireAngle: 0
+--- !u!114 &6390920240962302767
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2832618059774130309}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5c41f3a39f7a0934cb9374bcf6c0a620, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bulletPooling: {fileID: 2683349994792768806}
+  rangePatternBullet: {fileID: 3465485197423747118, guid: 5704d5e047b21014b83a73011ad895cb,
+    type: 3}
+  bulletParent: {fileID: 1359283471417940586}
+  wallCollider: {fileID: 33885078876045380}
+  fireAngle: 0
 --- !u!1 &3041577200029044450
 GameObject:
   m_ObjectHideFlags: 0
@@ -512,6 +590,37 @@ Transform:
   m_GameObject: {fileID: 3041577200029044450}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5715421227583453887}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &3209214873074002439
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1359283471417940586}
+  m_Layer: 0
+  m_Name: RangePatternBullet
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1359283471417940586
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3209214873074002439}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -657,6 +766,8 @@ GameObject:
   - component: {fileID: 2857225171936984596}
   - component: {fileID: 5324059050366143281}
   - component: {fileID: 2037978067026455746}
+  - component: {fileID: 3569187248637751483}
+  - component: {fileID: 4317184076511200338}
   m_Layer: 0
   m_Name: Cube (1)
   m_TagString: Untagged
@@ -802,7 +913,43 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c4b9fb615970a98449ba7c3511449c54, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  side: 2
+  side: 4
+--- !u!114 &3569187248637751483
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3807425660016838240}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fbfcc97cfe14b0b4991c1aba145ff6ac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bulletPooling: {fileID: 2683349994792768806}
+  anglePatternBullet: {fileID: -5814235743389041899, guid: 5704d5e047b21014b83a73011ad895cb,
+    type: 3}
+  bulletParent: {fileID: 2166552862952356285}
+  wallCollider: {fileID: 5357988804628771163}
+  fireAngle: 0
+--- !u!114 &4317184076511200338
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3807425660016838240}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5c41f3a39f7a0934cb9374bcf6c0a620, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bulletPooling: {fileID: 2683349994792768806}
+  rangePatternBullet: {fileID: 3465485197423747118, guid: 5704d5e047b21014b83a73011ad895cb,
+    type: 3}
+  bulletParent: {fileID: 1359283471417940586}
+  wallCollider: {fileID: 5357988804628771163}
+  fireAngle: 0
 --- !u!1 &5089889423873597652
 GameObject:
   m_ObjectHideFlags: 0
@@ -853,6 +1000,8 @@ GameObject:
   - component: {fileID: 6894913609686659391}
   - component: {fileID: 7995791593906623766}
   - component: {fileID: 8533692819106360156}
+  - component: {fileID: 4427265034421755114}
+  - component: {fileID: 7019009448904098124}
   m_Layer: 0
   m_Name: Cube (2)
   m_TagString: Untagged
@@ -998,7 +1147,43 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c4b9fb615970a98449ba7c3511449c54, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  side: 3
+  side: 2
+--- !u!114 &4427265034421755114
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5098133853083185360}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5c41f3a39f7a0934cb9374bcf6c0a620, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bulletPooling: {fileID: 2683349994792768806}
+  rangePatternBullet: {fileID: 3465485197423747118, guid: 5704d5e047b21014b83a73011ad895cb,
+    type: 3}
+  bulletParent: {fileID: 1996177251712743555}
+  wallCollider: {fileID: 2926523189867158994}
+  fireAngle: 0
+--- !u!114 &7019009448904098124
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5098133853083185360}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fbfcc97cfe14b0b4991c1aba145ff6ac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bulletPooling: {fileID: 2683349994792768806}
+  anglePatternBullet: {fileID: -5814235743389041899, guid: 5704d5e047b21014b83a73011ad895cb,
+    type: 3}
+  bulletParent: {fileID: 2166552862952356285}
+  wallCollider: {fileID: 2926523189867158994}
+  fireAngle: 0
 --- !u!1 &5289963468282589678
 GameObject:
   m_ObjectHideFlags: 0
@@ -1182,6 +1367,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1096704820367216734}
+  - component: {fileID: 6141992579673468801}
   m_Layer: 0
   m_Name: BulletRelatedObjects
   m_TagString: Untagged
@@ -1210,6 +1396,22 @@ Transform:
   - {fileID: 1057543587441836778}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6141992579673468801
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6478293145296870914}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 77b2863f88d238f4da75391ff5c99a81, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  csvFile: {fileID: 4900000, guid: c79c8b4ffafa1534d87d89a837476c3f, type: 3}
+  patternCSVFile: {fileID: 4900000, guid: 34dbc705fd4076d47a64d7def772e905, type: 3}
+  patternData: []
+  patternBulletData: []
 --- !u!1 &6654719288181944040
 GameObject:
   m_ObjectHideFlags: 0
@@ -1254,7 +1456,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3ab890c403d1584aa17f7f4d3111bf8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  loader: {fileID: 0}
+  loader: {fileID: 6141992579673468801}
   spawnerManager: {fileID: 7646841160314410175}
   bpm: 110
 --- !u!1 &6748021379469309435
@@ -1394,6 +1596,16 @@ MonoBehaviour:
   - {fileID: 5324059050366143281}
   - {fileID: 7995791593906623766}
   - {fileID: 7669456885974126513}
+  angleSpawners:
+  - {fileID: 7628207508544233662}
+  - {fileID: 3569187248637751483}
+  - {fileID: 7019009448904098124}
+  - {fileID: 9096813360349131111}
+  rangeSpawners:
+  - {fileID: 6390920240962302767}
+  - {fileID: 4317184076511200338}
+  - {fileID: 4427265034421755114}
+  - {fileID: 8516709921596419244}
 --- !u!114 &7646841160314410175
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1487,3 +1699,34 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 126
   m_CollisionDetection: 0
+--- !u!1 &9135731539889419575
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2166552862952356285}
+  m_Layer: 0
+  m_Name: AnglePatternBullet
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2166552862952356285
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9135731539889419575}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5715421227583453887}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
