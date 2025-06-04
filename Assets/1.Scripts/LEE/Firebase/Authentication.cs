@@ -10,6 +10,7 @@ using UnityEngine;
 
 public static class Authentication
 {
+    #region 파이어베이스 필드
     // 인증 상태를 나타내는 열거형 (로그인/회원가입 결과 전달용)
     public enum State : byte
     {
@@ -26,11 +27,14 @@ public static class Authentication
     }
 
     // Firebase Realtime Database에서 사용할 경로 이름들
+    // Users: 사용자 상위 폴더
+    // Session: 중복 로그인 방지, 세션 만료 감지, 로그인 시간 확인
+    // Token: 사용자가 로그인 할 때 Token을 생성해서 저장 -> 나중에 접속 상태를 감지하거나 강제 로그아웃 등을 처리 할 때 비교
+    // Timestamp: 마지막 로그인 시간 기록, 세션 타임아웃 검토
     private static readonly string UsersTag = "Users";
     private static readonly string SessionTag = "Session";
     private static readonly string TokenTag = "Token";
     private static readonly string TimestampTag = "Timestamp";
-
 
     // Firebase 인증 객체
     private static FirebaseAuth firebaseAuth = null;
@@ -40,6 +44,7 @@ public static class Authentication
 
     // 세션 상태 감지 리스너 (중복 로그인 등 감지용)
     private static EventHandler<ValueChangedEventArgs> sessionListener = null;
+    #endregion
 
     // 세션 리스너 정리 함수: 리스너 등록 해제 및 참조 해제
     private static void CleanupSessionListener()
@@ -93,7 +98,6 @@ public static class Authentication
                         return;
                     }
                 }
-
                 // 그 외 로그인 실패
                 callback?.Invoke(State.SignInFailure);
             }

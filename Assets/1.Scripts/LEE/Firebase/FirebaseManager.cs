@@ -23,7 +23,7 @@ public class FirebaseManager : MonoBehaviour
     [SerializeField] private TMP_InputField signUpInputPWCheck;     // 비밀번호 확인 입력
     [SerializeField] private TMP_InputField signUpInputSchool;      // 고등학교 모교
     [SerializeField] private Button checkButton;                    // ID 중복 확인 버튼
-    [SerializeField] private Button SignUpOkBuuton;                       // 회원가입 버튼
+    [SerializeField] private Button SignUpOkBuuton;                 // 회원가입 버튼
     [SerializeField] private Button signUpCancelBuuton;             // 캔버스 닫기 취소 버튼
     [SerializeField] private Image IDcheckImg0;                     // 중복 확인 이미지
     [SerializeField] private Image PWcheckImg0;                     // 중복 확인 이미지
@@ -52,9 +52,6 @@ public class FirebaseManager : MonoBehaviour
     [SerializeField] private TMP_InputField findPW_SchoolInput;  // SchoolInput 입력창
     [SerializeField] private Button findPW_okButton;             // 비번 찾기 버튼
     [SerializeField] private Button findPW_cancelButton;         // FindAccountImg 관련 다 닫기 및 초기화
-
-    [Header("로그 결과 텍스트")]
-    [SerializeField] private TMP_Text logText; // 결과 메시지를 출력할 텍스트 UI
     #endregion
     
     #region 시작 시 초기화 및 버튼 등록
@@ -74,7 +71,7 @@ public class FirebaseManager : MonoBehaviour
     {
         if (status == DependencyStatus.Available)
         {
-            Log("Firebase 초기화 성공");
+            //Firebase 초기화 성공
         }
         else
         {
@@ -404,6 +401,8 @@ public class FirebaseManager : MonoBehaviour
 
     private void OnClickFindPWChangeToID()
     {
+        findPW_IDInput.text = "";
+        findPW_SchoolInput.text = "";
         findPW.SetActive(false);
         findID.SetActive(true);
     }
@@ -416,7 +415,7 @@ public class FirebaseManager : MonoBehaviour
     private void Log(string message)
     {
         Debug.Log(message);
-        if (logText != null) logText.text = $"<color=green>{message}</color>";
+        WarningLogSetActiveTrue(message); // 팝업 창으로 통일
     }
 
     /// <summary>
@@ -425,7 +424,7 @@ public class FirebaseManager : MonoBehaviour
     private void LogWarning(string message)
     {
         Debug.LogWarning(message);
-        if (logText != null) logText.text = $"<color=yellow>{message}</color>";
+        WarningLogSetActiveTrue(message); // 팝업 창으로 통일
     }
 
     /// <summary>
@@ -434,7 +433,7 @@ public class FirebaseManager : MonoBehaviour
     private void LogError(string message)
     {
         Debug.LogError(message);
-        if (logText != null) logText.text = $"<color=red>{message}</color>";
+        WarningLogSetActiveTrue(message); // 팝업 창으로 통일
     }
     #endregion
 }
