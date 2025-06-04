@@ -1,10 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
-using System.Linq;
 using System;
 //using ExitGames.Client.Photon;
-using Unity.VisualScripting;
-using UnityEditor.Presets;
 
 /// <summary>
 /// BulletPatternLoader는 CSV 파일에서 탄막 패턴 데이터를 읽어와서
@@ -47,7 +44,7 @@ public class BulletPatternLoader : MonoBehaviour
         }
 
         csvFile = bulletCSVfile;
-        patternData = ParseCSV(csvFile.text);
+        patternData = ParseNonPatterCSV(csvFile.text);
     }
 
     /// <summary>
@@ -66,11 +63,10 @@ public class BulletPatternLoader : MonoBehaviour
         patternBulletData = ParsePatterCSV(patternCSVFile.text);
     }
 
-
     /// <summary>
     /// CSV 텍스트를 파싱하여 BulletSpawnData 리스트로 변환함
     /// </summary>
-    List<BulletSpawnData> ParseCSV(string csv)
+    List<BulletSpawnData> ParseNonPatterCSV(string csv)
     {
         //Split() : ()안에 있는 것을 기준으로 배열로 분리 
         //Trim() : 문자열의 앞뒤에 개행문자(\r, \n)등을 제거함
@@ -135,6 +131,11 @@ public class BulletPatternLoader : MonoBehaviour
         return dataList;
     }
 
+    /// <summary>
+    /// CSV 텍스트를 파싱하여 BulletSpawnData 리스트로 변환함
+    /// </summary>
+    /// <param name="csv"></param>
+    /// <returns></returns>
     List<BulletSpawnData> ParsePatterCSV(string csv)
     {
         var lines = csv.Split('\n');
@@ -184,7 +185,6 @@ public class BulletPatternLoader : MonoBehaviour
 
             dataList.Add(data);
         }
-
             return dataList;
     }
 }
