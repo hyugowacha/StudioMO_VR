@@ -15,17 +15,16 @@ using Photon.Realtime;
 [RequireComponent(typeof(PhotonTransformView))]
 public class Character : MonoBehaviourPunCallbacks, IPunObservable
 {
-    private bool _hasRigidbody = false;
+    private bool hasRigidbody = false;
 
     private new Rigidbody rigidbody = null;
 
     private Rigidbody getRigidbody {
         get
         {
-            if(_hasRigidbody == false)
+            if(hasRigidbody == false)
             {
-                rigidbody = GetComponent<Rigidbody>();
-                _hasRigidbody = true;
+                hasRigidbody = TryGetComponent(out rigidbody);
             }
             return rigidbody;
         }
@@ -41,9 +40,9 @@ public class Character : MonoBehaviourPunCallbacks, IPunObservable
     private Transform rightHandTransform;
     [Header("이동 속도"), SerializeField, Range(1, 5)]
     private float moveSpeed = 5;
-    [Header("기절 지속 시간"), Range(0, int.MaxValue)]
-    private float faintingTime = 30f;
-    [Header("무적 지속 시간"), Range(0, int.MaxValue)]
+    [Header("기절 지속 시간"), SerializeField, Range(0, int.MaxValue)]
+    private float faintingTime = 2f;
+    [Header("무적 지속 시간"), SerializeField, Range(0, int.MaxValue)]
     private float invincibleTime = 3f;
 
     //캐릭터가 탄막에 맞은 후 남은 면역 시간
@@ -161,7 +160,6 @@ public class Character : MonoBehaviourPunCallbacks, IPunObservable
         Debug.Log(player.ActorNumber);
         if (SlowMotion.IsOwner(player) == true)
         {
-
         }
     }
 
@@ -287,6 +285,7 @@ public class Character : MonoBehaviourPunCallbacks, IPunObservable
     {
         if (photonView.IsMine == true && headTransform != null && faintingState == false)
         {
+            Debug.Log("이동");
             Vector3 direction = headTransform.right * input.x + headTransform.forward * input.y;
             direction.y = 0;
             float moveSpeed = this.moveSpeed * Time.deltaTime * SlowMotion.speed;

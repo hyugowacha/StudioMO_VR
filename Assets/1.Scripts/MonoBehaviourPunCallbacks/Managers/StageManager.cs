@@ -1,8 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using DG.Tweening;
-using Photon.Pun;
-using UnityEngine.XR.Interaction.Toolkit;
 
 [RequireComponent(typeof(BulletPatternLoader))]
 public class StageManager : Manager
@@ -24,10 +22,6 @@ public class StageManager : Manager
     private Tween slowMotionTween = null;                       //슬로우 모션 트윈
     [SerializeField]
     private Pickaxe pickaxe;                                    //곡괭이
-    [SerializeField]
-    private TunnelingVignetteController vignetteController;     //비네트 (상태이상 표시)
-
-    ITunnelingVignetteProvider provider;
 
     private bool hasBulletPatternLoader = false;
 
@@ -70,7 +64,6 @@ public class StageManager : Manager
         base.Start();
         if (instance == this)
         {
-            provider = new VignetteProvider();
             SetFixedPosition(character != null ? character.transform.position : Vector3.zero);
             SetMoveSpeed(0);
             StageData stageData = StageData.current;
@@ -101,10 +94,9 @@ public class StageManager : Manager
                     }
                 }
             }
-            limitTime = 10f;
             remainingTime = limitTime;
             phasePanel?.Open();
-            DOVirtual.DelayedCall(startDelay, () => stop = false);  
+            DOVirtual.DelayedCall(startDelay, () => stop = false);
         }
     }
 
@@ -139,7 +131,7 @@ public class StageManager : Manager
                     character.SetSlowMotion(false); //시간이 끝나면 슬로우 모션 해제
                     totalScore = character.mineralCount;
                 }
-                phasePanel?.Open(totalScore, score.GetClearValue(), score.GetAddValue());
+                phasePanel?.Open(totalScore, score.GetClearValue(), score.GetAddValue(), null, null, null);
             }
         }
         timerPanel?.Open(remainingTime, limitTime);
@@ -171,6 +163,7 @@ public class StageManager : Manager
                 character.UpdateRightHand(rightActionBasedController.transform.position + rightHandOffset, rightActionBasedController.transform.rotation);
             }
             bool faintingState = character.faintingState;
+            SetTunnelingVignette(faintingState);
             if (faintingState == true && pickaxe != null && pickaxe.grip == true)
             {
                 pickaxe.grip = false;
@@ -283,39 +276,5 @@ public class StageManager : Manager
         {
             moveInput = Vector2.zero;
         }
-    }
-    
-    //비네트를 켜고 끄는 함수 (플레이어 상태이상 시)
-    public void ToggleVignette(bool enable)
-    {
-        if (enable)
-        {
-            vignetteController.BeginTunnelingVignette(provider);
-        }
-        else
-        {
-            vignetteController.EndTunnelingVignette(provider);
-        }
-    }
-
-    
-}
-
-//비네트 provider
-public class VignetteProvider : ITunnelingVignetteProvider
-{
-    public VignetteParameters vignetteParameters { get; }
-
-    public VignetteProvider()
-    {
-        vignetteParameters = new VignetteParameters
-        {
-            apertureSize = 0.685f,
-            featheringEffect = 0.282f,
-            easeInTime = 0.45f,
-            easeOutTime = 0.3f,
-            easeInTimeLock = false,
-            easeOutDelayTime = 0f
-        };
     }
 }
