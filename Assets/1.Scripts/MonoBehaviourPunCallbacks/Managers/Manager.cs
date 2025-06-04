@@ -27,7 +27,7 @@ public abstract class Manager : MonoBehaviourPunCallbacks
     [SerializeField]
     protected ActionBasedController rightActionBasedController; //오른쪽 컨트롤러
 
-    [SerializeField]
+    [Header("언어별 대응 폰트 에셋들") ,SerializeField]
     private TMP_FontAsset[] fontAssets = new TMP_FontAsset[Translation.count];
 
     protected TMP_FontAsset currentFontAsset {
@@ -177,6 +177,35 @@ public abstract class Manager : MonoBehaviourPunCallbacks
         {
             PlayerPrefs.SetInt(Translation.Preferences, index);
             ChangeText((Translation.Language)index);
+        }
+    }
+
+    protected void SendHapticImpulse(float amplitude, float duration, bool? handle)
+    {
+        if (handle == null)
+        {
+            if (rightActionBasedController != null)
+            {
+                rightActionBasedController.SendHapticImpulse(amplitude, duration);
+            }
+            if (leftActionBasedController != null)
+            {
+                leftActionBasedController.SendHapticImpulse(amplitude, duration);
+            }
+        }
+        else if (handle == true)
+        {
+            if (rightActionBasedController != null)
+            {
+                rightActionBasedController.SendHapticImpulse(amplitude, duration);
+            }
+        }
+        else
+        {
+            if (leftActionBasedController != null)
+            {
+                leftActionBasedController.SendHapticImpulse(amplitude, duration);
+            }
         }
     }
 

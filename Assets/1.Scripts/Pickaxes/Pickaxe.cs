@@ -1,7 +1,12 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
+using Photon.Pun;
 
-//모든 히트박스를 총괄하여 상호작용 가능 물체와 상호작용하는 스크립트
+/// <summary>
+/// 모든 하위 히트박스들의 변화를 감지하여 지정한 물체와 상호 작용하는 클래스
+/// </summary>
 public class Pickaxe : MonoBehaviour
 {
     [Header("정"), SerializeField]
@@ -10,6 +15,76 @@ public class Pickaxe : MonoBehaviour
     private HitBox eye;
     [Header("끌"), SerializeField]
     private HitBox chisel;
+
+    [Header("추가 유효타 인정 시간"), SerializeField, Range(0, 1)]
+    private float comboDelay = 0.1f;
+    [Header("타격 후 휴식 시간"), SerializeField, Range(0, int.MaxValue)]
+    private float restDelay = 1;
+
+    private List<Mineral> list = null;
+
+    public bool grip {
+        set
+        {
+            switch (value)
+            {
+                case true:
+                    if (pick != null)
+                    {
+                        pick.action += ReceiveReport;
+                    }
+                    if (eye != null)
+                    {
+                        eye.action += ReceiveReport;
+                    }
+                    if (chisel != null)
+                    {
+                        chisel.action += ReceiveReport;
+                    }
+                    list = new List<Mineral>();
+                    break;
+                case false:
+                    if (pick != null)
+                    {
+                        pick.action -= ReceiveReport;
+                    }
+                    if (eye != null)
+                    {
+                        eye.action -= ReceiveReport;
+                    }
+                    if (chisel != null)
+                    {
+                        chisel.action -= ReceiveReport;
+                    }
+                    list = null;
+                    break;
+            }
+        }
+        get
+        {
+            return list != null;
+        }
+    }
+
+    [Serializable]
+    private struct Vibration
+    {
+        public float amplitude; //진동 강도
+        public float duration; //진동 지속 시간
+
+        public Vibration(float amplitude, float duration)
+        {
+            this.amplitude = amplitude;
+            this.duration = duration;
+        }
+    }
+
+    [SerializeField]
+    private Vibration standardVibration = new Vibration(0.5f, 1f);
+
+    public event Action<float, float> vibrationAction = null; //진동을 발생시키는 액션
+
+    private readonly static float ComboDelayRatio = 0.7f;
 
 #if UNITY_EDITOR
 
@@ -28,61 +103,41 @@ public class Pickaxe : MonoBehaviour
     }
 #endif
 
-    //채취한 미네랄 개수를 반환하는 함수
-    public uint GetMineralCount()
+    //일시적으로 충돌 판정을 쉬어주는 메서드
+    private void Rest()
     {
-        uint value = 0;
-        Dictionary<Mineral, bool> minerals = new Dictionary<Mineral, bool>();
-        if (pick != null)
+        pick?.Rest(restDelay);
+        eye?.Rest(restDelay);
+        chisel?.Rest(restDelay);
+    }
+
+    //명중 판정을 보고받는 메서드
+    private void ReceiveReport(HitBox hitBox, Mineral mineral, Vector3 position)
+    {
+        if (list != null && mineral != null)
         {
-            IEnumerable<Mineral> contents = pick.GetMinerals();
-            if (contents != null)
+            if (((pick != null && hitBox == pick) || (chisel != null && hitBox == chisel)) && list.Contains(mineral) == false)
             {
-                foreach (Mineral mineral in contents)
+                list.Add(mineral);
+                eye?.Rest(comboDelay * ComboDelayRatio);
+                DOVirtual.DelayedCall(comboDelay, () =>
                 {
-                    if (minerals.ContainsKey(mineral) == false)
+                    if (list != null && list.Contains(mineral) == true)
                     {
-                        minerals.Add(mineral, false);
+                        mineral.Mine(position, PhotonNetwork.LocalPlayer.ActorNumber);
+                        list.Remove(mineral);
+                        Rest();
+                        vibrationAction?.Invoke(standardVibration.amplitude, standardVibration.duration);
                     }
-                }
+                });
+            }
+            else if(eye != null && hitBox == eye && list.Contains(mineral) == true)
+            {
+                mineral.Mine(position, PhotonNetwork.LocalPlayer.ActorNumber, true);
+                list.Remove(mineral);
+                Rest();
+                vibrationAction?.Invoke(standardVibration.amplitude, standardVibration.duration);
             }
         }
-        if (chisel != null)
-        {
-            IEnumerable<Mineral> contents = chisel.GetMinerals();
-            if (contents != null)
-            {
-                foreach (Mineral mineral in contents)
-                {
-                    if (minerals.ContainsKey(mineral) == false)
-                    {
-                        minerals.Add(mineral, false);
-                    }
-                }
-            }
-        }
-        if (eye != null)
-        {
-            IEnumerable<Mineral> contents = eye.GetMinerals();
-            if (contents != null)
-            {
-                foreach (Mineral mineral in contents)
-                {
-                    if (minerals.ContainsKey(mineral) == true) //중복이라면 50%
-                    {
-                        minerals[mineral] = true;
-                    }
-                    else
-                    {
-                        minerals.Add(mineral, false);
-                    }
-                }
-            }
-        }
-        foreach (KeyValuePair<Mineral, bool> keyValuePair in minerals)
-        {
-            value += keyValuePair.Key.GetMineral(keyValuePair.Value);
-        }
-        return value;
     }
 }

@@ -20,7 +20,6 @@ public class BulletPatternExecutor : MonoBehaviour
     int _currentBeatIndex = 1;   // 현재 몇번째 beat인지 (1부터 시작)
 
     List<BulletSpawnData> timePatterns; //패턴형 탄막 정보 리스트
-    float nextIndex = 1;
     float startTime; 
 
     bool initialized = false;
@@ -93,7 +92,6 @@ public class BulletPatternExecutor : MonoBehaviour
 
         foreach(var data in duePatterns)
         {
-            Debug.Log(data);
             ExecutePattern(data);
             timePatterns.Remove(data);
         }
@@ -126,21 +124,29 @@ public class BulletPatternExecutor : MonoBehaviour
      
     void ExecutePattern(BulletSpawnData data)
     {
-        if (data.bulletPresetID == 1)
+        int index = 0;
+
+        int[] presets = ReturnPreset(data.generatePreset);
+
+        if (data.bulletPresetID == 1) //프리셋 아이디가 1일 경우
         {
-            foreach(int side in ReturnPreset(data.generatePreset))
+            foreach(int side in ReturnSide(data.generatePreset))
             {
-                spawnerManager.SpawnPatternAngle(side, data.bulletAmount, ReturnPreset(data.generatePreset), 
+                spawnerManager.SpawnPatternAngle(side, data.bulletAmount, presets[index], 
                     data.fireAngle, data.bulletAngle);
+
+                index++;
             }
         }
 
-        if(data.bulletPresetID == 2)
+        if(data.bulletPresetID == 2) //프리셋 아이디가 2일 경우
         {
-            foreach (int side in ReturnPreset(data.generatePreset))
+            foreach (int side in ReturnSide(data.generatePreset))
             {
-                spawnerManager.SpawnPatternRange(side, data.bulletAmount, ReturnPreset(data.generatePreset),
+                spawnerManager.SpawnPatternRange(side, data.bulletAmount, presets[index],
                     data.fireAngle, data.bulletRange);
+
+                index++;
             }
         }
     }
@@ -171,13 +177,14 @@ public class BulletPatternExecutor : MonoBehaviour
 
         int sideValue = raw / 100;
 
-        #region
+        #region 사이드 체크
         if (sideValue == 1) sideResult.Add(1);
         if (sideValue == 2) sideResult.Add(2);
         if (sideValue == 3) sideResult.Add(3);
         if (sideValue == 4) sideResult.Add(4);
 
         #endregion
+
         return sideResult.ToArray();
     }
 
@@ -189,7 +196,8 @@ public class BulletPatternExecutor : MonoBehaviour
 
         int presetValue = raw % 100;
 
-        if(presetValue == 1) presetResult.Add(1);
+        #region 프리셋 숫자 체크 (1~9까지)
+        if (presetValue == 1) presetResult.Add(1);
         if(presetValue == 2) presetResult.Add(2);
         if(presetValue == 3) presetResult.Add(3);
         if(presetValue == 4) presetResult.Add(4);
@@ -198,6 +206,7 @@ public class BulletPatternExecutor : MonoBehaviour
         if(presetValue == 7) presetResult.Add(7);
         if(presetValue == 8) presetResult.Add(8);
         if(presetValue == 9) presetResult.Add(9);
+        #endregion
 
         return presetResult.ToArray();
     }
