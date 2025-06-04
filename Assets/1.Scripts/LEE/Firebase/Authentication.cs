@@ -293,42 +293,48 @@ public static class Authentication
         {
             Dictionary<string, object> data = mutableData.Value as Dictionary<string, object>;
 
-            if (data == null || data.ContainsKey(TokenTag) == false)
+            // 세션이 비어있거나 유효하지 않으면 세션 갱신 허용
+            if (data == null || !data.ContainsKey(TokenTag) || string.IsNullOrEmpty(data[TokenTag]?.ToString()))
             {
                 mutableData.Value = new Dictionary<string, object>
             {
                 { TokenTag, sessionToken },
                 { TimestampTag, ServerValue.Timestamp }
             };
-
-                return TransactionResult.Success(mutableData);
+                return TransactionResult.Success(mutableData); // B 로그인 허용
             }
 
-            return TransactionResult.Abort();
+            // 이미 세션 있으면 B 로그인 실패
+            return TransactionResult.Abort(); // A 유지, B 거절
         }).ContinueWithOnMainThread(task =>
         {
             if (task.IsCanceled || task.IsFaulted)
             {
                 firebaseAuth.SignOut();
-                callback?.Invoke(State.SignInFailure);
+                callback?.Invoke(State.SignInAlready); // 로그인 실패 사유 전달
                 return;
             }
 
             DataSnapshot snapshot = task.Result;
 
             Dictionary<string, object> resultData = snapshot?.Value as Dictionary<string, object>;
-            if (resultData == null || resultData.ContainsKey(TokenTag) == false || resultData[TokenTag].ToString() != sessionToken)
+
+            // 먼저 로그인 한 사람의 세션이 유지되었는지 확인
+            if (resultData != null && resultData.TryGetValue(TokenTag, out object tokenObj) &&
+                tokenObj.ToString() == sessionToken)
             {
+                // 로그인 성공 (세션 등록 성공한 경우)
+                PhotonNetwork.NickName = email;
+                databaseReference.Child(SessionTag).OnDisconnect().SetValue(""); // 연결 끊기면 자동 삭제
+                callback?.Invoke(State.SignInSuccess);
+                RegisterSessionListener(sessionToken); // 리스너 등록
+            }
+            else
+            {
+                // 추후 로그인 시도하는 사람의 시도는 실패 (세션 등록 못함)
                 firebaseAuth.SignOut();
                 callback?.Invoke(State.SignInAlready);
-                return;
             }
-
-            PhotonNetwork.NickName = email;
-            databaseReference.Child(SessionTag).OnDisconnect().SetValue("");
-
-            callback?.Invoke(State.SignInSuccess);
-            RegisterSessionListener(sessionToken);
         });
     }
 
@@ -357,4 +363,14 @@ public static class Authentication
         databaseReference.Child(SessionTag).ValueChanged += sessionListener;
     }
 
+    // 로그아웃
+    public static void SignOut()
+    {
+        firebaseAuth?.SignOut();
+
+        if (databaseReference != null)
+            databaseReference.Child(SessionTag).RemoveValueAsync(); // 세션 데이터 제거
+
+        CleanupSessionListener(); // 리스너 제거
+    }
 }

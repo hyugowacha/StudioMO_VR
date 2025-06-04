@@ -115,6 +115,7 @@ public class FirebaseManager : MonoBehaviour
 
     private void GameOver()
     {
+        Authentication.SignOut();
         Application.Quit();
     }
     #endregion
