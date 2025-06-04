@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using DG.Tweening;
 using Photon.Pun;
+using UnityEngine.XR.Interaction.Toolkit;
 
 [RequireComponent(typeof(BulletPatternLoader))]
 public class StageManager : Manager
@@ -23,6 +24,10 @@ public class StageManager : Manager
     private Tween slowMotionTween = null;                       //슬로우 모션 트윈
     [SerializeField]
     private Pickaxe pickaxe;                                    //곡괭이
+    [SerializeField]
+    private TunnelingVignetteController vignetteController;
+
+    public bool enableVignette;
 
     private bool hasBulletPatternLoader = false;
 
@@ -99,6 +104,7 @@ public class StageManager : Manager
             remainingTime = limitTime;
             phasePanel?.Open();
             DOVirtual.DelayedCall(startDelay, () => stop = false);
+           
         }
     }
 
@@ -277,5 +283,10 @@ public class StageManager : Manager
         {
             moveInput = Vector2.zero;
         }
+    }
+
+    public void EnableBool(bool enable) //vigentte 온오프하는 메서드
+    {
+        vignetteController.SetVignetteActive(enableVignette);
     }
 }
