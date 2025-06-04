@@ -285,7 +285,6 @@ public class Character : MonoBehaviourPunCallbacks, IPunObservable
     {
         if (photonView.IsMine == true && headTransform != null && faintingState == false)
         {
-            Debug.Log("¿Ãµø");
             Vector3 direction = headTransform.right * input.x + headTransform.forward * input.y;
             direction.y = 0;
             float moveSpeed = this.moveSpeed * Time.deltaTime * SlowMotion.speed;
