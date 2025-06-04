@@ -3,7 +3,7 @@ using UnityEngine;
 using TMPro;
 
 /// <summary>
-/// 현재 플레이 진행 단계에 대한 변화 국면을 표시해주는 팝업 패널
+/// 진행 단계에 관련된 내용을 표시해주는 패널
 /// </summary>
 [RequireComponent(typeof(Animator))]
 public class PhasePanel : Panel
@@ -89,13 +89,16 @@ public class PhasePanel : Panel
     }
 
     //결과창을 보여주는 메서드
-    public void Open(uint totalScore, uint clearScore, uint addScore)
+    public void Open(uint totalScore, uint clearScore, uint addScore, Action restart, Action exit, Action next)
     {
+        if (gameObject.activeSelf == false)
+        {
+            Open();
+        }
         texts[(int)TextIndex.Clear].Set(GetNumberText(clearScore));
         uint perfectScore = (uint)Mathf.Clamp((float)clearScore + addScore, uint.MinValue, uint.MaxValue);
         texts[(int)TextIndex.Perfect].Set(GetNumberText(perfectScore));
         texts[(int)TextIndex.Total].Set(TotalTextValue + GetNumberText(totalScore));
-        Open();
         if (totalScore >= perfectScore)
         {
             Set(true);

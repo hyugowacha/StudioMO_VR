@@ -2,11 +2,11 @@ using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
-/// 타이머에 관련된 내용을 표시해주는 패널
+/// 스킬 상태에 관련된 내용을 표시해주는 패널
 /// </summary>
 [RequireComponent(typeof(Slider))]
 [RequireComponent(typeof(Animator))]
-public class TimerPanel : Panel
+public class StatePanel : Panel
 {
     private bool hasSlider = false;
 
@@ -39,29 +39,39 @@ public class TimerPanel : Panel
     }
 
     [Header("애니메이션을 실행 시켜줄 float형 파라미터"), SerializeField]
-    private string parameter = "normalized";
+    private string floatParameter = "normalized";
+
+    [Header("애니메이션을 실행 시켜줄 trigger형 파라미터"), SerializeField]
+    private string triggerParameter = "disabled";
 
     //슬라이더와 애니메이션 파라미터의 양을 설정해주는 메서드
     private void Set(float value)
     {
-        getAnimator.SetFloat(parameter, value);
+        getAnimator.SetFloat(floatParameter, value);
         getSlider.value = value;
     }
 
-    //기준값과 최대값을 이용하여 시간 현황을 표시해주는 메서드
-    public void Open(float current, float max)
+    public override void Open()
+    {
+        if (gameObject.activeSelf == false)
+        {
+            base.Open();
+        }
+        else
+        {
+            getAnimator.SetTrigger(triggerParameter);
+        }
+    }
+
+    public void Open(float value)
     {
         if (gameObject.activeSelf == false)
         {
             Open();
         }
-        if (max == 0)
-        {
-            Set(MaxValue);
-        }
         else
         {
-            Set(current / max);
+            Set(value);
         }
     }
 }

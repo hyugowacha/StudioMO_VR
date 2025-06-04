@@ -133,7 +133,7 @@ public class StageManager : Manager
                     character.SetSlowMotion(false); //시간이 끝나면 슬로우 모션 해제
                     totalScore = character.mineralCount;
                 }
-                phasePanel?.Open(totalScore, score.GetClearValue(), score.GetAddValue());
+                phasePanel?.Open(totalScore, score.GetClearValue(), score.GetAddValue(), null, null, null);
             }
         }
         timerPanel?.Open(remainingTime, limitTime);
