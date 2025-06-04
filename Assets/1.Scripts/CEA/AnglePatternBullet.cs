@@ -95,4 +95,10 @@ public class AnglePatternBullet : MonoBehaviour, IBullet
         transform.position = currentPos;
     }
     #endregion
+
+    // 탄막 객체에 대한 속도 조절
+    public void ChangePitch(float val)
+    {
+
+    }
 }

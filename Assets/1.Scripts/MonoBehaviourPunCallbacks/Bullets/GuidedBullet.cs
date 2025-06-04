@@ -13,7 +13,6 @@ public class GuidedBullet : MonoBehaviour, IBullet
     // 이동 속도
     [Header("탄막 이동 속도")]
     public float speed = 3f;
-
     #endregion
 
     #region 오브젝트 풀 관련
