@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using DG.Tweening;
+using Photon.Pun;
 
 [RequireComponent(typeof(BulletPatternLoader))]
 public class StageManager : Manager
@@ -19,7 +20,6 @@ public class StageManager : Manager
     [SerializeField]
     private Vector3 rightHandOffset;                            //오른쪽 손잡이 간격
     private Vector2 moveInput = Vector2.zero;                   //이동 입력 값
-    private Tween slowMotionTween = null;                       //슬로우 모션 트윈
     [SerializeField]
     private Pickaxe pickaxe;                                    //곡괭이
 
@@ -48,7 +48,8 @@ public class StageManager : Manager
     private PhasePanel phasePanel;                              //게임 준비, 시작, 종료를 표시하는 패널
 
     [SerializeField]
-    private TimerPanel slowMotionPanel;                          //슬로우 모션 표시 패널
+    private SlowMotionPanel slowMotionPanel;                    //슬로우 모션 표시 패널
+    private Tween slowMotionTween = null;                       //슬로우 모션 트윈
 
     [SerializeField]
     private TimerPanel timerPanel;                              //남은 시간 표시 패널
@@ -168,19 +169,20 @@ public class StageManager : Manager
             {
                 pickaxe.grip = false;
             }
-            float ratio = character.GetSlowMotionRatio();
-            //if (SlowMotion.IsOwner(PhotonNetwork.LocalPlayer) == true)
-            //{
-            //    slowMotionPanel?.Fill(ratio, false);
-            //}
-            //else if (ratio >= SlowMotion.MinimumUseValue /*+ SlowMotion.RecoverRate*/ && faintingState == false)
-            //{
-            //    slowMotionPanel?.Fill(ratio, true);
-            //}
-            //else
-            //{
-            //    slowMotionPanel?.Fill(ratio, null);
-            //}
+            float full = SlowMotion.MaximumFillValue;
+            float current = character.remainingSlowMotionTime;
+            if (SlowMotion.IsOwner(PhotonNetwork.LocalPlayer) == true)
+            {
+                slowMotionPanel?.Fill(current, full, false);
+            }
+            else if (current >= SlowMotion.MinimumUseValue /*+ SlowMotion.RecoverRate*/ && faintingState == false)
+            {
+                slowMotionPanel?.Fill(current, full, true);
+            }
+            else
+            {
+                slowMotionPanel?.Fill(current, full, null);
+            }
             mineralCount = character.mineralCount;
         }
         scorePanel?.Open(mineralCount, score.GetClearValue(), score.GetAddValue());
@@ -199,7 +201,14 @@ public class StageManager : Manager
         {
             if (callbackContext.performed == true)
             {
-                slowMotionTween = DOVirtual.DelayedCall(SlowMotion.ActiveDelay, () => { character?.SetSlowMotion(true); });
+                if (character != null && (character.faintingState == true || character.remainingSlowMotionTime < SlowMotion.MinimumUseValue))
+                {
+                    slowMotionPanel?.Blink();
+                }
+                else
+                {
+                    slowMotionTween = DOVirtual.DelayedCall(SlowMotion.ActiveDelay, () => { character?.SetSlowMotion(true); });
+                }
             }
             else if (callbackContext.canceled)
             {

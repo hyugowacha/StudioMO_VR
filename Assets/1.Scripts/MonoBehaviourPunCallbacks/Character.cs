@@ -49,7 +49,10 @@ public class Character : MonoBehaviourPunCallbacks, IPunObservable
     private float remainingImmuneTime = 0;
 
     //캐릭터의 슬로우 모션 시간
-    private float remainingSlowMotionTime = SlowMotion.MaximumFillValue;
+    public float remainingSlowMotionTime {
+        private set;
+        get;
+    } = SlowMotion.MaximumFillValue;
 
     //채굴한 광물의 양
     public uint mineralCount {
@@ -336,11 +339,5 @@ public class Character : MonoBehaviourPunCallbacks, IPunObservable
         {
             photonView.RPC(nameof(SetMineral), RpcTarget.Others, convert);
         }
-    }
-
-    //슬로우 모션 정규화 값을 반환하는 메서드
-    public float GetSlowMotionRatio()
-    {
-        return remainingSlowMotionTime / SlowMotion.MaximumFillValue;
     }
 }

@@ -602,19 +602,19 @@ AnimatorController:
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: slowmotion
     m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: hit
     m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   m_AnimatorLayers:
   - serializedVersion: 5
     m_Name: Face
@@ -901,29 +901,29 @@ AnimatorStateMachine:
   m_ChildStates:
   - serializedVersion: 1
     m_State: {fileID: -1823337841914544032}
-    m_Position: {x: -290, y: -110, z: 0}
+    m_Position: {x: -240, y: -150, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -6459264634704637319}
-    m_Position: {x: 140, y: -60, z: 0}
+    m_Position: {x: -90, y: -30, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 2736065229904081130}
-    m_Position: {x: 90, y: 70, z: 0}
+    m_Position: {x: -500, y: -60, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -3638707416176530389}
-    m_Position: {x: -20, y: -160, z: 0}
+    m_Position: {x: 90, y: -230, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 7624272806330386813}
-    m_Position: {x: -450, y: 70, z: 0}
+    m_Position: {x: 310, y: 20, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -3034521285118371780}
-    m_Position: {x: -210, y: 190, z: 0}
+    m_Position: {x: -400, y: 210, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions:
   - {fileID: 2726822210298465741}
   m_EntryTransitions: []
   m_StateMachineTransitions: {}
   m_StateMachineBehaviours: []
-  m_AnyStatePosition: {x: -580, y: 0, z: 0}
+  m_AnyStatePosition: {x: 260, y: -160, z: 0}
   m_EntryPosition: {x: -410, y: -200, z: 0}
   m_ExitPosition: {x: 600, y: 0, z: 0}
   m_ParentStateMachinePosition: {x: 800, y: 20, z: 0}
