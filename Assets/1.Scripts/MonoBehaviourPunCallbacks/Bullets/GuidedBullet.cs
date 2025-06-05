@@ -69,6 +69,7 @@ public class GuidedBullet : MonoBehaviour, IBullet
     void OnDisable()
     {
         // 사라짐 이펙트 출력
+        if (!Application.isPlaying || !gameObject.activeInHierarchy) return;
         EffectPoolManager.Instance.SpawnEffect("VFX_MON001_Explode", transform.position, Quaternion.identity);
 
         // 인디케이터 제거됨
