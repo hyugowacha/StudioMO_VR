@@ -6,8 +6,13 @@ using UnityEngine.UI;
 
 public class ShopCanvasCtrl : MonoBehaviour
 {
+    [Header("상점 캔버스")]
     [SerializeField] Canvas shopCanvas;
+
+    [Header("스킨 스크립터블 오브젝트들")]
     [SerializeField] SkinData[] skinDatas;
+
+    [Header("각 스킨 이미지 버튼")]
     [SerializeField] ShopButton[] shopButtons;
 
     [Header("구매 패널")]
@@ -29,10 +34,14 @@ public class ShopCanvasCtrl : MonoBehaviour
 
     public void Start()
     {
+        // ▼ 시작 시, 상점 캔버스, 스킨 구매 패널 끔
         shopCanvas.gameObject.SetActive(false);
-        buySkinPanel.gameObject.SetActive(false);
+        buySkinPanel.SetActive(false);
+
+        // ▼ 보유 코인 임시 설정값으로 초기화    
         coinValue.text = currentCoin.ToString();
 
+        // ▼ 버튼들 해당 스킨 데이터 값으로 설정
         for (int i = 0; i < skinDatas.Length; i++)
         {
             bool isUnlocked = false;
@@ -42,12 +51,14 @@ public class ShopCanvasCtrl : MonoBehaviour
 
     private void Update()
     {
+        // ▼ 임시 테스트 용 -> 상점 캔버스 끄고 키기
         if(Input.GetKeyDown(KeyCode.Space))
         {
             shopCanvas.gameObject.SetActive(true);
         }
     }
 
+    // ▼ 스킨 구매 패널 보여주는 기능 담당
     public void ShowBuySkinPanel(SkinData skin, ShopButton button)
     {
         selectedSkin = skin;
@@ -61,6 +72,7 @@ public class ShopCanvasCtrl : MonoBehaviour
         buySkinPanel.gameObject.SetActive(true);
     }
 
+    // ▼ 스킨 구매 패널에서 해당 스킨 구매 버튼 눌렀을 때, 구매 처리 담당
     public void OnClickBuySkin()
     {
         if (currentCoin >= selectedSkin.price)
@@ -69,9 +81,9 @@ public class ShopCanvasCtrl : MonoBehaviour
             coinValue.text = currentCoin.ToString();
 
             selectedShopButton.UnLock();
-            ApplySkin(selectedSkin);
+            //ApplySkin(selectedSkin);
 
-            buySkinPanel.gameObject.SetActive(false);
+            buySkinPanel.SetActive(false);
         }
         else
         {
@@ -79,6 +91,19 @@ public class ShopCanvasCtrl : MonoBehaviour
         }
     }
 
+    // ▼ 스킨 구매 패널 나가는 버튼
+    public void OnClickCloseBuySkin()
+    {
+        buySkinPanel.SetActive(false);
+    }
+
+    // ▼ 상점 캔버스 나가기 버튼
+    public void OnClickCloseShop()
+    {
+        shopCanvas.gameObject.SetActive(false);
+    }
+
+    // ▼ 현재 적용중인 스킨 이미지 갱신
     public void ApplySkin(SkinData skin)
     {
         previewImage.sprite = skin.skinSprite;
