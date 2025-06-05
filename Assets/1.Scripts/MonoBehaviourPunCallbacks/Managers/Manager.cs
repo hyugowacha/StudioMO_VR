@@ -26,8 +26,11 @@ public abstract class Manager : MonoBehaviourPunCallbacks
     protected ActionBasedController leftActionBasedController;  //왼쪽 컨트롤러
     [SerializeField]
     protected ActionBasedController rightActionBasedController; //오른쪽 컨트롤러
+    [SerializeField]
+    private TunnelingVignetteController vignetteController;     //비네트 (상태이상 표시)
+    private LocomotionVignetteProvider locomotionVignetteProvider = null;
 
-    [Header("언어별 대응 폰트 에셋들") ,SerializeField]
+    [Header("언어별 대응 폰트 에셋들"), SerializeField]
     private TMP_FontAsset[] fontAssets = new TMP_FontAsset[Translation.count];
 
     protected TMP_FontAsset currentFontAsset {
@@ -119,7 +122,7 @@ public abstract class Manager : MonoBehaviourPunCallbacks
             Vector2 input = callbackContext.ReadValue<Vector2>();
             if (input != Vector2.zero)
             {
-                if(lookInputEnabled == false)
+                if (lookInputEnabled == false)
                 {
                     lookInputEnabled = true;
                     return;
@@ -164,7 +167,7 @@ public abstract class Manager : MonoBehaviourPunCallbacks
     //카메라 이동 속도를 변경해주는 메서드
     protected void SetMoveSpeed(float value)
     {
-        if(dynamicMoveProvider != null)
+        if (dynamicMoveProvider != null)
         {
             dynamicMoveProvider.moveSpeed = value;
         }
@@ -177,6 +180,35 @@ public abstract class Manager : MonoBehaviourPunCallbacks
         {
             PlayerPrefs.SetInt(Translation.Preferences, index);
             ChangeText((Translation.Language)index);
+        }
+    }
+
+    //비네트를 켜고 끄는 메서드 (플레이어 상태이상 시)
+    protected void SetTunnelingVignette(bool enable)
+    {
+        switch (enable)
+        {
+            case true:
+                if (locomotionVignetteProvider == null)
+                {
+                    locomotionVignetteProvider = new LocomotionVignetteProvider();
+                    if (vignetteController != null)
+                    {
+                        locomotionVignetteProvider.overrideParameters = vignetteController.defaultParameters;
+                        vignetteController.BeginTunnelingVignette(locomotionVignetteProvider);
+                    }
+                }
+                break;
+            case false:
+                if (locomotionVignetteProvider != null)
+                {
+                    if (vignetteController != null)
+                    {
+                        vignetteController.EndTunnelingVignette(locomotionVignetteProvider);
+                    }
+                    locomotionVignetteProvider = null;
+                }
+                break;
         }
     }
 
