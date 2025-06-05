@@ -49,12 +49,8 @@ public class TimerPanel : Panel
     }
 
     //기준값과 최대값을 이용하여 시간 현황을 표시해주는 메서드
-    public void Open(float current, float max)
+    public void Fill(float current, float max)
     {
-        if (gameObject.activeSelf == false)
-        {
-            Open();
-        }
         if (max == 0)
         {
             Set(MaxValue);

@@ -45,16 +45,13 @@ public class StageManager : Manager
     [SerializeField, Range(0, int.MaxValue)]
     private float startDelay = 3;                               //게임 시작 딜레이
     [SerializeField]
-    private PhasePanel phasePanel;                              //게임 준비, 시작, 종료를 표시하는 패널
+    private TimerPanel timerPanel;                              //남은 시간 표시 패널
+    private float remainingTime = 0.0f;                         //남은 시간
+    private float limitTime = 0.0f;                             //제한 시간
 
     [SerializeField]
     private SlowMotionPanel slowMotionPanel;                    //슬로우 모션 표시 패널
     private Tween slowMotionTween = null;                       //슬로우 모션 트윈
-
-    [SerializeField]
-    private TimerPanel timerPanel;                              //남은 시간 표시 패널
-    private float remainingTime = 0.0f;                         //남은 시간
-    private float limitTime = 0.0f;                             //제한 시간
 
     [SerializeField]
     private ScorePanel scorePanel;                              //광물 점수 표시 패널
@@ -96,7 +93,6 @@ public class StageManager : Manager
                 }
             }
             remainingTime = limitTime;
-            phasePanel?.Open();
             DOVirtual.DelayedCall(startDelay, () => stop = false);
         }
     }
@@ -132,10 +128,10 @@ public class StageManager : Manager
                     character.SetSlowMotion(false); //시간이 끝나면 슬로우 모션 해제
                     totalScore = character.mineralCount;
                 }
-                phasePanel?.Open(totalScore, score.GetClearValue(), score.GetAddValue(), null, null, null);
+                //phasePanel?.Open(totalScore, score.GetClearValue(), score.GetAddValue(), null, null, null);
             }
         }
-        timerPanel?.Open(remainingTime, limitTime);
+        timerPanel?.Fill(remainingTime, limitTime);
     }
 
     private void FixedUpdate()
@@ -190,8 +186,6 @@ public class StageManager : Manager
 
     protected override void ChangeText()
     {
-        slowMotionPanel?.ChangeText();
-        timerPanel?.ChangeText();
         //mineralPanel?.ChangeText();
     }
 
