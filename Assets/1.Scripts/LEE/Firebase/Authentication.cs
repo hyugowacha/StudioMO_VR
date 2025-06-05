@@ -44,7 +44,15 @@ public static class Authentication
 
     // 세션 상태 감지 리스너 (중복 로그인 등 감지용)
     private static EventHandler<ValueChangedEventArgs> sessionListener = null;
+
+    private static int testStartCoin = 9999;
     #endregion
+
+    // UID 안전하게 가져오는 유틸 메서드
+    public static string GetCurrentUID()
+    {
+        return firebaseAuth?.CurrentUser?.UserId;
+    }
 
     // 세션 리스너 정리 함수: 리스너 등록 해제 및 참조 해제
     private static void CleanupSessionListener()
@@ -156,9 +164,12 @@ public static class Authentication
                 // 저장할 유저 데이터
                 Dictionary<string, object> userData = new Dictionary<string, object>
                 {
-                    { "ID", ID },                    // ID는 이메일로 저장
-                    { "SchoolName", hintSchool },    // 학교 이름
-                    { "Session", "" }                // 일단 비움
+                    { "ID", ID },                               // ID는 이메일로 저장
+                    { "SchoolName", hintSchool },               // 학교 이름 (힌트용)
+                    { "Session", "" },                          // 일단 비움
+                    { "Coins", testStartCoin },                 // 시작 재화
+                    { "UnlockedSkins", new List<string> { "SkinData_Poorin" } }, // 시작 스킨
+                    { "EquippedSkin", "SkinData_Poorin" }              // 장착 스킨
                 };
 
 
