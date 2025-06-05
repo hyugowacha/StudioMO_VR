@@ -42,8 +42,8 @@ public class StageManager : Manager
     [Header("캔버스 내용들"), SerializeField]
     private AudioSource audioSource;                            //배경음악 오디오 소스
     private bool stop = true;                                   //게임 진행이 가능한지 여부를 알려주는 변수
-    [SerializeField, Range(0, int.MaxValue)]
-    private float startDelay = 3;                               //게임 시작 딜레이
+    [SerializeField]
+    private PhasePanel phasePanel;                              //진행 단계 표시 패널
     [SerializeField]
     private TimerPanel timerPanel;                              //남은 시간 표시 패널
     private float remainingTime = 0.0f;                         //남은 시간
@@ -93,7 +93,8 @@ public class StageManager : Manager
                 }
             }
             remainingTime = limitTime;
-            DOVirtual.DelayedCall(startDelay, () => stop = false);
+            phasePanel?.Play(PhasePanel.ReadyDelay, PhasePanel.StartDelay, PhasePanel.EndDelay);
+            DOVirtual.DelayedCall(PhasePanel.ReadyDelay + PhasePanel.StartDelay, () => stop = false);
         }
     }
 
@@ -128,7 +129,7 @@ public class StageManager : Manager
                     character.SetSlowMotion(false); //시간이 끝나면 슬로우 모션 해제
                     totalScore = character.mineralCount;
                 }
-                //phasePanel?.Open(totalScore, score.GetClearValue(), score.GetAddValue(), null, null, null);
+                phasePanel?.Stop();
             }
         }
         timerPanel?.Fill(remainingTime, limitTime);
@@ -186,7 +187,7 @@ public class StageManager : Manager
 
     protected override void ChangeText()
     {
-        //mineralPanel?.ChangeText();
+        phasePanel?.ChangeText();
     }
 
     protected override void OnLeftFunction(InputAction.CallbackContext callbackContext)
