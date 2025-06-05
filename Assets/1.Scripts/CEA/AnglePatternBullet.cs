@@ -71,11 +71,13 @@ public class AnglePatternBullet : MonoBehaviour, IBullet
         }
     }
 
+
     // 탄막 비활성화 시
     void OnDisable()
     {
         // 탄막 인스펙터 이름 추가 후 이름을 삽입해야 함. 추후 자동화 생각해보긴 하기.
         // 사라짐 이펙트 출력
+        if (!Application.isPlaying || !gameObject.activeInHierarchy) return;
         EffectPoolManager.Instance.SpawnEffect("VFX_MON001_Explode", transform.position, Quaternion.identity);
     }
     #endregion

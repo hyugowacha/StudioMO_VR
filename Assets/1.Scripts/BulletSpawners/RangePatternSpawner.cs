@@ -10,6 +10,8 @@ public class RangePatternSpawner : MonoBehaviour
 
     public ObjectPoolingBullet bulletPooling; //오브젝트풀
 
+    public EffectPoolManager effectPool;
+
     public RangePatternBullet rangePatternBullet; //패턴형 탄막(거리) 오브젝트
 
     public Transform bulletParent;
@@ -95,6 +97,6 @@ public class RangePatternSpawner : MonoBehaviour
         bullet.transform.position += offsetVector;
         bullet.Initialize(fireDir.normalized);
 
-        Debug.DrawRay(bullet.transform.position, fireDir * 3f, Color.green, 1f);
+        effectPool.SpawnEffect("PatternBullet_Enable", bullet.transform.position, Quaternion.identity);
     }
 }

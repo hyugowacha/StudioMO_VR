@@ -42,11 +42,8 @@ public abstract class Panel : MonoBehaviour
     [Header("현재 자릿수 설정"), SerializeField]
     private sbyte digitScale;
 
-    private static readonly char ZeroPlaceholder = '0';
-    private static readonly string DecimalPlaceLetter = "F";
-
-    protected static readonly float HalfValue = 0.5f;
-    protected static readonly float MaxValue = 1f;
+    protected static readonly char ZeroPlaceholder = '0';
+    protected static readonly string DecimalPlaceLetter = "F";
 
 #if UNITY_EDITOR
     protected virtual void OnValidate()

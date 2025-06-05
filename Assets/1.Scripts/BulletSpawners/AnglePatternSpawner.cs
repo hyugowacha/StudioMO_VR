@@ -9,11 +9,13 @@ public class AnglePatternSpawner : MonoBehaviour
 
     public ObjectPoolingBullet bulletPooling; //오브젝트풀
 
+    public EffectPoolManager effectPool;
+
     public AnglePatternBullet anglePatternBullet; //패턴형 탄막(거리)
 
     public Transform bulletParent;
 
-    public BoxCollider wallCollider; 
+    public BoxCollider wallCollider;
 
     public float fireAngle; //발사각
 
@@ -90,10 +92,11 @@ public class AnglePatternSpawner : MonoBehaviour
                 break;
         }
 
-            float totalAngle = fireAngle + offset;
+        float totalAngle = fireAngle + offset;
         Vector3 fireDir = Quaternion.Euler(0f, totalAngle, 0f) * baseDir;
 
         bullet.Initialize(fireDir.normalized);
-        Debug.DrawRay(spawnPos, fireDir * 3f, Color.red, 1f);
+
+        effectPool.SpawnEffect("PatternBullet_Enable", bullet.transform.position, Quaternion.identity);
     }
 }
