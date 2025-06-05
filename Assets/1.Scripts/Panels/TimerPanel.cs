@@ -41,6 +41,7 @@ public class TimerPanel : Panel
     [Header("애니메이션을 실행 시켜줄 float형 파라미터"), SerializeField]
     private string parameter = "normalized";
 
+<<<<<<< HEAD
     private static readonly float MaxValue = 1.0f;      //채우기의 최대값
 
     //슬라이더와 애니메이션 파라미터의 양을 설정해주는 메서드
@@ -50,20 +51,19 @@ public class TimerPanel : Panel
         getSlider.value = value;
     }
 
+=======
+>>>>>>> Develop_JYH
     //기준값과 최대값을 이용하여 시간 현황을 표시해주는 메서드
-    public void Open(float current, float max)
+    public void Fill(float current, float max)
     {
-        if (gameObject.activeSelf == false)
-        {
-            Open();
-        }
         if (max == 0)
         {
-            Set(MaxValue);
+            getSlider.value = getSlider.maxValue;
         }
         else
         {
-            Set(current / max);
+            getSlider.value = getSlider.maxValue * (current / max);
         }
+        getAnimator.SetFloat(parameter, current);
     }
 }
