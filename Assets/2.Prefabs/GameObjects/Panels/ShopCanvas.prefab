@@ -3280,7 +3280,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 7772125936563501269}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: ShopCanvasCtrl, Assembly-CSharp
+        m_MethodName: OnClickCloseBuySkin
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &7806914005943732011
 GameObject:
   m_ObjectHideFlags: 0
@@ -3746,7 +3758,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 506112041950791058}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: ShopCanvasCtrl, Assembly-CSharp
+        m_MethodName: OnClickCloseShop
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &9025028257902585383
 GameObject:
   m_ObjectHideFlags: 0

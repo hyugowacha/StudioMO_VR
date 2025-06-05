@@ -9,6 +9,9 @@ public class ShopCanvasCtrl : MonoBehaviour
     [Header("상점 캔버스")]
     [SerializeField] Canvas shopCanvas;
 
+    [Header("기본 적용 스킨 이미지 버튼")]
+    [SerializeField] SkinData basicSkinData;
+
     [Header("스킨 스크립터블 오브젝트들")]
     [SerializeField] SkinData[] skinDatas;
 
@@ -44,9 +47,11 @@ public class ShopCanvasCtrl : MonoBehaviour
         // ▼ 버튼들 해당 스킨 데이터 값으로 설정
         for (int i = 0; i < skinDatas.Length; i++)
         {
-            bool isUnlocked = false;
+            bool isUnlocked = (skinDatas[i] == basicSkinData);
             shopButtons[i].SetSkin(skinDatas[i], this, isUnlocked);
         }
+
+        ApplySkin(basicSkinData);
     }
 
     private void Update()
@@ -101,6 +106,12 @@ public class ShopCanvasCtrl : MonoBehaviour
     public void OnClickCloseShop()
     {
         shopCanvas.gameObject.SetActive(false);
+    }
+
+    // ▼ 기본 스킨으로 적용하는 버튼
+    public void OnClickBasicSkin()
+    {
+        previewImage.sprite = basicSkinData.skinSprite;
     }
 
     // ▼ 현재 적용중인 스킨 이미지 갱신
