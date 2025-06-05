@@ -185,7 +185,7 @@ public class StageManager : Manager
             }
             mineralCount = character.mineralCount;
         }
-        scorePanel?.Open(mineralCount, score.GetClearValue(), score.GetAddValue());
+        scorePanel?.Fill(mineralCount, score.GetClearValue(), score.GetAddValue());
     }
 
     protected override void ChangeText()

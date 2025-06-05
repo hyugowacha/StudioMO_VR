@@ -9,9 +9,10 @@ public abstract class Panel : MonoBehaviour
 {
     private static readonly char ZeroPlaceholder = '0';
     private static readonly string DecimalPlaceLetter = "F";
+    protected static readonly float HalfValue = 0.5f;
 
     //대상 숫자의 단위를 설정한 자릿수 변수에 맞게 문자열로 반환해주는 메소드
-    protected string GetNumberText(double value, sbyte digitScale)
+    protected static string GetNumberText(double value, sbyte digitScale)
     {
         if (digitScale > 0)      //자연수만 출력
         {
