@@ -1,11 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Photon.Pun;
 using DG.Tweening;
-using System;
-using static UnityEngine.Rendering.DebugUI;
 using Photon.Realtime;
 
 [System.Serializable]

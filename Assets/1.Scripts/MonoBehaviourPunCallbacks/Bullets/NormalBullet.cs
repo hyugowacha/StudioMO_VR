@@ -13,9 +13,11 @@ public class NormalBullet : MonoBehaviour, IBullet
     // 이동 방향
     Vector3 moveDirection;
 
-    // 이동 속도
-    [Header("탄막 속도")]
+    [Header("탄막 이동 속도")]
     public float speed = 3f;
+
+    [Header("슬로우 모션 시")]
+    public float slowSpeed = 1f;
     #endregion
 
     #region 오브젝트 풀, 생성 시
@@ -74,7 +76,8 @@ public class NormalBullet : MonoBehaviour, IBullet
     {
         // 탄막 인스펙터 이름 추가 후 이름을 삽입해야 함. 추후 자동화 생각해보긴 하기.
         // 사라짐 이펙트 출력
-        EffectPoolManager.Instance.SpawnEffect("VFX_MON001_Explode", transform.position, Quaternion.identity);
+        if (!Application.isPlaying || !gameObject.activeInHierarchy) return;
+        EffectPoolManager.Instance.SpawnEffect("VFX_MON005_Explode", transform.position, Quaternion.identity);
     }
     #endregion
 
@@ -87,10 +90,15 @@ public class NormalBullet : MonoBehaviour, IBullet
 
         // Y값 고정
         Vector3 currentPos = transform.position;
-        currentPos += flatDir * speed * Time.deltaTime;
+        currentPos += flatDir * speed * Time.deltaTime * slowSpeed;
         currentPos.y = transform.position.y; // Y 위치 고정
 
         transform.position = currentPos;
+    }
+
+    public void ChangePitch(float val)
+    {
+        slowSpeed = val;
     }
     #endregion
 }

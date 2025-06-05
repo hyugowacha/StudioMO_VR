@@ -42,19 +42,16 @@ public class StageManager : Manager
     [Header("캔버스 내용들"), SerializeField]
     private AudioSource audioSource;                            //배경음악 오디오 소스
     private bool stop = true;                                   //게임 진행이 가능한지 여부를 알려주는 변수
-    [SerializeField, Range(0, int.MaxValue)]
-    private float startDelay = 3;                               //게임 시작 딜레이
     [SerializeField]
-    private PhasePanel phasePanel;                              //게임 준비, 시작, 종료를 표시하는 패널
-
-    [SerializeField]
-    private SlowMotionPanel slowMotionPanel;                    //슬로우 모션 표시 패널
-    private Tween slowMotionTween = null;                       //슬로우 모션 트윈
-
+    private PhasePanel phasePanel;                              //진행 단계 표시 패널
     [SerializeField]
     private TimerPanel timerPanel;                              //남은 시간 표시 패널
     private float remainingTime = 0.0f;                         //남은 시간
     private float limitTime = 0.0f;                             //제한 시간
+
+    [SerializeField]
+    private SlowMotionPanel slowMotionPanel;                    //슬로우 모션 표시 패널
+    private Tween slowMotionTween = null;                       //슬로우 모션 트윈
 
     [SerializeField]
     private ScorePanel scorePanel;                              //광물 점수 표시 패널
@@ -96,8 +93,8 @@ public class StageManager : Manager
                 }
             }
             remainingTime = limitTime;
-            phasePanel?.Open();
-            DOVirtual.DelayedCall(startDelay, () => stop = false);
+            phasePanel?.Play(PhasePanel.ReadyDelay, PhasePanel.StartDelay, PhasePanel.EndDelay);
+            DOVirtual.DelayedCall(PhasePanel.ReadyDelay + PhasePanel.StartDelay, () => stop = false);
         }
     }
 
@@ -132,10 +129,10 @@ public class StageManager : Manager
                     character.SetSlowMotion(false); //시간이 끝나면 슬로우 모션 해제
                     totalScore = character.mineralCount;
                 }
-                phasePanel?.Open(totalScore, score.GetClearValue(), score.GetAddValue(), null, null, null);
+                phasePanel?.Stop();
             }
         }
-        timerPanel?.Open(remainingTime, limitTime);
+        timerPanel?.Fill(remainingTime, limitTime);
     }
 
     private void FixedUpdate()
@@ -190,9 +187,7 @@ public class StageManager : Manager
 
     protected override void ChangeText()
     {
-        slowMotionPanel?.ChangeText();
-        timerPanel?.ChangeText();
-        //mineralPanel?.ChangeText();
+        phasePanel?.ChangeText();
     }
 
     protected override void OnLeftFunction(InputAction.CallbackContext callbackContext)

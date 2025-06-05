@@ -11,6 +11,7 @@ public class GuidedBullet : MonoBehaviour, IBullet
     Vector3 moveDirection;
 
     // 이동 속도
+    [Header("탄막 이동 속도")]
     public float speed = 3f;
     #endregion
 
@@ -68,6 +69,7 @@ public class GuidedBullet : MonoBehaviour, IBullet
     void OnDisable()
     {
         // 사라짐 이펙트 출력
+        if (!Application.isPlaying || !gameObject.activeInHierarchy) return;
         EffectPoolManager.Instance.SpawnEffect("VFX_MON001_Explode", transform.position, Quaternion.identity);
 
         // 인디케이터 제거됨
@@ -84,9 +86,16 @@ public class GuidedBullet : MonoBehaviour, IBullet
         // Y값 고정
         Vector3 currentPos = transform.position;
         currentPos += flatDir * speed * Time.deltaTime;
+        //slowmotion.speed
+
         currentPos.y = transform.position.y; // Y 위치 고정
 
         transform.position = currentPos;
+    }
+
+    public void ChangePitch(float val)
+    {
+        // 오디오가 있다면 여기에 넣어라.
     }
     #endregion
 }

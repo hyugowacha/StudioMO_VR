@@ -1,115 +1,147 @@
-using System;
 using UnityEngine;
 using TMPro;
+using DG.Tweening;
 
 /// <summary>
 /// 진행 단계에 관련된 내용을 표시해주는 패널
 /// </summary>
-[RequireComponent(typeof(Animator))]
+[RequireComponent(typeof(TMP_Text))]
 public class PhasePanel : Panel
 {
-    private bool hasAnimator = false;
+    private bool hasText = false;
 
-    private Animator animator = null;
+    private TMP_Text text = null;
 
-    private Animator getAnimator {
+    private TMP_Text getText {
         get
         {
-            if(hasAnimator == false)
+            if (hasText == false)
             {
-                animator = GetComponent<Animator>();
-                hasAnimator = true;
+                hasText = TryGetComponent(out text);
             }
-            return animator;
+            return text;
         }
     }
 
-    /// <summary>
-    /// 결과에 따라 애니메이션과 글자의 변화를 주는 구조체
-    /// </summary>
-    [Serializable]
-    private struct Result
-    {
-        public string trigger;
-        public string value;
-    }
+    [Header("준비"), SerializeField]
+    private Translation.Text readyText;
+    [Header("시작"), SerializeField]
+    private Translation.Text startText;
+    [Header("종료"), SerializeField]
+    private Translation.Text endText;
 
-    [Header("실패 결과"),SerializeField]
-    private Result failResult;
-    [Header("클리어 결과"), SerializeField]
-    private Result clearResult;
-    [Header("퍼펙트 결과"), SerializeField]
-    private Result perfectResult;
+    [Header("언어별 대응 폰트들"), SerializeField]
+    private TMP_FontAsset[] tmpFontAssets = new TMP_FontAsset[Translation.count];
 
-    private enum TextIndex: byte
+    //현재 언어 설정에 의해 변경된 폰트
+    private TMP_FontAsset tmpFontAsset = null;
+
+    private Tween tween = null;
+
+    private enum State: byte
     {
-        Clear,
-        Perfect,
-        Total,
-        Result,
+        None,
+        Ready,
+        Start,
         End
     }
 
-    [Header("텍스트 묶음"), SerializeField]
-    private TMP_Text[] texts = new TMP_Text[TextCount];
+    //현재 상태를 나타내는 변수
+    private State state = State.None;
 
-    private static readonly int TextCount = (int)TextIndex.End;
-    private static readonly string TotalTextValue = "Total: ";
+    public static readonly float ReadyDelay = 1f;
+
+    public static readonly float StartDelay = 2f;
+
+    public static readonly float EndDelay = 1f;
 
 #if UNITY_EDITOR
-    protected override void OnValidate()
+    private void OnValidate()
     {
-        base.OnValidate();
-        ExtensionMethod.Sort(ref texts, TextCount);
+        ExtensionMethod.Sort(ref tmpFontAssets, Translation.count, true);
     }
 #endif
 
-    //문자열 및 애니메이션 트리거를 발동시켜줄 메서드
-    private void Set(string trigger, string value)
+    //텍스트 설정 메서드
+    private void Set(State state)
     {
-        texts[(int)TextIndex.Result].Set(value);
-        getAnimator.SetTrigger(trigger);
+        this.state = state;
+        switch(this.state)
+        {
+            case State.None:
+                getText.enabled = false;
+                break;
+            case State.Ready:
+                getText.enabled = true;
+                if (tmpFontAsset != null)
+                {
+                    getText.Set(readyText.Get(Translation.language), tmpFontAsset);
+                }
+                else
+                {
+                    getText.Set(readyText.Get(Translation.language));
+                }
+                break;
+            case State.Start:
+                getText.enabled = true;
+                if (tmpFontAsset != null)
+                {
+                    getText.Set(startText.Get(Translation.language), tmpFontAsset);
+                }
+                else
+                {
+                    getText.Set(startText.Get(Translation.language));
+                }
+                break;
+            case State.End:
+                getText.enabled = true;
+                if (tmpFontAsset != null)
+                {
+                    getText.Set(endText.Get(Translation.language), tmpFontAsset);
+                }
+                else
+                {
+                    getText.Set(endText.Get(Translation.language));
+                }
+                break;
+        }
     }
 
-    //분기에 따라 문자열 및 애니메이션 트리거 내용을 결정해주는 메서드
-    private void Set(bool? perfect)
+    //게임이 시작되었음을 표시하는 메서드
+    public void Play(float ready, float start, float end)
     {
-        if (perfect == true)
+        Set(State.None);
+        tween.Kill();
+        tween = DOVirtual.DelayedCall(ready, () =>
         {
-            Set(perfectResult.trigger, perfectResult.value);
-        }
-        else if (perfect == false)
-        {
-            Set(clearResult.trigger, clearResult.value);
-        }
-        else
-        {
-            Set(failResult.trigger, failResult.value);
-        }
+            Set(State.Ready);
+            DOVirtual.DelayedCall(start, ()=>
+            {
+                Set(State.Start);
+                DOVirtual.DelayedCall(end, () => { Set(State.None); });
+            });
+        });
     }
 
-    //결과창을 보여주는 메서드
-    public void Open(uint totalScore, uint clearScore, uint addScore, Action restart, Action exit, Action next)
+    //게임이 끝났음을 표시하는 메서드
+    public void Stop()
     {
-        if (gameObject.activeSelf == false)
+        tween.Kill();
+        Set(State.End);
+    }
+
+    //언어를 변경하기 위한 메소드
+    public void ChangeText()
+    {
+        switch (Translation.language)
         {
-            Open();
+            case Translation.Language.English:
+            case Translation.Language.Korean:
+            case Translation.Language.Chinese:
+            case Translation.Language.Japanese:
+                tmpFontAsset = tmpFontAssets[(int)Translation.language];
+                break;
         }
-        texts[(int)TextIndex.Clear].Set(GetNumberText(clearScore));
-        uint perfectScore = (uint)Mathf.Clamp((float)clearScore + addScore, uint.MinValue, uint.MaxValue);
-        texts[(int)TextIndex.Perfect].Set(GetNumberText(perfectScore));
-        texts[(int)TextIndex.Total].Set(TotalTextValue + GetNumberText(totalScore));
-        if (totalScore >= perfectScore)
-        {
-            Set(true);
-        }
-        else if (totalScore >= clearScore)
-        {
-            Set(false);
-        }
-        else
-        {
-            Set(null);
-        }
+        Set(state);
     }
 }
