@@ -39,6 +39,8 @@ public class ScorePanel : Panel
         }
     }
 
+    private sbyte digitScale;
+
     [Header("애니메이션을 실행 시켜줄 float형 파라미터"), SerializeField]
     private string parameter = "normalized";
 
@@ -54,14 +56,9 @@ public class ScorePanel : Panel
     [Header("텍스트 묶음"), SerializeField]
     private TMP_Text[] texts = new TMP_Text[(int)TextIndex.End];
 
-    private static readonly float HalfValue = 0.5f;
-
-    private static readonly float MaxValue = 1f;
-
 #if UNITY_EDITOR
-    protected override void OnValidate()
+    private void OnValidate()
     {
-        base.OnValidate();
         ExtensionMethod.Sort(ref texts, (int)TextIndex.End);
     }
 #endif
@@ -83,33 +80,33 @@ public class ScorePanel : Panel
     //점수 변화의 현황을 보여주는 메서드
     public void Open(uint totalScore, uint clearScore, uint addScore)
     {
-        texts[(int)TextIndex.Step1].Set(GetNumberText(clearScore * HalfValue));
-        texts[(int)TextIndex.Step2].Set(GetNumberText(clearScore));
-        uint perfectScore = (uint)Mathf.Clamp((float)clearScore + addScore, uint.MinValue, uint.MaxValue);
-        if (perfectScore > clearScore)
-        {
-            Set(GetNumberText(clearScore + (HalfValue * addScore)), GetNumberText(perfectScore));  
-        }
-        else
-        {
-            string value = GetNumberText(clearScore);
-            Set(value, value);
-        }
-        if(totalScore >= perfectScore)
-        {
-            Set(MaxValue);
-        }
-        else if (totalScore >= clearScore)
-        {
-            Set(HalfValue + (HalfValue * (((float)totalScore - clearScore) / ((float)perfectScore - clearScore))));
-        }
-        else
-        {
-            Set(((float)totalScore / clearScore) * HalfValue);
-        }
         if (gameObject.activeSelf == false)
         {
-            Open();
+            gameObject.SetActive(true);
         }
+        //texts[(int)TextIndex.Step1].Set(GetNumberText(clearScore * HalfValue, ));
+        //texts[(int)TextIndex.Step2].Set(GetNumberText(clearScore));
+        //uint perfectScore = (uint)Mathf.Clamp((float)clearScore + addScore, uint.MinValue, uint.MaxValue);
+        //if (perfectScore > clearScore)
+        //{
+        //    Set(GetNumberText(clearScore + (HalfValue * addScore)), GetNumberText(perfectScore));  
+        //}
+        //else
+        //{
+        //    string value = GetNumberText(clearScore);
+        //    Set(value, value);
+        //}
+        //if (totalScore >= perfectScore)
+        //{
+        //    Set(MaxValue);
+        //}
+        //else if (totalScore >= clearScore)
+        //{
+        //    Set(HalfValue + (HalfValue * (((float)totalScore - clearScore) / ((float)perfectScore - clearScore))));
+        //}
+        //else
+        //{
+        //    Set(((float)totalScore / clearScore) * HalfValue);
+        //}
     }
 }
