@@ -57,6 +57,9 @@ public class StageManager : Manager
     private ScorePanel scorePanel;                              //광물 점수 표시 패널
     private StageData.Score score;                              //목표 광물 개수
 
+    [SerializeField]
+    private StageResultPanel stageResultPanel;                  //스테이지 결과 패널
+
     protected override void Start()
     {
         base.Start();
