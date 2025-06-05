@@ -24,6 +24,12 @@ public class StageResultPanel : Panel
         }
     }
 
+    [Header("언어별 대응 폰트들"), SerializeField]
+    private TMP_FontAsset[] tmpFontAssets = new TMP_FontAsset[Translation.count];
+
+    //현재 언어 설정에 의해 변경된 폰트
+    private TMP_FontAsset tmpFontAsset = null;
+
     /// <summary>
     /// 결과에 따라 애니메이션과 글자의 변화를 주는 구조체
     /// </summary>
