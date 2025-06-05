@@ -15,17 +15,16 @@ using Photon.Realtime;
 [RequireComponent(typeof(PhotonTransformView))]
 public class Character : MonoBehaviourPunCallbacks, IPunObservable
 {
-    private bool _hasRigidbody = false;
+    private bool hasRigidbody = false;
 
     private new Rigidbody rigidbody = null;
 
     private Rigidbody getRigidbody {
         get
         {
-            if(_hasRigidbody == false)
+            if(hasRigidbody == false)
             {
-                rigidbody = GetComponent<Rigidbody>();
-                _hasRigidbody = true;
+                hasRigidbody = TryGetComponent(out rigidbody);
             }
             return rigidbody;
         }
@@ -41,16 +40,19 @@ public class Character : MonoBehaviourPunCallbacks, IPunObservable
     private Transform rightHandTransform;
     [Header("이동 속도"), SerializeField, Range(1, 5)]
     private float moveSpeed = 5;
-    [Header("기절 지속 시간"), Range(0, int.MaxValue)]
-    private float faintingTime = 30f;
-    [Header("무적 지속 시간"), Range(0, int.MaxValue)]
+    [Header("기절 지속 시간"), SerializeField, Range(0, int.MaxValue)]
+    private float faintingTime = 2f;
+    [Header("무적 지속 시간"), SerializeField, Range(0, int.MaxValue)]
     private float invincibleTime = 3f;
 
     //캐릭터가 탄막에 맞은 후 남은 면역 시간
     private float remainingImmuneTime = 0;
 
     //캐릭터의 슬로우 모션 시간
-    private float remainingSlowMotionTime = SlowMotion.MaximumFillValue;
+    public float remainingSlowMotionTime {
+        private set;
+        get;
+    } = SlowMotion.MaximumFillValue;
 
     //채굴한 광물의 양
     public uint mineralCount {
@@ -161,7 +163,6 @@ public class Character : MonoBehaviourPunCallbacks, IPunObservable
         Debug.Log(player.ActorNumber);
         if (SlowMotion.IsOwner(player) == true)
         {
-
         }
     }
 
@@ -338,11 +339,5 @@ public class Character : MonoBehaviourPunCallbacks, IPunObservable
         {
             photonView.RPC(nameof(SetMineral), RpcTarget.Others, convert);
         }
-    }
-
-    //슬로우 모션 정규화 값을 반환하는 메서드
-    public float GetSlowMotionRatio()
-    {
-        return remainingSlowMotionTime / SlowMotion.MaximumFillValue;
     }
 }

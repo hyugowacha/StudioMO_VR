@@ -54,10 +54,6 @@ public class ScorePanel : Panel
     [Header("텍스트 묶음"), SerializeField]
     private TMP_Text[] texts = new TMP_Text[(int)TextIndex.End];
 
-    private static readonly float HalfValue = 0.5f;
-
-    private static readonly float MaxValue = 1f;
-
 #if UNITY_EDITOR
     protected override void OnValidate()
     {
@@ -83,6 +79,10 @@ public class ScorePanel : Panel
     //점수 변화의 현황을 보여주는 메서드
     public void Open(uint totalScore, uint clearScore, uint addScore)
     {
+        if (gameObject.activeSelf == false)
+        {
+            Open();
+        }
         texts[(int)TextIndex.Step1].Set(GetNumberText(clearScore * HalfValue));
         texts[(int)TextIndex.Step2].Set(GetNumberText(clearScore));
         uint perfectScore = (uint)Mathf.Clamp((float)clearScore + addScore, uint.MinValue, uint.MaxValue);
@@ -95,7 +95,7 @@ public class ScorePanel : Panel
             string value = GetNumberText(clearScore);
             Set(value, value);
         }
-        if(totalScore >= perfectScore)
+        if (totalScore >= perfectScore)
         {
             Set(MaxValue);
         }
@@ -106,10 +106,6 @@ public class ScorePanel : Panel
         else
         {
             Set(((float)totalScore / clearScore) * HalfValue);
-        }
-        if (gameObject.activeSelf == false)
-        {
-            Open();
         }
     }
 }

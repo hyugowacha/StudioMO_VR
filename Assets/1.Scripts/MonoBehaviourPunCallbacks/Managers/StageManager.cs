@@ -2,7 +2,6 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using DG.Tweening;
 using Photon.Pun;
-using UnityEngine.XR.Interaction.Toolkit;
 
 [RequireComponent(typeof(BulletPatternLoader))]
 public class StageManager : Manager
@@ -21,13 +20,8 @@ public class StageManager : Manager
     [SerializeField]
     private Vector3 rightHandOffset;                            //오른쪽 손잡이 간격
     private Vector2 moveInput = Vector2.zero;                   //이동 입력 값
-    private Tween slowMotionTween = null;                       //슬로우 모션 트윈
     [SerializeField]
     private Pickaxe pickaxe;                                    //곡괭이
-    [SerializeField]
-    private TunnelingVignetteController vignetteController;     //비네트 (상태이상 표시)
-
-    ITunnelingVignetteProvider provider;
 
     private bool hasBulletPatternLoader = false;
 
@@ -47,14 +41,15 @@ public class StageManager : Manager
 
     [Header("캔버스 내용들"), SerializeField]
     private AudioSource audioSource;                            //배경음악 오디오 소스
-    [SerializeField]
-    private PhasePanel phasePanel;                              //게임 준비, 시작, 종료를 표시하는 패널
+    private bool stop = true;                                   //게임 진행이 가능한지 여부를 알려주는 변수
     [SerializeField, Range(0, int.MaxValue)]
     private float startDelay = 3;                               //게임 시작 딜레이
-    private bool stop = true;                                   //게임 진행이 가능한지 여부를 알려주는 변수
+    [SerializeField]
+    private PhasePanel phasePanel;                              //게임 준비, 시작, 종료를 표시하는 패널
 
     [SerializeField]
-    private TimerPanel slowMotionPanel;                          //슬로우 모션 표시 패널
+    private SlowMotionPanel slowMotionPanel;                    //슬로우 모션 표시 패널
+    private Tween slowMotionTween = null;                       //슬로우 모션 트윈
 
     [SerializeField]
     private TimerPanel timerPanel;                              //남은 시간 표시 패널
@@ -70,7 +65,6 @@ public class StageManager : Manager
         base.Start();
         if (instance == this)
         {
-            provider = new VignetteProvider();
             SetFixedPosition(character != null ? character.transform.position : Vector3.zero);
             SetMoveSpeed(0);
             StageData stageData = StageData.current;
@@ -101,10 +95,9 @@ public class StageManager : Manager
                     }
                 }
             }
-            limitTime = 10f;
             remainingTime = limitTime;
             phasePanel?.Open();
-            DOVirtual.DelayedCall(startDelay, () => stop = false);  
+            DOVirtual.DelayedCall(startDelay, () => stop = false);
         }
     }
 
@@ -139,7 +132,7 @@ public class StageManager : Manager
                     character.SetSlowMotion(false); //시간이 끝나면 슬로우 모션 해제
                     totalScore = character.mineralCount;
                 }
-                phasePanel?.Open(totalScore, score.GetClearValue(), score.GetAddValue());
+                phasePanel?.Open(totalScore, score.GetClearValue(), score.GetAddValue(), null, null, null);
             }
         }
         timerPanel?.Open(remainingTime, limitTime);
@@ -171,23 +164,25 @@ public class StageManager : Manager
                 character.UpdateRightHand(rightActionBasedController.transform.position + rightHandOffset, rightActionBasedController.transform.rotation);
             }
             bool faintingState = character.faintingState;
+            SetTunnelingVignette(faintingState);
             if (faintingState == true && pickaxe != null && pickaxe.grip == true)
             {
                 pickaxe.grip = false;
             }
-            float ratio = character.GetSlowMotionRatio();
-            //if (SlowMotion.IsOwner(PhotonNetwork.LocalPlayer) == true)
-            //{
-            //    slowMotionPanel?.Fill(ratio, false);
-            //}
-            //else if (ratio >= SlowMotion.MinimumUseValue /*+ SlowMotion.RecoverRate*/ && faintingState == false)
-            //{
-            //    slowMotionPanel?.Fill(ratio, true);
-            //}
-            //else
-            //{
-            //    slowMotionPanel?.Fill(ratio, null);
-            //}
+            float full = SlowMotion.MaximumFillValue;
+            float current = character.remainingSlowMotionTime;
+            if (SlowMotion.IsOwner(PhotonNetwork.LocalPlayer) == true)
+            {
+                slowMotionPanel?.Fill(current, full, false);
+            }
+            else if (current >= SlowMotion.MinimumUseValue /*+ SlowMotion.RecoverRate*/ && faintingState == false)
+            {
+                slowMotionPanel?.Fill(current, full, true);
+            }
+            else
+            {
+                slowMotionPanel?.Fill(current, full, null);
+            }
             mineralCount = character.mineralCount;
         }
         scorePanel?.Open(mineralCount, score.GetClearValue(), score.GetAddValue());
@@ -206,7 +201,14 @@ public class StageManager : Manager
         {
             if (callbackContext.performed == true)
             {
-                slowMotionTween = DOVirtual.DelayedCall(SlowMotion.ActiveDelay, () => { character?.SetSlowMotion(true); });
+                if (character != null && (character.faintingState == true || character.remainingSlowMotionTime < SlowMotion.MinimumUseValue))
+                {
+                    slowMotionPanel?.Blink();
+                }
+                else
+                {
+                    slowMotionTween = DOVirtual.DelayedCall(SlowMotion.ActiveDelay, () => { character?.SetSlowMotion(true); });
+                }
             }
             else if (callbackContext.canceled)
             {
@@ -283,39 +285,5 @@ public class StageManager : Manager
         {
             moveInput = Vector2.zero;
         }
-    }
-    
-    //비네트를 켜고 끄는 함수 (플레이어 상태이상 시)
-    public void ToggleVignette(bool enable)
-    {
-        if (enable)
-        {
-            vignetteController.BeginTunnelingVignette(provider);
-        }
-        else
-        {
-            vignetteController.EndTunnelingVignette(provider);
-        }
-    }
-
-    
-}
-
-//비네트 provider
-public class VignetteProvider : ITunnelingVignetteProvider
-{
-    public VignetteParameters vignetteParameters { get; }
-
-    public VignetteProvider()
-    {
-        vignetteParameters = new VignetteParameters
-        {
-            apertureSize = 0.685f,
-            featheringEffect = 0.282f,
-            easeInTime = 0.45f,
-            easeOutTime = 0.3f,
-            easeInTimeLock = false,
-            easeOutDelayTime = 0f
-        };
     }
 }

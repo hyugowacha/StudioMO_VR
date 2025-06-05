@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
-/// 잔여 시간 값을 정규값 수치로 환산하여 슬라이더 내용으로 표시하는 패널
+/// 타이머에 관련된 내용을 표시해주는 패널
 /// </summary>
 [RequireComponent(typeof(Slider))]
 [RequireComponent(typeof(Animator))]
@@ -40,8 +40,6 @@ public class TimerPanel : Panel
 
     [Header("애니메이션을 실행 시켜줄 float형 파라미터"), SerializeField]
     private string parameter = "normalized";
-
-    private static readonly float MaxValue = 1.0f;      //채우기의 최대값
 
     //슬라이더와 애니메이션 파라미터의 양을 설정해주는 메서드
     private void Set(float value)
