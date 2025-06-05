@@ -57,9 +57,8 @@ public class StageResultPanel : Panel
     private static readonly string TotalTextValue = "Total: ";
 
 #if UNITY_EDITOR
-    protected override void OnValidate()
+    private void OnValidate()
     {
-        base.OnValidate();
         ExtensionMethod.Sort(ref texts, TextCount);
     }
 #endif
@@ -93,12 +92,12 @@ public class StageResultPanel : Panel
     {
         if (gameObject.activeSelf == false)
         {
-            Open();
+            gameObject.SetActive(true);
         }
-        texts[(int)TextIndex.Clear].Set(GetNumberText(clearScore));
+        //texts[(int)TextIndex.Clear].Set(GetNumberText(clearScore));
         uint perfectScore = (uint)Mathf.Clamp((float)clearScore + addScore, uint.MinValue, uint.MaxValue);
-        texts[(int)TextIndex.Perfect].Set(GetNumberText(perfectScore));
-        texts[(int)TextIndex.Total].Set(TotalTextValue + GetNumberText(totalScore));
+       // texts[(int)TextIndex.Perfect].Set(GetNumberText(perfectScore));
+        //texts[(int)TextIndex.Total].Set(TotalTextValue + GetNumberText(totalScore));
         if (totalScore >= perfectScore)
         {
             Set(true);
