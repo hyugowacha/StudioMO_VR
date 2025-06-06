@@ -3000,19 +3000,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f356d8b45db71345bf06790ede20b77, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  openDelay: 0.5
+  failParameter: fail
+  clearParameter: clear
+  perfectParameter: perfect
   tmpFontAssets:
   - {fileID: 11400000, guid: 4b8aa5f6588df0c47803a2a6bb4b6761, type: 2}
   - {fileID: 11400000, guid: 4b8aa5f6588df0c47803a2a6bb4b6761, type: 2}
   - {fileID: 11400000, guid: 5835cec086e6a7948b6ffe62cdaa7edf, type: 2}
   - {fileID: 11400000, guid: 7e4defada93fa8944a9bdf0c50dad9a4, type: 2}
-  failParameter: fail
-  clearParameter: clear
-  perfectParameter: perfect
   texts:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 4398007214623884188}
+  - {fileID: 5073642273137503361}
+  - {fileID: 3809157315891557908}
+  - {fileID: 8468663608089817886}
+  buttons:
+  - {fileID: 8183520816175010656}
+  - {fileID: 4974190483164440137}
+  - {fileID: 8029981729849789168}
 --- !u!1 &8014447481869320150
 GameObject:
   m_ObjectHideFlags: 0
@@ -3228,10 +3233,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 
+  m_text: Fail...
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: dc2cc93475f76427c86a8262bee36b88, type: 2}
-  m_sharedMaterial: {fileID: 2269793554123077917, guid: dc2cc93475f76427c86a8262bee36b88,
+  m_fontAsset: {fileID: 11400000, guid: 4b8aa5f6588df0c47803a2a6bb4b6761, type: 2}
+  m_sharedMaterial: {fileID: -7853904899199214455, guid: 4b8aa5f6588df0c47803a2a6bb4b6761,
     type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}

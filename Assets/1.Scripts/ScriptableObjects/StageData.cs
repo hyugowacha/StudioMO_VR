@@ -132,7 +132,6 @@ public class StageData : ScriptableObject
             stageDatas = Resources.LoadAll<StageData>(FolderText);
         }
         int length = stageDatas != null ? stageDatas.Length : 0;
-        Debug.Log(length);
         if (level >= 0 && level < length)
         {
 #if UNITY_EDITOR
@@ -162,9 +161,4 @@ public class StageData : ScriptableObject
         current = GetStageData(level);
     }
 
-    //다음 스테이지 레벨로 올라 갈 수 있는지 여부를 반환하는 함수
-    public static bool IsNextLevelAvailable(int level)
-    {
-        return current == GetStageData(level);
-    }
 }
