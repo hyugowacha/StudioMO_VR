@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
 using UnityEngine.XR.Interaction.Toolkit;
 using TMPro;
@@ -224,6 +225,45 @@ public static class ExtensionMethod
                 image.type = Image.Type.Filled;
             }
             image.fillAmount = value;
+        }
+    }
+
+    public static void SetText(this Button button, string value, TMP_FontAsset fontAsset)
+    {
+        if (button != null)
+        {
+            TextMeshProUGUI[] tmpTexts = button.GetComponentsInChildren<TextMeshProUGUI>();
+            foreach (TextMeshProUGUI tmpText in tmpTexts)
+            {
+                tmpText.font = fontAsset;
+                tmpText.text = value;
+            }
+        }
+    }
+
+    public static void SetInteractable(this Button button, UnityAction action)
+    {
+        if(button != null)
+        {
+            button.onClick.RemoveAllListeners();
+            if (action != null)
+            {
+                button.onClick.AddListener(action);
+                button.interactable = true;
+            }
+            else
+            {
+                button.interactable = false;
+            }
+        }
+    }
+
+    public static void SetListener(this Button button, UnityAction action)
+    {
+        if (button != null)
+        {
+            button.onClick.RemoveAllListeners();
+            button.onClick.AddListener(action);
         }
     }
 
