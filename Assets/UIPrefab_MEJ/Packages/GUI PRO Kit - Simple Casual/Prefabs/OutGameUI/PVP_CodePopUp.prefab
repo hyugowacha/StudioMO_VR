@@ -113,8 +113,9 @@ GameObject:
   - component: {fileID: 7196794928676345316}
   - component: {fileID: 8845554475126707860}
   - component: {fileID: 684375451036806694}
+  - component: {fileID: 2558813942075846277}
   m_Layer: 5
-  m_Name: Image
+  m_Name: ExitB
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -177,6 +178,50 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &2558813942075846277
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1621922971210297931}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Navigation:
+    m_Mode: 3
+    m_WrapAround: 0
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 1
+  m_Colors:
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0.1
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_SelectedTrigger: Selected
+    m_DisabledTrigger: Disabled
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 684375451036806694}
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &2740598634579854823
 GameObject:
   m_ObjectHideFlags: 0
@@ -189,7 +234,7 @@ GameObject:
   - component: {fileID: 1364060472989880514}
   - component: {fileID: 7364376739217864720}
   m_Layer: 5
-  m_Name: Image
+  m_Name: PVPImage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -399,7 +444,7 @@ GameObject:
   - component: {fileID: 8837033555273467401}
   - component: {fileID: 2644644740668898823}
   m_Layer: 5
-  m_Name: Image
+  m_Name: TextFrame
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -475,7 +520,7 @@ GameObject:
   - component: {fileID: 2822238086700063481}
   - component: {fileID: 7966615689864597180}
   m_Layer: 5
-  m_Name: Text (TMP) (2)
+  m_Name: EnterTX
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -610,7 +655,7 @@ GameObject:
   - component: {fileID: 4644117126656718034}
   - component: {fileID: 301088211948351058}
   m_Layer: 5
-  m_Name: Image
+  m_Name: Frame
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -692,7 +737,7 @@ GameObject:
   - component: {fileID: 8890627060062794285}
   - component: {fileID: 4553307792904902586}
   m_Layer: 5
-  m_Name: Button (1)
+  m_Name: EnterB
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -825,7 +870,7 @@ GameObject:
   - component: {fileID: 6736281392972733148}
   - component: {fileID: 3108077599333495294}
   m_Layer: 5
-  m_Name: Text (TMP) (3)
+  m_Name: HostTX
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -962,7 +1007,7 @@ GameObject:
   - component: {fileID: 4547576826245142376}
   - component: {fileID: 1712660569475959229}
   m_Layer: 5
-  m_Name: Button
+  m_Name: HostB
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1095,7 +1140,7 @@ GameObject:
   - component: {fileID: 6195001737289021782}
   - component: {fileID: 1393578363710614553}
   m_Layer: 5
-  m_Name: Image
+  m_Name: Label
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1172,7 +1217,7 @@ GameObject:
   - component: {fileID: 1122401503016539117}
   - component: {fileID: 3559414552147384633}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: TitleText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

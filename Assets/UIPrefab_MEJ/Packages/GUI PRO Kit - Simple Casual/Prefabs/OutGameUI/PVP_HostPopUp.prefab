@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4963974238302639460}
   - component: {fileID: 8982630141630875475}
   m_Layer: 5
-  m_Name: Image (3)
+  m_Name: Player03Profile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -88,7 +88,7 @@ GameObject:
   - component: {fileID: 4381396231419862065}
   - component: {fileID: 3944882970973787046}
   m_Layer: 5
-  m_Name: Text (TMP) (1)
+  m_Name: Player02TX
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -324,8 +324,9 @@ GameObject:
   - component: {fileID: 7196794928676345316}
   - component: {fileID: 8845554475126707860}
   - component: {fileID: 684375451036806694}
+  - component: {fileID: 5329753754968692354}
   m_Layer: 5
-  m_Name: Image
+  m_Name: ExitB
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -388,6 +389,50 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &5329753754968692354
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1621922971210297931}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Navigation:
+    m_Mode: 3
+    m_WrapAround: 0
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 1
+  m_Colors:
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0.1
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_SelectedTrigger: Selected
+    m_DisabledTrigger: Disabled
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 684375451036806694}
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &1673983703476906004
 GameObject:
   m_ObjectHideFlags: 0
@@ -400,7 +445,7 @@ GameObject:
   - component: {fileID: 7011359750111987390}
   - component: {fileID: 5146227279942062694}
   m_Layer: 5
-  m_Name: Image (2)
+  m_Name: CheckBox01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -475,7 +520,7 @@ GameObject:
   - component: {fileID: 1240370611441292259}
   - component: {fileID: 1591642248738593983}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: Player01TX
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -609,7 +654,7 @@ GameObject:
   - component: {fileID: 1364060472989880514}
   - component: {fileID: 7364376739217864720}
   m_Layer: 5
-  m_Name: Image
+  m_Name: PVPImage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -684,7 +729,7 @@ GameObject:
   - component: {fileID: 8837033555273467401}
   - component: {fileID: 2644644740668898823}
   m_Layer: 5
-  m_Name: Image
+  m_Name: CodeFrame
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -761,7 +806,7 @@ GameObject:
   - component: {fileID: 3326151488350354387}
   - component: {fileID: 1836656440832953810}
   m_Layer: 5
-  m_Name: Text (TMP) (2)
+  m_Name: CodeText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -896,7 +941,7 @@ GameObject:
   - component: {fileID: 7603706776986822504}
   - component: {fileID: 4107894933487885650}
   m_Layer: 5
-  m_Name: Image (5)
+  m_Name: CheckBox04
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -971,7 +1016,7 @@ GameObject:
   - component: {fileID: 4094315747322276533}
   - component: {fileID: 8543548364730421655}
   m_Layer: 5
-  m_Name: Image (2)
+  m_Name: Player02Profile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1047,7 +1092,7 @@ GameObject:
   - component: {fileID: 4644117126656718034}
   - component: {fileID: 301088211948351058}
   m_Layer: 5
-  m_Name: Image
+  m_Name: Frame
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1126,7 +1171,7 @@ GameObject:
   - component: {fileID: 155221504672120796}
   - component: {fileID: 8419246902398122781}
   m_Layer: 5
-  m_Name: Text (TMP) (1)
+  m_Name: TitleText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1261,7 +1306,7 @@ GameObject:
   - component: {fileID: 6366937337227303770}
   - component: {fileID: 6075463761850386314}
   m_Layer: 5
-  m_Name: Text (TMP) (3)
+  m_Name: Player04TX
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1395,7 +1440,7 @@ GameObject:
   - component: {fileID: 3075286411469089563}
   - component: {fileID: 4409094777844743457}
   m_Layer: 5
-  m_Name: Image (1)
+  m_Name: PlayBImage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1470,7 +1515,7 @@ GameObject:
   - component: {fileID: 6811330266601947580}
   - component: {fileID: 5464745701011402485}
   m_Layer: 5
-  m_Name: Image (4)
+  m_Name: Player04Profile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1546,7 +1591,7 @@ GameObject:
   - component: {fileID: 64475002362979237}
   - component: {fileID: 3214287641596230148}
   m_Layer: 5
-  m_Name: Image (1)
+  m_Name: Player01Profile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1630,7 +1675,7 @@ GameObject:
   - component: {fileID: 6028810530462718050}
   - component: {fileID: 5495629753350916490}
   m_Layer: 5
-  m_Name: Image (5)
+  m_Name: CheckImage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1705,7 +1750,7 @@ GameObject:
   - component: {fileID: 8181919285817858119}
   - component: {fileID: 5256626841201349342}
   m_Layer: 5
-  m_Name: Image (5)
+  m_Name: CheckBox03
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1780,7 +1825,7 @@ GameObject:
   - component: {fileID: 8760392777578695588}
   - component: {fileID: 5293088417872272611}
   m_Layer: 5
-  m_Name: Text (TMP) (3)
+  m_Name: PlayTX
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1917,7 +1962,7 @@ GameObject:
   - component: {fileID: 4547576826245142376}
   - component: {fileID: 1712660569475959229}
   m_Layer: 5
-  m_Name: Button
+  m_Name: PlayB
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2051,7 +2096,7 @@ GameObject:
   - component: {fileID: 1647585116982852166}
   - component: {fileID: 4137134718564253299}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: CodeTX
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2185,7 +2230,7 @@ GameObject:
   - component: {fileID: 4849855455557940184}
   - component: {fileID: 4281381497739726351}
   m_Layer: 5
-  m_Name: Image (5)
+  m_Name: CheckBox02
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2260,7 +2305,7 @@ GameObject:
   - component: {fileID: 6195001737289021782}
   - component: {fileID: 1393578363710614553}
   m_Layer: 5
-  m_Name: Image
+  m_Name: Label
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2338,7 +2383,7 @@ GameObject:
   - component: {fileID: 1122401503016539117}
   - component: {fileID: 3559414552147384633}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: PlayerNameTX
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2473,7 +2518,7 @@ GameObject:
   - component: {fileID: 1621720281179896684}
   - component: {fileID: 6986395068407359531}
   m_Layer: 5
-  m_Name: Text (TMP) (2)
+  m_Name: Player03TX
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

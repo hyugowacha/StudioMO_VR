@@ -943,8 +943,9 @@ GameObject:
   - component: {fileID: 515260369742773305}
   - component: {fileID: 4481834906595494341}
   - component: {fileID: 4509142191975983217}
+  - component: {fileID: 1250630655779646349}
   m_Layer: 5
-  m_Name: Image
+  m_Name: ExitB
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1007,6 +1008,50 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &1250630655779646349
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1758065590411880633}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Navigation:
+    m_Mode: 3
+    m_WrapAround: 0
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 1
+  m_Colors:
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0.1
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_SelectedTrigger: Selected
+    m_DisabledTrigger: Disabled
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 4509142191975983217}
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &1900548477165741224
 GameObject:
   m_ObjectHideFlags: 0
@@ -1019,7 +1064,7 @@ GameObject:
   - component: {fileID: 3657124490120048460}
   - component: {fileID: 6809263274856523924}
   m_Layer: 5
-  m_Name: Image
+  m_Name: MarketFrame
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1247,7 +1292,7 @@ GameObject:
   - component: {fileID: 4531553847169166511}
   - component: {fileID: 1882580275805818416}
   m_Layer: 5
-  m_Name: Image (2)
+  m_Name: AchieveFrame
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1360,8 +1405,9 @@ GameObject:
   - component: {fileID: 7933490017397216762}
   - component: {fileID: 6777819471899462044}
   - component: {fileID: 1382108130828142047}
+  - component: {fileID: 2662455674554934533}
   m_Layer: 5
-  m_Name: Image
+  m_Name: SaveB
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1425,6 +1471,50 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &2662455674554934533
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2430389931163324467}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Navigation:
+    m_Mode: 3
+    m_WrapAround: 0
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 1
+  m_Colors:
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0.1
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_SelectedTrigger: Selected
+    m_DisabledTrigger: Disabled
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 1382108130828142047}
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &2605981390145956845
 GameObject:
   m_ObjectHideFlags: 0
@@ -1514,7 +1604,7 @@ GameObject:
   - component: {fileID: 1092481759888245219}
   - component: {fileID: 2669851690827850700}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: SaveTX
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1783,7 +1873,7 @@ GameObject:
   - component: {fileID: 5717431842008184710}
   - component: {fileID: 8395186478119039012}
   m_Layer: 5
-  m_Name: Image (2)
+  m_Name: Penguin
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1859,7 +1949,7 @@ GameObject:
   - component: {fileID: 8559516862288376446}
   - component: {fileID: 5301423417929166964}
   m_Layer: 5
-  m_Name: Image (4)
+  m_Name: AchieveFrame
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1936,7 +2026,7 @@ GameObject:
   - component: {fileID: 6719780556714192434}
   - component: {fileID: 2053097480215130386}
   m_Layer: 5
-  m_Name: Image (2)
+  m_Name: Mole
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2013,7 +2103,7 @@ GameObject:
   - component: {fileID: 3620884079510292483}
   - component: {fileID: 558944287287041875}
   m_Layer: 5
-  m_Name: Image
+  m_Name: Sign board
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2088,7 +2178,7 @@ GameObject:
   - component: {fileID: 1602462640787326984}
   - component: {fileID: 8526159777418686771}
   m_Layer: 5
-  m_Name: Image
+  m_Name: ShopImage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2602,7 +2692,7 @@ GameObject:
   - component: {fileID: 543783164021926200}
   - component: {fileID: 1681265585457224105}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: BuyTX
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2737,7 +2827,7 @@ GameObject:
   - component: {fileID: 7336169682379182647}
   - component: {fileID: 8736137741028243945}
   m_Layer: 5
-  m_Name: Image
+  m_Name: Cat
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2813,7 +2903,7 @@ GameObject:
   - component: {fileID: 6159158812343275306}
   - component: {fileID: 5199010183241174766}
   m_Layer: 5
-  m_Name: Image (1)
+  m_Name: CoinFrame
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2889,7 +2979,7 @@ GameObject:
   - component: {fileID: 6539012525931537494}
   - component: {fileID: 3494735269462168434}
   m_Layer: 5
-  m_Name: Image
+  m_Name: Rabbit
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2965,7 +3055,7 @@ GameObject:
   - component: {fileID: 1175719894825233266}
   - component: {fileID: 3620587289559547398}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: CoinTX
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3403,7 +3493,7 @@ GameObject:
   - component: {fileID: 1170419719773473290}
   - component: {fileID: 4482912708484277774}
   m_Layer: 5
-  m_Name: Image (1)
+  m_Name: Fish
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3688,7 +3778,7 @@ GameObject:
   - component: {fileID: 8831022591404205043}
   - component: {fileID: 366472448692894668}
   m_Layer: 5
-  m_Name: Image (3)
+  m_Name: CoinFrame
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3839,8 +3929,9 @@ GameObject:
   - component: {fileID: 6319533624404908184}
   - component: {fileID: 6644605064202374170}
   - component: {fileID: 2307714808172049572}
+  - component: {fileID: 4210828162425113937}
   m_Layer: 5
-  m_Name: Image (5)
+  m_Name: BuyB
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3904,6 +3995,50 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &4210828162425113937
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7281403700102323118}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Navigation:
+    m_Mode: 3
+    m_WrapAround: 0
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 1
+  m_Colors:
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0.1
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_SelectedTrigger: Selected
+    m_DisabledTrigger: Disabled
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 2307714808172049572}
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &7436704048987413920
 GameObject:
   m_ObjectHideFlags: 0
@@ -3991,7 +4126,7 @@ GameObject:
   - component: {fileID: 4047137542871855874}
   - component: {fileID: 409002938555549086}
   m_Layer: 5
-  m_Name: Image
+  m_Name: Frame
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4191,7 +4326,7 @@ GameObject:
   - component: {fileID: 6104255026858490063}
   - component: {fileID: 4334936037740570940}
   m_Layer: 5
-  m_Name: Image (1)
+  m_Name: Cactus
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4268,7 +4403,7 @@ GameObject:
   - component: {fileID: 2075905592454777004}
   - component: {fileID: 8429373726429583465}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: AchieveTX
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

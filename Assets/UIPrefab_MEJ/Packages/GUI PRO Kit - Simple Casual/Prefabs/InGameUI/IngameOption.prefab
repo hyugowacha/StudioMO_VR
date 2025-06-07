@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1730990244568070631}
   - component: {fileID: 4900950165091762038}
   m_Layer: 5
-  m_Name: Image (3)
+  m_Name: OptionBImage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -89,7 +89,7 @@ GameObject:
   - component: {fileID: 3780165887243576122}
   - component: {fileID: 3077624287449030077}
   m_Layer: 5
-  m_Name: Button (1)
+  m_Name: SmoothB
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -506,7 +506,7 @@ GameObject:
   - component: {fileID: 380939080058994971}
   - component: {fileID: 6598096480120576888}
   m_Layer: 0
-  m_Name: Image
+  m_Name: VolumeImage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -787,7 +787,7 @@ GameObject:
   - component: {fileID: 8544205042857235152}
   - component: {fileID: 6472109753130312775}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: SnapTX
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -843,7 +843,8 @@ MonoBehaviour:
   m_text: "\uC2A4\uB0C5"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 5e994e850b8324b18a58aa8c049a7865, type: 2}
-  m_sharedMaterial: {fileID: -676856466882600281, guid: 5e994e850b8324b18a58aa8c049a7865, type: 2}
+  m_sharedMaterial: {fileID: -676856466882600281, guid: 5e994e850b8324b18a58aa8c049a7865,
+    type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -883,17 +884,15 @@ MonoBehaviour:
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_TextWrappingMode: 1
+  m_enableWordWrapping: 0
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 0
-  m_ActiveFontFeatures: 6e72656b
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
-  m_EmojiFallbackSupport: 1
   m_parseCtrlCharacters: 1
   m_isOrthographic: 1
   m_isCullingEnabled: 0
@@ -923,7 +922,7 @@ GameObject:
   - component: {fileID: 8572587437420186821}
   - component: {fileID: 6321468957837171078}
   m_Layer: 5
-  m_Name: Image
+  m_Name: OptionFrame
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -946,8 +945,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 180}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.000015259, y: 22.215118}
-  m_SizeDelta: {x: 1050, y: 312.203}
+  m_AnchoredPosition: {x: -0.786, y: 22.215118}
+  m_SizeDelta: {x: 1915.4451, y: 312.203}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8572587437420186821
 CanvasRenderer:
@@ -999,7 +998,7 @@ GameObject:
   - component: {fileID: 6253146437712165877}
   - component: {fileID: 6118351475225285468}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: TitleText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1054,8 +1053,9 @@ MonoBehaviour:
       m_Calls: []
   m_text: "\uC635\uC158"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 5e994e850b8324b18a58aa8c049a7865, type: 2}
-  m_sharedMaterial: {fileID: -676856466882600281, guid: 5e994e850b8324b18a58aa8c049a7865, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 68f4c9b3bc6412c4ab362180f172f96c, type: 2}
+  m_sharedMaterial: {fileID: 2081446301306759604, guid: 68f4c9b3bc6412c4ab362180f172f96c,
+    type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1095,17 +1095,15 @@ MonoBehaviour:
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_TextWrappingMode: 1
+  m_enableWordWrapping: 0
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 0
-  m_ActiveFontFeatures: 6e72656b
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
-  m_EmojiFallbackSupport: 1
   m_parseCtrlCharacters: 1
   m_isOrthographic: 1
   m_isCullingEnabled: 0
@@ -1388,7 +1386,7 @@ GameObject:
   - component: {fileID: 4015234197027787720}
   - component: {fileID: 866877395158664318}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: SmoothTX
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1444,7 +1442,8 @@ MonoBehaviour:
   m_text: "\uC2A4\uBB34\uC2A4"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 5e994e850b8324b18a58aa8c049a7865, type: 2}
-  m_sharedMaterial: {fileID: -676856466882600281, guid: 5e994e850b8324b18a58aa8c049a7865, type: 2}
+  m_sharedMaterial: {fileID: -676856466882600281, guid: 5e994e850b8324b18a58aa8c049a7865,
+    type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1484,17 +1483,15 @@ MonoBehaviour:
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_TextWrappingMode: 1
+  m_enableWordWrapping: 0
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 0
-  m_ActiveFontFeatures: 6e72656b
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
-  m_EmojiFallbackSupport: 1
   m_parseCtrlCharacters: 1
   m_isOrthographic: 1
   m_isCullingEnabled: 0
@@ -1636,7 +1633,7 @@ GameObject:
   - component: {fileID: 7346087857874121687}
   - component: {fileID: 8109863055934525279}
   m_Layer: 5
-  m_Name: Button
+  m_Name: SnapB
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1830,7 +1827,7 @@ GameObject:
   - component: {fileID: 6674258543421797206}
   - component: {fileID: 1136521809205810206}
   m_Layer: 5
-  m_Name: Image
+  m_Name: PlayB
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
