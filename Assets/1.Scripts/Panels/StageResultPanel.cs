@@ -1,6 +1,9 @@
 using System;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.Events;
 using TMPro;
+using DG.Tweening;
 
 /// <summary>
 /// 진행 단계에 관련된 내용을 표시해주는 패널
@@ -15,33 +18,17 @@ public class StageResultPanel : Panel
     private Animator getAnimator {
         get
         {
-            if(hasAnimator == false)
+            if (hasAnimator == false)
             {
-                animator = GetComponent<Animator>();
-                hasAnimator = true;
+                hasAnimator = TryGetComponent(out animator);
             }
             return animator;
         }
     }
 
-    /// <summary>
-    /// 결과에 따라 애니메이션과 글자의 변화를 주는 구조체
-    /// </summary>
-    [Serializable]
-    private struct Result
-    {
-        public string trigger;
-        public string value;
-    }
+    private bool? result = null;
 
-    [Header("실패 결과"),SerializeField]
-    private Result failResult;
-    [Header("클리어 결과"), SerializeField]
-    private Result clearResult;
-    [Header("퍼펙트 결과"), SerializeField]
-    private Result perfectResult;
-
-    private enum TextIndex: byte
+    private enum TextIndex : byte
     {
         Clear,
         Perfect,
@@ -50,65 +37,117 @@ public class StageResultPanel : Panel
         End
     }
 
-    [Header("텍스트 묶음"), SerializeField]
-    private TMP_Text[] texts = new TMP_Text[TextCount];
+    private enum ButtonIndex: byte
+    {
+        Next,
+        Retry,
+        Exit,
+        End
+    }
 
-    private static readonly int TextCount = (int)TextIndex.End;
+    [Header("결과창을 열어주는 시간 딜레이"), SerializeField, Range(0, int.MaxValue)]
+    private float openDelay = 0.5f;
+    [Header("실패 트리거 파라미터"),SerializeField]
+    private string failParameter = "fail";
+    [Header("클리어 트리거 파라미터"), SerializeField]
+    private string clearParameter = "clear";
+    [Header("퍼펙트 트리거 파라미터"), SerializeField]
+    private string perfectParameter = "perfect";
+
+    [Header("언어별 대응 폰트들"), SerializeField]
+    private TMP_FontAsset[] tmpFontAssets = new TMP_FontAsset[Translation.count];
+    private TMP_FontAsset tmpFontAsset = null;
+
+    [Header("텍스트 묶음"), SerializeField]
+    private TMP_Text[] texts = new TMP_Text[(int)TextIndex.End];
+    [Header("버튼 묶음"), SerializeField]
+    private Button[] buttons = new Button[(int)ButtonIndex.End];
+
     private static readonly string TotalTextValue = "Total: ";
 
 #if UNITY_EDITOR
     private void OnValidate()
     {
-        ExtensionMethod.Sort(ref texts, TextCount);
+        ExtensionMethod.Sort(ref tmpFontAssets, Translation.count, true);
+        ExtensionMethod.Sort(ref texts, (int)TextIndex.End);
+        ExtensionMethod.Sort(ref buttons, (int)ButtonIndex.End);
     }
 #endif
 
-    //문자열 및 애니메이션 트리거를 발동시켜줄 메서드
-    private void Set(string trigger, string value)
+    //결과 텍스트(퍼펙트, 클리어, 실패)를 설정해주는 메서드
+    private void Set()
     {
-        texts[(int)TextIndex.Result].Set(value);
-        getAnimator.SetTrigger(trigger);
-    }
-
-    //분기에 따라 문자열 및 애니메이션 트리거 내용을 결정해주는 메서드
-    private void Set(bool? perfect)
-    {
-        if (perfect == true)
+        switch(result)
         {
-            Set(perfectResult.trigger, perfectResult.value);
-        }
-        else if (perfect == false)
-        {
-            Set(clearResult.trigger, clearResult.value);
-        }
-        else
-        {
-            Set(failResult.trigger, failResult.value);
+            case true:  // 퍼펙트
+                texts[(int)TextIndex.Result].Set(Translation.Get(Translation.Letter.Perfect), tmpFontAsset);
+                break;
+            case false: // 클리어
+                texts[(int)TextIndex.Result].Set(Translation.Get(Translation.Letter.Clear), tmpFontAsset);
+                break;
+            case null:  // 실패
+                texts[(int)TextIndex.Result].Set(Translation.Get(Translation.Letter.Fail), tmpFontAsset);
+                break;
         }
     }
 
     //결과창을 보여주는 메서드
-    public void Open(uint totalScore, uint clearScore, uint addScore, Action restart, Action exit, Action next)
+    public void Open(uint totalScore, uint clearScore, uint addScore, UnityAction next, UnityAction retry, UnityAction exit)
     {
-        if (gameObject.activeSelf == false)
-        {
-            gameObject.SetActive(true);
-        }
-        //texts[(int)TextIndex.Clear].Set(GetNumberText(clearScore));
+        texts[(int)TextIndex.Clear].Set(GetNumberText(clearScore, 0));
         uint perfectScore = (uint)Mathf.Clamp((float)clearScore + addScore, uint.MinValue, uint.MaxValue);
-       // texts[(int)TextIndex.Perfect].Set(GetNumberText(perfectScore));
-        //texts[(int)TextIndex.Total].Set(TotalTextValue + GetNumberText(totalScore));
+        texts[(int)TextIndex.Perfect].Set(GetNumberText(perfectScore, 0));
+        texts[(int)TextIndex.Total].Set(TotalTextValue + GetNumberText(totalScore, 0));
         if (totalScore >= perfectScore)
         {
-            Set(true);
+            result = true;
         }
         else if (totalScore >= clearScore)
         {
-            Set(false);
+            result = false;
         }
         else
         {
-            Set(null);
+            result = null;
         }
+        buttons[(int)ButtonIndex.Next].SetInteractable(next);
+        buttons[(int)ButtonIndex.Retry].SetInteractable(retry);
+        buttons[(int)ButtonIndex.Exit].SetInteractable(exit);
+        Set();
+        DOVirtual.DelayedCall(openDelay, () =>
+        {
+            gameObject.SetActive(true);
+            switch (result)
+            {
+                case true:
+                    getAnimator.SetTrigger(perfectParameter);
+                    break;
+                case false:
+                    getAnimator.SetTrigger(clearParameter);
+                    break;
+                case null:
+                    getAnimator.SetTrigger(failParameter);
+                    break;
+            }
+        });
+    }
+
+    //언어를 변경하기 위한 메소드
+    public void ChangeText()
+    {
+        switch (Translation.language)
+        {
+            case Translation.Language.English:
+            case Translation.Language.Korean:
+            case Translation.Language.Chinese:
+            case Translation.Language.Japanese:
+                tmpFontAsset = tmpFontAssets[(int)Translation.language];
+                break;
+        }
+        if (gameObject.activeSelf == false)
+        {
+            return;
+        }
+        Set();
     }
 }

@@ -12,7 +12,7 @@ public class SlowMotionPanel : Panel
 
     private Slider slider = null;
 
-    protected Slider getSlider {
+    private Slider getSlider {
         get
         {
             if (hasSlider == false)
@@ -27,7 +27,7 @@ public class SlowMotionPanel : Panel
 
     private Animator animator = null;
 
-    protected Animator getAnimator {
+    private Animator getAnimator {
         get
         {
             if (hasAnimator == false)

@@ -47,11 +47,12 @@ public class TimerPanel : Panel
         if (max == 0)
         {
             getSlider.value = getSlider.maxValue;
+            getAnimator.SetFloat(parameter, getSlider.maxValue);
         }
         else
         {
             getSlider.value = getSlider.maxValue * (current / max);
+            getAnimator.SetFloat(parameter, current);
         }
-        getAnimator.SetFloat(parameter, current);
     }
 }
