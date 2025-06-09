@@ -113,7 +113,7 @@ public class ShopCanvasCtrl : MonoBehaviour
         UserGameData.SetEquippedSkin(skin.skinName); // 장착 정보 저장
     }
 
-    // 상점 화면 활성화
+    // ▼ 상점 화면 활성화
     public void ShowShopCanvas()
     {
         shopCanvas.gameObject.SetActive(true);
