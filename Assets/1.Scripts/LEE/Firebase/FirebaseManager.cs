@@ -53,7 +53,7 @@ public class FirebaseManager : MonoBehaviour
     [SerializeField] private Button findPW_okButton;             // 비번 찾기 버튼
     [SerializeField] private Button findPW_cancelButton;         // FindAccountImg 관련 다 닫기 및 초기화
     #endregion
-    
+
     #region 시작 시 초기화 및 버튼 등록
     /// <summary>
     /// 시작 시 Firebase 초기화
@@ -438,4 +438,3 @@ public class FirebaseManager : MonoBehaviour
     }
     #endregion
 }
- 
