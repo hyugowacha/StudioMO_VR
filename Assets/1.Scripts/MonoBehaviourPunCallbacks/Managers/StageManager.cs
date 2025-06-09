@@ -92,8 +92,8 @@ public class StageManager : Manager
                     Instantiate(gameObject, Vector3.zero, Quaternion.identity);
                 }
                 score = stageData.GetScore();
-                TextAsset bulletTextAsset = stageData.GetBulletTextAsset();
-                getBulletPatternLoader.SetCSVData(bulletTextAsset);
+                //TextAsset bulletTextAsset = stageData.GetBulletTextAsset();
+                //getBulletPatternLoader.SetCSVData(bulletTextAsset);
                 if (audioSource != null)
                 {
                     AudioClip audioClip = stageData.GetAudioClip();

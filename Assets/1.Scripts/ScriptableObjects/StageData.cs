@@ -23,8 +23,11 @@ public class StageData : ScriptableObject
     [Header("맵"), SerializeField]
     private GameObject mapObject;
 
-    [Header("탄막 테스트 에셋"), SerializeField]
-    private TextAsset bulletTextAsset;
+    [Header("패턴형 탄막 패턴"), SerializeField]
+    private TextAsset patternBulletTextAsset;
+
+    [Header("비패턴형 탄막 패턴"), SerializeField]
+    private TextAsset nonPatternBulletTextAsset;
 
     [Serializable]
     public struct Score
@@ -77,10 +80,10 @@ public class StageData : ScriptableObject
         return score;
     }
 
-    //탄막 테스트 에셋을 반환하는 메서드
-    public TextAsset GetBulletTextAsset()
+    //탄막 에셋을 반환하는 메서드
+    public (TextAsset, TextAsset) GetBulletTextAsset()
     {
-        return bulletTextAsset;
+        return (patternBulletTextAsset, nonPatternBulletTextAsset);
     }
 
     //배경 음악 클립을 반환하는 메서드
