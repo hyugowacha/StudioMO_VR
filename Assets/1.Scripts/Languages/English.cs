@@ -157,6 +157,78 @@ public static class English
                 case Translation.Letter.NO:
                     letters[i] = "NO";
                     break;
+                case Translation.Letter.SignUp:
+                    letters[i] = "Sign Up";
+                    break;
+                case Translation.Letter.FindAccount:
+                    letters[i] = "Find Account";
+                    break;
+                case Translation.Letter.IncorrectIDorPassword:
+                    letters[i] = "Incorrect ID or Password";
+                    break;
+                case Translation.Letter.ID:
+                    letters[i] = "ID";
+                    break;
+                case Translation.Letter.Password:
+                    letters[i] = "Password";
+                    break;
+                case Translation.Letter.ConfirmPassword:
+                    letters[i] = "Confirm Password";
+                    break;
+                case Translation.Letter.HighSchoolQuestion:
+                    letters[i] = "What is your high school alma mater?";
+                    break;
+                case Translation.Letter.CheckAvailability:
+                    letters[i] = "Check Availability";
+                    break;
+                case Translation.Letter.HighSchoolHint:
+                    letters[i] = "Please enter your high school alma mater accurately as it is used for account recovery.";
+                    break;
+                case Translation.Letter.FindID:
+                    letters[i] = "Find ID";
+                    break;
+                case Translation.Letter.FindPassword:
+                    letters[i] = "Find Password";
+                    break;
+                case Translation.Letter.Email:
+                    letters[i] = "Email";
+                    break;
+                case Translation.Letter.YourIDIs:
+                    letters[i] = "Your ID is ***";
+                    break;
+                case Translation.Letter.IncorrectIDorSchoolName:
+                    letters[i] = "Incorrect ID or high school name";
+                    break;
+                case Translation.Letter.CreateRoom:
+                    letters[i] = "Create Room";
+                    break;
+                case Translation.Letter.Join:
+                    letters[i] = "Join";
+                    break;
+                case Translation.Letter.CreatingGame:
+                    letters[i] = "Creating Game";
+                    break;
+                case Translation.Letter.WaitingTime:
+                    letters[i] = "Waiting Time";
+                    break;
+                case Translation.Letter.MoveToNextStage:
+                    letters[i] = "Would you like to move to the next stage?";
+                    break;
+                case Translation.Letter.PlayAgainWithPlayer:
+                    letters[i] = "Would you like to play again with this player?";
+                    break;
+                case Translation.Letter.ReturnToMainMenu:
+                    letters[i] = "Would you like to return to the main menu?";
+                    break;
+                case Translation.Letter.RetryCanceled:
+                    letters[i] = "Retry has been canceled.";
+                    break;
+                case Translation.Letter.Ready:
+                    letters[i] = "Ready";
+                    break;
+                case Translation.Letter.TimesUp:
+                    letters[i] = "Time's up";
+                    break;
 
                 case Translation.Letter.Story:
                     letters[i] = "STORY";

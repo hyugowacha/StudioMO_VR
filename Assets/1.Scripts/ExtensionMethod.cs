@@ -203,6 +203,14 @@ public static class ExtensionMethod
         }
     }
 
+    public static void Set(this Image image, Material material)
+    {
+        if (image != null)
+        {
+            image.material = material;
+        }
+    }
+
     public static void Fill(this Image image, Color color, float value)
     {
         if (image != null)
