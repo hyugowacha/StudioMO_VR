@@ -50,6 +50,8 @@ public class PausePanel : Panel
     [SerializeField]
     private Button[] buttons = new Button[(int)Index.End];
 
+    private UnityAction resumeAction = null;
+
 #if UNITY_EDITOR
     private void OnValidate()
     {
@@ -63,21 +65,26 @@ public class PausePanel : Panel
         switch(state)
         {
             case true:
-                text.SetText(Translation.Get(Translation.Letter.Puase));
+                text.Set(Translation.Get(Translation.Letter.Pause), tmpFontAsset);
+                buttons[(int)Index.Retry].SetText("", tmpFontAsset);
+                buttons[(int)Index.Exit].SetText("", tmpFontAsset);
                 break;
             case false:
-                text.SetText(Translation.Get(Translation.Letter.Option));
+                text.Set(Translation.Get(Translation.Letter.Option), tmpFontAsset);
+                //buttons[(int)Index.Retry].SetText("", tmpFontAsset);
+                //buttons[(int)Index.Exit].SetText("", tmpFontAsset);
                 break;
         }
 
     }
 
     //멀티 플레이에서 호출되는 메소드
-    public void Open()
+    public void Open(UnityAction resume)
     {
         gameObject.SetActive(true);
         getAnimator.SetTrigger(optionParameter);
         state = false;
+        resumeAction = resume;
         Set();
     }
 
@@ -88,6 +95,7 @@ public class PausePanel : Panel
         getAnimator.SetTrigger(mainParameter);
         buttons[(int)Index.Resume].SetListener(resume);
         state = true;
+        resumeAction = resume;
         Set();
     }
 

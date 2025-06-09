@@ -98,10 +98,7 @@ public class StageManager : Manager
                 (TextAsset pattern, TextAsset nonPattern) = stageData.GetBulletTextAsset();
                 getBulletPatternLoader.SetnonPatternCSVData(nonPattern);
                 getBulletPatternLoader.SetPatternCSVData(pattern);
-
                 if (audioSource != null)
-
-
                 {
                     AudioClip audioClip = stageData.GetAudioClip();
                     if (audioClip != null)
@@ -208,6 +205,21 @@ public class StageManager : Manager
         scorePanel?.Fill(mineralCount, score.GetClearValue(), score.GetAddValue());
     }
 
+    protected override void Pause()
+    {
+        base.Pause();
+        audioSource?.Pause();
+        stop = true;
+        SlowMotion.Pause();
+        pausePanel.Open(Resume, () => ChangeScene(false), null);
+    }
+
+    protected override void Resume()
+    {
+        base.Resume();
+        //audioSource?.Play();
+    }
+
     protected override void ChangeText()
     {
         phasePanel?.ChangeText();
@@ -251,6 +263,14 @@ public class StageManager : Manager
             {
                 pickaxe.grip = false;
             }
+        }
+    }
+
+    protected override void OnSecondaryFunction(InputAction.CallbackContext callbackContext)
+    {
+        if(callbackContext.performed == true && pausePanel != null && pausePanel.gameObject.activeSelf == false)
+        {
+            Pause();
         }
     }
 

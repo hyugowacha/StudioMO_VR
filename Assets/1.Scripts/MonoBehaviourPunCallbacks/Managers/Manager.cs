@@ -27,6 +27,10 @@ public abstract class Manager : MonoBehaviourPunCallbacks
     [SerializeField]
     protected ActionBasedController rightActionBasedController; //오른쪽 컨트롤러
     [SerializeField]
+    private InputActionReference[] primaryInputActionReferences = new InputActionReference[2];
+    [SerializeField]
+    private InputActionReference[] secondaryInputActionReferences = new InputActionReference[2];
+    [SerializeField]
     private TunnelingVignetteController vignetteController;     //비네트 (상태이상 표시)
     private LocomotionVignetteProvider locomotionVignetteProvider = null;
 
@@ -66,6 +70,8 @@ public abstract class Manager : MonoBehaviourPunCallbacks
             {
                 name = GetType().Name;
                 ExtensionMethod.Sort(ref fontAssets, Translation.count, true);
+                ExtensionMethod.Sort(ref primaryInputActionReferences);
+                ExtensionMethod.Sort(ref secondaryInputActionReferences);
                 ChangeText(language);
             }
             UnityEditor.EditorApplication.delayCall += () =>
@@ -115,8 +121,17 @@ public abstract class Manager : MonoBehaviourPunCallbacks
         {
             rightActionBasedController.activateAction.reference.Set(OnRightFunction, OnRightFunction, value);
         }
-        ResetControllerPositionAndRotation();
+        for(int i = 0; i < primaryInputActionReferences.Length; i++)
+        {
+            //primaryInputActionReferences[i]?.Set(Tt, Tt, value);
+        }
+        for (int i = 0; i < secondaryInputActionReferences.Length; i++)
+        {
+            secondaryInputActionReferences[i]?.Set(OnSecondaryFunction, OnSecondaryFunction, value);
+        }
 #if UNITY_EDITOR
+        leftActionBasedController.SetPositionAndRotation(LeftControllerLocalPosition, Quaternion.identity, true);
+        rightActionBasedController.SetPositionAndRotation(RightControllerLocalPosition, Quaternion.identity, true);
         lookInputActionReference.Set((callbackContext) =>
         {
             Vector2 input = callbackContext.ReadValue<Vector2>();
@@ -130,7 +145,8 @@ public abstract class Manager : MonoBehaviourPunCallbacks
                 lookInputValue = new Vector2(Mathf.Clamp((-input.y * lookInputRatio.y) + lookInputValue.x, LookPitchAngle.x, LookPitchAngle.y), (input.x * lookInputRatio.x) + lookInputValue.y);
                 Quaternion quaternion = Quaternion.Euler(lookInputValue.x, lookInputValue.y, 0f);
                 xrOrigin?.MatchOriginUpCameraForward(quaternion * Vector3.up, quaternion * Vector3.forward);
-                ResetControllerPositionAndRotation();
+                leftActionBasedController.SetPositionAndRotation(LeftControllerLocalPosition, Quaternion.identity, true);
+                rightActionBasedController.SetPositionAndRotation(RightControllerLocalPosition, Quaternion.identity, true);
             }
         }, value);
 #endif
@@ -152,12 +168,6 @@ public abstract class Manager : MonoBehaviourPunCallbacks
         ChangeText();
     }
 
-    private void ResetControllerPositionAndRotation()
-    {
-        //leftActionBasedController.SetPositionAndRotation(LeftControllerLocalPosition, Quaternion.identity, true);
-        //rightActionBasedController.SetPositionAndRotation(RightControllerLocalPosition, Quaternion.identity, true);
-    }
-
     //카메라 위치를 고정시키는 메서드
     protected void SetFixedPosition(Vector3 position)
     {
@@ -170,16 +180,6 @@ public abstract class Manager : MonoBehaviourPunCallbacks
         if (dynamicMoveProvider != null)
         {
             dynamicMoveProvider.moveSpeed = value;
-        }
-    }
-
-    //언어를 바꿔주는 메서드
-    protected void SetLanguage(int index)
-    {
-        if (index >= 0 && index < Translation.count)
-        {
-            PlayerPrefs.SetInt(Translation.Preferences, index);
-            ChangeText((Translation.Language)index);
         }
     }
 
@@ -241,6 +241,27 @@ public abstract class Manager : MonoBehaviourPunCallbacks
         }
     }
 
+
+    //언어를 바꿔주는 메서드
+    public void SetLanguage(int index)
+    {
+        if (index >= 0 && index < Translation.count)
+        {
+            PlayerPrefs.SetInt(Translation.Preferences, index);
+            ChangeText((Translation.Language)index);
+        }
+    }
+
+    protected virtual void Pause()
+    {
+        Time.timeScale = 0.0f;
+    }
+
+    protected virtual void Resume()
+    {
+        Time.timeScale = 1.0f;
+    }
+
     //언어를 변경하기 위한 메소드
     protected abstract void ChangeText();
 
@@ -249,4 +270,7 @@ public abstract class Manager : MonoBehaviourPunCallbacks
 
     //오른쪽 컨트롤러 기능을 실행하는 추상 메서드
     protected abstract void OnRightFunction(InputAction.CallbackContext callbackContext);
+
+    //보조 버튼 기능을 수행하는 추상 메서드
+    protected abstract void OnSecondaryFunction(InputAction.CallbackContext callbackContext);
 }
