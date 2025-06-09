@@ -34,24 +34,13 @@ public class ShopCanvasCtrl : MonoBehaviour
     private int currentCoin = 9999999;
     private SkinData selectedSkin;
     private ShopButton selectedShopButton;
+    private bool isInitialized = false;
 
     public void Start()
     {
         // ▼ 시작 시, 상점 캔버스, 스킨 구매 패널 끔
         shopCanvas.gameObject.SetActive(false);
         buySkinPanel.SetActive(false);
-
-        // ▼ 보유 코인 임시 설정값으로 초기화    
-        coinValue.text = currentCoin.ToString();
-
-        // ▼ 버튼들 해당 스킨 데이터 값으로 설정
-        for (int i = 0; i < skinDatas.Length; i++)
-        {
-            bool isUnlocked = (skinDatas[i] == basicSkinData);
-            shopButtons[i].SetSkin(skinDatas[i], this, isUnlocked);
-        }
-
-        ApplySkin(basicSkinData);
     }
 
     private void Update()
@@ -59,7 +48,7 @@ public class ShopCanvasCtrl : MonoBehaviour
         // ▼ 임시 테스트 용 -> 상점 캔버스 끄고 키기
         if(Input.GetKeyDown(KeyCode.Space))
         {
-            shopCanvas.gameObject.SetActive(true);
+            ShowShopCanvas();
         }
     }
 
@@ -86,7 +75,10 @@ public class ShopCanvasCtrl : MonoBehaviour
             coinValue.text = currentCoin.ToString();
 
             selectedShopButton.UnLock();
-            //ApplySkin(selectedSkin);
+            
+            // 유저 게임 데이터 저장
+            UserGameData.SetCoins(currentCoin);
+            UserGameData.UnlockSkin(selectedSkin.skinName);
 
             buySkinPanel.SetActive(false);
         }
@@ -111,13 +103,41 @@ public class ShopCanvasCtrl : MonoBehaviour
     // ▼ 기본 스킨으로 적용하는 버튼
     public void OnClickBasicSkin()
     {
-        previewImage.sprite = basicSkinData.skinSprite;
+        ApplySkin(basicSkinData);
     }
 
     // ▼ 현재 적용중인 스킨 이미지 갱신
     public void ApplySkin(SkinData skin)
     {
         previewImage.sprite = skin.skinSprite;
+        UserGameData.SetEquippedSkin(skin.skinName); // 장착 정보 저장
+    }
+
+    // ▼ 상점 화면 활성화
+    public void ShowShopCanvas()
+    {
+        shopCanvas.gameObject.SetActive(true);
+
+        // 처음 한번만 로드
+        if (isInitialized) return;
+        isInitialized = true;
+
+        UserGameData.Load(() =>
+        {
+            currentCoin = UserGameData.Coins;
+            coinValue.text = currentCoin.ToString();
+
+            for (int i = 0; i < skinDatas.Length; i++)
+            {
+                bool isUnlocked = UserGameData.HasSkin(skinDatas[i].skinName);
+                shopButtons[i].SetSkin(skinDatas[i], this, isUnlocked);
+
+                if (UserGameData.EquippedSkin == skinDatas[i].skinName)
+                {
+                    ApplySkin(skinDatas[i]);
+                }
+            }
+        });
     }
 }
 

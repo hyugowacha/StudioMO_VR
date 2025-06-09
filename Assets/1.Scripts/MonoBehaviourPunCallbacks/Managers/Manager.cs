@@ -154,8 +154,8 @@ public abstract class Manager : MonoBehaviourPunCallbacks
 
     private void ResetControllerPositionAndRotation()
     {
-        leftActionBasedController.SetPositionAndRotation(LeftControllerLocalPosition, Quaternion.identity, true);
-        rightActionBasedController.SetPositionAndRotation(RightControllerLocalPosition, Quaternion.identity, true);
+        //leftActionBasedController.SetPositionAndRotation(LeftControllerLocalPosition, Quaternion.identity, true);
+        //rightActionBasedController.SetPositionAndRotation(RightControllerLocalPosition, Quaternion.identity, true);
     }
 
     //카메라 위치를 고정시키는 메서드
