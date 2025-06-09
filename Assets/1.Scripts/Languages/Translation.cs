@@ -115,7 +115,7 @@ public static class Translation
         Select,                 //선택
         SignUp,                   // 회원가입
         FindAccount,              // 계정찾기
-        IncorrectIDOrPassword,    // 아이디 혹은 비밀번호가 일치하지 않습니다
+        IncorrectIDorPassword,    // 아이디 혹은 비밀번호가 일치하지 않습니다
         ID,                       // 아이디
         Password,                 // 비밀번호
         ConfirmPassword,          // 비밀번호 확인
@@ -126,13 +126,13 @@ public static class Translation
         FindPassword,             // 비밀번호찾기
         Email,                    // 이메일
         YourIDIs,                 // 아이디는 ***입니다
-        IncorrectIDOrSchool,      // 아이디 혹은 고등학교 모교가 틀렸습니다
+        IncorrectIDorSchoolName,  // 아이디 혹은 고등학교 모교가 틀렸습니다
         CreateRoom,               // 방만들기
         Join,                     // 참가하기
         CreatingGame,             // 게임 생성 중
         WaitingTime,              // 대기시간
         MoveToNextStage,          // 다음 스테이지로 이동하시겠습니까?
-        RetryWithSamePlayer,      // 해당플레이어와 다시 하시겠습니까?
+        PlayAgainWithPlayer,      // 해당플레이어와 다시 하시겠습니까?
         ReturnToMainMenu,         // 메인화면으로 돌아가시겠습니까?
         RetryCanceled,            // 다시하기가 취소되었습니다.
         Ready,                    // 준비

@@ -231,10 +231,6 @@ public static class Korean
                     letters[i] = "시간종료";
                     break;
 
-
-                case Translation.Letter.Story:
-                    letters[i] = "스토리";
-                    break;
                 
                 case Translation.Letter.Select:
                     letters[i] = "선택";
