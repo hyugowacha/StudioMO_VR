@@ -158,11 +158,79 @@ public static class Korean
                 case Translation.Letter.NO:
                     letters[i] = "NO";
                     break;
-
-
-                case Translation.Letter.Story:
-                    letters[i] = "스토리";
+                case Translation.Letter.SignUp:
+                    letters[i] = "회원가입";
                     break;
+                case Translation.Letter.FindAccount:
+                    letters[i] = "계정찾기";
+                    break;
+                case Translation.Letter.IncorrectIDorPassword:
+                    letters[i] = "아이디 혹은 비밀번호가 일치하지 않습니다";
+                    break;
+                case Translation.Letter.ID:
+                    letters[i] = "아이디";
+                    break;
+                case Translation.Letter.Password:
+                    letters[i] = "비밀번호";
+                    break;
+                case Translation.Letter.ConfirmPassword:
+                    letters[i] = "비밀번호 확인";
+                    break;
+                case Translation.Letter.HighSchoolQuestion:
+                    letters[i] = "고등학교 시절 모교는?";
+                    break;
+                case Translation.Letter.CheckAvailability:
+                    letters[i] = "중복확인";
+                    break;
+                case Translation.Letter.HighSchoolHint:
+                    letters[i] = "고등학교 모교는 계정 찾기에 사용될 힌트이므로 정확하게 입력바랍니다.";
+                    break;
+                case Translation.Letter.FindID:
+                    letters[i] = "아이디찾기";
+                    break;
+                case Translation.Letter.FindPassword:
+                    letters[i] = "비밀번호찾기";
+                    break;
+                case Translation.Letter.Email:
+                    letters[i] = "이메일";
+                    break;
+                case Translation.Letter.YourIDIs:
+                    letters[i] = "아이디는 ***입니다";
+                    break;
+                case Translation.Letter.IncorrectIDorSchoolName:
+                    letters[i] = "아이디 혹은 고등학교 모교가 틀렸습니다";
+                    break;
+                case Translation.Letter.CreateRoom:
+                    letters[i] = "방만들기";
+                    break;
+                case Translation.Letter.Join:
+                    letters[i] = "참가하기";
+                    break;
+                case Translation.Letter.CreatingGame:
+                    letters[i] = "게임 생성 중";
+                    break;
+                case Translation.Letter.WaitingTime:
+                    letters[i] = "대기시간";
+                    break;
+                case Translation.Letter.MoveToNextStage:
+                    letters[i] = "다음 스테이지로 이동하시겠습니까?";
+                    break;
+                case Translation.Letter.PlayAgainWithPlayer:
+                    letters[i] = "해당플레이어와 다시 하시겠습니까?";
+                    break;
+                case Translation.Letter.ReturnToMainMenu:
+                    letters[i] = "메인화면으로 돌아가시겠습니까?";
+                    break;
+                case Translation.Letter.RetryCanceled:
+                    letters[i] = "다시하기가 취소되었습니다.";
+                    break;
+                case Translation.Letter.Ready:
+                    letters[i] = "준비";
+                    break;
+                case Translation.Letter.TimesUp:
+                    letters[i] = "시간종료";
+                    break;
+
                 
                 case Translation.Letter.Select:
                     letters[i] = "선택";

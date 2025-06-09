@@ -55,7 +55,7 @@
                 case Translation.Letter.Fail:
                     letters[i] = "失败";
                     break;
-               case Translation.Letter.Stageselect:
+                case Translation.Letter.Stageselect:
                     letters[i] = "关卡选择";
                     break;
                 case Translation.Letter.MainMenu:
@@ -157,7 +157,78 @@
                 case Translation.Letter.NO:
                     letters[i] = "不";
                     break;
-
+                case Translation.Letter.SignUp:
+                    letters[i] = "注册";
+                    break;
+                case Translation.Letter.FindAccount:
+                    letters[i] = "忘记账号、密码";
+                    break;
+                case Translation.Letter.IncorrectIDorPassword:
+                    letters[i] = "账号或密码有误";
+                    break;
+                case Translation.Letter.ID:
+                    letters[i] = "账号";
+                    break;
+                case Translation.Letter.Password:
+                    letters[i] = "密码";
+                    break;
+                case Translation.Letter.ConfirmPassword:
+                    letters[i] = "确认密码";
+                    break;
+                case Translation.Letter.HighSchoolQuestion:
+                    letters[i] = "你高中时期的母校是？";
+                    break;
+                case Translation.Letter.CheckAvailability:
+                    letters[i] = "重复检查";
+                    break;
+                case Translation.Letter.HighSchoolHint:
+                    letters[i] = "Please enter your high school alma mater accurately as it is used for account recovery.";
+                    break;
+                case Translation.Letter.FindID:
+                    letters[i] = "找回账号";
+                    break;
+                case Translation.Letter.FindPassword:
+                    letters[i] = "找回密码";
+                    break;
+                case Translation.Letter.Email:
+                    letters[i] = "邮箱";
+                    break;
+                case Translation.Letter.YourIDIs:
+                    letters[i] = "账号是***";
+                    break;
+                case Translation.Letter.IncorrectIDorSchoolName:
+                    letters[i] = "账号或高校名有误";
+                    break;
+                case Translation.Letter.CreateRoom:
+                    letters[i] = "开房";
+                    break;
+                case Translation.Letter.Join:
+                    letters[i] = "参加";
+                    break;
+                case Translation.Letter.CreatingGame:
+                    letters[i] = "正在创建游戏";
+                    break;
+                case Translation.Letter.WaitingTime:
+                    letters[i] = "等待时间";
+                    break;
+                case Translation.Letter.MoveToNextStage:
+                    letters[i] = "要进入下一关卡吗？";
+                    break;
+                case Translation.Letter.PlayAgainWithPlayer:
+                    letters[i] = "要与该玩家再玩一局吗？";
+                    break;
+                case Translation.Letter.ReturnToMainMenu:
+                    letters[i] = "要返回主菜单吗？";
+                    break;
+                case Translation.Letter.RetryCanceled:
+                    letters[i] = "重试已被取消。";
+                    break;
+                case Translation.Letter.Ready:
+                    letters[i] = "准备";
+                    break;
+                case Translation.Letter.TimesUp:
+                    letters[i] = "结束游戏";
+                    break;
 
                 case Translation.Letter.Story:
                     letters[i] = "";

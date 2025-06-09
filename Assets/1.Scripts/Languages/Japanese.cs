@@ -157,6 +157,78 @@
                 case Translation.Letter.NO:
                     letters[i] = "いいえ";
                     break;
+                case Translation.Letter.SignUp:
+                    letters[i] = "新規登録";
+                    break;
+                case Translation.Letter.FindAccount:
+                    letters[i] = "ログインできない場合";
+                    break;
+                case Translation.Letter.IncorrectIDorPassword:
+                    letters[i] = "IDまたは、パスワードが一致しません。";
+                    break;
+                case Translation.Letter.ID:
+                    letters[i] = "ID";
+                    break;
+                case Translation.Letter.Password:
+                    letters[i] = "パスワード";
+                    break;
+                case Translation.Letter.ConfirmPassword:
+                    letters[i] = "パスワード再入力";
+                    break;
+                case Translation.Letter.HighSchoolQuestion:
+                    letters[i] = "高校の名は？";
+                    break;
+                case Translation.Letter.CheckAvailability:
+                    letters[i] = "ID確認";
+                    break;
+                case Translation.Letter.HighSchoolHint:
+                    letters[i] = "高校の名はアカウントを忘れた時に、ヒントとして使われます。";
+                    break;
+                case Translation.Letter.FindID:
+                    letters[i] = "IDを忘れた方";
+                    break;
+                case Translation.Letter.FindPassword:
+                    letters[i] = "パスワードを忘れた方";
+                    break;
+                case Translation.Letter.Email:
+                    letters[i] = "メール";
+                    break;
+                case Translation.Letter.YourIDIs:
+                    letters[i] = "IDは***です";
+                    break;
+                case Translation.Letter.IncorrectIDorSchoolName:
+                    letters[i] = "IDまたは、高校の名が一致しません。";
+                    break;
+                case Translation.Letter.CreateRoom:
+                    letters[i] = "ルーム生成";
+                    break;
+                case Translation.Letter.Join:
+                    letters[i] = "参加";
+                    break;
+                case Translation.Letter.CreatingGame:
+                    letters[i] = "ゲーム生成中…";
+                    break;
+                case Translation.Letter.WaitingTime:
+                    letters[i] = "待機時間";
+                    break;
+                case Translation.Letter.MoveToNextStage:
+                    letters[i] = "次のステージ";
+                    break;
+                case Translation.Letter.PlayAgainWithPlayer:
+                    letters[i] = "再挑戦";
+                    break;
+                case Translation.Letter.ReturnToMainMenu:
+                    letters[i] = "メイン画面に戻る";
+                    break;
+                case Translation.Letter.RetryCanceled:
+                    letters[i] = "キャンセルされました";
+                    break;
+                case Translation.Letter.Ready:
+                    letters[i] = "レディ…";
+                    break;
+                case Translation.Letter.TimesUp:
+                    letters[i] = "タイムオーバー！";
+                    break;
 
                 case Translation.Letter.Story:
                     letters[i] = "";
