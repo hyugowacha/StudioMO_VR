@@ -1,5 +1,7 @@
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 using DG.Tweening;
 using Photon.Pun;
 
@@ -47,6 +49,7 @@ public class StageManager : Manager
     [SerializeField]
     private TimerPanel timerPanel;                              //남은 시간 표시 패널
     private float remainingTime = 0.0f;                         //남은 시간
+    [SerializeField]
     private float limitTime = 0.0f;                             //제한 시간
 
     [SerializeField]
@@ -55,7 +58,13 @@ public class StageManager : Manager
 
     [SerializeField]
     private ScorePanel scorePanel;                              //광물 점수 표시 패널
+    [SerializeField]
     private StageData.Score score;                              //목표 광물 개수
+
+    [SerializeField]
+    private StageResultPanel stageResultPanel;                  //스테이지 결과 패널
+    [SerializeField]
+    private StatePanel statePanel;                              //진행 상태 표시 패널
 
     protected override void Start()
     {
@@ -130,6 +139,9 @@ public class StageManager : Manager
                     totalScore = character.mineralCount;
                 }
                 phasePanel?.Stop();
+                UnityAction next = null;
+                //파이어베이스에서 받은 데이터 내용으로 next를 바인딩 할지 여부를 결정
+                stageResultPanel?.Open(totalScore, score.GetClearValue(), score.GetAddValue(), next, () => ChangeScene(false), () => ChangeScene(true));
             }
         }
         timerPanel?.Fill(remainingTime, limitTime);
@@ -182,12 +194,14 @@ public class StageManager : Manager
             }
             mineralCount = character.mineralCount;
         }
-        scorePanel?.Open(mineralCount, score.GetClearValue(), score.GetAddValue());
+        scorePanel?.Fill(mineralCount, score.GetClearValue(), score.GetAddValue());
     }
 
     protected override void ChangeText()
     {
         phasePanel?.ChangeText();
+        stageResultPanel?.ChangeText();
+        statePanel?.ChangeText();
     }
 
     protected override void OnLeftFunction(InputAction.CallbackContext callbackContext)
@@ -279,6 +293,20 @@ public class StageManager : Manager
         else if (callbackContext.canceled == true)
         {
             moveInput = Vector2.zero;
+        }
+    }
+
+    //씬을 전환해주는 메서드
+    private void ChangeScene(bool exit)
+    {
+        switch(exit)
+        {
+            case true:
+                statePanel?.Open(() => SceneManager.LoadScene("lobby"), null);
+                break;
+            case false:
+                statePanel?.Open(() => SceneManager.LoadScene(SceneName), false);
+                break;
         }
     }
 }

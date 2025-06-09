@@ -39,8 +39,6 @@ public class ScorePanel : Panel
         }
     }
 
-    private sbyte digitScale;
-
     [Header("애니메이션을 실행 시켜줄 float형 파라미터"), SerializeField]
     private string parameter = "normalized";
 
@@ -78,35 +76,31 @@ public class ScorePanel : Panel
     }
 
     //점수 변화의 현황을 보여주는 메서드
-    public void Open(uint totalScore, uint clearScore, uint addScore)
+    public void Fill(uint totalScore, uint clearScore, uint addScore)
     {
-        if (gameObject.activeSelf == false)
+        texts[(int)TextIndex.Step1].Set(GetNumberText(clearScore * HalfValue, 0));
+        texts[(int)TextIndex.Step2].Set(GetNumberText(clearScore, 0));
+        uint perfectScore = (uint)Mathf.Clamp((float)clearScore + addScore, uint.MinValue, uint.MaxValue);
+        if (perfectScore > clearScore)
         {
-            gameObject.SetActive(true);
+            Set(GetNumberText(clearScore + (HalfValue * addScore), 0), GetNumberText(perfectScore, 0));  
         }
-        //texts[(int)TextIndex.Step1].Set(GetNumberText(clearScore * HalfValue, ));
-        //texts[(int)TextIndex.Step2].Set(GetNumberText(clearScore));
-        //uint perfectScore = (uint)Mathf.Clamp((float)clearScore + addScore, uint.MinValue, uint.MaxValue);
-        //if (perfectScore > clearScore)
-        //{
-        //    Set(GetNumberText(clearScore + (HalfValue * addScore)), GetNumberText(perfectScore));  
-        //}
-        //else
-        //{
-        //    string value = GetNumberText(clearScore);
-        //    Set(value, value);
-        //}
-        //if (totalScore >= perfectScore)
-        //{
-        //    Set(MaxValue);
-        //}
-        //else if (totalScore >= clearScore)
-        //{
-        //    Set(HalfValue + (HalfValue * (((float)totalScore - clearScore) / ((float)perfectScore - clearScore))));
-        //}
-        //else
-        //{
-        //    Set(((float)totalScore / clearScore) * HalfValue);
-        //}
+        else
+        {
+            string value = GetNumberText(clearScore, 0);
+            Set(value, value);
+        }
+        if (totalScore >= perfectScore)
+        {
+            Set(getSlider.maxValue * (perfectScore != 0 ? totalScore / perfectScore : totalScore));
+        }
+        else if (totalScore >= clearScore)
+        {
+            Set(HalfValue + (HalfValue * (((float)totalScore - clearScore) / ((float)perfectScore - clearScore))));
+        }
+        else
+        {
+            Set(((float)totalScore / clearScore) * HalfValue);
+        }
     }
 }

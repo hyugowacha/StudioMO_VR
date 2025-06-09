@@ -97,6 +97,16 @@ public static class SlowMotion
         Play(value, AfterSpeed, ApplySpeed * rate);
     }
 
+    public static void Pause()
+    {
+        currentTween.Pause();
+    }
+
+    public static void Play()
+    {
+        currentTween.Play();
+    }
+
     //현재 플레이어가 슬로우 모션의 영향력을 가지고 있는지 여부를 확인하는 함수
     public static bool IsOwner(Player player)
     {
