@@ -30,8 +30,34 @@ public class Character : MonoBehaviourPunCallbacks, IPunObservable
         }
     }
 
+    private bool hasMaterial = false;
+
+    private Material material = null;
+
+    private Material getMaterial {
+        get
+        {
+            if (hasMaterial == false)
+            {
+                Shader shader = Shader.Find(ShaderPath);
+                if (shader != null)
+                {
+                    material = new Material(shader);
+                    if (portraitCamera != null)
+                    {
+                        material.mainTexture = portraitCamera.targetTexture;
+                    }
+                    hasMaterial = true;
+                }
+            }
+            return material;
+        }
+    }
+
     [Header("애니메이터"), SerializeField]
     private Animator animator;
+    [Header("카메라"), SerializeField]
+    private Camera portraitCamera;
     [Header("머리"), SerializeField]
     private Transform headTransform;
     [Header("왼손"), SerializeField]
@@ -80,6 +106,7 @@ public class Character : MonoBehaviourPunCallbacks, IPunObservable
     private static readonly string HitParameter = "hit";
     private static readonly string SlowMotionParameter = "slowmotion";
     private static readonly string GatheringParameter = "gathering";
+    private static readonly string ShaderPath = "UI/UnlitMaskShader";
 
     private void Update()
     {
@@ -339,5 +366,10 @@ public class Character : MonoBehaviourPunCallbacks, IPunObservable
         {
             photonView.RPC(nameof(SetMineral), RpcTarget.Others, convert);
         }
+    }
+
+    public Material GetPortraitMaterial()
+    {
+        return getMaterial;
     }
 }
