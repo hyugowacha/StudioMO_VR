@@ -38,6 +38,9 @@ public class SlowMotionPanel : Panel
         }
     }
 
+    [Header("초상화 이미지"), SerializeField]
+    private Image portraitImage;
+
     [Header("슬라이더 색깔 변화 Float형 파라미터"), SerializeField]
     private string fillFloat = "fill";
 
@@ -50,6 +53,12 @@ public class SlowMotionPanel : Panel
 
     [Header("깜빡임 트리거 파라미터"), SerializeField]
     private string blinkTrigger = "blink";
+
+    //플레이어 초상화를 적용시켜주는 메서드
+    public void Set(Material material)
+    {
+        portraitImage.Set(material);
+    }
 
     //슬라이더 값과 애니메이터 파라미터의 값을 설정해주는 메서드
     public void Fill(float current, float max, bool? direction)
