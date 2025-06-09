@@ -142,6 +142,7 @@ public static class Authentication
         // ID는 실제로 이메일 형식으로 변환되어 사용된 상태로 들어옴 (예: asd@StudioMO.com)
         firebaseAuth.CreateUserWithEmailAndPasswordAsync(ID, PW).ContinueWithOnMainThread(task =>
         {
+            // 실패 처리 (이미 존재하는 이메일 등)
             if (task.IsFaulted || task.IsCanceled)
             {
                 foreach (Exception exception in task.Exception.Flatten().InnerExceptions)
@@ -149,44 +150,62 @@ public static class Authentication
                     if (exception is FirebaseException firebaseEx &&
                         (AuthError)firebaseEx.ErrorCode == AuthError.EmailAlreadyInUse)
                     {
-                        callback?.Invoke(State.SignUpAlready);
+                        callback?.Invoke(State.SignUpAlready); // 중복 이메일
                         return;
                     }
                 }
 
-                callback?.Invoke(State.SignUpFailure);
+                callback?.Invoke(State.SignUpFailure); // 기타 실패
             }
             else
             {
-                // 유저 고유 UID
+                // 회원가입 성공 → 사용자 UID 획득
                 string userId = task.Result.User.UserId;
 
-                // 저장할 유저 데이터
-                Dictionary<string, object> userData = new Dictionary<string, object>
+                // 전체 맵 개수 (총 50개)
+                const int totalMaps = 50;
+
+                // [1] 각 맵별 별 획득 기록 초기화 (0개부터 시작)
+                Dictionary<string, object> mapClearData = new();
+
+                // [2] 각 맵별 잠금 여부 초기화 (0번 맵만 해금 상태)
+                Dictionary<string, object> mapUnlockData = new();
+
+                for (int i = 0; i < totalMaps; i++)
                 {
-                    { "ID", ID },                               // ID는 이메일로 저장
-                    { "SchoolName", hintSchool },               // 학교 이름 (힌트용)
-                    { "Session", "" },                          // 일단 비움
-                    { "Coins", testStartCoin },                 // 시작 재화
-                    { "UnlockedSkins", new List<string> { "SkinData_Poorin" } }, // 시작 스킨
-                    { "EquippedSkin", "SkinData_Poorin" }              // 장착 스킨
-                };
+                    string key = $"Map_{i}";
+                    mapClearData[key] = 0;         // 별 획득 수: 초기값 0
+                    mapUnlockData[key] = (i == 0); // 0번 맵만 true, 나머지는 false
+                }
 
+                // [3] 유저의 전체 데이터 딕셔너리 구성
+                Dictionary<string, object> userData = new Dictionary<string, object>
+            {
+                { "ID", ID },                                           // 이메일(ID)
+                { "SchoolName", hintSchool },                           // 학교 이름 (계정 찾기용)
+                { "Session", "" },                                      // 세션 정보 (빈 값으로 시작)
+                { "Coins", testStartCoin },                             // 시작 코인
+                { "Stars", 0 },                                         // 상점에서 사용하는 실제 별 수
+                { "UnlockedSkins", new List<string> { "SkinData_Poorin" } }, // 기본 스킨 1개 지급
+                { "EquippedSkin", "SkinData_Poorin" },                  // 기본 장착 스킨
+                { "MapClearData", mapClearData },                       // 맵별 최고 별 기록
+                { "MapUnlockData", mapUnlockData }                      // 맵별 해금 여부
+            };
 
-                // Firebase Realtime Database에 유저 정보 저장
+                // [4] Firebase Realtime Database에 사용자 데이터 저장
                 FirebaseDatabase.DefaultInstance.RootReference
-                    .Child(UsersTag)
+                    .Child("Users")
                     .Child(userId)
                     .SetValueAsync(userData)
                     .ContinueWithOnMainThread(dbTask =>
                     {
                         if (dbTask.IsFaulted || dbTask.IsCanceled)
                         {
-                            callback?.Invoke(State.SignUpFailure);
+                            callback?.Invoke(State.SignUpFailure); // 저장 실패
                         }
                         else
                         {
-                            callback?.Invoke(State.SignUpSuccess);
+                            callback?.Invoke(State.SignUpSuccess); // 저장 성공
                         }
                     });
             }
