@@ -51,8 +51,6 @@ public class StatePanel : Panel
         End
     }
 
-    private UnityAction unityAction = null;
-
     [Header("언어별 대응 폰트들"), SerializeField]
     private TMP_FontAsset[] tmpFontAssets = new TMP_FontAsset[Translation.count];
     private TMP_FontAsset tmpFontAsset = null;
@@ -139,7 +137,6 @@ public class StatePanel : Panel
     public void Open(UnityAction unityAction, bool? state)
     {
         gameObject.SetActive(true);
-        this.unityAction = unityAction;
         switch (state)
         {
             case true:
@@ -152,7 +149,7 @@ public class StatePanel : Panel
                 Set(State.Exit);
                 break;
         }
-        buttons[(int)Select.Yes].SetListener(() => this.unityAction?.Invoke());
+        buttons[(int)Select.Yes].SetListener(unityAction);
         buttons[(int)Select.No].SetListener(() => gameObject.SetActive(false));
     }
 
