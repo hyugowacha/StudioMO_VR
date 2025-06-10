@@ -157,7 +157,6 @@ public class FirebaseManager : MonoBehaviour
                     // TODO: 로그인 성공
                     // 로그인 성공했으니 포톤 서버 연결
 
-
                     break;
                 case Authentication.State.SignInAlready:
                     WarningLogSetActiveTrue("이미 로그인 된 계정입니다.");
