@@ -28,8 +28,8 @@ public class BulletPatternLoader : MonoBehaviour
     private void Awake()
     {
         // ▼ 테스트용 
-        //SetnonPatternCSVData(csvFile);
-        //SetPatternCSVData(patternCSVFile);
+        SetnonPatternCSVData(csvFile);
+        SetPatternCSVData(patternCSVFile);
     }
 
     /// <summary>
