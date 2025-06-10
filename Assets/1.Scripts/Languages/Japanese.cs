@@ -31,7 +31,7 @@
                 case Translation.Letter.Goal:
                     letters[i] = "目標";
                     break;
-                case Translation.Letter.Puase:
+                case Translation.Letter.Pause:
                     letters[i] = "一時停止";
                     break;
                 case Translation.Letter.Restart:

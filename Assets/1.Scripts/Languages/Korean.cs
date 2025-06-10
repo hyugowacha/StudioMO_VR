@@ -32,7 +32,7 @@ public static class Korean
                 case Translation.Letter.Goal:
                     letters[i] = "목표";
                     break;
-                case Translation.Letter.Puase:
+                case Translation.Letter.Pause:
                     letters[i] = "일시정지";
                     break;
                 case Translation.Letter.Restart:

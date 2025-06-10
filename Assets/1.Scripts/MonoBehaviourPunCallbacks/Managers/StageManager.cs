@@ -47,6 +47,8 @@ public class StageManager : Manager
     [SerializeField]
     private PhasePanel phasePanel;                              //진행 단계 표시 패널
     [SerializeField]
+    private PausePanel pausePanel;                              //일시정지 패널
+    [SerializeField]
     private TimerPanel timerPanel;                              //남은 시간 표시 패널
     private float remainingTime = 0.0f;                         //남은 시간
     [SerializeField]
@@ -92,8 +94,10 @@ public class StageManager : Manager
                     Instantiate(gameObject, Vector3.zero, Quaternion.identity);
                 }
                 score = stageData.GetScore();
-                TextAsset bulletTextAsset = stageData.GetBulletTextAsset();
-                getBulletPatternLoader.SetCSVData(bulletTextAsset);
+
+                (TextAsset pattern, TextAsset nonPattern) = stageData.GetBulletTextAsset();
+                getBulletPatternLoader.SetnonPatternCSVData(nonPattern);
+                getBulletPatternLoader.SetPatternCSVData(pattern);
                 if (audioSource != null)
                 {
                     AudioClip audioClip = stageData.GetAudioClip();
@@ -201,9 +205,25 @@ public class StageManager : Manager
         scorePanel?.Fill(mineralCount, score.GetClearValue(), score.GetAddValue());
     }
 
+    protected override void Pause()
+    {
+        base.Pause();
+        audioSource?.Pause();
+        stop = true;
+        SlowMotion.Pause();
+        pausePanel.Open(Resume, () => ChangeScene(false), null);
+    }
+
+    protected override void Resume()
+    {
+        base.Resume();
+        //audioSource?.Play();
+    }
+
     protected override void ChangeText()
     {
         phasePanel?.ChangeText();
+        pausePanel?.ChangeText();
         stageResultPanel?.ChangeText();
         statePanel?.ChangeText();
     }
@@ -243,6 +263,14 @@ public class StageManager : Manager
             {
                 pickaxe.grip = false;
             }
+        }
+    }
+
+    protected override void OnSecondaryFunction(InputAction.CallbackContext callbackContext)
+    {
+        if(callbackContext.performed == true && pausePanel != null && pausePanel.gameObject.activeSelf == false)
+        {
+            Pause();
         }
     }
 

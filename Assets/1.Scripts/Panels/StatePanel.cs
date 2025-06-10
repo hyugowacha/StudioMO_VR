@@ -78,16 +78,16 @@ public class StatePanel : Panel
         switch (state)
         {
             case State.Next:
-                //다음 스테이지로 이동하시겠습니까?
+                text.Set(Translation.Get(Translation.Letter.MoveToNextStage), tmpFontAsset);
                 break;
             case State.Retry:
                 //스테이지를 다시하시겠습니까?
                 break;
             case State.Exit:
-                //플레이를 종료하시겠습니까?
+                text.Set(Translation.Get(Translation.Letter.ReturnToMainMenu), tmpFontAsset);
                 break;
             case State.End:
-                //다시하기가 취소되었습니다.
+                text.Set(Translation.Get(Translation.Letter.RetryCanceled), tmpFontAsset);
                 break;
         }
         buttons[(int)Select.Yes].SetText(Translation.Get(Translation.Letter.YES), tmpFontAsset);

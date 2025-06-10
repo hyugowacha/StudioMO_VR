@@ -34,26 +34,6 @@ public class Character : MonoBehaviourPunCallbacks, IPunObservable
 
     private Material material = null;
 
-    private Material getMaterial {
-        get
-        {
-            if (hasMaterial == false)
-            {
-                Shader shader = Shader.Find(ShaderPath);
-                if (shader != null)
-                {
-                    material = new Material(shader);
-                    if (portraitCamera != null)
-                    {
-                        material.mainTexture = portraitCamera.targetTexture;
-                    }
-                    hasMaterial = true;
-                }
-            }
-            return material;
-        }
-    }
-
     [Header("애니메이터"), SerializeField]
     private Animator animator;
     [Header("카메라"), SerializeField]
@@ -370,6 +350,19 @@ public class Character : MonoBehaviourPunCallbacks, IPunObservable
 
     public Material GetPortraitMaterial()
     {
-        return getMaterial;
+        if (hasMaterial == false)
+        {
+            Shader shader = Shader.Find(ShaderPath);
+            if (shader != null)
+            {
+                material = new Material(shader);
+                if (portraitCamera != null)
+                {
+                    material.mainTexture = portraitCamera.targetTexture;
+                }
+                hasMaterial = true;
+            }
+        }
+        return material;
     }
 }

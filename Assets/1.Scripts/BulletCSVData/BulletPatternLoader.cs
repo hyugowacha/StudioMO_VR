@@ -27,15 +27,16 @@ public class BulletPatternLoader : MonoBehaviour
 
     private void Awake()
     {
-        SetCSVData(csvFile);
-        SetPatternCSVData(patternCSVFile);
+        // ▼ 테스트용 
+        //SetnonPatternCSVData(csvFile);
+        //SetPatternCSVData(patternCSVFile);
     }
 
     /// <summary>
     /// CSV 파일을 파싱하는 함수
     /// </summary>
     /// <param name="bulletCSVfile">탄막의 생성 패턴 CSV파일</param>
-    public void SetCSVData(TextAsset bulletCSVfile)
+    public void SetnonPatternCSVData(TextAsset bulletCSVfile)
     {
         if (bulletCSVfile == null)
         {
