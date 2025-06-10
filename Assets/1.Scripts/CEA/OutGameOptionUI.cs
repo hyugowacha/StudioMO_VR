@@ -4,22 +4,10 @@ using UnityEngine;
 
 public class OutGameOptionUI : MonoBehaviour
 {
+    public GameObject optionUI;
 
-    /// <summary>
-    /// 스냅/스무스 변경 함수
-    /// </summary>
-    public void ChangeSnap()
+    public void CloseOptionTab()
     {
-
+        optionUI.SetActive(false);
     }
-
-    /// <summary>
-    /// 왼손/오른손 변경 함수
-    /// </summary>
-    public void ChangeHand()
-    {
-
-    }
-
-
 }
