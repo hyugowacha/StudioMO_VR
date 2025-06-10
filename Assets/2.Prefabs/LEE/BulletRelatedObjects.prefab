@@ -176,6 +176,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bulletPooling: {fileID: 2683349994792768806}
+  effectPool: {fileID: 210626297532153865}
   rangePatternBullet: {fileID: 3465485197423747118, guid: 5704d5e047b21014b83a73011ad895cb,
     type: 3}
   bulletParent: {fileID: 1359283471417940586}
@@ -194,6 +195,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bulletPooling: {fileID: 2683349994792768806}
+  effectPool: {fileID: 210626297532153865}
   anglePatternBullet: {fileID: -5814235743389041899, guid: 5704d5e047b21014b83a73011ad895cb,
     type: 3}
   bulletParent: {fileID: 2166552862952356285}
@@ -330,6 +332,37 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultCapacity: 100
   maxSize: 100
+--- !u!1 &945237759942392544
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 630711641702402388}
+  m_Layer: 0
+  m_Name: PatternBullet_Enable
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &630711641702402388
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 945237759942392544}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 132648451577283326}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2737959415689228832
 GameObject:
   m_ObjectHideFlags: 0
@@ -542,6 +575,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bulletPooling: {fileID: 2683349994792768806}
+  effectPool: {fileID: 210626297532153865}
   anglePatternBullet: {fileID: -5814235743389041899, guid: 5704d5e047b21014b83a73011ad895cb,
     type: 3}
   bulletParent: {fileID: 2166552862952356285}
@@ -560,6 +594,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bulletPooling: {fileID: 2683349994792768806}
+  effectPool: {fileID: 210626297532153865}
   rangePatternBullet: {fileID: 3465485197423747118, guid: 5704d5e047b21014b83a73011ad895cb,
     type: 3}
   bulletParent: {fileID: 1359283471417940586}
@@ -691,6 +726,7 @@ Transform:
   - {fileID: 4846106302964483752}
   - {fileID: 4570998415937059860}
   - {fileID: 6414449863760891384}
+  - {fileID: 630711641702402388}
   m_Father: {fileID: 1096704820367216734}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &210626297532153865
@@ -720,6 +756,13 @@ MonoBehaviour:
     defaultCapacity: 50
     maxSize: 100
     parent: {fileID: 6414449863760891384}
+  - effectName: PatternBullet_Enable
+    prefab: {fileID: 3503703426356020469, guid: 6ef350ba91d57bb48993133fe6ed8ef5,
+      type: 3}
+    autoReleaseTime: 3
+    defaultCapacity: 50
+    maxSize: 100
+    parent: {fileID: 630711641702402388}
 --- !u!1 &3785167980610764659
 GameObject:
   m_ObjectHideFlags: 0
@@ -927,6 +970,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bulletPooling: {fileID: 2683349994792768806}
+  effectPool: {fileID: 210626297532153865}
   anglePatternBullet: {fileID: -5814235743389041899, guid: 5704d5e047b21014b83a73011ad895cb,
     type: 3}
   bulletParent: {fileID: 2166552862952356285}
@@ -945,6 +989,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bulletPooling: {fileID: 2683349994792768806}
+  effectPool: {fileID: 210626297532153865}
   rangePatternBullet: {fileID: 3465485197423747118, guid: 5704d5e047b21014b83a73011ad895cb,
     type: 3}
   bulletParent: {fileID: 1359283471417940586}
@@ -1161,6 +1206,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bulletPooling: {fileID: 2683349994792768806}
+  effectPool: {fileID: 210626297532153865}
   rangePatternBullet: {fileID: 3465485197423747118, guid: 5704d5e047b21014b83a73011ad895cb,
     type: 3}
   bulletParent: {fileID: 1996177251712743555}
@@ -1179,6 +1225,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bulletPooling: {fileID: 2683349994792768806}
+  effectPool: {fileID: 210626297532153865}
   anglePatternBullet: {fileID: -5814235743389041899, guid: 5704d5e047b21014b83a73011ad895cb,
     type: 3}
   bulletParent: {fileID: 2166552862952356285}
