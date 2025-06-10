@@ -8,5 +8,6 @@ public class SkinData : ScriptableObject
     public string skinName;
     public string skinDescription;
     public int price;
-    public Sprite skinSprite;
+    public Sprite profile;
+    public GameObject inGameSkin;
 }

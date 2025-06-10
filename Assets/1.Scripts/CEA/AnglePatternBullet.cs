@@ -18,6 +18,9 @@ public class AnglePatternBullet : MonoBehaviour, IBullet
     // 이동 속도
     [Header("탄막 속도")]
     public float speed = 3f;
+
+    [Header("슬로우 모션 시")]
+    public float slowSpeed = 1f;
     #endregion
 
     #region 오브젝트 풀, 생성 시
@@ -91,7 +94,7 @@ public class AnglePatternBullet : MonoBehaviour, IBullet
 
         // Y값 고정
         Vector3 currentPos = transform.position;
-        currentPos += flatDir * speed * Time.deltaTime;
+        currentPos += flatDir * speed * Time.deltaTime * slowSpeed;
         currentPos.y = transform.position.y; // Y 위치 고정
 
         transform.position = currentPos;
@@ -101,6 +104,6 @@ public class AnglePatternBullet : MonoBehaviour, IBullet
     // 탄막 객체에 대한 속도 조절
     public void ChangePitch(float val)
     {
-
+        slowSpeed = val;
     }
 }
