@@ -1,12 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using Firebase;
 using Firebase.Auth;
 using Firebase.Database;
 using Firebase.Extensions;
 using Photon.Pun;
-using UnityEngine;
 
 public static class Authentication
 {
@@ -45,6 +43,7 @@ public static class Authentication
     // 세션 상태 감지 리스너 (중복 로그인 등 감지용)
     private static EventHandler<ValueChangedEventArgs> sessionListener = null;
 
+    // 게임 테스트용 코인
     private static int testStartCoin = 9999;
     #endregion
 

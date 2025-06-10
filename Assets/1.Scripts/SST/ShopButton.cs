@@ -23,7 +23,7 @@ public class ShopButton : MonoBehaviour
         shopCanvasCtrl = canvasCtrl;
         checkUnlocked = isUnlocked;
 
-        skinImage.sprite = skinData.skinSprite;
+        skinImage.sprite = skinData.profile;
         skinPrice.text = skinData.price.ToString();
         lockImage.enabled = !isUnlocked;
         unLockImage.enabled = isUnlocked;
