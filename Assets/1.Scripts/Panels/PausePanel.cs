@@ -42,15 +42,13 @@ public class PausePanel : Panel
     {
         Resume,
         Retry,
-        Setting,
+        Option,
         Exit,
         End
     }
 
     [SerializeField]
     private Button[] buttons = new Button[(int)Index.End];
-
-    private UnityAction resumeAction = null;
 
 #if UNITY_EDITOR
     private void OnValidate()
@@ -71,21 +69,26 @@ public class PausePanel : Panel
                 break;
             case false:
                 text.Set(Translation.Get(Translation.Letter.Option), tmpFontAsset);
-                //buttons[(int)Index.Retry].SetText("", tmpFontAsset);
-                //buttons[(int)Index.Exit].SetText("", tmpFontAsset);
+                //buttons[(int)Index.Retry].SetText("", tmpFontAsset);// 스냅
+                //buttons[(int)Index.Exit].SetText("", tmpFontAsset); // 스무스
                 break;
         }
 
+    }
+
+    private void ShowOption()
+    {
+        getAnimator.SetTrigger(optionParameter);
+        state = false;
+        Set();
+        //버튼 스냅과 스무스 두 개의 버튼 내용을 바꿔준다
     }
 
     //멀티 플레이에서 호출되는 메소드
     public void Open(UnityAction resume)
     {
         gameObject.SetActive(true);
-        getAnimator.SetTrigger(optionParameter);
-        state = false;
-        resumeAction = resume;
-        Set();
+        ShowOption();
     }
 
     //싱글 플레이에서 호출되는 메소드
@@ -93,9 +96,11 @@ public class PausePanel : Panel
     {
         gameObject.SetActive(true);
         getAnimator.SetTrigger(mainParameter);
-        buttons[(int)Index.Resume].SetListener(resume);
+        buttons[(int)Index.Resume].SetListener(() => { resume?.Invoke(); gameObject.SetActive(false); });
+        //buttons[(int)Index.Retry].SetListener(retry);
+        buttons[(int)Index.Option].SetListener(ShowOption);
+        //buttons[(int)Index.Exit].SetListener(exit);
         state = true;
-        resumeAction = resume;
         Set();
     }
 

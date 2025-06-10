@@ -4,6 +4,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using DG.Tweening;
 using Photon.Pun;
+using UnityEngine.XR.Interaction.Toolkit;
 
 [RequireComponent(typeof(BulletPatternLoader))]
 public class StageManager : Manager
@@ -94,7 +95,6 @@ public class StageManager : Manager
                     Instantiate(gameObject, Vector3.zero, Quaternion.identity);
                 }
                 score = stageData.GetScore();
-
                 (TextAsset pattern, TextAsset nonPattern) = stageData.GetBulletTextAsset();
                 getBulletPatternLoader.SetnonPatternCSVData(nonPattern);
                 getBulletPatternLoader.SetPatternCSVData(pattern);
@@ -205,21 +205,6 @@ public class StageManager : Manager
         scorePanel?.Fill(mineralCount, score.GetClearValue(), score.GetAddValue());
     }
 
-    protected override void Pause()
-    {
-        base.Pause();
-        audioSource?.Pause();
-        stop = true;
-        SlowMotion.Pause();
-        pausePanel.Open(Resume, () => ChangeScene(false), null);
-    }
-
-    protected override void Resume()
-    {
-        base.Resume();
-        //audioSource?.Play();
-    }
-
     protected override void ChangeText()
     {
         phasePanel?.ChangeText();
@@ -312,7 +297,25 @@ public class StageManager : Manager
                 }
                 break;
         }
+    }
 
+    private void Pause()
+    {
+        Time.timeScale = 0.0f;
+        audioSource?.Pause();
+        stop = true;
+        SlowMotion.Pause();
+        SetRayInteractor(true);
+        pausePanel.Open(Resume, () => ChangeScene(false), null);
+    }
+
+    private void Resume()
+    {
+        Time.timeScale = 1.0f;
+        audioSource?.Play();
+        stop = false;
+        SlowMotion.Play();
+        SetRayInteractor(false);
     }
 
     //왼쪽 방향 입력을 적용하는 메서드
