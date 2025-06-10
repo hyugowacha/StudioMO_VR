@@ -89,7 +89,7 @@ GameObject:
   - component: {fileID: 5781859783845402546}
   - component: {fileID: 7985165504417992712}
   m_Layer: 5
-  m_Name: FriendMatchB
+  m_Name: FriendMatchButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -225,7 +225,7 @@ GameObject:
   - component: {fileID: 646850470769150864}
   - component: {fileID: 7802865306401038662}
   m_Layer: 5
-  m_Name: RandomMatchB
+  m_Name: RandomMatchButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -451,8 +451,8 @@ RectTransform:
   m_GameObject: {fileID: 3078504594090484771}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0, y: 0, z: 0}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 0.005, y: 0.005, z: 0.005}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 4365899482994788389}
   m_Father: {fileID: 0}
@@ -471,7 +471,7 @@ Canvas:
   m_GameObject: {fileID: 3078504594090484771}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 0
+  m_RenderMode: 2
   m_Camera: {fileID: 0}
   m_PlaneDistance: 100
   m_PixelPerfect: 0
@@ -507,7 +507,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 0
+  m_PresetInfoIsWorld: 1
 --- !u!114 &2648490681724301533
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -707,10 +707,10 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 4807413605033384252}
   - {fileID: 2613171049233081983}
   - {fileID: 3706684573321619144}
   - {fileID: 4747105728083519138}
-  - {fileID: 4807413605033384252}
   m_Father: {fileID: 742880715171019132}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -782,7 +782,7 @@ GameObject:
   - component: {fileID: 8198738500748028758}
   - component: {fileID: 4880229037119360125}
   m_Layer: 5
-  m_Name: ExitB
+  m_Name: ExitButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -804,7 +804,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -591.2304, y: 233.07617}
+  m_AnchoredPosition: {x: -650, y: 233.07617}
   m_SizeDelta: {x: 116.8583, y: 120.6263}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6934589862757790885

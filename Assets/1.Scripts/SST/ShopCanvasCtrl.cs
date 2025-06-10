@@ -58,7 +58,7 @@ public class ShopCanvasCtrl : MonoBehaviour
         selectedSkin = skin;
         selectedShopButton = button;
 
-        buySkinImage.sprite = skin.skinSprite;
+        buySkinImage.sprite = skin.profile;
         buySkinName.text = skin.skinName;
         buySkinDescription.text = "설명\n" + skin.skinDescription;
         buySkinPrice.text = "구매\n" + $"({skin.price.ToString()})";
@@ -109,7 +109,7 @@ public class ShopCanvasCtrl : MonoBehaviour
     // ▼ 현재 적용중인 스킨 이미지 갱신
     public void ApplySkin(SkinData skin)
     {
-        previewImage.sprite = skin.skinSprite;
+        previewImage.sprite = skin.profile;
         UserGameData.SetEquippedSkin(skin.skinName); // 장착 정보 저장
     }
 

@@ -86,7 +86,6 @@ public class BulletPatternExecutor : MonoBehaviour
 
         var duePatterns = timePatterns.Where(p => p.beatTiming / 1000f <= elapsed).ToList();
 
-
         foreach(var data in duePatterns)
         {
             ExecutePattern(data);
