@@ -107,6 +107,13 @@ public static class SlowMotion
         currentTween.Play();
     }
 
+    public static void Stop()
+    {
+        currentTween.Kill();
+        actor = null;
+        speed = BeforeSpeed;
+    }
+
     //현재 플레이어가 슬로우 모션의 영향력을 가지고 있는지 여부를 확인하는 함수
     public static bool IsOwner(Player player)
     {

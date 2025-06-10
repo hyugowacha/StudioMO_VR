@@ -774,7 +774,7 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 1
+        value: 1e-45
         inSlope: Infinity
         outSlope: Infinity
         tangentMode: 103
@@ -784,18 +784,18 @@ AnimationClip:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    attribute: m_IsActive
-    path: ReplayB/SnapTX
-    classID: 1
-    script: {fileID: 0}
-    flags: 0
+    attribute: m_Type
+    path: ReplayB
+    classID: 114
+    script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+    flags: 1
   - serializedVersion: 2
     curve:
       serializedVersion: 2
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 1
+        value: 1e-45
         inSlope: Infinity
         outSlope: Infinity
         tangentMode: 103
@@ -805,11 +805,11 @@ AnimationClip:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    attribute: m_IsActive
-    path: ExitB/SmoothTX
-    classID: 1
-    script: {fileID: 0}
-    flags: 0
+    attribute: m_Type
+    path: ExitB
+    classID: 114
+    script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+    flags: 1
   m_PPtrCurves:
   - serializedVersion: 2
     curve:
@@ -823,7 +823,7 @@ AnimationClip:
   - serializedVersion: 2
     curve:
     - time: 0
-      value: {fileID: 21300000, guid: 7d1d0082a19184dabb23efae8c671504, type: 3}
+      value: {fileID: 21300000, guid: 393da457ab9d840f59264400afe15411, type: 3}
     attribute: m_Sprite
     path: ReplayB
     classID: 114
@@ -832,7 +832,7 @@ AnimationClip:
   - serializedVersion: 2
     curve:
     - time: 0
-      value: {fileID: 21300000, guid: 7d1d0082a19184dabb23efae8c671504, type: 3}
+      value: {fileID: 21300000, guid: 393da457ab9d840f59264400afe15411, type: 3}
     attribute: m_Sprite
     path: ExitB
     classID: 114
@@ -856,24 +856,6 @@ AnimationClip:
       isSerializeReferenceCurve: 0
     - serializedVersion: 2
       path: 83635035
-      attribute: 2086281974
-      script: {fileID: 0}
-      typeID: 1
-      customType: 0
-      isPPtrCurve: 0
-      isIntCurve: 0
-      isSerializeReferenceCurve: 0
-    - serializedVersion: 2
-      path: 2331641409
-      attribute: 2086281974
-      script: {fileID: 0}
-      typeID: 1
-      customType: 0
-      isPPtrCurve: 0
-      isIntCurve: 0
-      isSerializeReferenceCurve: 0
-    - serializedVersion: 2
-      path: 44550755
       attribute: 2086281974
       script: {fileID: 0}
       typeID: 1
@@ -1214,10 +1196,28 @@ AnimationClip:
       isPPtrCurve: 0
       isIntCurve: 0
       isSerializeReferenceCurve: 0
+    - serializedVersion: 2
+      path: 3590804073
+      attribute: 2990785078
+      script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+      typeID: 114
+      customType: 0
+      isPPtrCurve: 0
+      isIntCurve: 1
+      isSerializeReferenceCurve: 0
+    - serializedVersion: 2
+      path: 1815987382
+      attribute: 2990785078
+      script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+      typeID: 114
+      customType: 0
+      isPPtrCurve: 0
+      isIntCurve: 1
+      isSerializeReferenceCurve: 0
     pptrCurveMapping:
     - {fileID: 21300000, guid: 7391c95db40ff45cab5edb78c1eea28b, type: 3}
-    - {fileID: 21300000, guid: 7d1d0082a19184dabb23efae8c671504, type: 3}
-    - {fileID: 21300000, guid: 7d1d0082a19184dabb23efae8c671504, type: 3}
+    - {fileID: 21300000, guid: 393da457ab9d840f59264400afe15411, type: 3}
+    - {fileID: 21300000, guid: 393da457ab9d840f59264400afe15411, type: 3}
   m_AnimationClipSettings:
     serializedVersion: 2
     m_AdditiveReferencePoseClip: {fileID: 0}
@@ -2043,7 +2043,7 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 1
+        value: 1e-45
         inSlope: Infinity
         outSlope: Infinity
         tangentMode: 103
@@ -2053,18 +2053,18 @@ AnimationClip:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    attribute: m_IsActive
-    path: ReplayB/SnapTX
-    classID: 1
-    script: {fileID: 0}
-    flags: 0
+    attribute: m_Type
+    path: ReplayB
+    classID: 114
+    script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+    flags: 1
   - serializedVersion: 2
     curve:
       serializedVersion: 2
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 1
+        value: 1e-45
         inSlope: Infinity
         outSlope: Infinity
         tangentMode: 103
@@ -2074,11 +2074,11 @@ AnimationClip:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    attribute: m_IsActive
-    path: ExitB/SmoothTX
-    classID: 1
-    script: {fileID: 0}
-    flags: 0
+    attribute: m_Type
+    path: ExitB
+    classID: 114
+    script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+    flags: 1
   m_EulerEditorCurves:
   - serializedVersion: 2
     curve:

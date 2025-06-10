@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using UnityEngine.XR.Interaction.Toolkit;
 using DG.Tweening;
 using Photon.Pun;
 
@@ -16,6 +17,8 @@ public class StageManager : Manager
     public static readonly string SceneName = "StageScene";
 
     [Header("스테이지 매니저 구간"), SerializeField]
+    private ActionBasedSnapTurnProvider snapTurnProvider;
+    [SerializeField]
     private Character character;                                //조종할 캐릭터
     [SerializeField]
     private Vector3 leftHandOffset;                             //왼쪽 손잡이 간격
@@ -68,6 +71,9 @@ public class StageManager : Manager
     [SerializeField]
     private StatePanel statePanel;                              //진행 상태 표시 패널
 
+    private static readonly Vector2 snapMode = new Vector2(45f, 0.5f);
+    private static readonly Vector2 smoothMode = new Vector2(1f, 0.05f);
+
     protected override void Start()
     {
         base.Start();
@@ -94,7 +100,6 @@ public class StageManager : Manager
                     Instantiate(gameObject, Vector3.zero, Quaternion.identity);
                 }
                 score = stageData.GetScore();
-
                 (TextAsset pattern, TextAsset nonPattern) = stageData.GetBulletTextAsset();
                 getBulletPatternLoader.SetnonPatternCSVData(nonPattern);
                 getBulletPatternLoader.SetPatternCSVData(pattern);
@@ -205,21 +210,6 @@ public class StageManager : Manager
         scorePanel?.Fill(mineralCount, score.GetClearValue(), score.GetAddValue());
     }
 
-    protected override void Pause()
-    {
-        base.Pause();
-        audioSource?.Pause();
-        stop = true;
-        SlowMotion.Pause();
-        pausePanel.Open(Resume, () => ChangeScene(false), null);
-    }
-
-    protected override void Resume()
-    {
-        base.Resume();
-        //audioSource?.Play();
-    }
-
     protected override void ChangeText()
     {
         phasePanel?.ChangeText();
@@ -268,7 +258,7 @@ public class StageManager : Manager
 
     protected override void OnSecondaryFunction(InputAction.CallbackContext callbackContext)
     {
-        if(callbackContext.performed == true && pausePanel != null && pausePanel.gameObject.activeSelf == false)
+        if(stop == false && callbackContext.performed == true && pausePanel != null && pausePanel.gameObject.activeSelf == false)
         {
             Pause();
         }
@@ -312,7 +302,41 @@ public class StageManager : Manager
                 }
                 break;
         }
+    }
 
+    private void SetTurnMode(bool snap)
+    {
+        if(snapTurnProvider != null)
+        {
+            if(snap == true)
+            {
+                snapTurnProvider.turnAmount = snapMode.x;
+                snapTurnProvider.debounceTime = snapMode.y;
+            }
+            else
+            {
+                snapTurnProvider.turnAmount = smoothMode.x;
+                snapTurnProvider.debounceTime = smoothMode.y;
+            }
+        }
+    }
+
+    private void Pause()
+    {
+        audioSource?.Pause();
+        stop = true;
+        SlowMotion.Pause();
+        SetRayInteractor(true);
+        pausePanel.Open(Resume, () => { SlowMotion.Stop(); SceneManager.LoadScene(SceneName);}, () => statePanel?.Open(() => SceneManager.LoadScene("lobby"), null), 
+            () => SetTurnMode(true), () => SetTurnMode(false), CheckTurnMode());
+    }
+
+    private void Resume()
+    {
+        audioSource?.Play();
+        stop = false;
+        SlowMotion.Play();
+        SetRayInteractor(false);
     }
 
     //왼쪽 방향 입력을 적용하는 메서드
@@ -340,5 +364,10 @@ public class StageManager : Manager
                 statePanel?.Open(() => SceneManager.LoadScene(SceneName), false);
                 break;
         }
+    }
+
+    private bool CheckTurnMode()
+    {
+        return snapTurnProvider != null && snapTurnProvider.turnAmount == snapMode.x && snapTurnProvider.debounceTime == snapMode.y;
     }
 }

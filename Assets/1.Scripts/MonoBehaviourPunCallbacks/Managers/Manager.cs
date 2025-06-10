@@ -93,8 +93,6 @@ public abstract class Manager : MonoBehaviourPunCallbacks
         }
         if (this == instance)
         {
-            leftActionBasedController.SetActive(true);
-            rightActionBasedController.SetActive(true);
             ChangeText((Translation.Language)PlayerPrefs.GetInt(Translation.Preferences));
         }
     }
@@ -119,7 +117,7 @@ public abstract class Manager : MonoBehaviourPunCallbacks
         }
         if (rightActionBasedController != null && rightActionBasedController.activateAction != null)
         {
-            rightActionBasedController.activateAction.reference.Set(OnRightFunction, OnRightFunction, value);
+            //rightActionBasedController.activateAction.reference.Set(OnRightFunction, OnRightFunction, value);
         }
         for(int i = 0; i < primaryInputActionReferences.Length; i++)
         {
@@ -184,9 +182,9 @@ public abstract class Manager : MonoBehaviourPunCallbacks
     }
 
     //비네트를 켜고 끄는 메서드 (플레이어 상태이상 시)
-    protected void SetTunnelingVignette(bool enable)
+    protected void SetTunnelingVignette(bool enabled)
     {
-        switch (enable)
+        switch (enabled)
         {
             case true:
                 if (locomotionVignetteProvider == null)
@@ -212,6 +210,14 @@ public abstract class Manager : MonoBehaviourPunCallbacks
         }
     }
 
+    //레이 인터랙터를 활성화하거나 비활성화하는 메서드
+    protected void SetRayInteractor(bool enabled)
+    {
+        leftActionBasedController.SetRayInteractor(enabled);
+        rightActionBasedController.SetRayInteractor(enabled);
+    }
+
+    //VR 컨트롤러의 햅틱 진동을 발생시키는 메서드
     protected void SendHapticImpulse(float amplitude, float duration, bool? handle)
     {
         if (handle == null)
@@ -250,16 +256,6 @@ public abstract class Manager : MonoBehaviourPunCallbacks
             PlayerPrefs.SetInt(Translation.Preferences, index);
             ChangeText((Translation.Language)index);
         }
-    }
-
-    protected virtual void Pause()
-    {
-        Time.timeScale = 0.0f;
-    }
-
-    protected virtual void Resume()
-    {
-        Time.timeScale = 1.0f;
     }
 
     //언어를 변경하기 위한 메소드
