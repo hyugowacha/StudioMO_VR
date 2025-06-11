@@ -2,8 +2,8 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using DG.Tweening;
 using Photon.Pun;
+using Photon.Realtime;
 using ExitGames.Client.Photon;
-using System.Collections.Generic;
 
 [RequireComponent(typeof(BulletPatternLoader))]
 public class BattleManager : Manager
@@ -50,7 +50,9 @@ public class BattleManager : Manager
     private TimerPanel timerPanel;                              //남은 시간 표시 패널
     private double startTime = 0;
     [SerializeField]
-    private RankingPanel rankingPanel;                          //랭킹 표시 패널    
+    private RankingPanel rankingPanel;                          //랭킹 표시 패널
+
+    private const string Time = "time"; //방의 시간 속성 키
 
     System.Collections.IEnumerator Test()
     {
@@ -70,14 +72,37 @@ public class BattleManager : Manager
                 slowMotionPanel?.Set(character.GetPortraitMaterial());
             }
         }
-
-        if(PhotonNetwork.IsMasterClient == true)
+        StageData stageData = StageData.current;
+        if (stageData != null)
         {
-            //Debug.Log(PhotonNetwork.Time);
+            GameObject gameObject = stageData.GetMapObject();
+            if (gameObject != null)
+            {
+                Instantiate(gameObject, Vector3.zero, Quaternion.identity);
+            }
+            (TextAsset pattern, TextAsset nonPattern) = stageData.GetBulletTextAsset();
+            getBulletPatternLoader.SetnonPatternCSVData(nonPattern);
+            getBulletPatternLoader.SetPatternCSVData(pattern);
+            if (audioSource != null)
+            {
+                AudioClip audioClip = stageData.GetAudioClip();
+                if (audioClip != null)
+                {
+                    audioSource.clip = audioClip;
+                }
+            }
+        }
+        Room room = PhotonNetwork.CurrentRoom;
+        if (PhotonNetwork.IsMasterClient == false)
+        {
+            OnRoomPropertiesUpdate(room.CustomProperties);
         }
         else
         {
-            OnRoomPropertiesUpdate(PhotonNetwork.CurrentRoom.CustomProperties);
+            if (audioSource != null && audioSource.clip != null)
+            {
+                room.SetCustomProperties(new Hashtable() { { Time, PhotonNetwork.Time + audioSource.clip.length } });
+            }
         }
     }
 
@@ -211,6 +236,11 @@ public class BattleManager : Manager
         {
             foreach (string key in hashtable.Keys)
             {
+                switch (key)
+                {
+                    case Time:
+                        break;
+                }
             }
         }
     }
