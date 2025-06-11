@@ -550,6 +550,4 @@ public class FirebaseManager : MonoBehaviour
         WarningLogSetActiveTrue(message); // 팝업 창으로 통일
     }
     #endregion
-
-
 }

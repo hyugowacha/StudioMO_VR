@@ -3,7 +3,7 @@ using UnityEngine.UI;
 using UnityEngine.Audio;
 using UnityEngine.Events;
 using TMPro;
-using UnityEditor.ShortcutManagement;
+//using UnityEditor.ShortcutManagement;
 
 /// <summary>
 /// 싱글 플레이에서 사용되는 일시정지 패널

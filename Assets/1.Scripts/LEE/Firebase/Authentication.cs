@@ -126,6 +126,15 @@ public static class Authentication
                 // 세션을 위한 고유 토큰 생성
                 string sessionToken = Guid.NewGuid().ToString();
                 
+                // Photon AuthValues 설정
+                PhotonNetwork.AuthValues = new Photon.Realtime.AuthenticationValues(userId);
+
+                // Photon 연결 시도
+                PhotonNetwork.ConnectUsingSettings();
+
+                // 닉네임
+                SetPhotonNicknameFromFirebase(userId);
+
                 // 로그인한 유저의 DB 경로 참조
                 databaseReference = FirebaseDatabase.DefaultInstance.RootReference.Child(UsersTag).Child(userId);
 
@@ -336,8 +345,6 @@ public static class Authentication
             if (resultData != null && resultData.TryGetValue(TokenTag, out object tokenObj) &&
                 tokenObj.ToString() == sessionToken)
             {
-                // 로그인 성공 (세션 등록 성공한 경우)
-                PhotonNetwork.NickName = email;
                 databaseReference.Child(SessionTag).OnDisconnect().SetValue(""); // 연결 끊기면 자동 삭제
                 callback?.Invoke(State.SignInSuccess);
                 RegisterSessionListener(sessionToken); // 리스너 등록
@@ -385,5 +392,27 @@ public static class Authentication
             databaseReference.Child(SessionTag).RemoveValueAsync(); // 세션 데이터 제거
 
         CleanupSessionListener(); // 리스너 제거
+    }
+
+    // 닉네임 가져오는 함수
+    public static void SetPhotonNicknameFromFirebase(string uid)
+    {
+        FirebaseDatabase.DefaultInstance
+            .GetReference("Users")
+            .Child(uid)
+            .Child("Nickname")
+            .GetValueAsync()
+            .ContinueWithOnMainThread(task =>
+            {
+                if (task.IsCompletedSuccessfully && task.Result.Exists)
+                {
+                    string nickname = task.Result.Value.ToString();
+                    PhotonNetwork.NickName = nickname;
+
+                    ExitGames.Client.Photon.Hashtable props = new ExitGames.Client.Photon.Hashtable();
+                    props["Nickname"] = nickname;
+                    PhotonNetwork.LocalPlayer.SetCustomProperties(props);
+                }
+            });
     }
 }
