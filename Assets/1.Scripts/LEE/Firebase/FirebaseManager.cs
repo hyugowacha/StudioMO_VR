@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using Firebase.Database;
 using Firebase.Extensions;
+using Photon.Pun;
 
 public class FirebaseManager : MonoBehaviour
 {
@@ -71,6 +72,12 @@ public class FirebaseManager : MonoBehaviour
         Authentication.Initialize(OnFirebaseInitComplete);
     }
 
+    public void MasterTest()
+    {
+        loginInputID.text = "dhkdskrwl123@naver.com";
+        loginInputPW.text = "123456";
+    }
+
     /// <summary>
     /// Firebase 초기화 완료 후 콜백
     /// </summary>
@@ -88,6 +95,8 @@ public class FirebaseManager : MonoBehaviour
 
     private void Start()
     {
+        MasterTest();
+
         // 로그인 관련 버튼 이벤트 등록
         signUpCanvasButton.onClick.AddListener(OnClickGoToSignUp);      // 회원가입 창 열기
         signInButton.onClick.AddListener(OnClickSignIn);                // 로그인
@@ -154,8 +163,19 @@ public class FirebaseManager : MonoBehaviour
             switch (result)
             {
                 case Authentication.State.SignInSuccess:
-                    // TODO: 로그인 성공
-                    // 로그인 성공했으니 포톤 서버 연결
+                    PhotonNetwork.AutomaticallySyncScene = true;
+                    if (!PhotonNetwork.IsConnected)
+                    {
+                        Debug.Log("Photon 연결 시작");
+                        PhotonNetwork.ConnectUsingSettings();
+                    }
+                    else
+                    {
+                        Debug.Log("이미 Photon 연결됨 → 로비 진입");
+                        PhotonNetwork.JoinLobby();
+                    }
+
+                    loginCanvas.gameObject.SetActive(false);
 
                     break;
                 case Authentication.State.SignInAlready:
@@ -530,4 +550,6 @@ public class FirebaseManager : MonoBehaviour
         WarningLogSetActiveTrue(message); // 팝업 창으로 통일
     }
     #endregion
+
+
 }

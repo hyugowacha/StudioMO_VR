@@ -60,7 +60,7 @@ public class ShopCanvasCtrl : MonoBehaviour
 
         buySkinImage.sprite = skin.profile;
         buySkinName.text = skin.skinName;
-        buySkinDescription.text = "설명\n" + skin.skinDescription;
+        buySkinDescription.text = "설명\n" + skin.description;
         buySkinPrice.text = "구매\n" + $"({skin.price.ToString()})";
 
         buySkinPanel.gameObject.SetActive(true);

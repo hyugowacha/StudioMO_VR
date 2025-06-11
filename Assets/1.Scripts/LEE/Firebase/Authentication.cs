@@ -161,23 +161,7 @@ public static class Authentication
                 // 회원가입 성공 → 사용자 UID 획득
                 string userId = task.Result.User.UserId;
 
-                // 전체 맵 개수 (총 50개)
-                const int totalMaps = 50;
-
-                // [1] 각 맵별 별 획득 기록 초기화 (0개부터 시작)
-                Dictionary<string, object> mapClearData = new();
-
-                // [2] 각 맵별 잠금 여부 초기화 (0번 맵만 해금 상태)
-                Dictionary<string, object> mapUnlockData = new();
-
-                for (int i = 0; i < totalMaps; i++)
-                {
-                    string key = $"Map_{i}";
-                    mapClearData[key] = 0;         // 별 획득 수: 초기값 0
-                    mapUnlockData[key] = (i == 0); // 0번 맵만 true, 나머지는 false
-                }
-
-                // [3] 유저의 전체 데이터 딕셔너리 구성
+                // 유저의 전체 데이터 딕셔너리 구성
                 Dictionary<string, object> userData = new Dictionary<string, object>
                 {
                     { "ID", ID },                                           // 이메일(ID)
@@ -188,11 +172,10 @@ public static class Authentication
                     { "UnlockedSkins", new List<string> { "SkinData_Poorin" } }, // 기본 스킨 1개 지급
                     { "EquippedProfile", "Profile_Default" },               // 기본 프로필 (Sprite 이름 또는 ID)
                     { "EquippedSkin", "SkinData_Poorin" },                  // 기본 장착 스킨
-                    { "MapClearData", mapClearData },                       // 맵별 최고 별 기록
-                    { "MapUnlockData", mapUnlockData }                      // 맵별 해금 여부
+                    { "ClearedMapIndex", 0 }                                // 0번 맵만 플레이 가능
                 };
 
-                // [4] Firebase Realtime Database에 사용자 데이터 저장
+                // Firebase Realtime Database에 사용자 데이터 저장
                 FirebaseDatabase.DefaultInstance.RootReference
                     .Child("Users")
                     .Child(userId)

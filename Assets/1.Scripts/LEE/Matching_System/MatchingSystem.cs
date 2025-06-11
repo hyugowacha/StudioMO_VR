@@ -8,6 +8,7 @@ public class MatchingSystem : MonoBehaviourPunCallbacks
 {
     #region MatchingSystem의 필드
     [Header("PVPModeUI 팝업 관련 필드 (PVPModeUI)")]
+    [SerializeField] private GameObject PVPModeUI;                  // 매칭 기본 UI
     [SerializeField] private Button backToLobbyButton;              // 로비로 돌아가기
     [SerializeField] private Button withFriendsButton;              // 친구와 버튼
     [SerializeField] private Button randomMatchingButton;           // 랜덤 매칭 버튼
@@ -69,8 +70,6 @@ public class MatchingSystem : MonoBehaviourPunCallbacks
     #region 일반 필드
     // 사설방 = true / 공용방 = false
     private bool isRoomPrivate = false;
-
-
     #endregion
 
     #region Start, Update 초기화 및 버튼 연결
@@ -144,7 +143,10 @@ public class MatchingSystem : MonoBehaviourPunCallbacks
         if (isMatching)
         {
             matchingTime += Time.deltaTime;
-            timerText.text = $"{(int)matchingTime}초 경과";
+
+            int minutes = (int)(matchingTime / 60);
+            int seconds = (int)(matchingTime % 60);
+            timerText.text = $"{minutes:00}:{seconds:00}";
 
             // 15분(900초) 후 매칭 실패 팝업
             if (matchingTime >= 900f)
@@ -235,6 +237,11 @@ public class MatchingSystem : MonoBehaviourPunCallbacks
     private void OnClickCloseHostPopUp()
     {
         PVP_HostPopUp.SetActive(false);
+
+        if (PhotonNetwork.InRoom)
+        {
+            PhotonNetwork.LeaveRoom();
+        }
     }
 
     private void OnClickStartGame()
@@ -244,7 +251,7 @@ public class MatchingSystem : MonoBehaviourPunCallbacks
         int playerCount = PhotonNetwork.CurrentRoom.PlayerCount;
         if (playerCount < 2)
         {
-            ShowError("플레이어가 부족합니다. 최소 2명 이상이 필요합니다.");
+            ShowError("플레이어가 부족합니다.");
             return;
         }
 
@@ -300,11 +307,33 @@ public class MatchingSystem : MonoBehaviourPunCallbacks
         player2_nickname.text = "";
         player3_nickname.text = "";
     }
-
-
     #endregion
 
     #region Photon 콜백
+    public override void OnConnectedToMaster()
+    {
+        Debug.Log("Photon 마스터 서버 연결 완료");
+        PhotonNetwork.JoinLobby();
+    }
+
+    public override void OnJoinedLobby()
+    {
+        Debug.Log("Photon 로비 입장 완료");
+
+        // 로그인 성공 후 유저 스킨 정보 공유
+        if (!string.IsNullOrEmpty(UserGameData.EquippedSkin))
+        {
+            ExitGames.Client.Photon.Hashtable playerProps = new();
+            playerProps["EquippedSkin"] = UserGameData.EquippedSkin;
+            PhotonNetwork.LocalPlayer.SetCustomProperties(playerProps);
+            Debug.Log($"스킨 설정 완료: {UserGameData.EquippedSkin}");
+        }
+
+        // UI 전환 등 로비 관련 처리
+        PVPModeUI.SetActive(true);
+        // TODO: ▲ 추후 삭제 요청. 테스트용 코드
+    }
+
     // 방 입장 실패 시
     public override void OnJoinRandomFailed(short returnCode, string message)
     {
