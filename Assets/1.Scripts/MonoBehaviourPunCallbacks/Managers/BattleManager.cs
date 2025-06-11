@@ -54,6 +54,8 @@ public class BattleManager : Manager
 
     private const string Time = "time"; //방의 시간 속성 키
 
+    private Player bestPlayer = null; //최고 플레이어
+
     System.Collections.IEnumerator Test()
     {
         PhotonNetwork.ConnectUsingSettings();
@@ -97,12 +99,9 @@ public class BattleManager : Manager
         {
             OnRoomPropertiesUpdate(room.CustomProperties);
         }
-        else
+        else if (audioSource != null && audioSource.clip != null)
         {
-            if (audioSource != null && audioSource.clip != null)
-            {
-                room.SetCustomProperties(new Hashtable() { { Time, PhotonNetwork.Time + audioSource.clip.length } });
-            }
+            room.SetCustomProperties(new Hashtable() { { Time, PhotonNetwork.Time + audioSource.clip.length } });
         }
     }
 
@@ -239,6 +238,14 @@ public class BattleManager : Manager
                 switch (key)
                 {
                     case Time:
+                        if (hashtable[key] != null && double.TryParse(hashtable[key].ToString(), out startTime) == true)
+                        {
+                            double currentTime = startTime - PhotonNetwork.Time;
+                            if (currentTime <= 0)
+                            {
+
+                            }
+                        }
                         break;
                 }
             }
