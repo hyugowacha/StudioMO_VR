@@ -207,7 +207,7 @@ public static class Korean
                     letters[i] = "참가하기";
                     break;
                 case Translation.Letter.CreatingGame:
-                    letters[i] = "게임 생성 중";
+                    letters[i] = "매칭 중";
                     break;
                 case Translation.Letter.WaitingTime:
                     letters[i] = "대기시간";
