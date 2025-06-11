@@ -332,7 +332,7 @@ public class MatchingSystem : MonoBehaviourPunCallbacks
 
         string nickname = player.CustomProperties.ContainsKey("Nickname") ?
                           player.CustomProperties["Nickname"].ToString() :
-                          "(알 수 없음)";
+                          "Player";
 
         TMP_Text targetNicknameText = playerIndex switch
         {
@@ -361,7 +361,11 @@ public class MatchingSystem : MonoBehaviourPunCallbacks
             _ => null
         };
 
-        if (targetProfile != null) targetProfile.gameObject.SetActive(true);
+        if (targetProfile != null)
+        {
+            targetProfile.gameObject.SetActive(true);
+            SetPlayerProfileImage(player, targetProfile);
+        }
         if (targetReady != null) targetReady.gameObject.SetActive(isReady);
         if (targetNicknameText != null) targetNicknameText.text = nickname;
     }
@@ -563,6 +567,7 @@ public class MatchingSystem : MonoBehaviourPunCallbacks
         StartCoroutine(HideErrorAfterDelay(3f, 1f));
     }
 
+    // 오류출력 코루틴 3초 1초
     private System.Collections.IEnumerator HideErrorAfterDelay(float waitTime, float fadeTime)
     {
         // 지정된 시간만큼 기다립니다.
@@ -582,6 +587,25 @@ public class MatchingSystem : MonoBehaviourPunCallbacks
         // 페이드 아웃이 끝난 후 알파값을 0으로 확실하게 설정하고 오브젝트를 비활성화합니다.
         canvasGroup.alpha = 0f;
         PVP_ErrorCode.SetActive(false);
+    }
+
+    // 프로필 이미지 삽입
+    private void SetPlayerProfileImage(Player player, Image targetImage)
+    {
+        if (player.CustomProperties.TryGetValue("EquippedProfile", out object profileObj))
+        {
+            string profileName = profileObj.ToString();
+            Sprite profileSprite = Resources.Load<Sprite>($"Profile/{profileName}");
+
+            if (profileSprite != null)
+            {
+                targetImage.sprite = profileSprite;
+            }
+            else
+            {
+                Debug.LogWarning($"[프로필 이미지 없음] Profile/{profileName}");
+            }
+        }
     }
     #endregion
 

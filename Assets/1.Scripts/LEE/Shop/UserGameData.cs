@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Firebase.Database;
 using Firebase.Extensions;
+using Photon.Pun;
 
 public static class UserGameData
 {
@@ -21,8 +22,11 @@ public static class UserGameData
 
     // 현재 유저가 장착 중인 스킨 이름
     public static string EquippedSkin { get; private set; }
+
+    public static string EquippedProfile { get; set; } = "Profile_Default";
     #endregion
 
+    #region 함수들
     // Firebase에서 유저 데이터를 불러옴
     public static void Load(Action onComplete = null)
     {
@@ -94,4 +98,53 @@ public static class UserGameData
 
     // 해당 스킨을 해금했는지 확인
     public static bool HasSkin(string skinName) => UnlockedSkins.Contains(skinName);
+
+    // 닉네임 가져오는 함수
+    public static void SetPhotonNicknameFromFirebase(string uid)
+    {
+        FirebaseDatabase.DefaultInstance
+            .GetReference("Users")
+            .Child(uid)
+            .Child("Nickname")
+            .GetValueAsync()
+            .ContinueWithOnMainThread(task =>
+            {
+                if (task.IsCompletedSuccessfully && task.Result.Exists)
+                {
+                    string nickname = task.Result.Value.ToString();
+                    PhotonNetwork.NickName = nickname;
+
+                    ExitGames.Client.Photon.Hashtable props = new ExitGames.Client.Photon.Hashtable();
+                    props["Nickname"] = nickname;
+                    PhotonNetwork.LocalPlayer.SetCustomProperties(props);
+                }
+            });
+    }
+
+    // 프로필 정보 가져오는 함수
+    public static void LoadEquippedProfile(string uid)
+    {
+        FirebaseDatabase.DefaultInstance
+            .GetReference("Users")
+            .Child(uid)
+            .Child("EquippedProfile")
+            .GetValueAsync()
+            .ContinueWithOnMainThread(task =>
+            {
+                string profileName = "Profile_Default";
+
+                if (task.IsCompletedSuccessfully && task.Result.Exists)
+                {
+                    profileName = task.Result.Value.ToString();
+                }
+
+                UserGameData.EquippedProfile = profileName;
+
+                // Photon 커스텀 프로퍼티 설정
+                ExitGames.Client.Photon.Hashtable props = new();
+                props["EquippedProfile"] = profileName;
+                PhotonNetwork.LocalPlayer.SetCustomProperties(props);
+            });
+    }
+    #endregion
 }

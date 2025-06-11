@@ -388,26 +388,4 @@ public static class Authentication
 
         CleanupSessionListener(); // 리스너 제거
     }
-
-    // 닉네임 가져오는 함수
-    public static void SetPhotonNicknameFromFirebase(string uid)
-    {
-        FirebaseDatabase.DefaultInstance
-            .GetReference("Users")
-            .Child(uid)
-            .Child("Nickname")
-            .GetValueAsync()
-            .ContinueWithOnMainThread(task =>
-            {
-                if (task.IsCompletedSuccessfully && task.Result.Exists)
-                {
-                    string nickname = task.Result.Value.ToString();
-                    PhotonNetwork.NickName = nickname;
-
-                    ExitGames.Client.Photon.Hashtable props = new ExitGames.Client.Photon.Hashtable();
-                    props["Nickname"] = nickname;
-                    PhotonNetwork.LocalPlayer.SetCustomProperties(props);
-                }
-            });
-    }
 }
