@@ -136,7 +136,8 @@ public static class Translation
         ReturnToMainMenu,         // 메인화면으로 돌아가시겠습니까?
         RetryCanceled,            // 다시하기가 취소되었습니다.
         Ready,                    // 준비
-        TimesUp,                   // 시간종료
+        TimesUp,                  // 시간종료
+        SmoosthTurn,              //스무스턴
         End
     }
 

@@ -73,12 +73,12 @@ public class StageManager : Manager
         base.Start();
         if (instance == this)
         {
+            SetMoveSpeed(0);
             if (character != null)
             {
                 SetFixedPosition(character.transform.position);
                 slowMotionPanel?.Set(character.GetPortraitMaterial());
             }
-            SetMoveSpeed(0);
             StageData stageData = StageData.current;
 #if UNITY_EDITOR
             if (stageData == null)
@@ -94,7 +94,6 @@ public class StageManager : Manager
                     Instantiate(gameObject, Vector3.zero, Quaternion.identity);
                 }
                 score = stageData.GetScore();
-
                 (TextAsset pattern, TextAsset nonPattern) = stageData.GetBulletTextAsset();
                 getBulletPatternLoader.SetnonPatternCSVData(nonPattern);
                 getBulletPatternLoader.SetPatternCSVData(pattern);
@@ -192,7 +191,7 @@ public class StageManager : Manager
             {
                 slowMotionPanel?.Fill(current, full, false);
             }
-            else if (current >= SlowMotion.MinimumUseValue /*+ SlowMotion.RecoverRate*/ && faintingState == false)
+            else if (current >= SlowMotion.MinimumUseValue && faintingState == false)
             {
                 slowMotionPanel?.Fill(current, full, true);
             }
@@ -203,21 +202,6 @@ public class StageManager : Manager
             mineralCount = character.mineralCount;
         }
         scorePanel?.Fill(mineralCount, score.GetClearValue(), score.GetAddValue());
-    }
-
-    protected override void Pause()
-    {
-        base.Pause();
-        audioSource?.Pause();
-        stop = true;
-        SlowMotion.Pause();
-        pausePanel.Open(Resume, () => ChangeScene(false), null);
-    }
-
-    protected override void Resume()
-    {
-        base.Resume();
-        //audioSource?.Play();
     }
 
     protected override void ChangeText()
@@ -259,7 +243,7 @@ public class StageManager : Manager
             {
                 pickaxe.grip = true;
             }
-            if (callbackContext.canceled)
+            else if (callbackContext.canceled)
             {
                 pickaxe.grip = false;
             }
@@ -268,7 +252,7 @@ public class StageManager : Manager
 
     protected override void OnSecondaryFunction(InputAction.CallbackContext callbackContext)
     {
-        if(callbackContext.performed == true && pausePanel != null && pausePanel.gameObject.activeSelf == false)
+        if(stop == false && callbackContext.performed == true && pausePanel != null && pausePanel.gameObject.activeSelf == false)
         {
             Pause();
         }
@@ -312,7 +296,24 @@ public class StageManager : Manager
                 }
                 break;
         }
+    }
 
+    private void Pause()
+    {
+        audioSource?.Pause();
+        stop = true;
+        SlowMotion.Pause();
+        SetRayInteractor(true);
+        pausePanel.Open(Resume, () => { SlowMotion.Stop(); SceneManager.LoadScene(SceneName);}, () => statePanel?.Open(() => SceneManager.LoadScene("lobby"), null), 
+            () => SetTurnMode(true), () => SetTurnMode(false), CheckTurnMode());
+    }
+
+    private void Resume()
+    {
+        audioSource?.Play();
+        stop = false;
+        SlowMotion.Play();
+        SetRayInteractor(false);
     }
 
     //왼쪽 방향 입력을 적용하는 메서드

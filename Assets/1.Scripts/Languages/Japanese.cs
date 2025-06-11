@@ -229,10 +229,11 @@
                 case Translation.Letter.TimesUp:
                     letters[i] = "タイムオーバー！";
                     break;
-
-                case Translation.Letter.Story:
-                    letters[i] = "";
+                case Translation.Letter.SmoosthTurn:
+                    letters[i] = "スムーズ移動";
                     break;
+
+               
                
                 case Translation.Letter.Select:
                     letters[i] = "";
