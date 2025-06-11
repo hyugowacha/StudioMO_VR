@@ -3,6 +3,7 @@ using UnityEngine.InputSystem;
 using DG.Tweening;
 using Photon.Pun;
 using ExitGames.Client.Photon;
+using System.Collections.Generic;
 
 [RequireComponent(typeof(BulletPatternLoader))]
 public class BattleManager : Manager
@@ -60,7 +61,9 @@ public class BattleManager : Manager
         yield return new WaitUntil(() => PhotonNetwork.InRoom);
         if (prefab != null && Resources.Load<GameObject>(prefab.name) != null)
         {
-            character = PhotonNetwork.Instantiate(prefab.name, Vector3.zero, Quaternion.identity, 0, null).GetComponent<Character>();
+            GameObject gameObject = PhotonNetwork.Instantiate(prefab.name, Vector3.zero, Quaternion.identity, 0, null);
+            SetFixedPosition(gameObject.transform.position);
+            character = gameObject.GetComponent<Character>();
         }
         if(PhotonNetwork.IsMasterClient == true)
         {
@@ -109,6 +112,16 @@ public class BattleManager : Manager
 
     private void LateUpdate()
     {
+        IReadOnlyList<Character> list = Character.list;
+        int count = list != null ? list.Count : 0;
+        for(int i = 0; i < count; i++)
+        {
+            if (list[i] == character)
+            {
+
+            }
+        }
+
         if (character != null)
         {
             if (Camera.main != null)

@@ -73,12 +73,12 @@ public class StageManager : Manager
         base.Start();
         if (instance == this)
         {
+            SetMoveSpeed(0);
             if (character != null)
             {
                 SetFixedPosition(character.transform.position);
                 slowMotionPanel?.Set(character.GetPortraitMaterial());
             }
-            SetMoveSpeed(0);
             StageData stageData = StageData.current;
 #if UNITY_EDITOR
             if (stageData == null)
