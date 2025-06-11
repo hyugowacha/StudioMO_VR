@@ -9,10 +9,8 @@ public class MapDatabase : ScriptableObject
     [System.Serializable]
     public class MapInfo
     {
-        public int mapIndex;
-        public string mapName;
-        public Sprite previewImage;
-        [Tooltip("해당 맵을 플레이하려면 최소 몇 번째까지 클리어해야 하는가 (ClearedMapIndex 기준)")]
-        public int requiredClearIndex;
+        [Header("해당 맵의 점수 정보")] public int mapHighScore;
+        
+        [Header("해당맵을 해금 하려면 몇개의 스테이지가 풀렸는지.")] public int requiredClearIndex;
     }
 }

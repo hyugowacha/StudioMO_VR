@@ -45,6 +45,10 @@ public static class Authentication
 
     // 게임 테스트용 코인
     private static int testStartCoin = 9999;
+
+    // 유저 아이디 정보
+    private static string userId;
+    public static string UserId => userId;
     #endregion
 
     // UID 안전하게 가져오는 유틸 메서드
@@ -52,9 +56,6 @@ public static class Authentication
     {
         return firebaseAuth?.CurrentUser?.UserId;
     }
-
-    private static string userId;
-    public static string UserId => userId;
 
     // 세션 리스너 정리 함수: 리스너 등록 해제 및 참조 해제
     private static void CleanupSessionListener()
@@ -175,7 +176,7 @@ public static class Authentication
                     { "UnlockedSkins", new List<string> { "SkinData_Poorin" } }, // 기본 스킨 1개 지급
                     { "EquippedProfile", "Profile_Default" },               // 기본 프로필 (Sprite 이름 또는 ID)
                     { "EquippedSkin", "SkinData_Poorin" },                  // 기본 장착 스킨
-                    { "ClearedMapIndex", 0 }                                // 0번 맵만 플레이 가능
+                    { "MapHighScore", new List<int>(new int[50])}           // 각 맵의 최고 점수
                 };
 
                 // Firebase Realtime Database에 사용자 데이터 저장

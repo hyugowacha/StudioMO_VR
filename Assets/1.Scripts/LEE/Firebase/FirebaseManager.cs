@@ -402,7 +402,7 @@ public class FirebaseManager : MonoBehaviourPunCallbacks
                 return;
             }
 
-            // 중복 아님 → 저장
+            // 중복 아니면 저장
             FirebaseDatabase.DefaultInstance
                 .RootReference
                 .Child("Users")
@@ -418,6 +418,7 @@ public class FirebaseManager : MonoBehaviourPunCallbacks
                     else
                     {
                         Log("닉네임이 성공적으로 저장되었습니다.");
+                        nickname_Input.text = "";
                         nicknameCanvas.SetActive(false);
                         OnClickBackToLogin();
                     }
