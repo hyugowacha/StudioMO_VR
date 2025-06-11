@@ -49,7 +49,8 @@ public class BattleManager : Manager
     [SerializeField]
     private TimerPanel timerPanel;                              //남은 시간 표시 패널
     private double startTime = 0;
-
+    [SerializeField]
+    private RankingPanel rankingPanel;                          //랭킹 표시 패널    
 
     System.Collections.IEnumerator Test()
     {
@@ -64,10 +65,15 @@ public class BattleManager : Manager
             GameObject gameObject = PhotonNetwork.Instantiate(prefab.name, Vector3.zero, Quaternion.identity, 0, null);
             SetFixedPosition(gameObject.transform.position);
             character = gameObject.GetComponent<Character>();
+            if(character != null)
+            {
+                slowMotionPanel?.Set(character.GetPortraitMaterial());
+            }
         }
+
         if(PhotonNetwork.IsMasterClient == true)
         {
-            Debug.Log(PhotonNetwork.Time);
+            //Debug.Log(PhotonNetwork.Time);
         }
         else
         {
@@ -112,16 +118,6 @@ public class BattleManager : Manager
 
     private void LateUpdate()
     {
-        IReadOnlyList<Character> list = Character.list;
-        int count = list != null ? list.Count : 0;
-        for(int i = 0; i < count; i++)
-        {
-            if (list[i] == character)
-            {
-
-            }
-        }
-
         if (character != null)
         {
             if (Camera.main != null)
@@ -157,6 +153,7 @@ public class BattleManager : Manager
                 slowMotionPanel?.Fill(current, full, null);
             }
         }
+        rankingPanel?.Show(Character.list);
     }
 
     protected override void ChangeText()
