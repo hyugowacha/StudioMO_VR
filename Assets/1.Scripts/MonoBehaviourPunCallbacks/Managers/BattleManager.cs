@@ -16,4 +16,9 @@ public class BattleManager : Manager
     protected override void OnRightFunction(InputAction.CallbackContext callbackContext)
     {
     }
+
+    protected override void OnSecondaryFunction(InputAction.CallbackContext callbackContext)
+    {
+
+    }
 }

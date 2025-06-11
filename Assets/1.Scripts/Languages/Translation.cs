@@ -69,7 +69,7 @@ public static class Translation
         ExitGame,               //나가기
         Music,                  //음악명
         Goal,                   //목표
-        Puase,                  //일시정지
+        Pause,                  //일시정지
         Restart,                //다시하기
         Continue,               //계속하기
         LeaveGame,              //그만하기

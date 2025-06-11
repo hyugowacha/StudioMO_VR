@@ -31,7 +31,7 @@ public static class English
                 case Translation.Letter.Goal:
                     letters[i] = "GOAL";
                     break;
-                case Translation.Letter.Puase:
+                case Translation.Letter.Pause:
                     letters[i] = "Puase";
                     break;
                 case Translation.Letter.Restart:
