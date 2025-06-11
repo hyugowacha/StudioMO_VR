@@ -20,7 +20,7 @@ public class MatchingSystem : MonoBehaviourPunCallbacks
     [SerializeField] private Button PVP_CodePopUp_JoinButton;           // 참가하기 버튼
     [SerializeField] private Button PVP_CodePopUp_MakeRoomButton;       // 방 만들기 버튼
 
-    #region 임시 사설 방 관련 필드들
+    #region 사설 방 관련 필드들
     [Header("방만들기 버튼 선택시 관련 필드 (PVP_HostPopUp)")]
     [SerializeField] private GameObject PVP_HostPopUp;                  // 호스트 방
     [SerializeField] private TMP_Text PVP_HostPopUp_HostNickname;       // 호스트의 닉네임
@@ -245,6 +245,7 @@ public class MatchingSystem : MonoBehaviourPunCallbacks
     #endregion
 
     #region 사설방 관련 함수
+    // 사설방 나가기
     private void OnClickCloseHostPopUp()
     {
         if (PhotonNetwork.InRoom)
@@ -253,6 +254,7 @@ public class MatchingSystem : MonoBehaviourPunCallbacks
         }
     }
 
+    // 방장이면 게임 시작, 참가 유저면 Ready상태로 전환
     private void OnClickStartGame()
     {
         if (!isRoomPrivate) return; // 공용방이면 무시
@@ -290,6 +292,7 @@ public class MatchingSystem : MonoBehaviourPunCallbacks
         }
     }
 
+    // 플레이어 UI 관련 업데이트 함수
     private void UpdatePlayerList()
     {
         Player[] players = PhotonNetwork.PlayerList;
@@ -304,6 +307,7 @@ public class MatchingSystem : MonoBehaviourPunCallbacks
         }
     }
 
+    // 플레이어 UI 관련 함수
     private void SetPlayerUI(int playerIndex, Player player)
     {
         bool isReady = player.CustomProperties.ContainsKey(READY_KEY) &&
@@ -345,6 +349,7 @@ public class MatchingSystem : MonoBehaviourPunCallbacks
         if (targetNicknameText != null) targetNicknameText.text = nickname;
     }
 
+    // 플레이어 UI 초기화
     private void ResetAllPlayerUI()
     {
         player0_profile.gameObject.SetActive(false);
@@ -360,6 +365,7 @@ public class MatchingSystem : MonoBehaviourPunCallbacks
     #endregion
 
     #region Photon 콜백
+    // 방장이 바뀔때 호출
     public override void OnMasterClientSwitched(Player newMasterClient)
     {
         Debug.Log($"방장이 변경됨: 새로운 방장 → {newMasterClient.NickName}");
@@ -377,6 +383,7 @@ public class MatchingSystem : MonoBehaviourPunCallbacks
         UpdatePlayerList();
     }
 
+    // 플레이어가 방을 나갔을 때 호출됨
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
         Debug.Log($"플레이어 나감: {otherPlayer.NickName}");
@@ -385,6 +392,7 @@ public class MatchingSystem : MonoBehaviourPunCallbacks
         UpdatePlayerList();
     }
 
+    // 플레이어 준비 완료 버튼 클릭 시 호출됨
     public override void OnPlayerPropertiesUpdate(Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
     {
         if (changedProps.ContainsKey(READY_KEY))
@@ -393,12 +401,14 @@ public class MatchingSystem : MonoBehaviourPunCallbacks
         }
     }
 
+    // 사설방에서 게임시작 버튼을 클릭했을 시 호출
     public override void OnConnectedToMaster()
     {
         Debug.Log("Photon 마스터 서버 연결 완료");
         PhotonNetwork.JoinLobby();
     }
 
+    // 로비 입장 시 호출됨
     public override void OnJoinedLobby()
     {
         Debug.Log("Photon 로비 입장 완료");
