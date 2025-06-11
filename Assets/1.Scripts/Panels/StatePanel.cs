@@ -51,8 +51,6 @@ public class StatePanel : Panel
         End
     }
 
-    private UnityAction unityAction = null;
-
     [Header("언어별 대응 폰트들"), SerializeField]
     private TMP_FontAsset[] tmpFontAssets = new TMP_FontAsset[Translation.count];
     private TMP_FontAsset tmpFontAsset = null;
@@ -78,16 +76,16 @@ public class StatePanel : Panel
         switch (state)
         {
             case State.Next:
-                //다음 스테이지로 이동하시겠습니까?
+                text.Set(Translation.Get(Translation.Letter.MoveToNextStage), tmpFontAsset);
                 break;
             case State.Retry:
                 //스테이지를 다시하시겠습니까?
                 break;
             case State.Exit:
-                //플레이를 종료하시겠습니까?
+                text.Set(Translation.Get(Translation.Letter.ReturnToMainMenu), tmpFontAsset);
                 break;
             case State.End:
-                //다시하기가 취소되었습니다.
+                text.Set(Translation.Get(Translation.Letter.RetryCanceled), tmpFontAsset);
                 break;
         }
         buttons[(int)Select.Yes].SetText(Translation.Get(Translation.Letter.YES), tmpFontAsset);
@@ -139,7 +137,6 @@ public class StatePanel : Panel
     public void Open(UnityAction unityAction, bool? state)
     {
         gameObject.SetActive(true);
-        this.unityAction = unityAction;
         switch (state)
         {
             case true:
@@ -152,7 +149,7 @@ public class StatePanel : Panel
                 Set(State.Exit);
                 break;
         }
-        buttons[(int)Select.Yes].SetListener(() => this.unityAction?.Invoke());
+        buttons[(int)Select.Yes].SetListener(unityAction);
         buttons[(int)Select.No].SetListener(() => gameObject.SetActive(false));
     }
 

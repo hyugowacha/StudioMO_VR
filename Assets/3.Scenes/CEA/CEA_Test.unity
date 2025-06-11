@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028352, g: 0.22571376, b: 0.30692244, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -131,42 +131,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 210626297532153865, guid: cee8148478902274787c968a9c796dce,
-        type: 3}
-      propertyPath: effects.Array.size
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 210626297532153865, guid: cee8148478902274787c968a9c796dce,
-        type: 3}
-      propertyPath: effects.Array.data[2].parent
-      value: 
-      objectReference: {fileID: 526406791}
-    - target: {fileID: 210626297532153865, guid: cee8148478902274787c968a9c796dce,
-        type: 3}
-      propertyPath: effects.Array.data[2].prefab
-      value: 
-      objectReference: {fileID: 3503703426356020469, guid: 6ef350ba91d57bb48993133fe6ed8ef5,
-        type: 3}
-    - target: {fileID: 210626297532153865, guid: cee8148478902274787c968a9c796dce,
-        type: 3}
-      propertyPath: effects.Array.data[2].maxSize
-      value: 100
-      objectReference: {fileID: 0}
-    - target: {fileID: 210626297532153865, guid: cee8148478902274787c968a9c796dce,
-        type: 3}
-      propertyPath: effects.Array.data[2].effectName
-      value: PatternBullet_Enable
-      objectReference: {fileID: 0}
-    - target: {fileID: 210626297532153865, guid: cee8148478902274787c968a9c796dce,
-        type: 3}
-      propertyPath: effects.Array.data[2].autoReleaseTime
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 210626297532153865, guid: cee8148478902274787c968a9c796dce,
-        type: 3}
-      propertyPath: effects.Array.data[2].defaultCapacity
-      value: 50
-      objectReference: {fileID: 0}
     - target: {fileID: 1096704820367216734, guid: cee8148478902274787c968a9c796dce,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -217,58 +181,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3569187248637751483, guid: cee8148478902274787c968a9c796dce,
-        type: 3}
-      propertyPath: effectPool
-      value: 
-      objectReference: {fileID: 341204601}
-    - target: {fileID: 4317184076511200338, guid: cee8148478902274787c968a9c796dce,
-        type: 3}
-      propertyPath: effectPool
-      value: 
-      objectReference: {fileID: 341204601}
-    - target: {fileID: 4427265034421755114, guid: cee8148478902274787c968a9c796dce,
-        type: 3}
-      propertyPath: effectPool
-      value: 
-      objectReference: {fileID: 341204601}
-    - target: {fileID: 6390920240962302767, guid: cee8148478902274787c968a9c796dce,
-        type: 3}
-      propertyPath: effectPool
-      value: 
-      objectReference: {fileID: 341204601}
     - target: {fileID: 6478293145296870914, guid: cee8148478902274787c968a9c796dce,
         type: 3}
       propertyPath: m_Name
       value: BulletRelatedObjects
       objectReference: {fileID: 0}
-    - target: {fileID: 7019009448904098124, guid: cee8148478902274787c968a9c796dce,
-        type: 3}
-      propertyPath: effectPool
-      value: 
-      objectReference: {fileID: 341204601}
-    - target: {fileID: 7628207508544233662, guid: cee8148478902274787c968a9c796dce,
-        type: 3}
-      propertyPath: effectPool
-      value: 
-      objectReference: {fileID: 341204601}
-    - target: {fileID: 8516709921596419244, guid: cee8148478902274787c968a9c796dce,
-        type: 3}
-      propertyPath: effectPool
-      value: 
-      objectReference: {fileID: 341204601}
-    - target: {fileID: 9096813360349131111, guid: cee8148478902274787c968a9c796dce,
-        type: 3}
-      propertyPath: effectPool
-      value: 
-      objectReference: {fileID: 341204601}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects:
-    - targetCorrespondingSourceObject: {fileID: 132648451577283326, guid: cee8148478902274787c968a9c796dce,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 526406791}
+    m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cee8148478902274787c968a9c796dce, type: 3}
 --- !u!1 &304391741
@@ -407,55 +327,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!4 &341204600 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 132648451577283326, guid: cee8148478902274787c968a9c796dce,
-    type: 3}
-  m_PrefabInstance: {fileID: 150340654}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &341204601 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 210626297532153865, guid: cee8148478902274787c968a9c796dce,
-    type: 3}
-  m_PrefabInstance: {fileID: 150340654}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6e650ca6a096dde41812c2f672a7510f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!1 &526406790
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 526406791}
-  m_Layer: 0
-  m_Name: PatternBullet_Enable
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &526406791
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 526406790}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 341204600}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1504862945
 GameObject:
