@@ -15,11 +15,15 @@ public abstract class Manager : MonoBehaviourPunCallbacks
 {
     protected static Manager instance = null;                   //각 씬 안에 단독으로 존재하기 위한 싱글톤 변수
 
+    private static readonly Vector2 snapMode = new Vector2(45f, 0.5f);
+    private static readonly Vector2 smoothMode = new Vector2(1f, 0.05f);
     private static readonly Vector3 CameraOffsetPosition = new Vector3(0, 1.36144f, 0);
 
     [Header("매니저 구간")]
     [SerializeField]
     private XROrigin xrOrigin;                                  //XR 오리진을 사용하기 위한 변수
+    [SerializeField]
+    private ActionBasedSnapTurnProvider snapTurnProvider;
     [SerializeReference]
     private DynamicMoveProvider dynamicMoveProvider;            //카메라 이동을 담당하는 프로바이더
     [SerializeField]
@@ -33,14 +37,6 @@ public abstract class Manager : MonoBehaviourPunCallbacks
     [SerializeField]
     private TunnelingVignetteController vignetteController;     //비네트 (상태이상 표시)
     private LocomotionVignetteProvider locomotionVignetteProvider = null;
-
-    [Header("언어별 대응 폰트 에셋들"), SerializeField]
-    private TMP_FontAsset[] fontAssets = new TMP_FontAsset[Translation.count];
-
-    protected TMP_FontAsset currentFontAsset {
-        get;
-        private set;
-    }
 
 #if UNITY_EDITOR
     [Header("유니티 에디터 전용")]
@@ -69,7 +65,6 @@ public abstract class Manager : MonoBehaviourPunCallbacks
             if (this == instance)
             {
                 name = GetType().Name;
-                ExtensionMethod.Sort(ref fontAssets, Translation.count, true);
                 ExtensionMethod.Sort(ref primaryInputActionReferences);
                 ExtensionMethod.Sort(ref secondaryInputActionReferences);
                 ChangeText(language);
@@ -154,15 +149,6 @@ public abstract class Manager : MonoBehaviourPunCallbacks
     private void ChangeText(Translation.Language language)
     {
         Translation.Set(language);
-        switch (language)
-        {
-            case Translation.Language.English:
-            case Translation.Language.Korean:
-            case Translation.Language.Chinese:
-            case Translation.Language.Japanese:
-                currentFontAsset = fontAssets[(int)language];
-                break;
-        }
         ChangeText();
     }
 
@@ -178,6 +164,24 @@ public abstract class Manager : MonoBehaviourPunCallbacks
         if (dynamicMoveProvider != null)
         {
             dynamicMoveProvider.moveSpeed = value;
+        }
+    }
+
+    //카메라 회전 속도를 변경해주는 메서드
+    protected void SetTurnMode(bool snap)
+    {
+        if (snapTurnProvider != null)
+        {
+            if (snap == true)
+            {
+                snapTurnProvider.turnAmount = snapMode.x;
+                snapTurnProvider.debounceTime = snapMode.y;
+            }
+            else
+            {
+                snapTurnProvider.turnAmount = smoothMode.x;
+                snapTurnProvider.debounceTime = smoothMode.y;
+            }
         }
     }
 
@@ -245,6 +249,12 @@ public abstract class Manager : MonoBehaviourPunCallbacks
                 leftActionBasedController.SendHapticImpulse(amplitude, duration);
             }
         }
+    }
+
+    //회전 모드가 스냅 모드인지 확인하는 메서드
+    protected bool CheckTurnMode()
+    {
+        return snapTurnProvider != null && snapTurnProvider.turnAmount == snapMode.x && snapTurnProvider.debounceTime == snapMode.y;
     }
 
 

@@ -123,7 +123,7 @@ public static class Korean
                     letters[i] = "머리";
                     break;
                 case Translation.Letter.SnapTurn:
-                    letters[i] = "조이스틱";
+                    letters[i] = "스냅";
                     break;
                 case Translation.Letter.LeftHand:
                     letters[i] = "왼손";
@@ -230,8 +230,11 @@ public static class Korean
                 case Translation.Letter.TimesUp:
                     letters[i] = "시간종료";
                     break;
+                case Translation.Letter.SmoosthTurn:
+                    letters[i] = "스무스";
+                    break;
 
-                
+
                 case Translation.Letter.Select:
                     letters[i] = "선택";
                     break;
