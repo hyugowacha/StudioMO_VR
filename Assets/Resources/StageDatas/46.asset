@@ -13,19 +13,26 @@ MonoBehaviour:
   m_Name: 46
   m_EditorClassIdentifier: 
   musicText:
-    english: Music
-    korean: "\uC74C\uC545"
-    chinese: "\u97F3\u4E50"
-    japanese: "\u304A\u3093\u304C\u304F"
+    english: 'Chains and Claws '
+    korean: 'Chains and Claws '
+    chinese: 'Chains and Claws '
+    japanese: 'Chains and Claws '
   storyText:
-    english: 
-    korean: 
-    chinese: 
-    japanese: 
+    english: 'Libby has lit all the lights in the depths of the Maze planet. At last,
+      the treasure chest containing the starlight tree sap is in sight. But just
+      then, the space bugs began rushing toward her! '
+    korean: "\uBBF8\uAD81\uBCC4 \uC9C0\uD558\uC758 \uBAA8\uB4E0 \uBD88\uC744 \uBC1D\uD614\uC5B4\uC694.
+      \uB4DC\uB514\uC5B4 \uB208 \uC55E\uC5D0 \uBCC4\uB098\uBB34 \uC218\uC561\uC774
+      \uB4E0 \uBCF4\uBB3C\uC0C1\uC790\uAC00 \uBCF4\uC774\uB124\uC694. \uADF8 \uC21C\uAC04,
+      \uC6B0\uC8FC\uBC8C\uB808\uB4E4\uC774 \uB9AC\uBE44\uB97C \uD5A5\uD574 \uB2EC\uB824\uB4E4\uAE30
+      \uC2DC\uC791\uD588\uC5B4\uC694. "
+    chinese: "\u70B9\u4EAE\u4E86\u8FF7\u5BAB\u5730\u5E95\u7684\u6240\u6709\u706B\u5149\u540E\uFF0C\u8389\u6BD4\u7EC8\u4E8E\u5728\u773C\u524D\u770B\u5230\u4E86\u88C5\u6709\u661F\u4E4B\u6811\u6811\u6DB2\u7684\u5B9D\u7BB1\uFF01\u5C31\u5728\u8FD9\u65F6\uFF0C\u5B87\u5B99\u866B\u671D\u5979\u731B\u6251\u800C\u6765\uFF01 "
+    japanese: "\u8FF7\u5BAE\u661F\u306E\u5730\u4E0B\u306E\u3059\u3079\u3066\u306E\u706F\u308A\u3092\u706F\u3057\u307E\u3057\u305F\u3002\u3064\u3044\u306B\u76EE\u306E\u524D\u306B\u661F\u306E\u6728\u306E\u6A39\u6DB2\u304C\u5165\u3063\u305F\u5B9D\u7BB1\u304C\u73FE\u308C\u307E\u3057\u305F\uFF01\u305D\u306E\u77AC\u9593\u3001\u5B87\u5B99\u30E0\u30B7\u305F\u3061\u304C\u30EA\u30D3\u306B\u5411\u304B\u3063\u3066\u8972\u3044\u304B\u304B\u3063\u3066\u304D\u307E\u3057\u305F\uFF01 "
   audioClip: {fileID: 0}
   mapObject: {fileID: 6613263428121346272, guid: 5d5acb2135d382343be0d6e80c9746c7,
     type: 3}
-  bulletTextAsset: {fileID: 0}
+  patternBulletTextAsset: {fileID: 0}
+  nonPatternBulletTextAsset: {fileID: 0}
   score:
     clearValue: 50
     addValue: 0

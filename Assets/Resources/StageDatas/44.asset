@@ -13,19 +13,26 @@ MonoBehaviour:
   m_Name: 44
   m_EditorClassIdentifier: 
   musicText:
-    english: Music
-    korean: "\uC74C\uC545"
-    chinese: "\u97F3\u4E50"
-    japanese: "\u304A\u3093\u304C\u304F"
+    english: 'Arcane Vault '
+    korean: 'Arcane Vault '
+    chinese: 'Arcane Vault '
+    japanese: 'Arcane Vault '
   storyText:
-    english: 
-    korean: 
-    chinese: 
-    japanese: 
+    english: 'Avoiding the spaceworms that have been attacking her like crazy, Libby
+      finally reached the bottom of the maze planet. But it''s so dark all over the
+      place that Libby can''t find anything. What should we do? '
+    korean: "\uC815\uC2E0\uC5C6\uC774 \uACF5\uACA9\uD574\uC624\uB294 \uC6B0\uC8FC\uBC8C\uB808\uB4E4\uC744
+      \uD53C\uD574 \uB9AC\uBE44\uB294 \uBBF8\uAD81\uBCC4\uC758 \uC9C0\uD558\uAE4C\uC9C0
+      \uB3C4\uB2EC\uD588\uC5B4\uC694. \uADF8\uB7F0\uB370 \uC0AC\uBC29\uC774 \uB108\uBB34
+      \uC5B4\uB450\uCEF4\uCEF4\uD574\uC11C \uC544\uBB34\uAC83\uB3C4 \uCC3E\uC744
+      \uC218\uAC00 \uC5C6\uC5B4\uC694. \uC774\uB97C \uC5B4\uCA4C\uC8E0? "
+    chinese: "\u8389\u6BD4\u4E00\u8DEF\u8EB2\u907F\u75AF\u72C2\u653B\u51FB\u7684\u5B87\u5B99\u866B\uFF0C\u7EC8\u4E8E\u62B5\u8FBE\u8FF7\u5BAB\u661F\u7684\u5730\u5E95\u3002\u4F46\u56DB\u5468\u6F06\u9ED1\u4E00\u7247\uFF0C\u4EC0\u4E48\u4E5F\u770B\u4E0D\u89C1\uFF0C\u8BE5\u600E\u4E48\u529E\u5462\uFF1F "
+    japanese: "\u6FC0\u3057\u304F\u8972\u3044\u304B\u304B\u308B\u5B87\u5B99\u30E0\u30B7\u305F\u3061\u3092\u907F\u3051\u306A\u304C\u3089\u3001\u30EA\u30D3\u306F\u3064\u3044\u306B\u8FF7\u5BAE\u661F\u306E\u5730\u4E0B\u307E\u3067\u305F\u3069\u308A\u7740\u304D\u307E\u3057\u305F\u3002\u3051\u308C\u3069\u3001\u5468\u56F2\u304C\u3042\u307E\u308A\u306B\u3082\u6697\u304F\u3066\u4F55\u3082\u898B\u3048\u307E\u305B\u3093\u3002\u3069\u3046\u3057\u307E\u3057\u3087\u3046\uFF1F "
   audioClip: {fileID: 0}
   mapObject: {fileID: 6613263428121346272, guid: 5d5acb2135d382343be0d6e80c9746c7,
     type: 3}
-  bulletTextAsset: {fileID: 0}
+  patternBulletTextAsset: {fileID: 0}
+  nonPatternBulletTextAsset: {fileID: 0}
   score:
     clearValue: 50
     addValue: 0

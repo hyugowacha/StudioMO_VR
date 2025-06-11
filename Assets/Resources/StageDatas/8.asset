@@ -13,19 +13,25 @@ MonoBehaviour:
   m_Name: 8
   m_EditorClassIdentifier: 
   musicText:
-    english: Music
-    korean: "\uC74C\uC545"
-    chinese: "\u97F3\u4E50"
-    japanese: "\u304A\u3093\u304C\u304F"
+    english: 'Salty Sprint '
+    korean: 'Salty Sprint '
+    chinese: 'Salty Sprint '
+    japanese: 'Salty Sprint '
   storyText:
-    english: 
-    korean: 
-    chinese: 
-    japanese: 
+    english: 'The stronger the resistance of the spaceworms, the waves of the sea
+      star got stronger and stronger. Help Libby escape the waves safely! '
+    korean: "\uC6B0\uC8FC\uBC8C\uB808\uB4E4\uC758 \uC800\uD56D\uC774 \uAC70\uC138\uC9C8
+      \uC218\uB85D \uBC14\uB2E4\uBCC4\uC758 \uD30C\uB3C4\uAC00 \uB354\uC6B1 \uAC70\uC138\uC9C0\uAE30
+      \uC2DC\uC791\uD588\uC5B4\uC694. \uB9AC\uBE44\uAC00 \uBB34\uC0AC\uD788 \uD30C\uB3C4\uB97C
+      \uD53C\uD574 \uB3C4\uB9DD\uCE60 \uC218 \uC788\uB3C4\uB85D \uB3C4\uC640\uC8FC\uC138\uC694! "
+    chinese: "\u5B87\u5B99\u866B\u7684\u53CD\u6297\u6108\u53D1\u6FC0\u70C8\uFF0C\u6D77\u4E4B\u661F\u7684\u6D6A\u6D9B\u4E5F\u53D8\u5F97\u66F4\u52A0\u6C79\u6D8C\u3002\u8BF7\u5E2E\u52A9\u8389\u6BD4\u5B89\u5168\u907F\u5F00\u5DE8\u6D6A\uFF01 "
+    japanese: "\u5B87\u5B99\u30E0\u30B7\u305F\u3061\u306E\u62B5\u6297\u304C\u6FC0\u3057\u304F\u306A\u308B\u306B\u3064\u308C\u3001\u6D77\u306E\u661F\u306E\u6CE2\u3082\u3055\u3089\u306B\u6FC0\u3057\u304F\u306A\u3063\u3066\u304D\u307E\u3057\u305F\u3002
+      \u2003\u30EA\u30D3\u304C\u7121\u4E8B\u306B\u6CE2\u3092\u907F\u3051\u3066\u9003\u3052\u3089\u308C\u308B\u3088\u3046\u3001\u529B\u3092\u8CB8\u3057\u3066\u304F\u3060\u3055\u3044\uFF01 "
   audioClip: {fileID: 0}
   mapObject: {fileID: 6613263428121346272, guid: 5d5acb2135d382343be0d6e80c9746c7,
     type: 3}
-  bulletTextAsset: {fileID: 0}
+  patternBulletTextAsset: {fileID: 0}
+  nonPatternBulletTextAsset: {fileID: 0}
   score:
     clearValue: 50
     addValue: 0

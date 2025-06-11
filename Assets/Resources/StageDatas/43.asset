@@ -13,19 +13,23 @@ MonoBehaviour:
   m_Name: 43
   m_EditorClassIdentifier: 
   musicText:
-    english: Music
-    korean: "\uC74C\uC545"
-    chinese: "\u97F3\u4E50"
-    japanese: "\u304A\u3093\u304C\u304F"
+    english: 'Forgotten Passage '
+    korean: 'Forgotten Passage '
+    chinese: 'Forgotten Passage '
+    japanese: 'Forgotten Passage '
   storyText:
-    english: 
-    korean: 
-    chinese: 
-    japanese: 
+    english: "Libby just saw something terrifying... a ghost?! Wait a second\u2014it\u2019s
+      not a ghost, it\u2019s the spaceworm PyuPyu! We have to run, now! "
+    korean: "\uB9AC\uBE44\uAC00 \uBB34\uC2DC\uBB34\uC2DC\uD55C \uADC0\uC2E0\uC744
+      \uBC1C\uACAC\uD588\uC5B4\uC694. \uC774\uB7F0! \uC54C\uACE0\uBCF4\uB2C8 \uC6B0\uC8FC\uBC8C\uB808
+      \uD4E9\uD4E9\uC774 \uC544\uB2C8\uACA0\uC5B4\uC694? \uC5B4\uC11C \uB3C4\uB9DD\uCCD0\uC57C\uD574\uC694! "
+    chinese: "\u8389\u6BD4\u53D1\u73B0\u4E86\u4E00\u4E2A\u6050\u6016\u7684\u5E7D\u7075\u3002\u54A6\uFF1F\u539F\u6765\u662F\u5B87\u5B99\u866B\u201C\u55D6\u55D6\u201D\u4F2A\u88C5\u7684\uFF01\u5FEB\u9003\u554A\uFF01 "
+    japanese: "\u30EA\u30D3\u304C\u3068\u3066\u3082\u6016\u3044\u5E7D\u970A\u3092\u898B\u3064\u3051\u307E\u3057\u305F\u3002\u3048\u3063\u3001\u3088\u304F\u898B\u308B\u3068\u5B87\u5B99\u30E0\u30B7\u201C\u30D4\u30E5\u30F3\u30D4\u30E5\u30F3\u201D\u3058\u3083\u306A\u3044\u3067\u3059\u304B\uFF01\uFF1F\u6025\u3044\u3067\u9003\u3052\u307E\u3057\u3087\u3046\uFF01 "
   audioClip: {fileID: 0}
   mapObject: {fileID: 6613263428121346272, guid: 5d5acb2135d382343be0d6e80c9746c7,
     type: 3}
-  bulletTextAsset: {fileID: 0}
+  patternBulletTextAsset: {fileID: 0}
+  nonPatternBulletTextAsset: {fileID: 0}
   score:
     clearValue: 50
     addValue: 0

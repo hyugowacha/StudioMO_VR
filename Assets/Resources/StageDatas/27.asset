@@ -13,19 +13,27 @@ MonoBehaviour:
   m_Name: 27
   m_EditorClassIdentifier: 
   musicText:
-    english: Music
-    korean: "\uC74C\uC545"
-    chinese: "\u97F3\u4E50"
-    japanese: "\u304A\u3093\u304C\u304F"
+    english: 'Heatwave Clash '
+    korean: 'Heatwave Clash '
+    chinese: 'Heatwave Clash '
+    japanese: 'Heatwave Clash '
   storyText:
-    english: 
-    korean: 
-    chinese: 
-    japanese: 
+    english: "After a long journey, we finally collected enough desert star gems.
+      But just then, a swarm of space bugs suddenly appeared and took the baby cactus!
+      Let\u2019s hurry and rescue the baby cactus before it\u2019s too late! "
+    korean: "\uC624\uB79C \uC2DC\uAC04 \uB05D\uC5D0 \uC0AC\uB9C9\uBCC4 \uBCF4\uC11D\uC744
+      \uCDA9\uBD84\uD788 \uBAA8\uC744 \uC218 \uC788\uC5C8\uC5B4\uC694. \uBC14\uB85C
+      \uADF8\uB54C, \uAC11\uC790\uAE30 \uBAB0\uB824\uC694 \uC6B0\uC8FC\uBC8C\uB808
+      \uBB34\uB9AC\uB4E4\uC774 \uC544\uAE30 \uC120\uC778\uC7A5\uC744 \uC7A1\uC544\uAC14\uC5B4\uC694.
+      \uB354 \uB2A6\uAE30\uC804\uC5D0 \uC544\uAE30 \uC120\uC778\uC7A5\uC744 \uAD6C\uD574\uC8FC\uB7EC
+      \uAC11\uC2DC\uB2E4! "
+    chinese: "\u5386\u7ECF\u6F2B\u957F\u65C5\u7A0B\uFF0C\u7EC8\u4E8E\u96C6\u9F50\u4E86\u6C99\u6F20\u5B9D\u77F3\u3002\u5C31\u5728\u6B64\u65F6\uFF0C\u5927\u6279\u5B87\u5B99\u866B\u7A81\u7136\u51FA\u73B0\u5E76\u6293\u8D70\u4E86\u5C0F\u4ED9\u4EBA\u638C\uFF01\u5FEB\u53BB\u8425\u6551\u4ED6\u5427\uFF01 "
+    japanese: "\u9577\u3044\u6642\u9593\u3092\u304B\u3051\u3066\u3001\u3088\u3046\u3084\u304F\u7802\u6F20\u661F\u306E\u5B9D\u77F3\u3092\u5341\u5206\u306B\u96C6\u3081\u308B\u3053\u3068\u304C\u3067\u304D\u307E\u3057\u305F\u3002\u2026\u305D\u306E\u6642\uFF01\u5B87\u5B99\u30E0\u30B7\u306E\u5927\u7FA4\u304C\u73FE\u308C\u3066\u3001\u30B5\u30DC\u30C6\u30F3\u306E\u8D64\u3061\u3083\u3093\u3092\u9023\u308C\u53BB\u3063\u3066\u3057\u307E\u3044\u307E\u3057\u305F\uFF01\u6025\u3044\u3067\u52A9\u3051\u306B\u884C\u304D\u307E\u3057\u3087\u3046\uFF01 "
   audioClip: {fileID: 0}
   mapObject: {fileID: 6613263428121346272, guid: 5d5acb2135d382343be0d6e80c9746c7,
     type: 3}
-  bulletTextAsset: {fileID: 0}
+  patternBulletTextAsset: {fileID: 0}
+  nonPatternBulletTextAsset: {fileID: 0}
   score:
     clearValue: 50
     addValue: 0

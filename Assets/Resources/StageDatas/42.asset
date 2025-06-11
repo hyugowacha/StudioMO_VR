@@ -13,19 +13,24 @@ MonoBehaviour:
   m_Name: 42
   m_EditorClassIdentifier: 
   musicText:
-    english: Music
-    korean: "\uC74C\uC545"
-    chinese: "\u97F3\u4E50"
-    japanese: "\u304A\u3093\u304C\u304F"
+    english: 'Dungeon Descent '
+    korean: 'Dungeon Descent '
+    chinese: 'Dungeon Descent '
+    japanese: 'Dungeon Descent '
   storyText:
-    english: 
-    korean: 
-    chinese: 
-    japanese: 
+    english: 'Boom! Crash! Thunder and lightning always rage across the Maze Star.
+      Help Libby gather her courage and push forward through the terrifying storm! '
+    korean: "\uC6B0\uB974\uB974\uCF85\uCF85! \uBBF8\uAD81\uBCC4\uC740 \uC5B8\uC81C\uB098
+      \uBB34\uC2DC\uBB34\uC2DC\uD55C \uCC9C\uB465\uBC88\uAC1C\uAC00 \uB0B4\uB9AC\uCE58\uACE0
+      \uC788\uC5B4\uC694. \uB9AC\uBE44\uAC00 \uC6A9\uAE30\uB97C \uB0B4\uC5B4 \uB098\uC544\uAC08
+      \uC218 \uC788\uB3C4\uB85D \uBAA8\uB450 \uB3C4\uC640\uC8FC\uC138\uC694! "
+    chinese: "\u8F70\u9686\u9686\uFF01\u8FF7\u5BAB\u661F\u4E0A\u603B\u662F\u96F7\u58F0\u6EDA\u6EDA\u3001\u95EA\u7535\u4E0D\u65AD\u3002\u5FEB\u5E2E\u52A9\u8389\u6BD4\u9F13\u8D77\u52C7\u6C14\u7EE7\u7EED\u524D\u8FDB\u5427\uFF01 "
+    japanese: "\u30C9\u30AB\u30FC\u30F3\uFF01\u8FF7\u5BAE\u661F\u3067\u306F\u3044\u3064\u3082\u6050\u308D\u3057\u3044\u96F7\u9CF4\u304C\u8F5F\u3044\u3066\u3044\u307E\u3059\u3002\u30EA\u30D3\u304C\u52C7\u6C17\u3092\u51FA\u3057\u3066\u9032\u3081\u308B\u3088\u3046\u3001\u307F\u3093\u306A\u3067\u52A9\u3051\u3066\u3042\u3052\u307E\u3057\u3087\u3046\uFF01 "
   audioClip: {fileID: 0}
   mapObject: {fileID: 6613263428121346272, guid: 5d5acb2135d382343be0d6e80c9746c7,
     type: 3}
-  bulletTextAsset: {fileID: 0}
+  patternBulletTextAsset: {fileID: 0}
+  nonPatternBulletTextAsset: {fileID: 0}
   score:
     clearValue: 50
     addValue: 0
