@@ -122,7 +122,7 @@
                     letters[i] = "回转动作方式";
                     break;
                 case Translation.Letter.SnapTurn:
-                    letters[i] = "操纵杆回转方式";
+                    letters[i] = "瞬移";
                     break;
                 case Translation.Letter.LeftHand:
                     letters[i] = "左手";
@@ -229,11 +229,12 @@
                 case Translation.Letter.TimesUp:
                     letters[i] = "结束游戏";
                     break;
-
-                case Translation.Letter.Story:
-                    letters[i] = "";
+                case Translation.Letter.SmoosthTurn:
+                    letters[i] = "平移";
                     break;
-                
+
+
+
                 case Translation.Letter.Select:
                     letters[i] = "";
                     break;
