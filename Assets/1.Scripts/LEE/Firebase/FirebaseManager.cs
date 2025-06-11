@@ -7,7 +7,7 @@ using Firebase.Database;
 using Firebase.Extensions;
 using Photon.Pun;
 
-public class FirebaseManager : MonoBehaviour
+public class FirebaseManager : MonoBehaviourPunCallbacks
 {
     #region 파이어베이스 필드
     [Header("LoginCanvas 관련 필드")]
@@ -72,6 +72,7 @@ public class FirebaseManager : MonoBehaviour
         Authentication.Initialize(OnFirebaseInitComplete);
     }
 
+    //TODO: 임시 아이디용
     public void MasterTest()
     {
         loginInputID.text = "dhkdskrwl123@naver.com";

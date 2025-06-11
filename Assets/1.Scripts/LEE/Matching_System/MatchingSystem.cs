@@ -12,6 +12,8 @@ public class MatchingSystem : MonoBehaviourPunCallbacks
     [SerializeField] private Button backToLobbyButton;              // 로비로 돌아가기
     [SerializeField] private Button withFriendsButton;              // 친구와 버튼
     [SerializeField] private Button randomMatchingButton;           // 랜덤 매칭 버튼
+    [SerializeField] private Image disableIMGL;                     // 친구와 버튼 비활성화 시
+    [SerializeField] private Image disableIMGR;                     // 랜덤매칭 버튼 비활성화 시
 
     [Header("'친구와' 관련 필드 (PVP_CodePopUp)")]
     [SerializeField] private GameObject PVP_CodePopUp;                  // 친구와 관련 팝업 오브젝트
@@ -134,6 +136,9 @@ public class MatchingSystem : MonoBehaviourPunCallbacks
     // 랜덤매칭 버튼 클릭 시
     private void OnClickRandomMatch()
     {
+        SetButtonInteractableVisual(withFriendsButton, false);
+        SetButtonInteractableVisual(randomMatchingButton, false);
+
         matchingTime = 0;
         isMatching = true;
         isRoomPrivate = false;
@@ -171,6 +176,9 @@ public class MatchingSystem : MonoBehaviourPunCallbacks
     // 랜덤매칭 중 종료 함수
     private void CancelMatching()
     {
+        SetButtonInteractableVisual(withFriendsButton, true);
+        SetButtonInteractableVisual(randomMatchingButton, true);
+
         isMatching = false;
         RandomMatchUI.SetActive(false);
         if (PhotonNetwork.InRoom)
@@ -198,10 +206,16 @@ public class MatchingSystem : MonoBehaviourPunCallbacks
     #region '친구와' 관련 함수
     private void OnClickWithFriends()
     {
+        SetButtonInteractableVisual(withFriendsButton, false);
+        SetButtonInteractableVisual(randomMatchingButton, false);
+
         PVP_CodePopUp.SetActive(true);
     }
     private void OnClickCloseCodePopUp()
     {
+        SetButtonInteractableVisual(withFriendsButton, true);
+        SetButtonInteractableVisual(randomMatchingButton, true);
+
         PVP_CodePopUp.SetActive(false);
     }
 
@@ -248,6 +262,9 @@ public class MatchingSystem : MonoBehaviourPunCallbacks
     // 사설방 나가기
     private void OnClickCloseHostPopUp()
     {
+        SetButtonInteractableVisual(withFriendsButton, true);
+        SetButtonInteractableVisual(randomMatchingButton, true);
+
         if (PhotonNetwork.InRoom)
         {
             PhotonNetwork.LeaveRoom();
@@ -598,6 +615,17 @@ public class MatchingSystem : MonoBehaviourPunCallbacks
 
         // Firebase 세션 정리
         Authentication.SignOut(); // 이미 구현된 로그아웃 함수 호출
+    }
+    #endregion
+
+    #region 버튼 관련 함수들
+    private void SetButtonInteractableVisual(Button button, bool isInteractable)
+    {
+        // 버튼 자체 막기
+        button.interactable = isInteractable;
+
+        disableIMGL.gameObject.SetActive(!isInteractable);
+        disableIMGR.gameObject.SetActive(!isInteractable);
     }
     #endregion
 }
