@@ -53,6 +53,9 @@ public static class Authentication
         return firebaseAuth?.CurrentUser?.UserId;
     }
 
+    private static string userId;
+    public static string UserId => userId;
+
     // 세션 리스너 정리 함수: 리스너 등록 해제 및 참조 해제
     private static void CleanupSessionListener()
     {
@@ -121,20 +124,11 @@ public static class Authentication
                 }
 
                 // 유저 고유 ID
-                string userId = user.UserId;
+                userId = user.UserId;
 
                 // 세션을 위한 고유 토큰 생성
                 string sessionToken = Guid.NewGuid().ToString();
                 
-                // Photon AuthValues 설정
-                PhotonNetwork.AuthValues = new Photon.Realtime.AuthenticationValues(userId);
-
-                // Photon 연결 시도
-                PhotonNetwork.ConnectUsingSettings();
-
-                // 닉네임
-                SetPhotonNicknameFromFirebase(userId);
-
                 // 로그인한 유저의 DB 경로 참조
                 databaseReference = FirebaseDatabase.DefaultInstance.RootReference.Child(UsersTag).Child(userId);
 

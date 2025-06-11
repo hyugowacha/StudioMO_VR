@@ -164,7 +164,9 @@ public class FirebaseManager : MonoBehaviourPunCallbacks
             switch (result)
             {
                 case Authentication.State.SignInSuccess:
+
                     PhotonNetwork.AutomaticallySyncScene = true;
+
                     if (!PhotonNetwork.IsConnected)
                     {
                         Debug.Log("Photon 연결 시작");
@@ -175,6 +177,12 @@ public class FirebaseManager : MonoBehaviourPunCallbacks
                         Debug.Log("이미 Photon 연결됨 → 로비 진입");
                         PhotonNetwork.JoinLobby();
                     }
+
+                    // Photon AuthValues 설정
+                    PhotonNetwork.AuthValues = new Photon.Realtime.AuthenticationValues(Authentication.UserId);
+
+                    // 닉네임
+                    Authentication.SetPhotonNicknameFromFirebase(Authentication.UserId);
 
                     loginCanvas.gameObject.SetActive(false);
 
