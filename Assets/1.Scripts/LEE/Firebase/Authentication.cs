@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Firebase;
 using Firebase.Auth;
 using Firebase.Database;
@@ -387,5 +388,70 @@ public static class Authentication
             databaseReference.Child(SessionTag).RemoveValueAsync(); // 세션 데이터 제거
 
         CleanupSessionListener(); // 리스너 제거
+    }
+
+    // 닉네임 변경 함수
+    public static void TrySetNickname(string nickname, Action<bool> onResult)
+    {
+        nickname = nickname.Trim();
+
+        if (string.IsNullOrEmpty(nickname) || nickname.Length < 2 || nickname.Length > 8)
+        {
+            UnityEngine.Debug.LogWarning("닉네임 유효성 검사 실패");
+            onResult?.Invoke(false);
+            return;
+        }
+
+        string uid = GetCurrentUID();
+        if (string.IsNullOrEmpty(uid))
+        {
+            UnityEngine.Debug.LogError("UID 없음");
+            onResult?.Invoke(false);
+            return;
+        }
+
+        FirebaseDatabase.DefaultInstance
+            .GetReference("Users")
+            .OrderByChild("Nickname")
+            .EqualTo(nickname)
+            .GetValueAsync()
+            .ContinueWithOnMainThread(task =>
+            {
+                if (task.IsFaulted || task.IsCanceled || task.Result == null)
+                {
+                    UnityEngine.Debug.LogError("닉네임 중복 확인 실패 또는 결과 없음");
+                    onResult?.Invoke(false);
+                    return;
+                }
+
+                if (task.Result.Exists)
+                {
+                    UnityEngine.Debug.LogWarning("중복된 닉네임");
+                    onResult?.Invoke(false);
+                    return;
+                }
+
+                // 닉네임 저장
+                FirebaseDatabase.DefaultInstance
+                    .RootReference
+                    .Child("Users")
+                    .Child(uid)
+                    .Child("Nickname")
+                    .SetValueAsync(nickname)
+                    .ContinueWithOnMainThread(saveTask =>
+                    {
+                        if (saveTask.IsFaulted || saveTask.IsCanceled)
+                        {
+                            UnityEngine.Debug.LogError("닉네임 저장 실패");
+                            onResult?.Invoke(false);
+                        }
+                        else
+                        {
+                            UnityEngine.Debug.Log("닉네임 저장 성공");
+                            PhotonNetwork.NickName = nickname;
+                            onResult?.Invoke(true);
+                        }
+                    });
+            });
     }
 }

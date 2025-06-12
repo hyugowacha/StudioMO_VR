@@ -149,5 +149,22 @@ public static class UserGameData
                 UserGameData.EquippedProfile = profileName;
             });
     }
+
+    // 리소스 폴더안 스킨 데이터 가져오기
+    public static List<SkinData> GetUnlockedSkinData()
+    {
+        List<SkinData> result = new();
+        SkinData[] allSkins = Resources.LoadAll<SkinData>("SkinData");
+
+        foreach (SkinData skin in allSkins)
+        {
+            if (UnlockedSkins.Contains(skin.skinID))
+            {
+                result.Add(skin);
+            }
+        }
+
+        return result;
+    }
     #endregion
 }

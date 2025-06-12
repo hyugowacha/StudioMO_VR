@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 
@@ -8,37 +9,59 @@ using DG.Tweening;
 
 public class HitBox : MonoBehaviour
 {
-    private Tween tween = null;
+    private Action<Collider, Vector3> action = null;
+    private Dictionary<Collider, Vector3> colliders = null;
 
-    public event Action<HitBox, Mineral, Vector3> action = null;
+    private static readonly float ImpactDistance = 0.1f; //충돌 판정 거리
+    private static readonly float ImpactDuration = 0.1f; //충돌 판정 지속 시간
+    private static readonly string TargetTag = "Interactable";
 
-    private static readonly string ContactTagName = "Interactable";
-
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter(Collider collider)
     {
-        if (other.tag == ContactTagName && tween == null)
+        if (collider.tag == TargetTag && colliders != null && colliders.ContainsKey(collider) == false)
         {
-            Vector3 position = this.transform.position;
-            Transform transform = other.transform;
-            while (true)
+            if (colliders.Count < 1)
             {
-                action?.Invoke(this, transform.GetComponent<Mineral>(), position);
-                if(transform.parent == null)
+                DOVirtual.DelayedCall(ImpactDuration, () =>
                 {
-                    break;
-                }
-                else
-                {
-                    transform = transform.parent;
-                }
+                    if (colliders != null)
+                    {
+                        colliders.Clear();
+                    }
+                });
             }
+            colliders.Add(collider, transform.position);
         }
     }
 
-    //일시적으로 충돌 판정을 쉬어주는 메서드
-    public void Rest(float duration)
+    private void OnTriggerStay(Collider collider)
     {
-        tween.Kill();
-        tween = DOVirtual.DelayedCall(duration, () => { tween = null; });
+        if (collider.tag == TargetTag && colliders != null && colliders.ContainsKey(collider) == true && ImpactDistance <= Vector3.Distance(colliders[collider], transform.position))
+        {
+            action?.Invoke(collider, transform.position);
+            colliders.Remove(collider);
+        }
+    }
+
+    private void OnTriggerExit(Collider collider)
+    {
+        if (collider.tag == TargetTag && colliders != null && colliders.ContainsKey(collider) == true)
+        {
+            action?.Invoke(collider, transform.position);
+            colliders.Remove(collider);
+        }
+    }
+
+    public void Set(Action<Collider, Vector3> action)
+    {
+        this.action = action;
+        if(this.action != null)
+        {
+            colliders = new Dictionary<Collider, Vector3>();
+        }
+        else
+        {
+            colliders = null;
+        }
     }
 }
