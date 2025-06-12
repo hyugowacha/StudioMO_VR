@@ -11,6 +11,7 @@ public class FirebaseManager : MonoBehaviourPunCallbacks
 {
     #region 파이어베이스 필드
     [Header("LoginCanvas 관련 필드")]
+    [SerializeField] private GameObject lobbyUI;            // 로비 화면
     [SerializeField] private Canvas loginCanvas;            // 로그인 캔버스
     [SerializeField] private TMP_InputField loginInputID;   // ID 입력창
     [SerializeField] private TMP_InputField loginInputPW;   // 비밀번호 입력창
@@ -187,6 +188,7 @@ public class FirebaseManager : MonoBehaviourPunCallbacks
                     PhotonNetwork.AuthValues = new Photon.Realtime.AuthenticationValues(Authentication.UserId);
 
                     loginCanvas.gameObject.SetActive(false);
+                    lobbyUI.gameObject.SetActive(true);
 
                     break;
                 case Authentication.State.SignInAlready:

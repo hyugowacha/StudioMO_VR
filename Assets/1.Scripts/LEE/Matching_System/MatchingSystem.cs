@@ -457,10 +457,6 @@ public class MatchingSystem : MonoBehaviourPunCallbacks
         }
 
         PhotonNetwork.LocalPlayer.SetCustomProperties(playerProps);
-
-        // UI 전환 등 로비 관련 처리
-        PVPModeUI.SetActive(true);
-        // TODO: ▲ 추후 삭제 요청. 테스트용 코드
     }
 
     // 방 입장 실패 시
