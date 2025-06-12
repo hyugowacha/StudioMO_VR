@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Firebase;
 using Firebase.Auth;
 using Firebase.Database;
@@ -45,6 +46,10 @@ public static class Authentication
 
     // 게임 테스트용 코인
     private static int testStartCoin = 9999;
+
+    // 유저 아이디 정보
+    private static string userId;
+    public static string UserId => userId;
     #endregion
 
     // UID 안전하게 가져오는 유틸 메서드
@@ -121,7 +126,7 @@ public static class Authentication
                 }
 
                 // 유저 고유 ID
-                string userId = user.UserId;
+                userId = user.UserId;
 
                 // 세션을 위한 고유 토큰 생성
                 string sessionToken = Guid.NewGuid().ToString();
@@ -161,37 +166,21 @@ public static class Authentication
                 // 회원가입 성공 → 사용자 UID 획득
                 string userId = task.Result.User.UserId;
 
-                // 전체 맵 개수 (총 50개)
-                const int totalMaps = 50;
-
-                // [1] 각 맵별 별 획득 기록 초기화 (0개부터 시작)
-                Dictionary<string, object> mapClearData = new();
-
-                // [2] 각 맵별 잠금 여부 초기화 (0번 맵만 해금 상태)
-                Dictionary<string, object> mapUnlockData = new();
-
-                for (int i = 0; i < totalMaps; i++)
-                {
-                    string key = $"Map_{i}";
-                    mapClearData[key] = 0;         // 별 획득 수: 초기값 0
-                    mapUnlockData[key] = (i == 0); // 0번 맵만 true, 나머지는 false
-                }
-
-                // [3] 유저의 전체 데이터 딕셔너리 구성
+                // 유저의 전체 데이터 딕셔너리 구성
                 Dictionary<string, object> userData = new Dictionary<string, object>
-            {
-                { "ID", ID },                                           // 이메일(ID)
-                { "SchoolName", hintSchool },                           // 학교 이름 (계정 찾기용)
-                { "Session", "" },                                      // 세션 정보 (빈 값으로 시작)
-                { "Coins", testStartCoin },                             // 시작 코인
-                { "Stars", 0 },                                         // 상점에서 사용하는 실제 별 수
-                { "UnlockedSkins", new List<string> { "SkinData_Poorin" } }, // 기본 스킨 1개 지급
-                { "EquippedSkin", "SkinData_Poorin" },                  // 기본 장착 스킨
-                { "MapClearData", mapClearData },                       // 맵별 최고 별 기록
-                { "MapUnlockData", mapUnlockData }                      // 맵별 해금 여부
-            };
+                {
+                    { "ID", ID },                                               // 이메일(ID)
+                    { "SchoolName", hintSchool },                               // 학교 이름 (계정 찾기용)
+                    { "Session", "" },                                          // 세션 정보 (빈 값으로 시작)
+                    { "Coins", testStartCoin },                                 // 시작 코인
+                    { "Stars", 0 },                                             // 상점에서 사용하는 실제 별 수
+                    { "UnlockedSkins", new List<string> { "SkinData_Libee" } }, // 기본 스킨 1개 지급
+                    { "EquippedProfile", "SkinData_Libee" },               // 기본 프로필 (Sprite 이름 또는 ID)
+                    { "EquippedSkin", "SkinData_Libee" },                  // 기본 장착 스킨
+                    { "MapHighScore", new List<int>(new int[50])}          // 각 맵의 최고 점수
+                };
 
-                // [4] Firebase Realtime Database에 사용자 데이터 저장
+                // Firebase Realtime Database에 사용자 데이터 저장
                 FirebaseDatabase.DefaultInstance.RootReference
                     .Child("Users")
                     .Child(userId)
@@ -352,8 +341,6 @@ public static class Authentication
             if (resultData != null && resultData.TryGetValue(TokenTag, out object tokenObj) &&
                 tokenObj.ToString() == sessionToken)
             {
-                // 로그인 성공 (세션 등록 성공한 경우)
-                PhotonNetwork.NickName = email;
                 databaseReference.Child(SessionTag).OnDisconnect().SetValue(""); // 연결 끊기면 자동 삭제
                 callback?.Invoke(State.SignInSuccess);
                 RegisterSessionListener(sessionToken); // 리스너 등록
@@ -401,5 +388,70 @@ public static class Authentication
             databaseReference.Child(SessionTag).RemoveValueAsync(); // 세션 데이터 제거
 
         CleanupSessionListener(); // 리스너 제거
+    }
+
+    // 닉네임 변경 함수
+    public static void TrySetNickname(string nickname, Action<bool> onResult)
+    {
+        nickname = nickname.Trim();
+
+        if (string.IsNullOrEmpty(nickname) || nickname.Length < 2 || nickname.Length > 8)
+        {
+            UnityEngine.Debug.LogWarning("닉네임 유효성 검사 실패");
+            onResult?.Invoke(false);
+            return;
+        }
+
+        string uid = GetCurrentUID();
+        if (string.IsNullOrEmpty(uid))
+        {
+            UnityEngine.Debug.LogError("UID 없음");
+            onResult?.Invoke(false);
+            return;
+        }
+
+        FirebaseDatabase.DefaultInstance
+            .GetReference("Users")
+            .OrderByChild("Nickname")
+            .EqualTo(nickname)
+            .GetValueAsync()
+            .ContinueWithOnMainThread(task =>
+            {
+                if (task.IsFaulted || task.IsCanceled || task.Result == null)
+                {
+                    UnityEngine.Debug.LogError("닉네임 중복 확인 실패 또는 결과 없음");
+                    onResult?.Invoke(false);
+                    return;
+                }
+
+                if (task.Result.Exists)
+                {
+                    UnityEngine.Debug.LogWarning("중복된 닉네임");
+                    onResult?.Invoke(false);
+                    return;
+                }
+
+                // 닉네임 저장
+                FirebaseDatabase.DefaultInstance
+                    .RootReference
+                    .Child("Users")
+                    .Child(uid)
+                    .Child("Nickname")
+                    .SetValueAsync(nickname)
+                    .ContinueWithOnMainThread(saveTask =>
+                    {
+                        if (saveTask.IsFaulted || saveTask.IsCanceled)
+                        {
+                            UnityEngine.Debug.LogError("닉네임 저장 실패");
+                            onResult?.Invoke(false);
+                        }
+                        else
+                        {
+                            UnityEngine.Debug.Log("닉네임 저장 성공");
+                            PhotonNetwork.NickName = nickname;
+                            onResult?.Invoke(true);
+                        }
+                    });
+            });
     }
 }

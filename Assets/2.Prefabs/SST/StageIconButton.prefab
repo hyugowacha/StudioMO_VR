@@ -637,7 +637,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 3710417463786230111}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 5167441377710913934}
+        m_TargetAssemblyTypeName: StageIconButton, Assembly-CSharp
+        m_MethodName: OnClickStageButton
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &5167441377710913934
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -650,7 +662,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a14ff61b678924e40bd24d23106beb84, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  testScore: 0
+  stageIconButton: {fileID: 7894747184781019961}
   emptyStars:
   - {fileID: 9192669304083393182}
   - {fileID: 3535344302771564224}
