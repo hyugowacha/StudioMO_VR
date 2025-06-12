@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 4114510307101525242}
   m_Layer: 0
   m_Name: Mineral_Purple
-  m_TagString: Interactable
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -105,7 +105,7 @@ MonoBehaviour:
   observableSearch: 2
   ObservedComponents:
   - {fileID: 4114510307101525242}
-  sceneViewId: 0
+  sceneViewId: 1
   InstantiationId: 0
   isRuntimeInstantiated: 0
 --- !u!114 &4114510307101525242
@@ -123,22 +123,17 @@ MonoBehaviour:
   maxValue: 3
   acquisitionAmount: 10
   chargingTime: 3
-  canvasObject: {fileID: 4542825196714211797}
-  progressSlider: {fileID: 9061945153369199131}
-  progressFadeTime: 0.8
-  pieceOfMinerals:
+  crystals:
+  - {fileID: 5989636416914842833}
   - {fileID: 5157004185185511540}
   - {fileID: 6083663732394570175}
   - {fileID: 5852908212687308927}
-  pieceOfTransform:
-  - {fileID: 6752817447028781548}
-  - {fileID: 3114668994086138245}
-  - {fileID: 7683176578800674396}
-  hidePieceGroups: []
-  debris: {fileID: 3316325148399143489}
+  progressSlider: {fileID: 9061945153369199131}
+  progressFadeTime: 0.8
   sliderFillSpeed: 0.3
-  hitParticle: {fileID: 0}
-  dustParticle: {fileID: 0}
+  hitParticle: {fileID: 2394219387133387349, guid: db8bc4c67b3d49741b20fd480e29eff6,
+    type: 3}
+  debris: {fileID: 3316325148399143489}
 --- !u!1 &846643241137135807
 GameObject:
   m_ObjectHideFlags: 0
@@ -5187,7 +5182,7 @@ GameObject:
   - component: {fileID: 9037961626498956326}
   m_Layer: 0
   m_Name: SM_LP_Mineral_3_Piece_6
-  m_TagString: Untagged
+  m_TagString: Interactable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -10612,7 +10607,7 @@ GameObject:
   - component: {fileID: 8819624665358242980}
   m_Layer: 0
   m_Name: SM_LP_Mineral_3_Piece_4
-  m_TagString: Untagged
+  m_TagString: Interactable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -10821,7 +10816,7 @@ GameObject:
   - component: {fileID: 6532808748326269906}
   m_Layer: 0
   m_Name: SM_LP_Mineral_3_Piece_5
-  m_TagString: Untagged
+  m_TagString: Interactable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -11090,7 +11085,7 @@ GameObject:
   - component: {fileID: 6406619040633867699}
   m_Layer: 0
   m_Name: SM_LP_Mineral_3_Piece_7
-  m_TagString: Untagged
+  m_TagString: Interactable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

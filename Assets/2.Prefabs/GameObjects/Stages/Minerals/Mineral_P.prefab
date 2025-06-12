@@ -589,7 +589,7 @@ GameObject:
   - component: {fileID: 6095946080245421245}
   m_Layer: 0
   m_Name: SM_LP_Mineral_4_Piece_5
-  m_TagString: Untagged
+  m_TagString: Interactable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -10512,7 +10512,7 @@ GameObject:
   - component: {fileID: 1683083043496217408}
   m_Layer: 0
   m_Name: SM_LP_Mineral_4_Piece_8
-  m_TagString: Untagged
+  m_TagString: Interactable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -10780,7 +10780,7 @@ GameObject:
   - component: {fileID: 4933345843988421437}
   m_Layer: 0
   m_Name: SM_LP_Mineral_4_Piece_7
-  m_TagString: Untagged
+  m_TagString: Interactable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -10989,7 +10989,7 @@ GameObject:
   - component: {fileID: 7141936424189692076}
   m_Layer: 0
   m_Name: Mineral_P
-  m_TagString: Interactable
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -11097,40 +11097,18 @@ MonoBehaviour:
   maxValue: 5
   acquisitionAmount: 10
   chargingTime: 3
-  canvasObject: {fileID: 1494602641645501154}
+  crystals:
+  - {fileID: 603437822019991364}
+  - {fileID: 4153334527002901221}
+  - {fileID: 5934736273967769886}
+  - {fileID: 8920034988681150276}
+  - {fileID: 5087010936827062611}
   progressSlider: {fileID: 2678582064458923126}
   progressFadeTime: 0.8
-  pieceOfMinerals:
-  - {fileID: 5087010936827062611}
-  - {fileID: 5934736273967769886}
-  - {fileID: 603437822019991364}
-  - {fileID: 8920034988681150276}
-  - {fileID: 4153334527002901221}
-  pieceOfTransform:
-  - {fileID: 5056217273552254472}
-  - {fileID: 3316860829436121629}
-  - {fileID: 7243835424268510881}
-  - {fileID: 890477640620885062}
-  - {fileID: 6120353364782463206}
-  hidePieceGroups:
-  - hideBelowRatio: 0.5
-    targetPieces:
-    - {fileID: 80578379478198939}
-    - {fileID: 5934736273967769886}
-  - hideBelowRatio: 0.25
-    targetPieces:
-    - {fileID: 5087010936827062611}
-    - {fileID: 603437822019991364}
-  - hideBelowRatio: 0
-    targetPieces:
-    - {fileID: 3545796615426066651}
-    - {fileID: 9156526512552703658}
-    - {fileID: 8920034988681150276}
-    - {fileID: 4153334527002901221}
-  debris: {fileID: 5289554211961775082}
   sliderFillSpeed: 0.3
-  hitParticle: {fileID: 0}
-  dustParticle: {fileID: 0}
+  hitParticle: {fileID: 2394219387133387349, guid: db8bc4c67b3d49741b20fd480e29eff6,
+    type: 3}
+  debris: {fileID: 5289554211961775082}
 --- !u!1 &8229890638115932177
 GameObject:
   m_ObjectHideFlags: 0
@@ -11146,7 +11124,7 @@ GameObject:
   - component: {fileID: 6997113715810354666}
   m_Layer: 0
   m_Name: SM_LP_Mineral_4_Piece_6
-  m_TagString: Untagged
+  m_TagString: Interactable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -11280,7 +11258,7 @@ GameObject:
   - component: {fileID: 7501088920905336000}
   m_Layer: 0
   m_Name: SM_LP_Mineral_4_Piece_4
-  m_TagString: Untagged
+  m_TagString: Interactable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

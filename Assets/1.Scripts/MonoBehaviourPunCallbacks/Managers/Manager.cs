@@ -113,7 +113,7 @@ public abstract class Manager : MonoBehaviourPunCallbacks
         }
         if (rightActionBasedController != null && rightActionBasedController.activateAction != null)
         {
-            //rightActionBasedController.activateAction.reference.Set(OnRightFunction, OnRightFunction, value);
+            rightActionBasedController.activateAction.reference.Set(OnRightFunction, OnRightFunction, value);
         }
         for(int i = 0; i < primaryInputActionReferences.Length; i++)
         {
