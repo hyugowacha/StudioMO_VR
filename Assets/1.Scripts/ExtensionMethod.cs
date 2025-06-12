@@ -231,6 +231,14 @@ public static class ExtensionMethod
         }
     }
 
+    public static void SetActive(this Image image, bool value)
+    {
+        if(image != null)
+        {
+            image.gameObject.SetActive(value);
+        }
+    }
+
     public static void Fill(this Image image, Color color, float value)
     {
         if (image != null)

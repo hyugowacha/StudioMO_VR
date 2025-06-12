@@ -57,7 +57,7 @@ public static class SlowMotion
         }
         get
         {
-            if(currentTween != null && currentTween.IsPlaying() == false && currentTween.Elapsed() < currentTween.Duration())
+            if(currentTween.IsActive() == true && currentTween.IsPlaying() == false && currentTween.Elapsed() < currentTween.Duration())
             {
                 return 0;
             }
