@@ -55,14 +55,12 @@ public class BattleManager : Manager
     [SerializeField]
     private RankingPanel rankingPanel;                          //랭킹 표시 패널
 
-
     private const string Time = "time"; //방의 시간 속성 키
-
 
     System.Collections.IEnumerator Test()
     {
         PhotonNetwork.ConnectUsingSettings();
-        yield return new WaitUntil(() => PhotonNetwork.NetworkClientState == Photon.Realtime.ClientState.ConnectedToMasterserver);
+        yield return new WaitUntil(() => PhotonNetwork.NetworkClientState == ClientState.ConnectedToMasterserver);
         PhotonNetwork.JoinLobby();
         yield return new WaitUntil(() => PhotonNetwork.InLobby);
         PhotonNetwork.JoinRandomOrCreateRoom();
@@ -98,7 +96,7 @@ public class BattleManager : Manager
             }
         }
         Room room = PhotonNetwork.CurrentRoom;
-        rankingPanel?.Set(room.Players);
+        rankingPanel?.Set(room.Players); //랭킹 패널 갱신
         if (PhotonNetwork.IsMasterClient == false)
         {
             OnRoomPropertiesUpdate(room.CustomProperties);
@@ -254,6 +252,21 @@ public class BattleManager : Manager
                 }
             }
         }
+    }
+
+    public override void OnPlayerEnteredRoom(Player player)
+    {
+        //새로운 멤버로 인하여 랭킹패널 갱신
+    }
+
+    public override void OnPlayerLeftRoom(Player player)
+    {
+        if (bestCharacter == null)
+        {
+            //최고 플레이어가 사라질 시
+        }
+        //랭킹패널 갱신
+        //혼자 남으면 이긴거
     }
 
     //입력 시스템과 관련된 바인딩을 연결 및 해제에 사용하는 메서드 
