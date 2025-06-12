@@ -20,6 +20,9 @@ public class LobbyCanvasCtrl : MonoBehaviour
     [SerializeField] private GameObject shopPanel;
     [SerializeField] private GameObject optionPanel;
 
+    [Header("대전모드 UI 전체")]
+    [SerializeField] private MatchingSystem matchingSystem;
+
     private void Start()
     {
         // 초기화
@@ -49,8 +52,15 @@ public class LobbyCanvasCtrl : MonoBehaviour
 
     private void OnClickStageMode()
     {
-        DeactivateAllPanels();
-        stageSelectPanel.SetActive(true);
+        if (matchingSystem.IsRandomMatchUIActive)
+        {
+            matchingSystem.RandomMatchError.SetActive(true);
+        }
+        else
+        {
+            DeactivateAllPanels();
+            stageSelectPanel.SetActive(true);
+        }
     }
 
     private void OnClickVersusMode()

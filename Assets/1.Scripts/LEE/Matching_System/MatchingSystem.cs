@@ -9,6 +9,7 @@ public class MatchingSystem : MonoBehaviourPunCallbacks
 {
     #region MatchingSystem의 필드
     [Header("PVPModeUI 팝업 관련 필드 (PVPModeUI)")]
+    [SerializeField] private GameObject LobbyUI;                    // 로비 UI
     [SerializeField] private GameObject PVPModeUI;                  // 매칭 기본 UI
     [SerializeField] private Button backToLobbyButton;              // 로비로 돌아가기
     [SerializeField] private Button withFriendsButton;              // 친구와 버튼
@@ -57,14 +58,15 @@ public class MatchingSystem : MonoBehaviourPunCallbacks
     [SerializeField] private TMP_Text timerText;                    // 대기 시간
     [SerializeField] private TMP_Text playerCountText;              // 총 참가 인원 수
     [SerializeField] private Button RandomMatchUI_CancelButton;     // 매칭중 취소 버튼
+    public bool IsRandomMatchUIActive = false;
 
     private float matchingTime = 0f;
     private bool isMatching = false;
 
     [Header("매칭 종료 팝업 관련 필드 (RandomMatchError)")]
-    [SerializeField] private GameObject RandomMatchError;   // 매칭 종료 선택 팝업 UI
-    [SerializeField] private Button RandomMatchError_Yes;   // 매칭 종료 버튼
-    [SerializeField] private Button RandomMatchError_No;    // 현상 유지 버튼
+    [SerializeField] public GameObject RandomMatchError;   // 매칭 종료 선택 팝업 UI
+    [SerializeField] public Button RandomMatchError_Yes;   // 매칭 종료 버튼
+    [SerializeField] public Button RandomMatchError_No;    // 현상 유지 버튼
 
     [Header("매칭 실패 팝업 관련 필드 (MatchingFail)")]
     [SerializeField] private GameObject MatchingFail;       // 매칭 실패 시 팝업 UI
@@ -129,7 +131,8 @@ public class MatchingSystem : MonoBehaviourPunCallbacks
     #region 로비로 나가기 함수
     private void OnClickBackToLobby()
     {
-        // TODO: 로비로 나가기. 어차피 서버는 로그인으로 이동할 예정이니 ui부분만 나중에 지정하기.
+        PVPModeUI.SetActive(false);
+        LobbyUI.SetActive(true);
     }
     #endregion
 
@@ -211,12 +214,14 @@ public class MatchingSystem : MonoBehaviourPunCallbacks
         SetButtonInteractableVisual(randomMatchingButton, false);
 
         PVP_CodePopUp.SetActive(true);
+        backToLobbyButton.interactable = false;
     }
     private void OnClickCloseCodePopUp()
     {
         SetButtonInteractableVisual(withFriendsButton, true);
         SetButtonInteractableVisual(randomMatchingButton, true);
 
+        backToLobbyButton.interactable = true;
         PVP_CodePopUp.SetActive(false);
     }
 
@@ -265,6 +270,7 @@ public class MatchingSystem : MonoBehaviourPunCallbacks
     {
         SetButtonInteractableVisual(withFriendsButton, true);
         SetButtonInteractableVisual(randomMatchingButton, true);
+        backToLobbyButton.interactable = true;
 
         if (PhotonNetwork.InRoom)
         {
@@ -501,6 +507,7 @@ public class MatchingSystem : MonoBehaviourPunCallbacks
         else
         {
             RandomMatchUI.SetActive(true);
+            IsRandomMatchUIActive = true;
         }
 
         // 공용방이고, 4명이 다 차면 게임 시작
@@ -541,9 +548,6 @@ public class MatchingSystem : MonoBehaviourPunCallbacks
 
         // 플레이어 정보 초기화
         ResetAllPlayerUI();
-
-        // 로비 UI 다시 표시
-        PVPModeUI.SetActive(true);
     }
     #endregion
 

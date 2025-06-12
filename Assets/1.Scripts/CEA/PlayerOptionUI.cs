@@ -8,6 +8,11 @@ using UnityEngine.UI;
 public class PlayerOptionUI : MonoBehaviour
 {
     #region 필드
+    [Header("옵션창 UI")]
+    [SerializeField] private GameObject optionUI;
+    [SerializeField] private GameObject lobbyUI;
+    [SerializeField] protected Button closeOptionUI;
+
     [Header("리비 스킨 관련")]
     [SerializeField] private Image libeeProfile;
     [SerializeField] private Button libeeSelect;
@@ -44,9 +49,6 @@ public class PlayerOptionUI : MonoBehaviour
     // 기본 스킨 데이터
     private string currentlySelectedSkin = "SkinData_Libee";
 
-    //TODO: 네트워크 기반으로 변경할 때 대비해서, 데이터 저장 방식 바꾸는것 고려해야함
-    //(데이터 저장 방법 유지 시 하드 코딩된 부분 중앙 집중식 관리로 바꾸는 편이 좋아보임)
-
     private string turnMethod = "Snap"; //기본값
     private const string TURN_PREFS_KEY = "TurnMethod"; //회전 방식 저장용 키
 
@@ -60,6 +62,8 @@ public class PlayerOptionUI : MonoBehaviour
     {
         //프로필 전환에 쓰는 배열
         profileImages = new Image[] { libeeProfile, catProfile, bunnyProfile, sharkProfile };
+
+        closeOptionUI.onClick.AddListener(CloseOptionUI);
     }
 
     private void OnEnable()
@@ -251,6 +255,13 @@ public class PlayerOptionUI : MonoBehaviour
             }
             Debug.Log("닉네임 저장 성공!");
         });
+
+        CloseOptionUI();
     }
 
+    public void CloseOptionUI()
+    {
+        optionUI.SetActive(false);
+        lobbyUI.SetActive(true);
+    }
 }
