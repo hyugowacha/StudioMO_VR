@@ -1,3 +1,4 @@
+using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -23,10 +24,11 @@ public class PlayerOptionUI : MonoBehaviour
     [SerializeField] private Image sharkProfile;
     [SerializeField] private Button sharkSelect;
 
-    [Header("해당 스킨 보유 여부 bool")]
-    [SerializeField] private bool hasCat;
-    [SerializeField] private bool hasBunny;
-    [SerializeField] private bool hasShark;
+    // 스킨 불값
+    bool hasLibee;
+    bool hasCat;
+    bool hasBunny;
+    bool hasShark;
 
     [Header("스냅/스무스 전환 버튼")]
     [SerializeField] private Button snapButton;
@@ -39,20 +41,17 @@ public class PlayerOptionUI : MonoBehaviour
     [Header("닉네임 입력 필드")]
     [SerializeField] private TMP_InputField nicknameField;
 
+    // 기본 스킨 데이터
+    private string currentlySelectedSkin = "SkinData_Libee";
+
     //TODO: 네트워크 기반으로 변경할 때 대비해서, 데이터 저장 방식 바꾸는것 고려해야함
     //(데이터 저장 방법 유지 시 하드 코딩된 부분 중앙 집중식 관리로 바꾸는 편이 좋아보임)
-
-    private string selectedSkin = "Libee"; //기본값
-    private const string SKIN_PREFS_KEY = "SelectedSkin"; //스킨 저장용 키
 
     private string turnMethod = "Snap"; //기본값
     private const string TURN_PREFS_KEY = "TurnMethod"; //회전 방식 저장용 키
 
     private string usedHand = "Right"; //기본값
     private const string HAND_PREFS_KEY = "UsedHand"; //사용 손 저장용 키
-
-    private string nickname;
-    private const string NICKNAME_PREFS_KEY = "PlayerNickname"; //닉네임 저장용 키
 
     private Image[] profileImages;
     #endregion
@@ -65,91 +64,109 @@ public class PlayerOptionUI : MonoBehaviour
 
     private void OnEnable()
     {
-        UpdateSkinInfo();
+        nicknameField.text = PhotonNetwork.NickName;
 
-        nickname = PlayerPrefs.GetString(NICKNAME_PREFS_KEY, "Player");
-        Debug.Log($"불러온 닉네임: {nickname}");
-        nicknameField.text = nickname;
+        // Firebase에서 데이터 로드 후, 해금된 스킨 적용
+        UserGameData.Load(() =>
+        {
+            ApplyUnlockedSkinsFromUserData();
+            SelectSkin(UserGameData.EquippedSkin);  // 장착된 스킨 자동 선택
+        });
 
-        // 스킨 로드 및 적용
-        string savedSkin = PlayerPrefs.GetString(SKIN_PREFS_KEY, "Libee");
-        SelectSkin(savedSkin);
-
-        // 회전 방식 로드 및 적용
+        // 회전 및 손잡이 관련 정보는 로컬에 저장되므로 그대로 적용
         bool isSnap = PlayerPrefs.GetString(TURN_PREFS_KEY, "Snap") == "Snap";
         ChangeTurnMethod(isSnap);
 
-        // 손잡이 로드 및 적용
         bool isRight = PlayerPrefs.GetString(HAND_PREFS_KEY, "Right") == "Right";
         ChangeHand(isRight);
     }
-
 
     /// <summary>
     /// 스킨 변경 함수
     /// </summary>
     public void SelectSkin(string skinName)
     {
-        foreach (var image in profileImages) { image.gameObject.SetActive(false); }
-        libeeProfile.gameObject.SetActive(true);
+        foreach (var image in profileImages)
+            image.gameObject.SetActive(false);
 
-        switch(skinName)
+        switch (skinName)
         {
-            case "Cat":
+            case "SkinData_Libee":
+                if (!hasLibee) return;
+                libeeProfile.gameObject.SetActive(true);
+                break;
+            case "SkinData_Cat":
+                if (!hasCat) return;
                 catProfile.gameObject.SetActive(true);
                 break;
-
-            case "Bunny":
+            case "SkinData_Bunny":
+                if (!hasBunny) return;
                 bunnyProfile.gameObject.SetActive(true);
                 break;
-
-            case "Shark":
+            case "SkinData_Fish":
+                if (!hasShark) return;
                 sharkProfile.gameObject.SetActive(true);
                 break;
-                
             default:
-                libeeProfile.gameObject.SetActive(true);
-                selectedSkin = "Libee";
-                break;
+                return;
         }
 
-        selectedSkin = skinName;
-    } 
-
-    #region 버튼용
-    public void SelectLibee()
-    {
-        SelectSkin("Libee");
+        // 대신 로컬 변수로 선택한 스킨 기억
+        currentlySelectedSkin = skinName;
     }
 
-    public void SelectCat()
+    /// <summary>
+    /// 파이어베이스 스킨 정보 가져오기
+    /// </summary>
+    public void ApplyUnlockedSkinsFromUserData()
     {
-        SelectSkin("Cat");
+        var unlockedSkins = UserGameData.GetUnlockedSkinData();
+
+        foreach (var skin in unlockedSkins)
+        {
+            switch (skin.skinID)
+            {
+                case "SkinData_Libee":
+                    hasLibee = true;
+                    libeeProfile.sprite = skin.profile;
+                    break;
+                case "SkinData_Cat":
+                    hasCat = true;
+                    catProfile.sprite = skin.profile;
+                    break;
+                case "SkinData_Bunny":
+                    hasBunny = true;
+                    bunnyProfile.sprite = skin.profile;
+                    break;
+                case "SkinData_Shark":
+                    hasShark = true;
+                    sharkProfile.sprite = skin.profile;
+                    break;
+            }
+        }
+
+        UpdateSkinInfo();
     }
 
-    public void SelectBunny()
-    {
-        SelectSkin("Bunny");
-    }
-
-    public void SelectShark()
-    {
-        SelectSkin("Shark");
-    }
+    #region 각 스킨 버튼용
+    public void SelectLibee() => SelectSkin("SkinData_Libee");
+    public void SelectCat() => SelectSkin("SkinData_Cat");
+    public void SelectBunny() => SelectSkin("SkinData_Bunny");
+    public void SelectShark() => SelectSkin("SkinData_Fish");
     #endregion
-
 
     /// <summary>
     /// 스킨 정보(보유 여부) 업데이트 함수
     /// </summary>
     public void UpdateSkinInfo()
     {
+        libeeSelect.gameObject.SetActive(hasLibee);
         catSelect.gameObject.SetActive(hasCat);
         bunnySelect.gameObject.SetActive(hasBunny);
         sharkSelect.gameObject.SetActive(hasShark);
     }
 
-
+    #region 손목 관련 함수들
     /// <summary>
     /// 스냅/스무스 변경 함수
     /// </summary>
@@ -210,19 +227,30 @@ public class PlayerOptionUI : MonoBehaviour
     {
         ChangeHand(false);
     }
+    #endregion
 
     /// <summary>
     /// 플레이어 옵션 저장 함수
     /// </summary>
     public void SavePlayerOption()
     {
-        nickname = nicknameField.text;
+        string newNickname = nicknameField.text;
 
-        PlayerPrefs.SetString(SKIN_PREFS_KEY, selectedSkin);
         PlayerPrefs.SetString(TURN_PREFS_KEY, turnMethod);
         PlayerPrefs.SetString(HAND_PREFS_KEY, usedHand);
-        PlayerPrefs.SetString(NICKNAME_PREFS_KEY, nickname);
         PlayerPrefs.Save();
+
+        UserGameData.SetEquippedSkin(currentlySelectedSkin);
+
+        Authentication.TrySetNickname(newNickname, success =>
+        {
+            if (!success)
+            {
+                Debug.LogWarning("닉네임 저장 실패 또는 중복됨.");
+                return;
+            }
+            Debug.Log("닉네임 저장 성공!");
+        });
     }
-    
+
 }
