@@ -229,11 +229,11 @@ public static class English
                 case Translation.Letter.TimesUp:
                     letters[i] = "Time's up";
                     break;
-
-                case Translation.Letter.Story:
-                    letters[i] = "STORY";
+                case Translation.Letter.SmoosthTurn:
+                    letters[i] = "Smoosth Turn";
                     break;
-                
+
+
                 case Translation.Letter.Select:
                     letters[i] = "SELECT";
                     break;

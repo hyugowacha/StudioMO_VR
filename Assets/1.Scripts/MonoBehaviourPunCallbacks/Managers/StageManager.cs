@@ -2,7 +2,6 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
-using UnityEngine.XR.Interaction.Toolkit;
 using DG.Tweening;
 using Photon.Pun;
 
@@ -17,8 +16,6 @@ public class StageManager : Manager
     public static readonly string SceneName = "StageScene";
 
     [Header("스테이지 매니저 구간"), SerializeField]
-    private ActionBasedSnapTurnProvider snapTurnProvider;
-    [SerializeField]
     private Character character;                                //조종할 캐릭터
     [SerializeField]
     private Vector3 leftHandOffset;                             //왼쪽 손잡이 간격
@@ -71,20 +68,17 @@ public class StageManager : Manager
     [SerializeField]
     private StatePanel statePanel;                              //진행 상태 표시 패널
 
-    private static readonly Vector2 snapMode = new Vector2(45f, 0.5f);
-    private static readonly Vector2 smoothMode = new Vector2(1f, 0.05f);
-
     protected override void Start()
     {
         base.Start();
         if (instance == this)
         {
+            SetMoveSpeed(0);
             if (character != null)
             {
                 SetFixedPosition(character.transform.position);
                 slowMotionPanel?.Set(character.GetPortraitMaterial());
             }
-            SetMoveSpeed(0);
             StageData stageData = StageData.current;
 #if UNITY_EDITOR
             if (stageData == null)
@@ -197,7 +191,7 @@ public class StageManager : Manager
             {
                 slowMotionPanel?.Fill(current, full, false);
             }
-            else if (current >= SlowMotion.MinimumUseValue /*+ SlowMotion.RecoverRate*/ && faintingState == false)
+            else if (current >= SlowMotion.MinimumUseValue && faintingState == false)
             {
                 slowMotionPanel?.Fill(current, full, true);
             }
@@ -249,7 +243,7 @@ public class StageManager : Manager
             {
                 pickaxe.grip = true;
             }
-            if (callbackContext.canceled)
+            else if (callbackContext.canceled)
             {
                 pickaxe.grip = false;
             }
@@ -304,23 +298,6 @@ public class StageManager : Manager
         }
     }
 
-    private void SetTurnMode(bool snap)
-    {
-        if(snapTurnProvider != null)
-        {
-            if(snap == true)
-            {
-                snapTurnProvider.turnAmount = snapMode.x;
-                snapTurnProvider.debounceTime = snapMode.y;
-            }
-            else
-            {
-                snapTurnProvider.turnAmount = smoothMode.x;
-                snapTurnProvider.debounceTime = smoothMode.y;
-            }
-        }
-    }
-
     private void Pause()
     {
         audioSource?.Pause();
@@ -364,10 +341,5 @@ public class StageManager : Manager
                 statePanel?.Open(() => SceneManager.LoadScene(SceneName), false);
                 break;
         }
-    }
-
-    private bool CheckTurnMode()
-    {
-        return snapTurnProvider != null && snapTurnProvider.turnAmount == snapMode.x && snapTurnProvider.debounceTime == snapMode.y;
     }
 }

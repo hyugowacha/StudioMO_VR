@@ -12,8 +12,6 @@ using TMPro;
 /// </summary>
 public static class ExtensionMethod
 {
-    private static readonly string RayInteractor = "Ray Interactor";
-
     public static void Sort<T>(ref T[] array) where T : UnityEngine.Object
     {
         List<T> list = new List<T>();
@@ -125,14 +123,10 @@ public static class ExtensionMethod
     {
         if (actionBasedController != null)
         {
-            int childCount = actionBasedController.transform.childCount;
-            for (int i = 0; i < childCount; i++)
+            XRRayInteractor xrRayInteractor = actionBasedController.GetComponentInChildren<XRRayInteractor>();
+            if (xrRayInteractor != null)
             {
-                Transform child = actionBasedController.transform.GetChild(i);
-                if (child.name == RayInteractor)
-                {
-                    child.gameObject.SetActive(enabled);
-                }
+                xrRayInteractor.enabled = enabled;
             }
         }
     }
