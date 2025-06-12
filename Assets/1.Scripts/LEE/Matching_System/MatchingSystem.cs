@@ -3,6 +3,7 @@ using Photon.Pun;
 using Photon.Realtime;
 using TMPro;
 using UnityEngine.UI;
+using UnityEngine.Profiling;
 
 public class MatchingSystem : MonoBehaviourPunCallbacks
 {
@@ -434,14 +435,28 @@ public class MatchingSystem : MonoBehaviourPunCallbacks
     {
         Debug.Log("Photon 로비 입장 완료");
 
-        // 로그인 성공 후 유저 스킨 정보 공유
+        // Photon 커스텀 프로퍼티 설정
+        ExitGames.Client.Photon.Hashtable playerProps = new();
+
         if (!string.IsNullOrEmpty(UserGameData.EquippedSkin))
         {
-            ExitGames.Client.Photon.Hashtable playerProps = new();
             playerProps["EquippedSkin"] = UserGameData.EquippedSkin;
-            PhotonNetwork.LocalPlayer.SetCustomProperties(playerProps);
             Debug.Log($"스킨 설정 완료: {UserGameData.EquippedSkin}");
         }
+
+        if (!string.IsNullOrEmpty(UserGameData.EquippedProfile))
+        {
+            playerProps["EquippedProfile"] = UserGameData.EquippedProfile;
+            Debug.Log($"프로필 설정 완료: {UserGameData.EquippedProfile}");
+        }
+
+        if (!string.IsNullOrEmpty(PhotonNetwork.NickName))
+        {
+            playerProps["Nickname"] = PhotonNetwork.NickName;
+            Debug.Log($"닉네임 설정 완료: {PhotonNetwork.NickName}");
+        }
+
+        PhotonNetwork.LocalPlayer.SetCustomProperties(playerProps);
 
         // UI 전환 등 로비 관련 처리
         PVPModeUI.SetActive(true);
@@ -481,7 +496,7 @@ public class MatchingSystem : MonoBehaviourPunCallbacks
                 PVP_HostPopUp_Code.text = roomCodeObj.ToString();
             }
 
-            PVP_HostPopUp_HostNickname.text = PhotonNetwork.NickName;
+            PVP_HostPopUp_HostNickname.text = PhotonNetwork.MasterClient.NickName;
             PVP_HostPopUp.SetActive(true);
             gameStartButton.gameObject.SetActive(true);
 
@@ -595,16 +610,19 @@ public class MatchingSystem : MonoBehaviourPunCallbacks
         if (player.CustomProperties.TryGetValue("EquippedProfile", out object profileObj))
         {
             string profileName = profileObj.ToString();
-            Sprite profileSprite = Resources.Load<Sprite>($"Profile/{profileName}");
 
-            if (profileSprite != null)
+            // Resources/SkinData 폴더 안에 있는 모든 SkinData 불러오기
+            SkinData[] allSkins = Resources.LoadAll<SkinData>("SkinData");
+
+            foreach (SkinData skin in allSkins)
             {
-                targetImage.sprite = profileSprite;
+                if (skin.skinID == profileName)
+                {
+                    targetImage.sprite = skin.profile;
+                    return;
+                }
             }
-            else
-            {
-                Debug.LogWarning($"[프로필 이미지 없음] Profile/{profileName}");
-            }
+            Debug.LogWarning($"[프로필 찾을 수 없음] skinID: {profileName}");
         }
     }
     #endregion

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using static UnityEngine.InputManagerEntry;
 
 public class PlayerOptionUI : MonoBehaviour
 {
@@ -66,7 +65,6 @@ public class PlayerOptionUI : MonoBehaviour
 
     private void OnEnable()
     {
-
         UpdateSkinInfo();
 
         nickname = PlayerPrefs.GetString(NICKNAME_PREFS_KEY, "Player");

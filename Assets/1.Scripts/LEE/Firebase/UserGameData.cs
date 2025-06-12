@@ -23,6 +23,7 @@ public static class UserGameData
     // 현재 유저가 장착 중인 스킨 이름
     public static string EquippedSkin { get; private set; }
 
+    // 현재 유저가 장착 중인 프로필 이름
     public static string EquippedProfile { get; set; } = "Profile_Default";
     #endregion
 
@@ -131,19 +132,21 @@ public static class UserGameData
             .GetValueAsync()
             .ContinueWithOnMainThread(task =>
             {
+                // 값을 못가져오면 기본 값
                 string profileName = "Profile_Default";
 
+                // 값을 가져왔으면 덮어쓰기
                 if (task.IsCompletedSuccessfully && task.Result.Exists)
                 {
                     profileName = task.Result.Value.ToString();
                 }
 
-                UserGameData.EquippedProfile = profileName;
-
                 // Photon 커스텀 프로퍼티 설정
                 ExitGames.Client.Photon.Hashtable props = new();
                 props["EquippedProfile"] = profileName;
                 PhotonNetwork.LocalPlayer.SetCustomProperties(props);
+
+                UserGameData.EquippedProfile = profileName;
             });
     }
     #endregion

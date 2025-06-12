@@ -168,15 +168,15 @@ public static class Authentication
                 // 유저의 전체 데이터 딕셔너리 구성
                 Dictionary<string, object> userData = new Dictionary<string, object>
                 {
-                    { "ID", ID },                                           // 이메일(ID)
-                    { "SchoolName", hintSchool },                           // 학교 이름 (계정 찾기용)
-                    { "Session", "" },                                      // 세션 정보 (빈 값으로 시작)
-                    { "Coins", testStartCoin },                             // 시작 코인
-                    { "Stars", 0 },                                         // 상점에서 사용하는 실제 별 수
-                    { "UnlockedSkins", new List<string> { "SkinData_Poorin" } }, // 기본 스킨 1개 지급
-                    { "EquippedProfile", "Profile_Default" },               // 기본 프로필 (Sprite 이름 또는 ID)
-                    { "EquippedSkin", "SkinData_Poorin" },                  // 기본 장착 스킨
-                    { "MapHighScore", new List<int>(new int[50])}           // 각 맵의 최고 점수
+                    { "ID", ID },                                               // 이메일(ID)
+                    { "SchoolName", hintSchool },                               // 학교 이름 (계정 찾기용)
+                    { "Session", "" },                                          // 세션 정보 (빈 값으로 시작)
+                    { "Coins", testStartCoin },                                 // 시작 코인
+                    { "Stars", 0 },                                             // 상점에서 사용하는 실제 별 수
+                    { "UnlockedSkins", new List<string> { "SkinData_Libee" } }, // 기본 스킨 1개 지급
+                    { "EquippedProfile", "SkinData_Libee" },               // 기본 프로필 (Sprite 이름 또는 ID)
+                    { "EquippedSkin", "SkinData_Libee" },                  // 기본 장착 스킨
+                    { "MapHighScore", new List<int>(new int[50])}          // 각 맵의 최고 점수
                 };
 
                 // Firebase Realtime Database에 사용자 데이터 저장
