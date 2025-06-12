@@ -38,8 +38,6 @@ public class Mineral : MonoBehaviourPunCallbacks, IPunObservable
     private ParticleSystem debris;
 
     private static uint maxCount = 0;
-    private List<Mineral> list = new List<Mineral>();
-    private List<GameObject> effects = new List<GameObject>();
 
     public static event Action<int, uint> miningAction = null;
 
@@ -69,7 +67,7 @@ public class Mineral : MonoBehaviourPunCallbacks, IPunObservable
     {
         if (photonView.IsMine == true && remainingTime > 0)
         {
-            remainingTime -= Time.deltaTime; // 매 프레임마다 충전시간 감소
+            remainingTime -= Time.deltaTime * SlowMotion.speed;
             if (remainingTime <= 0)
             {
                 // 충전 완료 시 → 다시 채집 가능 상태로
@@ -84,7 +82,6 @@ public class Mineral : MonoBehaviourPunCallbacks, IPunObservable
     {
         base.OnEnable();
         progressSlider.SetActive(false); //UI 슬라이더 숨기기
-        list.Add(this);
     }
 
     // ▼ 오브젝트가 비활성화될 때 호출됨 (게임 내에서 꺼질 때)
@@ -92,7 +89,6 @@ public class Mineral : MonoBehaviourPunCallbacks, IPunObservable
     {
         base.OnDisable();
         StopAllCoroutines(); // 실행 중인 코루틴 전부 중지
-        list.Remove(this);
     }
 
     public override void OnPlayerEnteredRoom(Player player)
@@ -117,6 +113,10 @@ public class Mineral : MonoBehaviourPunCallbacks, IPunObservable
     private void SetCount(int remainCount)
     {
         uint convert = ExtensionMethod.Convert(remainCount);
+        if (maxCount < maxValue)
+        {
+            maxCount = maxValue;
+        }
         if (currentValue != convert)
         {
             currentValue = convert;
@@ -129,6 +129,10 @@ public class Mineral : MonoBehaviourPunCallbacks, IPunObservable
                     crystals[i].enabled = (int)(length * value) > i;
                 }
             }
+        }
+        if (currentValue == maxCount && currentValue > 0)
+        {
+
         }
     }
 
@@ -262,12 +266,15 @@ public class Mineral : MonoBehaviourPunCallbacks, IPunObservable
     // ▼ 방 안에서 조종 권한이 있는 이 객체의 멤버 변수 내용이 변경될 때 다른 플레이어에게 그 값을 동기화 시키기 위한 함수
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
+        Debug.Log("값 변환");
         if (photonView.IsMine == true)
         {
+            Debug.Log("송신");
             stream.SendNext(remainingTime);
         }
         else
         {
+            Debug.Log("수신");
             remainingTime = (float)stream.ReceiveNext();
         }
     }

@@ -47,11 +47,23 @@ public static class SlowMotion
         get;
     }
 
+    private static float currentSpeed = BeforeSpeed;
+
     //슬로우 모션의 현재 속도를 나타내는 프로퍼티
     public static float speed {
-        private set;
-        get;
-    } = BeforeSpeed;
+        private set
+        {
+            currentSpeed = value;
+        }
+        get
+        {
+            if(currentTween != null && currentTween.IsPlaying() == false && currentTween.Elapsed() < currentTween.Duration())
+            {
+                return 0;
+            }
+            return currentSpeed;
+        }
+    }
 
     //슬로우 모션 속도를 점진적으로 변경하는 함수
     private static void Play(float before, float after, float duration)
