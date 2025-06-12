@@ -113,10 +113,6 @@ public class Mineral : MonoBehaviourPunCallbacks, IPunObservable
     private void SetCount(int remainCount)
     {
         uint convert = ExtensionMethod.Convert(remainCount);
-        if (maxCount < maxValue)
-        {
-            maxCount = maxValue;
-        }
         if (currentValue != convert)
         {
             currentValue = convert;
@@ -130,9 +126,13 @@ public class Mineral : MonoBehaviourPunCallbacks, IPunObservable
                 }
             }
         }
+        if (maxCount < currentValue)
+        {
+            maxCount = currentValue;
+        }
         if (currentValue == maxCount && currentValue > 0)
         {
-
+            //채집량이 높은 광물을 표시해주는 이펙트
         }
     }
 
@@ -167,14 +167,18 @@ public class Mineral : MonoBehaviourPunCallbacks, IPunObservable
     [PunRPC]
     private void ApplyMining(int actor, int remainCount, int gatherAmount, float value)
     {
-        if(remainCount != ExtensionMethod.Convert(currentValue) && debris != null)
+        if(remainCount != ExtensionMethod.Convert(currentValue))
         {
             int index = (int)((maxValue > 0 ? (float)currentValue / maxValue : 1.0f) * crystals.Length) - 1;
-            if (crystals[index] != null)
+            if (crystals[index] != null && debris != null)
             {
                 debris.transform.SetPositionAndRotation(crystals[index].transform.position, crystals[index].transform.rotation);
                 debris.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
                 debris.Play();
+            }
+            if (maxCount > 0 && maxCount == currentValue && maxCount > ExtensionMethod.Convert(remainCount))
+            {
+                //채집량이 높은 광물을 파괴했을 때 이펙트가 소멸되며 등장하는 이펙트
             }
         }
         if (progressSlider != null)
@@ -266,15 +270,12 @@ public class Mineral : MonoBehaviourPunCallbacks, IPunObservable
     // ▼ 방 안에서 조종 권한이 있는 이 객체의 멤버 변수 내용이 변경될 때 다른 플레이어에게 그 값을 동기화 시키기 위한 함수
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
-        Debug.Log("값 변환");
         if (photonView.IsMine == true)
         {
-            Debug.Log("송신");
             stream.SendNext(remainingTime);
         }
         else
         {
-            Debug.Log("수신");
             remainingTime = (float)stream.ReceiveNext();
         }
     }
