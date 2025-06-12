@@ -1789,11 +1789,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stagePanelType: 4
-  infoImage: {fileID: 473862186}
   stageListPanel: {fileID: 263224324}
-  stageIcon: {fileID: 6911838171431879061, guid: dbebb4bf0337ec945913677873fa0607,
+  stageIconPrefab: {fileID: 6911838171431879061, guid: dbebb4bf0337ec945913677873fa0607,
     type: 3}
   selectStagePanel: {fileID: 1803302585}
+  stageInfoDataSet: {fileID: 11400000, guid: c0c5a507158cb3545b5490258901b795, type: 2}
+  infoImage: {fileID: 473862186}
+  infoPanel: {fileID: 473862188}
 --- !u!1 &201726366
 GameObject:
   m_ObjectHideFlags: 0
@@ -2560,11 +2562,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stagePanelType: 0
-  infoImage: {fileID: 1161921646}
   stageListPanel: {fileID: 366144351}
-  stageIcon: {fileID: 6911838171431879061, guid: dbebb4bf0337ec945913677873fa0607,
+  stageIconPrefab: {fileID: 6911838171431879061, guid: dbebb4bf0337ec945913677873fa0607,
     type: 3}
   selectStagePanel: {fileID: 1803302585}
+  stageInfoDataSet: {fileID: 11400000, guid: c0c5a507158cb3545b5490258901b795, type: 2}
+  infoImage: {fileID: 1161921646}
+  infoPanel: {fileID: 1161921648}
 --- !u!1 &236270130
 GameObject:
   m_ObjectHideFlags: 0
@@ -4629,6 +4633,7 @@ GameObject:
   - component: {fileID: 473862185}
   - component: {fileID: 473862187}
   - component: {fileID: 473862186}
+  - component: {fileID: 473862188}
   m_Layer: 5
   m_Name: DungeonInfoImage
   m_TagString: Untagged
@@ -4698,6 +4703,29 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 473862184}
   m_CullTransparentMesh: 1
+--- !u!114 &473862188
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 473862184}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 29d5b143c7fcfc943adedc9955d699ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bgmTitleText: {fileID: 772871381}
+  storyText: {fileID: 714900453}
+  emptyStars:
+  - {fileID: 216961328}
+  - {fileID: 582345409}
+  filledStars:
+  - {fileID: 1115782402}
+  - {fileID: 785128893}
+  perfectStars:
+  - {fileID: 1692504409}
+  - {fileID: 674356991}
 --- !u!1 &485561778
 GameObject:
   m_ObjectHideFlags: 0
@@ -4779,7 +4807,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 485561781}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 810950172}
+        m_TargetAssemblyTypeName: StagePanelCtrl, Assembly-CSharp
+        m_MethodName: OnClickExitInfoPanel
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &485561781
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5842,7 +5882,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 632927975}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 870406708}
+        m_TargetAssemblyTypeName: StagePanelCtrl, Assembly-CSharp
+        m_MethodName: OnClickExitInfoPanel
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &632927975
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6483,6 +6535,7 @@ GameObject:
   - component: {fileID: 688785173}
   - component: {fileID: 688785175}
   - component: {fileID: 688785174}
+  - component: {fileID: 688785176}
   m_Layer: 5
   m_Name: DesertInfoImage
   m_TagString: Untagged
@@ -6552,6 +6605,29 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 688785172}
   m_CullTransparentMesh: 1
+--- !u!114 &688785176
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 688785172}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 29d5b143c7fcfc943adedc9955d699ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bgmTitleText: {fileID: 1612395990}
+  storyText: {fileID: 990447355}
+  emptyStars:
+  - {fileID: 1437225695}
+  - {fileID: 115770837}
+  filledStars:
+  - {fileID: 236270132}
+  - {fileID: 827147562}
+  perfectStars:
+  - {fileID: 113311179}
+  - {fileID: 1275628195}
 --- !u!1 &709575371
 GameObject:
   m_ObjectHideFlags: 0
@@ -7596,11 +7672,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stagePanelType: 2
-  infoImage: {fileID: 1487071918}
   stageListPanel: {fileID: 1464601113}
-  stageIcon: {fileID: 6911838171431879061, guid: dbebb4bf0337ec945913677873fa0607,
+  stageIconPrefab: {fileID: 6911838171431879061, guid: dbebb4bf0337ec945913677873fa0607,
     type: 3}
   selectStagePanel: {fileID: 1803302585}
+  stageInfoDataSet: {fileID: 11400000, guid: c0c5a507158cb3545b5490258901b795, type: 2}
+  infoImage: {fileID: 1487071918}
+  infoPanel: {fileID: 1487071920}
 --- !u!1 &822815803
 GameObject:
   m_ObjectHideFlags: 0
@@ -8149,11 +8227,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stagePanelType: 1
-  infoImage: {fileID: 688785174}
   stageListPanel: {fileID: 1527777479}
-  stageIcon: {fileID: 6911838171431879061, guid: dbebb4bf0337ec945913677873fa0607,
+  stageIconPrefab: {fileID: 6911838171431879061, guid: dbebb4bf0337ec945913677873fa0607,
     type: 3}
   selectStagePanel: {fileID: 1803302585}
+  stageInfoDataSet: {fileID: 11400000, guid: c0c5a507158cb3545b5490258901b795, type: 2}
+  infoImage: {fileID: 688785174}
+  infoPanel: {fileID: 688785176}
 --- !u!1 &870918845
 GameObject:
   m_ObjectHideFlags: 0
@@ -9453,11 +9533,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stagePanelType: 3
-  infoImage: {fileID: 2060860280}
   stageListPanel: {fileID: 212291228}
-  stageIcon: {fileID: 6911838171431879061, guid: dbebb4bf0337ec945913677873fa0607,
+  stageIconPrefab: {fileID: 6911838171431879061, guid: dbebb4bf0337ec945913677873fa0607,
     type: 3}
   selectStagePanel: {fileID: 1803302585}
+  stageInfoDataSet: {fileID: 11400000, guid: c0c5a507158cb3545b5490258901b795, type: 2}
+  infoImage: {fileID: 2060860280}
+  infoPanel: {fileID: 2060860282}
 --- !u!1 &1050258202
 GameObject:
   m_ObjectHideFlags: 0
@@ -9957,7 +10039,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1081401672}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 167535879}
+        m_TargetAssemblyTypeName: StagePanelCtrl, Assembly-CSharp
+        m_MethodName: OnClickExitInfoPanel
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1081401672
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10532,6 +10626,7 @@ GameObject:
   - component: {fileID: 1161921645}
   - component: {fileID: 1161921647}
   - component: {fileID: 1161921646}
+  - component: {fileID: 1161921648}
   m_Layer: 5
   m_Name: BeachInfoImage
   m_TagString: Untagged
@@ -10601,6 +10696,29 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1161921644}
   m_CullTransparentMesh: 1
+--- !u!114 &1161921648
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1161921644}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 29d5b143c7fcfc943adedc9955d699ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bgmTitleText: {fileID: 227243027}
+  storyText: {fileID: 159076814}
+  emptyStars:
+  - {fileID: 1936514927}
+  - {fileID: 2095339731}
+  filledStars:
+  - {fileID: 503124276}
+  - {fileID: 661205700}
+  perfectStars:
+  - {fileID: 1164815785}
+  - {fileID: 783211718}
 --- !u!1 &1164815783
 GameObject:
   m_ObjectHideFlags: 0
@@ -11299,7 +11417,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1226790856}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 232618972}
+        m_TargetAssemblyTypeName: StagePanelCtrl, Assembly-CSharp
+        m_MethodName: OnClickExitInfoPanel
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1226790856
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14001,6 +14131,7 @@ GameObject:
   - component: {fileID: 1487071917}
   - component: {fileID: 1487071919}
   - component: {fileID: 1487071918}
+  - component: {fileID: 1487071920}
   m_Layer: 5
   m_Name: NorthPoleInfoImage
   m_TagString: Untagged
@@ -14070,6 +14201,29 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1487071916}
   m_CullTransparentMesh: 1
+--- !u!114 &1487071920
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1487071916}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 29d5b143c7fcfc943adedc9955d699ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bgmTitleText: {fileID: 2037869589}
+  storyText: {fileID: 709575373}
+  emptyStars:
+  - {fileID: 1332184602}
+  - {fileID: 647281032}
+  filledStars:
+  - {fileID: 1350422342}
+  - {fileID: 275906183}
+  perfectStars:
+  - {fileID: 1812718004}
+  - {fileID: 201726368}
 --- !u!1 &1527777478
 GameObject:
   m_ObjectHideFlags: 0
@@ -17589,7 +17743,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1875732817}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1029632371}
+        m_TargetAssemblyTypeName: StagePanelCtrl, Assembly-CSharp
+        m_MethodName: OnClickExitInfoPanel
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1875732817
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18655,6 +18821,7 @@ GameObject:
   - component: {fileID: 2060860279}
   - component: {fileID: 2060860281}
   - component: {fileID: 2060860280}
+  - component: {fileID: 2060860282}
   m_Layer: 5
   m_Name: VolcanoInfoImage
   m_TagString: Untagged
@@ -18724,6 +18891,29 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2060860278}
   m_CullTransparentMesh: 1
+--- !u!114 &2060860282
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2060860278}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 29d5b143c7fcfc943adedc9955d699ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bgmTitleText: {fileID: 1645819402}
+  storyText: {fileID: 930672777}
+  emptyStars:
+  - {fileID: 2120875679}
+  - {fileID: 1678767179}
+  filledStars:
+  - {fileID: 136685778}
+  - {fileID: 1758715190}
+  perfectStars:
+  - {fileID: 246501816}
+  - {fileID: 130038364}
 --- !u!1 &2066759821
 GameObject:
   m_ObjectHideFlags: 0
