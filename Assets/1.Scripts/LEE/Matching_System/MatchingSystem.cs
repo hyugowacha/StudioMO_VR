@@ -3,22 +3,27 @@ using Photon.Pun;
 using Photon.Realtime;
 using TMPro;
 using UnityEngine.UI;
+using UnityEngine.Profiling;
 
 public class MatchingSystem : MonoBehaviourPunCallbacks
 {
     #region MatchingSystem의 필드
     [Header("PVPModeUI 팝업 관련 필드 (PVPModeUI)")]
+    [SerializeField] private GameObject PVPModeUI;                  // 매칭 기본 UI
     [SerializeField] private Button backToLobbyButton;              // 로비로 돌아가기
     [SerializeField] private Button withFriendsButton;              // 친구와 버튼
     [SerializeField] private Button randomMatchingButton;           // 랜덤 매칭 버튼
+    [SerializeField] private Image disableIMGL;                     // 친구와 버튼 비활성화 시
+    [SerializeField] private Image disableIMGR;                     // 랜덤매칭 버튼 비활성화 시
 
-    [Header("친구와 관련 필드 (PVP_CodePopUp)")]
+    [Header("'친구와' 관련 필드 (PVP_CodePopUp)")]
     [SerializeField] private GameObject PVP_CodePopUp;                  // 친구와 관련 팝업 오브젝트
     [SerializeField] private Button PVP_CodePopUp_CloseButton;          // X 버튼
     [SerializeField] private TMP_InputField PVP_CodePopUp_InputField;   // 초대 코드 입력칸
     [SerializeField] private Button PVP_CodePopUp_JoinButton;           // 참가하기 버튼
     [SerializeField] private Button PVP_CodePopUp_MakeRoomButton;       // 방 만들기 버튼
 
+    #region 사설 방 관련 필드들
     [Header("방만들기 버튼 선택시 관련 필드 (PVP_HostPopUp)")]
     [SerializeField] private GameObject PVP_HostPopUp;                  // 호스트 방
     [SerializeField] private TMP_Text PVP_HostPopUp_HostNickname;       // 호스트의 닉네임
@@ -41,6 +46,7 @@ public class MatchingSystem : MonoBehaviourPunCallbacks
     [SerializeField] private TMP_Text player3_nickname; // 3번 플레이어 닉네임
 
     [SerializeField] private Button gameStartButton;    // 게임 시작 및 게임 준비 버튼
+    #endregion
 
     [Header("PVP 에러 코드 (PVP_ErrorCode)")]
     [SerializeField] private GameObject PVP_ErrorCode;      // PVP 에러 시 팝업
@@ -50,7 +56,7 @@ public class MatchingSystem : MonoBehaviourPunCallbacks
     [SerializeField] private GameObject RandomMatchUI;              // 매칭 중 팝업 UI
     [SerializeField] private TMP_Text timerText;                    // 대기 시간
     [SerializeField] private TMP_Text playerCountText;              // 총 참가 인원 수
-    [SerializeField] private Button RandomMatchUI_CancelButton; // 매칭중 취소 버튼
+    [SerializeField] private Button RandomMatchUI_CancelButton;     // 매칭중 취소 버튼
 
     private float matchingTime = 0f;
     private bool isMatching = false;
@@ -64,18 +70,103 @@ public class MatchingSystem : MonoBehaviourPunCallbacks
     [SerializeField] private GameObject MatchingFail;       // 매칭 실패 시 팝업 UI
     #endregion
 
-    void Start()
+    #region 일반 필드
+    // 사설방 = true / 공용방 = false
+    private bool isRoomPrivate = false;
+
+    // 사설방 Ready 관련 (커스텀 프로퍼티 키 상수)
+    private const string READY_KEY = "IsReady";
+    #endregion
+
+    #region Start, Update 초기화 및 버튼 연결
+    private void Start()
     {
+        #region PVPModeUI 팝업 관련 버튼들
+        // 로비로 나가기
+        backToLobbyButton.onClick.AddListener(OnClickBackToLobby);
+
+        // '친구와' 게임 버튼
+        withFriendsButton.onClick.AddListener(OnClickWithFriends);
+
+        // '랜덤매칭' 게임 버튼
         randomMatchingButton.onClick.AddListener(OnClickRandomMatch);
+        #endregion
+
+        #region 랜덤매칭, 매칭 종료 관련 버튼
+        // 랜덤 매칭 중 나가기 버튼
         RandomMatchUI_CancelButton.onClick.AddListener(CancelMatching);
+
+        // 매칭 종료 팝업
+        RandomMatchError_Yes.onClick.AddListener(OnClickLeaveMatching);
+        RandomMatchError_No.onClick.AddListener(OnClickStayInMatching);
+        #endregion
+
+        #region '친구와' 관련 버튼
+        // PVP_CodePopUp 팝업 취소 버튼
+        PVP_CodePopUp_CloseButton.onClick.AddListener(OnClickCloseCodePopUp);
+
+        // 초대 코드 입력 후 방에 입장 버튼
+        PVP_CodePopUp_JoinButton.onClick.AddListener(OnClickJoinRoomByCode);
+        
+        // 사설방 만들기 버튼
+        PVP_CodePopUp_MakeRoomButton.onClick.AddListener(OnClickMakeRoom);
+        #endregion
+
+        // 게임 시작 버튼
+        gameStartButton.onClick.AddListener(OnClickStartGame);
+
+        // 친구와 매칭
+        PVP_HostPopUp_CloseButton.onClick.AddListener(OnClickCloseHostPopUp);
     }
 
     private void Update()
     {
+        // 매칭 중 UI
+        IsMatchingUI();
+    }
+    #endregion
+
+    #region 로비로 나가기 함수
+    private void OnClickBackToLobby()
+    {
+        // TODO: 로비로 나가기. 어차피 서버는 로그인으로 이동할 예정이니 ui부분만 나중에 지정하기.
+    }
+    #endregion
+
+    #region 랜덤매칭 (RandomMatchUI) 관련 함수 
+    // 랜덤매칭 버튼 클릭 시
+    private void OnClickRandomMatch()
+    {
+        SetButtonInteractableVisual(withFriendsButton, false);
+        SetButtonInteractableVisual(randomMatchingButton, false);
+
+        matchingTime = 0;
+        isMatching = true;
+        isRoomPrivate = false;
+        PhotonNetwork.JoinRandomRoom();
+    }
+
+    // 실시간 매칭 중 UI 함수
+    private void IsMatchingUI()
+    {
         if (isMatching)
         {
             matchingTime += Time.deltaTime;
-            timerText.text = $"{(int)matchingTime}초 경과";
+
+            int minutes = (int)(matchingTime / 60);
+            int seconds = (int)(matchingTime % 60);
+            timerText.text = $"{minutes:00}:{seconds:00}";
+
+            // 15분(900초) 후 매칭 실패 팝업
+            if (matchingTime >= 900f)
+            {
+                isMatching = false;
+                RandomMatchUI.SetActive(false);
+                MatchingFail.SetActive(true);
+                if (PhotonNetwork.InRoom)
+                    PhotonNetwork.LeaveRoom();
+            }
+
             if (PhotonNetwork.InRoom)
             {
                 playerCountText.text = $"{PhotonNetwork.CurrentRoom.PlayerCount} / {PhotonNetwork.CurrentRoom.MaxPlayers}";
@@ -83,45 +174,12 @@ public class MatchingSystem : MonoBehaviourPunCallbacks
         }
     }
 
-    public void OnClickRandomMatch()
-    {
-        matchingTime = 0;
-        isMatching = true;
-        RandomMatchUI.SetActive(true);
-
-        PhotonNetwork.JoinRandomRoom();
-    }
-
-    public override void OnJoinRandomFailed(short returnCode, string message)
-    {
-        Debug.Log("랜덤 방 없음 → 새 방 생성");
-        RoomOptions options = new RoomOptions { MaxPlayers = 2 };
-        PhotonNetwork.CreateRoom(null, options); // 랜덤 이름으로 생성
-    }
-
-    public override void OnJoinedRoom()
-    {
-        Debug.Log("방 입장 완료");
-        // 인원이 다 차면 시작
-        if (PhotonNetwork.CurrentRoom.PlayerCount == PhotonNetwork.CurrentRoom.MaxPlayers)
-        {
-            isMatching = false;
-            PhotonNetwork.LoadLevel("InGameScene"); // 시작 씬으로
-        }
-    }
-
-    public override void OnPlayerEnteredRoom(Player newPlayer)
-    {
-        Debug.Log($"새로운 플레이어 입장: {newPlayer.NickName}");
-        if (PhotonNetwork.CurrentRoom.PlayerCount == PhotonNetwork.CurrentRoom.MaxPlayers)
-        {
-            isMatching = false;
-            PhotonNetwork.LoadLevel("InGameScene");
-        }
-    }
-
+    // 랜덤매칭 중 종료 함수
     private void CancelMatching()
     {
+        SetButtonInteractableVisual(withFriendsButton, true);
+        SetButtonInteractableVisual(randomMatchingButton, true);
+
         isMatching = false;
         RandomMatchUI.SetActive(false);
         if (PhotonNetwork.InRoom)
@@ -129,9 +187,487 @@ public class MatchingSystem : MonoBehaviourPunCallbacks
             PhotonNetwork.LeaveRoom();
         }
     }
+    #endregion
 
+    #region 매칭종료 (RandomMatchError) 관련 함수
+    // 매칭 종료 함수
+    private void OnClickLeaveMatching()
+    {
+        RandomMatchError.SetActive(false);
+        CancelMatching();
+    }
+
+    // 매칭 유지 함수
+    private void OnClickStayInMatching()
+    {
+        RandomMatchError.SetActive(false);
+    }
+    #endregion
+
+    #region '친구와' 관련 함수
+    private void OnClickWithFriends()
+    {
+        SetButtonInteractableVisual(withFriendsButton, false);
+        SetButtonInteractableVisual(randomMatchingButton, false);
+
+        PVP_CodePopUp.SetActive(true);
+    }
+    private void OnClickCloseCodePopUp()
+    {
+        SetButtonInteractableVisual(withFriendsButton, true);
+        SetButtonInteractableVisual(randomMatchingButton, true);
+
+        PVP_CodePopUp.SetActive(false);
+    }
+
+    // 초대 코드로 방 참가시도
+    private void OnClickJoinRoomByCode()
+    {
+        string code = PVP_CodePopUp_InputField.text;
+        if (!string.IsNullOrEmpty(code))
+        {
+            isRoomPrivate = true;       // 사설방 유무 확인
+            PhotonNetwork.JoinRoom(code);
+        }
+        else
+        {
+            ShowError("존재하지 않는 방입니다.");
+        }
+    }
+
+    // 사설방 만들기 함수
+    private void OnClickMakeRoom()
+    {
+        string code = GenerateRoomCode(7);
+
+        RoomOptions options = new RoomOptions
+        {
+            MaxPlayers = 4,
+            IsVisible = false,
+            CustomRoomProperties = new ExitGames.Client.Photon.Hashtable
+        {
+            { "RoomCode", code }
+        },
+            CustomRoomPropertiesForLobby = new string[] { "RoomCode" } // 필요하면
+        };
+
+        PhotonNetwork.CreateRoom(code, options);
+
+        isRoomPrivate = true;
+
+        PVP_CodePopUp.SetActive(false);
+    }
+    #endregion
+
+    #region 사설방 관련 함수
+    // 사설방 나가기
+    private void OnClickCloseHostPopUp()
+    {
+        SetButtonInteractableVisual(withFriendsButton, true);
+        SetButtonInteractableVisual(randomMatchingButton, true);
+
+        if (PhotonNetwork.InRoom)
+        {
+            PhotonNetwork.LeaveRoom();
+        }
+    }
+
+    // 방장이면 게임 시작, 참가 유저면 Ready상태로 전환
+    private void OnClickStartGame()
+    {
+        if (!isRoomPrivate) return; // 공용방이면 무시
+
+        int playerCount = PhotonNetwork.CurrentRoom.PlayerCount;
+        if (playerCount < 2)
+        {
+            ShowError("플레이어가 부족합니다.");
+            return;
+        }
+
+        if (PhotonNetwork.IsMasterClient)
+        {
+            // 방장: 전체 레디 체크
+            foreach (Player p in PhotonNetwork.PlayerList)
+            {
+                if (!p.CustomProperties.ContainsKey(READY_KEY) || !(bool)p.CustomProperties[READY_KEY])
+                {
+                    ShowError("모두 레디상태가 아닙니다.");
+                    return;
+                }
+            }
+
+            PhotonNetwork.LoadLevel("InGameScene");
+        }
+        else
+        {
+            // 일반 유저: Ready 토글
+            bool currentReady = PhotonNetwork.LocalPlayer.CustomProperties.ContainsKey(READY_KEY) &&
+                                (bool)PhotonNetwork.LocalPlayer.CustomProperties[READY_KEY];
+
+            ExitGames.Client.Photon.Hashtable props = new();
+            props[READY_KEY] = !currentReady;
+            PhotonNetwork.LocalPlayer.SetCustomProperties(props);
+        }
+    }
+
+    // 플레이어 UI 관련 업데이트 함수
+    private void UpdatePlayerList()
+    {
+        Player[] players = PhotonNetwork.PlayerList;
+
+        // 모든 플레이어 UI 초기화
+        ResetAllPlayerUI();
+
+        // 현재 방에 있는 플레이어들 UI 업데이트
+        for (int i = 0; i < players.Length && i < 4; i++)
+        {
+            SetPlayerUI(i, players[i]);
+        }
+    }
+
+    // 플레이어 UI 관련 함수
+    private void SetPlayerUI(int playerIndex, Player player)
+    {
+        bool isReady = player.CustomProperties.ContainsKey(READY_KEY) &&
+                       (bool)player.CustomProperties[READY_KEY];
+
+        string nickname = player.CustomProperties.ContainsKey("Nickname") ?
+                          player.CustomProperties["Nickname"].ToString() :
+                          "Player";
+
+        TMP_Text targetNicknameText = playerIndex switch
+        {
+            0 => player0_nickname,
+            1 => player1_nickname,
+            2 => player2_nickname,
+            3 => player3_nickname,
+            _ => null
+        };
+
+        Image targetProfile = playerIndex switch
+        {
+            0 => player0_profile,
+            1 => player1_profile,
+            2 => player2_profile,
+            3 => player3_profile,
+            _ => null
+        };
+
+        Image targetReady = playerIndex switch
+        {
+            0 => player0_ready,
+            1 => player1_ready,
+            2 => player2_ready,
+            3 => player3_ready,
+            _ => null
+        };
+
+        if (targetProfile != null)
+        {
+            targetProfile.gameObject.SetActive(true);
+            SetPlayerProfileImage(player, targetProfile);
+        }
+        if (targetReady != null) targetReady.gameObject.SetActive(isReady);
+        if (targetNicknameText != null) targetNicknameText.text = nickname;
+    }
+
+    // 플레이어 UI 초기화
+    private void ResetAllPlayerUI()
+    {
+        player0_profile.gameObject.SetActive(false);
+        player1_profile.gameObject.SetActive(false);
+        player2_profile.gameObject.SetActive(false);
+        player3_profile.gameObject.SetActive(false);
+
+        player0_nickname.text = "";
+        player1_nickname.text = "";
+        player2_nickname.text = "";
+        player3_nickname.text = "";
+    }
+    #endregion
+
+    #region Photon 콜백
+    // 방장이 바뀔때 호출
+    public override void OnMasterClientSwitched(Player newMasterClient)
+    {
+        Debug.Log($"방장이 변경됨: 새로운 방장 → {newMasterClient.NickName}");
+
+        // 내가 방장이 되었을 때 처리
+        if (newMasterClient == PhotonNetwork.LocalPlayer)
+        {
+            // Ready 상태 true로 강제 설정
+            ExitGames.Client.Photon.Hashtable props = new();
+            props[READY_KEY] = true;
+            PhotonNetwork.LocalPlayer.SetCustomProperties(props);
+        }
+
+        // UI 갱신
+        UpdatePlayerList();
+    }
+
+    // 플레이어가 방을 나갔을 때 호출됨
+    public override void OnPlayerLeftRoom(Player otherPlayer)
+    {
+        Debug.Log($"플레이어 나감: {otherPlayer.NickName}");
+
+        // UI 갱신
+        UpdatePlayerList();
+    }
+
+    // 플레이어 준비 완료 버튼 클릭 시 호출됨
+    public override void OnPlayerPropertiesUpdate(Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
+    {
+        if (changedProps.ContainsKey(READY_KEY))
+        {
+            UpdatePlayerList();
+        }
+    }
+
+    // 사설방에서 게임시작 버튼을 클릭했을 시 호출
+    public override void OnConnectedToMaster()
+    {
+        Debug.Log("Photon 마스터 서버 연결 완료");
+        PhotonNetwork.JoinLobby();
+    }
+
+    // 로비 입장 시 호출됨
+    public override void OnJoinedLobby()
+    {
+        Debug.Log("Photon 로비 입장 완료");
+
+        // Photon 커스텀 프로퍼티 설정
+        ExitGames.Client.Photon.Hashtable playerProps = new();
+
+        if (!string.IsNullOrEmpty(UserGameData.EquippedSkin))
+        {
+            playerProps["EquippedSkin"] = UserGameData.EquippedSkin ?? "SkinData_Libee";
+            Debug.Log($"스킨 설정 완료: {UserGameData.EquippedSkin}");
+        }
+
+        if (!string.IsNullOrEmpty(UserGameData.EquippedProfile))
+        {
+            playerProps["EquippedProfile"] = UserGameData.EquippedProfile ?? "SkinData_Libee";
+            Debug.Log($"프로필 설정 완료: {UserGameData.EquippedProfile}");
+        }
+
+        if (!string.IsNullOrEmpty(PhotonNetwork.NickName))
+        {
+            playerProps["Nickname"] = PhotonNetwork.NickName ?? "Player";
+            Debug.Log($"닉네임 설정 완료: {PhotonNetwork.NickName}");
+        }
+
+        PhotonNetwork.LocalPlayer.SetCustomProperties(playerProps);
+
+        // UI 전환 등 로비 관련 처리
+        PVPModeUI.SetActive(true);
+        // TODO: ▲ 추후 삭제 요청. 테스트용 코드
+    }
+
+    // 방 입장 실패 시
+    public override void OnJoinRandomFailed(short returnCode, string message)
+    {
+        Debug.Log("랜덤 방 없음 -> 새 방 생성");
+        RoomOptions options = new RoomOptions { MaxPlayers = 4};
+        PhotonNetwork.CreateRoom(null, options);
+    }
+
+    // 방 입장 시
+    public override void OnJoinedRoom()
+    {
+        PVP_CodePopUp.SetActive(false);
+
+        Debug.Log($"방 입장 완료 - 방 이름: {PhotonNetwork.CurrentRoom.Name}");
+
+        // 플레이어 목록 UI 업데이트
+        UpdatePlayerList();
+
+        // 사설방일경우
+        if (isRoomPrivate)
+        {
+            if (PhotonNetwork.IsMasterClient)
+            {
+                ExitGames.Client.Photon.Hashtable props = new();
+                props[READY_KEY] = true; // 방장은 고정 Ready
+                PhotonNetwork.LocalPlayer.SetCustomProperties(props);
+            }
+
+            if (PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue("RoomCode", out object roomCodeObj))
+            {
+                PVP_HostPopUp_Code.text = roomCodeObj.ToString();
+            }
+
+            PVP_HostPopUp_HostNickname.text = PhotonNetwork.MasterClient.NickName;
+            PVP_HostPopUp.SetActive(true);
+            gameStartButton.gameObject.SetActive(true);
+
+        }
+        // 공용방일경우
+        else
+        {
+            RandomMatchUI.SetActive(true);
+        }
+
+        // 공용방이고, 4명이 다 차면 게임 시작
+        if (!isRoomPrivate && PhotonNetwork.CurrentRoom.PlayerCount == PhotonNetwork.CurrentRoom.MaxPlayers)
+        {
+            isMatching = false;
+            Debug.Log("인게임 씬으로 전환");
+            //PhotonNetwork.LoadLevel("InGameScene");
+        }
+    }
+
+    // 플레이어가 방에 입장 시
+    public override void OnPlayerEnteredRoom(Player newPlayer)
+    {
+        Debug.Log($"플레이어 입장: {newPlayer.NickName}");
+
+        // UI 업데이트
+        UpdatePlayerList();
+
+        // 공개방에서만 자동 시작
+        if (!isRoomPrivate && PhotonNetwork.CurrentRoom.PlayerCount == PhotonNetwork.CurrentRoom.MaxPlayers)
+        {
+            isMatching = false;
+            Debug.Log("공용방 게임 시작");
+            //PhotonNetwork.LoadLevel("InGameScene");
+        }
+    }
+
+    // 방을 나갈 시
     public override void OnLeftRoom()
     {
-        Debug.Log("방 나감");
+        Debug.Log("방에서 나감");
+
+        // UI 전환
+        PVP_HostPopUp.SetActive(false);         // 호스트 팝업 끄기
+        RandomMatchUI.SetActive(false);         // 혹시 랜덤 매칭 UI 켜졌다면 끄기
+        MatchingFail.SetActive(false);          // 매칭 실패 팝업도 종료
+
+        // 플레이어 정보 초기화
+        ResetAllPlayerUI();
+
+        // 로비 UI 다시 표시
+        PVPModeUI.SetActive(true);
     }
+    #endregion
+
+    #region 유틸 함수
+    // 사설방 생성시 코드 부여
+    private string GenerateRoomCode(int length)
+    {
+        const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        System.Text.StringBuilder sb = new System.Text.StringBuilder(length);
+        for (int i = 0; i < length; i++)
+            sb.Append(chars[Random.Range(0, chars.Length)]);
+        return sb.ToString();
+    }
+
+    // 오류 출력
+    private void ShowError(string msg)
+    {
+        CanvasGroup canvasGroup = PVP_ErrorCode.GetComponent<CanvasGroup>();
+        if (canvasGroup == null)
+        {
+            // 만약 CanvasGroup이 없다면, 직접 추가하고 다시 시도하거나 에러를 로그로 남깁니다.
+            Debug.LogError("PVP_ErrorCode 오브젝트에 CanvasGroup 컴포넌트가 필요합니다.");
+            return;
+        }
+
+        // 다음 표시를 위해 알파값을 1로 초기화
+        canvasGroup.alpha = 1f;
+        PVP_ErrorCode_Text.text = msg;
+        PVP_ErrorCode.SetActive(true);
+
+        // 3초 대기 후 1초 동안 서서히 사라지는 코루틴을 시작합니다.
+        StartCoroutine(HideErrorAfterDelay(3f, 1f));
+    }
+
+    // 오류출력 코루틴 3초 1초
+    private System.Collections.IEnumerator HideErrorAfterDelay(float waitTime, float fadeTime)
+    {
+        // 지정된 시간만큼 기다립니다.
+        yield return new WaitForSeconds(waitTime);
+
+        CanvasGroup canvasGroup = PVP_ErrorCode.GetComponent<CanvasGroup>();
+        float elapsedTime = 0f;
+
+        // fadeTime 동안 알파값을 1에서 0으로 변경합니다.
+        while (elapsedTime < fadeTime)
+        {
+            canvasGroup.alpha = Mathf.Lerp(1f, 0f, elapsedTime / fadeTime);
+            elapsedTime += Time.deltaTime;
+            yield return null; // 다음 프레임까지 대기
+        }
+
+        // 페이드 아웃이 끝난 후 알파값을 0으로 확실하게 설정하고 오브젝트를 비활성화합니다.
+        canvasGroup.alpha = 0f;
+        PVP_ErrorCode.SetActive(false);
+    }
+
+    // 프로필 이미지 삽입
+    private void SetPlayerProfileImage(Player player, Image targetImage)
+    {
+        if (player.CustomProperties.TryGetValue("EquippedProfile", out object profileObj))
+        {
+            string profileName = profileObj.ToString();
+
+            // Resources/SkinData 폴더 안에 있는 모든 SkinData 불러오기
+            SkinData[] allSkins = Resources.LoadAll<SkinData>("SkinData");
+
+            foreach (SkinData skin in allSkins)
+            {
+                if (skin.skinID == profileName)
+                {
+                    targetImage.sprite = skin.profile;
+                    return;
+                }
+            }
+            Debug.LogWarning($"[프로필 찾을 수 없음] skinID: {profileName}");
+        }
+    }
+    #endregion
+
+    #region 게임 강제 종료 시
+    private void OnApplicationQuit()
+    {
+        HandleCleanUpOnExit();
+    }
+
+    private void OnApplicationPause(bool pause)
+    {
+        if (pause)
+        {
+            HandleCleanUpOnExit();
+        }
+    }
+
+    private void HandleCleanUpOnExit()
+    {
+        // 방에 있을 경우 퇴장
+        if (PhotonNetwork.InRoom)
+        {
+            PhotonNetwork.LeaveRoom(); // 유저가 방에서 나가도록 요청
+        }
+
+        // 포톤 연결 해제
+        if (PhotonNetwork.IsConnected)
+        {
+            PhotonNetwork.Disconnect();
+        }
+
+        // Firebase 세션 정리
+        Authentication.SignOut(); // 이미 구현된 로그아웃 함수 호출
+    }
+    #endregion
+
+    #region 버튼 관련 함수들
+    private void SetButtonInteractableVisual(Button button, bool isInteractable)
+    {
+        // 버튼 자체 막기
+        button.interactable = isInteractable;
+
+        disableIMGL.gameObject.SetActive(!isInteractable);
+        disableIMGR.gameObject.SetActive(!isInteractable);
+    }
+    #endregion
 }

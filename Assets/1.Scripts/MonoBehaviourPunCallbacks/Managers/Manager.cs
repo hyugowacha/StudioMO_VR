@@ -4,7 +4,6 @@ using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR.Interaction.Toolkit.Samples.StarterAssets;
-using TMPro;
 using Photon.Pun;
 
 /// <summary>
@@ -88,6 +87,8 @@ public abstract class Manager : MonoBehaviourPunCallbacks
         }
         if (this == instance)
         {
+            leftActionBasedController.SetActive(true);
+            rightActionBasedController.SetActive(true);
             ChangeText((Translation.Language)PlayerPrefs.GetInt(Translation.Preferences));
         }
     }

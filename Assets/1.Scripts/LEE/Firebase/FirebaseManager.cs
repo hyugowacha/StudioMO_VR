@@ -5,8 +5,9 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using Firebase.Database;
 using Firebase.Extensions;
+using Photon.Pun;
 
-public class FirebaseManager : MonoBehaviour
+public class FirebaseManager : MonoBehaviourPunCallbacks
 {
     #region 파이어베이스 필드
     [Header("LoginCanvas 관련 필드")]
@@ -71,6 +72,13 @@ public class FirebaseManager : MonoBehaviour
         Authentication.Initialize(OnFirebaseInitComplete);
     }
 
+    //TODO: 임시 아이디용
+    public void MasterTest()
+    {
+        loginInputID.text = "dhkdskrwl123@naver.com";
+        loginInputPW.text = "123456";
+    }
+
     /// <summary>
     /// Firebase 초기화 완료 후 콜백
     /// </summary>
@@ -88,6 +96,8 @@ public class FirebaseManager : MonoBehaviour
 
     private void Start()
     {
+        MasterTest();
+
         // 로그인 관련 버튼 이벤트 등록
         signUpCanvasButton.onClick.AddListener(OnClickGoToSignUp);      // 회원가입 창 열기
         signInButton.onClick.AddListener(OnClickSignIn);                // 로그인
@@ -154,9 +164,29 @@ public class FirebaseManager : MonoBehaviour
             switch (result)
             {
                 case Authentication.State.SignInSuccess:
-                    // TODO: 로그인 성공
-                    // 로그인 성공했으니 포톤 서버 연결
 
+                    PhotonNetwork.AutomaticallySyncScene = true;
+
+                    // 닉네임 정보 가져오기
+                    UserGameData.SetPhotonNicknameFromFirebase(Authentication.UserId);
+                    // 프로필 이미지 정보 가져오기 
+                    UserGameData.LoadEquippedProfile(Authentication.UserId);
+
+                    if (!PhotonNetwork.IsConnected)
+                    {
+                        Debug.Log("Photon 연결 시작");
+                        PhotonNetwork.ConnectUsingSettings();
+                    }
+                    else
+                    {
+                        Debug.Log("이미 Photon 연결됨 → 로비 진입");
+                        PhotonNetwork.JoinLobby();
+                    }
+
+                    // Photon AuthValues 설정
+                    PhotonNetwork.AuthValues = new Photon.Realtime.AuthenticationValues(Authentication.UserId);
+
+                    loginCanvas.gameObject.SetActive(false);
 
                     break;
                 case Authentication.State.SignInAlready:
@@ -312,92 +342,6 @@ public class FirebaseManager : MonoBehaviour
     }
     #endregion
 
-    #region 닉네임 설정 관련 함수들
-    /// <summary>
-    /// 닉네임 중복 체크 함수
-    /// </summary>
-    private void CheckNicknameDuplicate(string nickname, System.Action<bool> onComplete)
-    {
-        FirebaseDatabase.DefaultInstance
-            .GetReference("Users")
-            .OrderByChild("Nickname")
-            .EqualTo(nickname)
-            .GetValueAsync()
-            .ContinueWithOnMainThread(task =>
-            {
-                if (task.IsFaulted || task.IsCanceled)
-                {
-                    LogError("닉네임 중복 확인 실패");
-                    onComplete?.Invoke(true); // 실패 시 중복된 것으로 간주
-                    return;
-                }
-
-                bool isDuplicate = task.Result.Exists;
-                onComplete?.Invoke(isDuplicate);
-            });
-    }
-
-    /// <summary>
-    /// 닉네임 입력 후 확인 버튼 클릭 처리
-    /// </summary>
-    private void OnClickSetNickname()
-    {
-        string nickname = nickname_Input.text.Trim();
-
-        // 닉네임 공백 제한
-        if (string.IsNullOrEmpty(nickname))
-        {
-            LogWarning("닉네임을 입력해주세요.");
-            return;
-        }
-
-        // 닉네임 길이 제한 검사
-        if (nickname.Length < 2 || nickname.Length > 8)
-        {
-            LogWarning("닉네임은 최소 2글자 이상, 최대 8글자 이하로 입력해주세요.");
-            return;
-        }
-
-        string uid = Authentication.GetCurrentUID();
-        if (string.IsNullOrEmpty(uid))
-        {
-            LogError("닉네임 저장 실패: UID를 찾을 수 없습니다.");
-            return;
-        }
-
-        // 닉네임 중복 체크 먼저 수행
-        CheckNicknameDuplicate(nickname, isDuplicate =>
-        {
-            if (isDuplicate)
-            {
-                LogWarning("이미 사용 중인 닉네임입니다.");
-                return;
-            }
-
-            // 중복 아님 → 저장
-            FirebaseDatabase.DefaultInstance
-                .RootReference
-                .Child("Users")
-                .Child(uid)
-                .Child("Nickname")
-                .SetValueAsync(nickname)
-                .ContinueWithOnMainThread(task =>
-                {
-                    if (task.IsCanceled || task.IsFaulted)
-                    {
-                        LogError("닉네임 저장에 실패했습니다.");
-                    }
-                    else
-                    {
-                        Log("닉네임이 성공적으로 저장되었습니다.");
-                        nicknameCanvas.SetActive(false);
-                        OnClickBackToLogin();
-                    }
-                });
-        });
-    }
-    #endregion
-
     #region 계정 찾기 중 ID찾기 안에서 행해지는 함수들
     /// <summary>
     /// Email 입력 후 Email기반으로 ID찾기 시도
@@ -500,6 +444,93 @@ public class FirebaseManager : MonoBehaviour
         findPW_SchoolInput.text = "";
         findPW.SetActive(false);
         findID.SetActive(true);
+    }
+    #endregion
+
+    #region 닉네임 설정 관련 함수들
+    /// <summary>
+    /// 닉네임 중복 체크 함수
+    /// </summary>
+    private void CheckNicknameDuplicate(string nickname, System.Action<bool> onComplete)
+    {
+        FirebaseDatabase.DefaultInstance
+            .GetReference("Users")
+            .OrderByChild("Nickname")
+            .EqualTo(nickname)
+            .GetValueAsync()
+            .ContinueWithOnMainThread(task =>
+            {
+                if (task.IsFaulted || task.IsCanceled)
+                {
+                    LogError("닉네임 중복 확인 실패");
+                    onComplete?.Invoke(true); // 실패 시 중복된 것으로 간주
+                    return;
+                }
+
+                bool isDuplicate = task.Result.Exists;
+                onComplete?.Invoke(isDuplicate);
+            });
+    }
+
+    /// <summary>
+    /// 닉네임 입력 후 확인 버튼 클릭 처리
+    /// </summary>
+    private void OnClickSetNickname()
+    {
+        string nickname = nickname_Input.text.Trim();
+
+        // 닉네임 공백 제한
+        if (string.IsNullOrEmpty(nickname))
+        {
+            LogWarning("닉네임을 입력해주세요.");
+            return;
+        }
+
+        // 닉네임 길이 제한 검사
+        if (nickname.Length < 2 || nickname.Length > 8)
+        {
+            LogWarning("닉네임은 최소 2글자 이상, 최대 8글자 이하로 입력해주세요.");
+            return;
+        }
+
+        string uid = Authentication.GetCurrentUID();
+        if (string.IsNullOrEmpty(uid))
+        {
+            LogError("닉네임 저장 실패: UID를 찾을 수 없습니다.");
+            return;
+        }
+
+        // 닉네임 중복 체크 먼저 수행
+        CheckNicknameDuplicate(nickname, isDuplicate =>
+        {
+            if (isDuplicate)
+            {
+                LogWarning("이미 사용 중인 닉네임입니다.");
+                return;
+            }
+
+            // 중복 아니면 저장
+            FirebaseDatabase.DefaultInstance
+                .RootReference
+                .Child("Users")
+                .Child(uid)
+                .Child("Nickname")
+                .SetValueAsync(nickname)
+                .ContinueWithOnMainThread(task =>
+                {
+                    if (task.IsCanceled || task.IsFaulted)
+                    {
+                        LogError("닉네임 저장에 실패했습니다.");
+                    }
+                    else
+                    {
+                        Log("닉네임이 성공적으로 저장되었습니다.");
+                        nickname_Input.text = "";
+                        nicknameCanvas.SetActive(false);
+                        OnClickBackToLogin();
+                    }
+                });
+        });
     }
     #endregion
 

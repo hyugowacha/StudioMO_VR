@@ -317,7 +317,7 @@ PrefabInstance:
     - target: {fileID: 1870346438729983196, guid: 7031f2b74e5772942b20714b68d9f50e,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2343023634178312409, guid: 7031f2b74e5772942b20714b68d9f50e,
         type: 3}
@@ -337,7 +337,7 @@ PrefabInstance:
     - target: {fileID: 2649671975386424950, guid: 7031f2b74e5772942b20714b68d9f50e,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2703892535990001091, guid: 7031f2b74e5772942b20714b68d9f50e,
         type: 3}
@@ -454,6 +454,11 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5323021353595609196, guid: 7031f2b74e5772942b20714b68d9f50e,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5570756430699653411, guid: 7031f2b74e5772942b20714b68d9f50e,
         type: 3}
       propertyPath: m_AnchorMax.y
@@ -514,6 +519,11 @@ PrefabInstance:
       propertyPath: m_DefaultParameters.m_VignetteColorBlend.r
       value: 0.5660378
       objectReference: {fileID: 0}
+    - target: {fileID: 6563744695617791598, guid: 7031f2b74e5772942b20714b68d9f50e,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6720512595020038020, guid: 7031f2b74e5772942b20714b68d9f50e,
         type: 3}
       propertyPath: m_Name
@@ -523,6 +533,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7078623879732139637, guid: 7031f2b74e5772942b20714b68d9f50e,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7167463795571588754, guid: 7031f2b74e5772942b20714b68d9f50e,
         type: 3}
@@ -567,6 +582,11 @@ PrefabInstance:
     - target: {fileID: 9021409837209167621, guid: 7031f2b74e5772942b20714b68d9f50e,
         type: 3}
       propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9162784085390937998, guid: 7031f2b74e5772942b20714b68d9f50e,
+        type: 3}
+      propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents:
@@ -634,6 +654,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   xrOrigin: {fileID: 2023253639}
+  snapTurnProvider: {fileID: 422152584}
   dynamicMoveProvider: {fileID: 300346592}
   leftActionBasedController: {fileID: 1448770467}
   rightActionBasedController: {fileID: 1517645303}
@@ -644,17 +665,11 @@ MonoBehaviour:
   - {fileID: -5404065080865582764, guid: 7a90aca60ac74e4468fb63423fbf29cc, type: 3}
   - {fileID: 3053582084035031754, guid: 7a90aca60ac74e4468fb63423fbf29cc, type: 3}
   vignetteController: {fileID: 1718015150}
-  fontAssets:
-  - {fileID: 11400000, guid: 4b8aa5f6588df0c47803a2a6bb4b6761, type: 2}
-  - {fileID: 11400000, guid: 4b8aa5f6588df0c47803a2a6bb4b6761, type: 2}
-  - {fileID: 11400000, guid: 5835cec086e6a7948b6ffe62cdaa7edf, type: 2}
-  - {fileID: 11400000, guid: 7e4defada93fa8944a9bdf0c50dad9a4, type: 2}
   lookInputActionReference: {fileID: 974710145598052325, guid: 7a90aca60ac74e4468fb63423fbf29cc,
     type: 3}
   lookInputRatio: {x: 1, y: 1}
   language: 1
   stageData: {fileID: 0}
-  snapTurnProvider: {fileID: 422152584}
   character: {fileID: 7609372094796106672}
   leftHandOffset: {x: 0, y: 0, z: 0}
   rightHandOffset: {x: 0, y: 0, z: 0}
@@ -1851,6 +1866,21 @@ PrefabInstance:
       propertyPath: sceneViewId
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3995498578209120260, guid: 99d1fdbf8c7943d40b7e251dd187825e,
+        type: 3}
+      propertyPath: sceneViewId
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4079833951125051977, guid: 99d1fdbf8c7943d40b7e251dd187825e,
+        type: 3}
+      propertyPath: sceneViewId
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5477831085550239135, guid: 99d1fdbf8c7943d40b7e251dd187825e,
+        type: 3}
+      propertyPath: sceneViewId
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 5540131540651068354, guid: 99d1fdbf8c7943d40b7e251dd187825e,
         type: 3}
       propertyPath: m_Name
@@ -1905,6 +1935,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6538331087419072085, guid: 99d1fdbf8c7943d40b7e251dd187825e,
+        type: 3}
+      propertyPath: invincibleMode
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
