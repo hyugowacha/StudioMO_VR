@@ -199,6 +199,14 @@ public static class ExtensionMethod
         }
     }
 
+    public static void SetActive(this Slider slider, bool value)
+    {
+        if(slider != null)
+        {
+            slider.gameObject.SetActive(value);
+        }
+    }
+
     public static void Set(this Image image, Sprite sprite)
     {
         if (image != null)

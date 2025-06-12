@@ -262,6 +262,7 @@ public class BattleManager : Manager
         switch (value)
         {
             case true:
+                Mineral.miningAction += (actor, value) => { character?.AddMineral(value); };
                 SlowMotion.action += (speed) =>
                 {
                     if (audioSource != null)
@@ -275,6 +276,7 @@ public class BattleManager : Manager
                 }
                 break;
             case false:
+                Mineral.miningAction -= (actor, value) => { character?.AddMineral(value); };
                 SlowMotion.action -= (speed) =>
                 {
                     if (audioSource != null)

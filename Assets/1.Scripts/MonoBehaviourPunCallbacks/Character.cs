@@ -167,9 +167,10 @@ public class Character : MonoBehaviourPunCallbacks, IPunObservable
 
     public override void OnPlayerLeftRoom(Player player)
     {
-        Debug.Log(player.ActorNumber);
         if (SlowMotion.IsOwner(player) == true)
         {
+            Debug.Log("슬로우 모션 테스트");
+            SlowMotion.Stop();
         }
     }
 
