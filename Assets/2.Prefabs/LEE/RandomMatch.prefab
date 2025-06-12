@@ -51,10 +51,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a9ea5a5087cbc74ca0494b6b4060c80, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PVPModeUI: {fileID: 0}
+  PVPModeUI: {fileID: 4896072174714895910}
   backToLobbyButton: {fileID: 3094344983041152632}
   withFriendsButton: {fileID: 4140522174968303031}
   randomMatchingButton: {fileID: 7039494822517313941}
+  disableIMGL: {fileID: 9052119871003607824}
+  disableIMGR: {fileID: 4087015283920046187}
   PVP_CodePopUp: {fileID: 4998945352854031885}
   PVP_CodePopUp_CloseButton: {fileID: 7045926265432106491}
   PVP_CodePopUp_InputField: {fileID: 6871409333167327013}
@@ -958,15 +960,15 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 14
-  m_fontSizeBase: 14
+  m_fontSize: 20
+  m_fontSizeBase: 20
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
   m_HorizontalAlignment: 1
-  m_VerticalAlignment: 256
+  m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_wordSpacing: 0
@@ -1012,6 +1014,8 @@ GameObject:
   - component: {fileID: 527539532266510902}
   - component: {fileID: 420012126021294463}
   - component: {fileID: 7000783147515491201}
+  - component: {fileID: 6271294892903647617}
+  - component: {fileID: 110025253599862658}
   m_Layer: 5
   m_Name: PVP_ErrorCode
   m_TagString: Untagged
@@ -1103,6 +1107,37 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!225 &6271294892903647617
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1351422302573535945}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
+--- !u!114 &110025253599862658
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1351422302573535945}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7951c64acb0fa62458bf30a60089fe2d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreReversedGraphics: 0
+  m_CheckFor2DOcclusion: 0
+  m_CheckFor3DOcclusion: 0
+  m_BlockingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_RaycastTriggerInteraction: 1
 --- !u!1 &1382957735013823367
 GameObject:
   m_ObjectHideFlags: 0
@@ -2047,6 +2082,7 @@ GameObject:
   - component: {fileID: 6719658041844880335}
   - component: {fileID: 3887119477465292338}
   - component: {fileID: 1891677801805357454}
+  - component: {fileID: 779231110665420811}
   m_Layer: 5
   m_Name: RandomMatchUI
   m_TagString: Untagged
@@ -2143,6 +2179,25 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &779231110665420811
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2633006866292174115}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7951c64acb0fa62458bf30a60089fe2d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreReversedGraphics: 0
+  m_CheckFor2DOcclusion: 0
+  m_CheckFor3DOcclusion: 0
+  m_BlockingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_RaycastTriggerInteraction: 1
 --- !u!1 &2782702288665508390
 GameObject:
   m_ObjectHideFlags: 0
@@ -2939,6 +2994,7 @@ GameObject:
   - component: {fileID: 412287061477833355}
   - component: {fileID: 6749419313454881655}
   - component: {fileID: 7951062378194636064}
+  - component: {fileID: 2057309594088903250}
   m_Layer: 5
   m_Name: PVP_HostPopUp
   m_TagString: Untagged
@@ -3033,6 +3089,25 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &2057309594088903250
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3395511222496674176}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7951c64acb0fa62458bf30a60089fe2d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreReversedGraphics: 0
+  m_CheckFor2DOcclusion: 0
+  m_CheckFor3DOcclusion: 0
+  m_BlockingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_RaycastTriggerInteraction: 1
 --- !u!1 &3711431800577546742
 GameObject:
   m_ObjectHideFlags: 0
@@ -4888,13 +4963,14 @@ GameObject:
   - component: {fileID: 1841402137915197331}
   - component: {fileID: 1708581387030582122}
   - component: {fileID: 5587287168922823384}
+  - component: {fileID: 7862365722834395191}
   m_Layer: 5
   m_Name: PVPModeUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &7134935731862266745
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4978,6 +5054,25 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &7862365722834395191
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4896072174714895910}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7951c64acb0fa62458bf30a60089fe2d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreReversedGraphics: 0
+  m_CheckFor2DOcclusion: 0
+  m_CheckFor3DOcclusion: 0
+  m_BlockingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_RaycastTriggerInteraction: 1
 --- !u!1 &4998945352854031885
 GameObject:
   m_ObjectHideFlags: 0
@@ -4990,6 +5085,7 @@ GameObject:
   - component: {fileID: 8068244647971927302}
   - component: {fileID: 4029125435006883066}
   - component: {fileID: 294788122555941549}
+  - component: {fileID: 4283503384382065232}
   m_Layer: 5
   m_Name: PVP_CodePopUp
   m_TagString: Untagged
@@ -5080,6 +5176,25 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &4283503384382065232
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4998945352854031885}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7951c64acb0fa62458bf30a60089fe2d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreReversedGraphics: 0
+  m_CheckFor2DOcclusion: 0
+  m_CheckFor3DOcclusion: 0
+  m_BlockingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_RaycastTriggerInteraction: 1
 --- !u!1 &5169518461176610453
 GameObject:
   m_ObjectHideFlags: 0
@@ -5092,6 +5207,7 @@ GameObject:
   - component: {fileID: 6112464007019024686}
   - component: {fileID: 7844098434977331222}
   - component: {fileID: 2858627759066520033}
+  - component: {fileID: 947024091006021075}
   m_Layer: 5
   m_Name: MatchingFail
   m_TagString: Untagged
@@ -5182,6 +5298,25 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &947024091006021075
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5169518461176610453}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7951c64acb0fa62458bf30a60089fe2d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreReversedGraphics: 0
+  m_CheckFor2DOcclusion: 0
+  m_CheckFor3DOcclusion: 0
+  m_BlockingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_RaycastTriggerInteraction: 1
 --- !u!1 &5191247848331227188
 GameObject:
   m_ObjectHideFlags: 0
@@ -5892,6 +6027,7 @@ GameObject:
   - component: {fileID: 4960673694366912968}
   - component: {fileID: 5067049670849516161}
   - component: {fileID: 2495609060004886655}
+  - component: {fileID: 4291419440495050626}
   m_Layer: 5
   m_Name: RandomMatchError
   m_TagString: Untagged
@@ -5985,6 +6121,25 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &4291419440495050626
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5856051110712338743}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7951c64acb0fa62458bf30a60089fe2d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreReversedGraphics: 0
+  m_CheckFor2DOcclusion: 0
+  m_CheckFor3DOcclusion: 0
+  m_BlockingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_RaycastTriggerInteraction: 1
 --- !u!1 &5896730541208312121
 GameObject:
   m_ObjectHideFlags: 0

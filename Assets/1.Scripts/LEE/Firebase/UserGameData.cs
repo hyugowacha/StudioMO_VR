@@ -26,7 +26,7 @@ public static class UserGameData
     public static string EquippedProfile { get; set; } = "Profile_Default";
     #endregion
 
-    #region 함수들
+    #region 파이어베이스에서 값을 가져오는 함수들
     // Firebase에서 유저 데이터를 불러옴
     public static void Load(Action onComplete = null)
     {
