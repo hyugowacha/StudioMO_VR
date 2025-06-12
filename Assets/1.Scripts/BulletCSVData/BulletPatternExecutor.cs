@@ -12,6 +12,8 @@ public class BulletPatternExecutor : MonoBehaviour
     [Header("실제 탄막을 발사시켜줄 매니저")]
     public BulletSpawnerManager spawnerManager;
 
+    public StageManager stageManager;
+
     [Header("분당 BPM")] 
     public float bpm = 110f;
 
@@ -56,6 +58,12 @@ public class BulletPatternExecutor : MonoBehaviour
         if (!initialized) { return; }
 
         _timer += Time.deltaTime;
+
+        //if() //만약 일시정지 중이라면 
+        //{
+        //    _timer -= Time.deltaTime;
+        //}
+
 
         if (_timer >= _beatInterval)
         {
