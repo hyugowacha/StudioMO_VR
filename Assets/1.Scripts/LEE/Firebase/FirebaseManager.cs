@@ -167,6 +167,11 @@ public class FirebaseManager : MonoBehaviourPunCallbacks
 
                     PhotonNetwork.AutomaticallySyncScene = true;
 
+                    // 닉네임 정보 가져오기
+                    UserGameData.SetPhotonNicknameFromFirebase(Authentication.UserId);
+                    // 프로필 이미지 정보 가져오기 
+                    UserGameData.LoadEquippedProfile(Authentication.UserId);
+
                     if (!PhotonNetwork.IsConnected)
                     {
                         Debug.Log("Photon 연결 시작");
@@ -180,11 +185,6 @@ public class FirebaseManager : MonoBehaviourPunCallbacks
 
                     // Photon AuthValues 설정
                     PhotonNetwork.AuthValues = new Photon.Realtime.AuthenticationValues(Authentication.UserId);
-
-                    // 닉네임 정보 가져오기
-                    UserGameData.SetPhotonNicknameFromFirebase(Authentication.UserId);
-                    // 프로필 이미지 정보 가져오기 
-                    UserGameData.LoadEquippedProfile(Authentication.UserId);
 
                     loginCanvas.gameObject.SetActive(false);
 
