@@ -116,12 +116,14 @@ public static class SlowMotion
     {
         currentTween.Pause();
         speed = PauseSpeed;
+        action?.Invoke(speed);
     }
 
     public static void Play()
     {
         currentTween.Play();
         speed = BeforeSpeed;
+        action?.Invoke(speed);
     }
 
     public static void Stop()
