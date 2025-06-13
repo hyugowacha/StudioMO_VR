@@ -29,6 +29,9 @@ public class StageData : ScriptableObject
     [Header("비패턴형 탄막 패턴"), SerializeField]
     private TextAsset nonPatternBulletTextAsset;
 
+    [Header("Skybox"), SerializeField]
+    private Material skybox;
+
     [Serializable]
     public struct Score
     {
