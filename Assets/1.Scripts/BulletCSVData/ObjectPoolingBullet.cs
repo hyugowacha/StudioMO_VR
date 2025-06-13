@@ -13,7 +13,7 @@ public interface IBullet
     void OnSpawn();
 
     // 탄막 객체에 대한 속도 조절
-    void ChangePitch(float val);
+    void ChangeAnimationSpeed(float motionSpeed);
 }
 
 public class ObjectPoolingBullet : MonoBehaviour
@@ -32,17 +32,7 @@ public class ObjectPoolingBullet : MonoBehaviour
     private Dictionary<Type, List<IBullet>> _allCreatedBullets = new();
     #endregion
 
-    #region 유니티 이벤트 (슬로우모션 클래스 구독 처리용)
-    private void OnEnable()
-    {
-        // TODO: 추후 슬로우모션 시스템 이벤트 구독
-    }
-
-    private void OnDisable()
-    {
-        // TODO: 슬로우모션 시스템 이벤트 해제
-    }
-    #endregion
+   
 
     #region 슬로우모션 처리 (테스트용)
     private float _currentPitch = 1f;
@@ -71,7 +61,7 @@ public class ObjectPoolingBullet : MonoBehaviour
         {
             foreach (var bullet in list)
             {
-                bullet.ChangePitch(val);
+                bullet.ChangeAnimationSpeed(val);
             }
         }
     }
@@ -92,7 +82,7 @@ public class ObjectPoolingBullet : MonoBehaviour
                 T bullet = Instantiate(prefab, parent);
 
                 // 현재 Pitch 값 즉시 반영
-                bullet.ChangePitch(_currentPitch);
+                bullet.ChangeAnimationSpeed(SlowMotion.speed);
 
                 // 관리 리스트에 추가 (없으면 Type에 추가)
                 if (!_allCreatedBullets.ContainsKey(typeof(T)))
@@ -108,7 +98,7 @@ public class ObjectPoolingBullet : MonoBehaviour
                 bullet.SetPool(localPool);           // 풀 정보 전달
                 bullet.gameObject.SetActive(true);   // 활성화
                 bullet.OnSpawn();                    // 초기화
-                bullet.ChangePitch(_currentPitch);   // Pitch 적용
+                bullet.ChangeAnimationSpeed(SlowMotion.speed);   // Pitch 적용
             },
             actionOnRelease: (bullet) =>
             {

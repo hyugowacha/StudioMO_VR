@@ -12,12 +12,16 @@ public class BulletPatternExecutor : MonoBehaviour
     [Header("실제 탄막을 발사시켜줄 매니저")]
     public BulletSpawnerManager spawnerManager;
 
+    public StageManager stageManager;
+
     [Header("분당 BPM")] 
     public float bpm = 110f;
 
     float _beatInterval;         // 비트 하나당 시간 (초 단위)
     float _timer;                // 시간 누적용
     int _currentBeatIndex = 1;   // 현재 몇번째 beat인지 (1부터 시작)
+
+    private float patternElapsedTime; //slowmotion speed 영향을 받는 시간 누적값
 
     List<BulletSpawnData> timePatterns; //패턴형 탄막 정보 리스트
     float startTime; 
@@ -32,14 +36,18 @@ public class BulletPatternExecutor : MonoBehaviour
 
     void Update()
     {
-        ProcessBeatTiming();
+        float delta = Time.deltaTime * SlowMotion.speed;
+        patternElapsedTime += delta;
+
+        ProcessBeatTiming(delta);
         ProcessPatternTiming();
     }
     #endregion
 
     public void InitiallizeBeatTiming()
     {
-        startTime = Time.time;
+        patternElapsedTime = 0;
+        _timer = 0;
 
         timePatterns = new List<BulletSpawnData>(loader.patternBulletData);
 
@@ -51,11 +59,12 @@ public class BulletPatternExecutor : MonoBehaviour
     /// <summary>
     /// 시간 누적해서 BPM에 맞춰 탄막 실행함. 해당 beatIndex에 맞는 패턴만 찾아서 실행함.
     /// </summary>
-    void ProcessBeatTiming()
+    void ProcessBeatTiming(float delta)
     {
         if (!initialized) { return; }
 
-        _timer += Time.deltaTime;
+        _timer += delta;
+
 
         if (_timer >= _beatInterval)
         {
@@ -82,9 +91,7 @@ public class BulletPatternExecutor : MonoBehaviour
     {
         if (!initialized) { return; }
 
-        float elapsed = Time.time - startTime;
-
-        var duePatterns = timePatterns.Where(p => p.beatTiming / 1000f <= elapsed).ToList();
+        var duePatterns = timePatterns.Where(p => p.beatTiming / 1000f <= patternElapsedTime).ToList();
 
         foreach(var data in duePatterns)
         {
