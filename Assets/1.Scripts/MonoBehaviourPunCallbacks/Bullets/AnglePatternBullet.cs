@@ -12,6 +12,9 @@ public class AnglePatternBullet : MonoBehaviour, IBullet
     // 탄막을 관리하는 오브젝트 풀
     IObjectPool<AnglePatternBullet> _AnglePatternBulletPool;
 
+    [Header("탄막 애니메이터")]
+    [SerializeField] private Animator bulletAnimator;
+
     // 이동 방향
     Vector3 moveDirection;
 
@@ -31,7 +34,8 @@ public class AnglePatternBullet : MonoBehaviour, IBullet
     // 풀에서 꺼내질 때 호출됨 (초기화)
     public void OnSpawn()
     {
-        // 추후 애니메이션 및 몇가지 기능 추가 예정
+        SlowMotion.action += ChangeAnimationSpeed;
+        ChangeAnimationSpeed(SlowMotion.speed);
     }
 
     // 발사 시 방향 설정
@@ -100,8 +104,8 @@ public class AnglePatternBullet : MonoBehaviour, IBullet
     #endregion
 
     // 탄막 객체에 대한 속도 조절(애니메이션)
-    public void ChangeAnimationSpeed()
+    public void ChangeAnimationSpeed(float motionSpeed)
     {
-        //slowSpeed = val;
+        bulletAnimator.speed = motionSpeed;
     }
 }

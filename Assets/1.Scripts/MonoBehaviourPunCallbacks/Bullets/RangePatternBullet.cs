@@ -12,6 +12,9 @@ public class RangePatternBullet : MonoBehaviour, IBullet
     // 탄막을 관리하는 오브젝트 풀
     IObjectPool<RangePatternBullet> _rangePatternBulletPool;
 
+    [Header("탄막 애니메이터")]
+    [SerializeField] private Animator bulletAnimator;
+
     // 이동 방향
     Vector3 moveDirection;
 
@@ -19,8 +22,6 @@ public class RangePatternBullet : MonoBehaviour, IBullet
     [Header("탄막 속도")]
     public float speed = 3f;
 
-    [Header("슬로우 모션 시")]
-    public float slowSpeed = 1f;
     #endregion
 
     #region 오브젝트 풀, 생성 시
@@ -33,7 +34,8 @@ public class RangePatternBullet : MonoBehaviour, IBullet
     // 풀에서 꺼내질 때 호출됨 (초기화)
     public void OnSpawn()
     {
-        // 추후 애니메이션 및 몇가지 기능 추가 예정
+        SlowMotion.action += ChangeAnimationSpeed;
+        ChangeAnimationSpeed(SlowMotion.speed);
     }
 
     // 발사 시 방향 설정
@@ -79,6 +81,8 @@ public class RangePatternBullet : MonoBehaviour, IBullet
     {
         // 탄막 인스펙터 이름 추가 후 이름을 삽입해야 함. 추후 자동화 생각해보긴 하기.
         // 사라짐 이펙트 출력
+        SlowMotion.action -= ChangeAnimationSpeed;
+
         if (!Application.isPlaying || !gameObject.activeInHierarchy) return;
         EffectPoolManager.Instance.SpawnEffect("VFX_MON001_Explode", transform.position, Quaternion.identity);
     }
@@ -93,15 +97,15 @@ public class RangePatternBullet : MonoBehaviour, IBullet
 
         // Y값 고정
         Vector3 currentPos = transform.position;
-        currentPos += flatDir * speed * Time.deltaTime * SlowMotion.speed;
+        currentPos += flatDir * speed * Time.deltaTime * SlowMotion.speed;    
         currentPos.y = transform.position.y; // Y 위치 고정
 
         transform.position = currentPos;
     }
     #endregion
 
-    public void ChangeAnimationSpeed()
+    public void ChangeAnimationSpeed(float motionSpeed)
     {
-
+        bulletAnimator.speed = motionSpeed;
     }
 }
