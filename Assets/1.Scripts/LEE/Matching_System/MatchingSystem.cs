@@ -70,6 +70,9 @@ public class MatchingSystem : MonoBehaviourPunCallbacks
 
     [Header("매칭 실패 팝업 관련 필드 (MatchingFail)")]
     [SerializeField] private GameObject MatchingFail;       // 매칭 실패 시 팝업 UI
+
+    [Header("로딩 화면")]
+    [SerializeField] GameObject loadingObject;
     #endregion
 
     #region 일반 필드
@@ -467,8 +470,11 @@ public class MatchingSystem : MonoBehaviourPunCallbacks
         // 유저 데이터 로드
         UserGameData.Load(() =>
         {
-            Debug.Log($"[PhotonLobbyHandler] 유저 데이터 로드 완료. IsTester = {UserGameData.IsTester}");
+            LobbyUI.gameObject.SetActive(true);
         });
+
+        loadingObject.gameObject.SetActive(false);
+
     }
 
     // 방 입장 실패 시
