@@ -1,3 +1,5 @@
+using System.Linq;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using DG.Tweening;
@@ -53,8 +55,10 @@ public class BattleManager : Manager
     [SerializeField]
     private RankingPanel rankingPanel;                          //랭킹 표시 패널
 
-    private const string Time = "time"; //방의 시간 속성 키
-    private const string Player1 = "player1";
+    private const string Time = "time";                         //방의 시간 속성 키
+    private const string First = "first";
+    private const string Second = "second";
+    private const string Third = "third";
 
     System.Collections.IEnumerator Test()
     {
@@ -67,12 +71,10 @@ public class BattleManager : Manager
         if (prefabCharacter != null && Resources.Load<GameObject>(prefabCharacter.name) != null)
         {
             GameObject gameObject = PhotonNetwork.Instantiate(prefabCharacter.name, Vector3.zero, Quaternion.identity, 0, null);
-            yield return new WaitUntil(() => gameObject != null);
             SetFixedPosition(gameObject.transform.position);
             myCharacter = gameObject.GetComponent<Character>();
             if(myCharacter != null)
             {
-                Debug.Log(myCharacter.GetComponent<PhotonView>().ViewID);
                 slowMotionPanel?.Set(myCharacter.GetPortraitMaterial());
             }
         }
@@ -97,7 +99,6 @@ public class BattleManager : Manager
             }
         }
         Room room = PhotonNetwork.CurrentRoom;
-        rankingPanel?.Set(room.Players); //랭킹 패널 갱신
         if (PhotonNetwork.IsMasterClient == false)
         {
             OnRoomPropertiesUpdate(room.CustomProperties);
@@ -180,7 +181,6 @@ public class BattleManager : Manager
                 slowMotionPanel?.Fill(current, full, null);
             }
         }
-        rankingPanel?.Show();
     }
 
     protected override void ChangeText()
@@ -250,6 +250,15 @@ public class BattleManager : Manager
                             }
                         }
                         break;
+                    case First:
+                        rankingPanel?.SetFirst(hashtable[key]);
+                        break;
+                    case Second:
+                        rankingPanel?.SetSecond(hashtable[key]);
+                        break;
+                    case Third:
+                        rankingPanel?.SetThird(hashtable[key]);
+                        break;
                 }
             }
         }
@@ -258,11 +267,58 @@ public class BattleManager : Manager
     public override void OnPlayerEnteredRoom(Player player)
     {
         //새로운 멤버로 인하여 랭킹패널 갱신
+        Debug.Log(Character.list.Count);
     }
 
     public override void OnPlayerLeftRoom(Player player)
     {
-        //랭킹패널 갱신
+        if (PhotonNetwork.IsMasterClient == true && player != null)
+        {
+            Room room = PhotonNetwork.CurrentRoom;
+            Hashtable hashtable = room != null ? room.CustomProperties : null;
+            if (hashtable != null)
+            {
+                if(hashtable.ContainsKey(First) == true && hashtable[First] != null && int.TryParse(hashtable[First].ToString(), out int first) == true)
+                {
+                    if(first == player.ActorNumber)
+                    {
+                        if(hashtable.ContainsKey(Second) == true && hashtable[Second] != null && int.TryParse(hashtable[Second].ToString(), out int second) == true)
+                        {
+                            if(hashtable.ContainsKey(Third) == true && hashtable[Third] != null && int.TryParse(hashtable[Third].ToString(), out int third) == true)
+                            {
+                                room.SetCustomProperties(new Hashtable() { { First, second }, { Second, third }, { Third, null } });
+                            }
+                            else
+                            {
+                                room.SetCustomProperties(new Hashtable() { { First, second }, { Second, null }});
+                            }
+                        }
+                        else
+                        {
+                            room.SetCustomProperties(new Hashtable() { { First, null } });
+                        }
+                    }
+                    else if(hashtable.ContainsKey(Second) == true && hashtable[Second] != null && int.TryParse(hashtable[Second].ToString(), out int second) == true)
+                    {
+                        if(second == player.ActorNumber)
+                        {
+                            if (hashtable.ContainsKey(Third) == true && hashtable[Third] != null && int.TryParse(hashtable[Third].ToString(), out int third) == true)
+                            {
+                                room.SetCustomProperties(new Hashtable() {{ Second, third }, { Third, null } });
+                            }
+                            else
+                            {
+                                room.SetCustomProperties(new Hashtable() {{ Second, null } });
+                            }
+                        }
+                        else if(hashtable.ContainsKey(Third) == true && hashtable[Third] != null && int.TryParse(hashtable[Third].ToString(), out int third) == true && third == player.ActorNumber)
+                        {
+                            room.SetCustomProperties(new Hashtable() { { Third, null } });
+                        }
+                    }
+                }
+            }
+        }
         //혼자 남으면 이긴거
     }
 
@@ -321,7 +377,83 @@ public class BattleManager : Manager
 
     private void AddMineral(int actor, uint value)
     {
-        if(PhotonNetwork.LocalPlayer.ActorNumber == actor)
+        if (value > 0 && PhotonNetwork.IsMasterClient == true)
+        {
+            Room room = PhotonNetwork.CurrentRoom;
+            Hashtable hashtable = room != null ? room.CustomProperties : null;
+            IReadOnlyList<Character> list = Character.list;
+            if (hashtable != null && list != null)
+            {
+                for (int i = 0; i < list.Count; i++)
+                {
+                    if (list[i] != null && list[i].photonView.OwnerActorNr == actor)
+                    {
+                        if(hashtable.ContainsKey(First) == false || hashtable[First] == null || int.TryParse(hashtable[First].ToString(), out int first) == false)
+                        {
+                            room.SetCustomProperties(new Hashtable() { { First, actor } });
+                        }
+                        else if(first != actor)
+                        {
+                            bool change = false;
+                            for(int j = 0; j < list.Count; j++)
+                            {
+                                if (list[j] != null && list[j].photonView.OwnerActorNr == first && list[j].mineralCount < (ulong)list[i].mineralCount + value)
+                                {
+                                    if(hashtable.ContainsKey(Second) == true && hashtable[Second] != null && int.TryParse(hashtable[Second].ToString(), out int second) == true)
+                                    {
+                                        room.SetCustomProperties(new Hashtable() { { First, actor }, { Second, first }, { Third, second } });
+                                    }
+                                    else
+                                    {
+                                        room.SetCustomProperties(new Hashtable() { {First, actor}, {Second, first} });
+                                    }
+                                    change = true;
+                                    break;
+                                }
+                            }
+                            if(change == false)
+                            {
+                                if (hashtable.ContainsKey(Second) == false || hashtable[Second] == null || int.TryParse(hashtable[Second].ToString(), out int second) == false)
+                                {
+                                    room.SetCustomProperties(new Hashtable() { { Second, actor } });
+                                }
+                                else if(second != actor)
+                                {
+                                    for (int j = 0; j < list.Count; j++)
+                                    {
+                                        if (list[j] != null && list[j].photonView.OwnerActorNr == second && list[j].mineralCount < (ulong)list[i].mineralCount + value)
+                                        {
+                                            room.SetCustomProperties(new Hashtable() { { Second, actor }, { Third, second } });
+                                            change = true;
+                                            break;
+                                        }
+                                    }
+                                    if (change == false)
+                                    {
+                                        if(hashtable.ContainsKey(Third) == false || hashtable[Third] == null || int.TryParse(hashtable[Third].ToString(), out int third) == false)
+                                        {
+                                            room.SetCustomProperties(new Hashtable() { {Third, actor} });
+                                        }
+                                        else if (third != actor)
+                                        {
+                                            for (int j = 0; j < list.Count; j++)
+                                            {
+                                                if (list[j] != null && list[j].photonView.OwnerActorNr == third && list[j].mineralCount < (ulong)list[i].mineralCount + value)
+                                                {
+                                                    room.SetCustomProperties(new Hashtable() { { Third, actor } });
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        if (PhotonNetwork.LocalPlayer.ActorNumber == actor)
         {
             myCharacter?.AddMineral(value);
         }
