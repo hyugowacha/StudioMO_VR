@@ -14,6 +14,9 @@ public static class SlowMotion
     //슬로우 모션이 적용 후의 속도
     public static readonly float AfterSpeed = 0.2f;
 
+    //퍼즈 시 속도
+    public static readonly float PauseSpeed = 0;
+
     //슬로우 모션 적용 시간
     public static readonly float ApplySpeed = 0.5f;
 
@@ -112,11 +115,15 @@ public static class SlowMotion
     public static void Pause()
     {
         currentTween.Pause();
+        speed = PauseSpeed;
+        action?.Invoke(speed);
     }
 
     public static void Play()
     {
         currentTween.Play();
+        speed = BeforeSpeed;
+        action?.Invoke(speed);
     }
 
     public static void Stop()

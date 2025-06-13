@@ -1,3 +1,4 @@
+using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 using UnityEngine.Pool;
 
@@ -6,6 +7,12 @@ public class GuidedBullet : MonoBehaviour, IBullet
     #region 탄막(인식) 필드
     // 탄막을 관리하는 오브젝트 풀
     IObjectPool<GuidedBullet> _guidedBulletPool;
+
+    [Header("탄막 스폰 애니메이터")]
+    [SerializeField] private Animator spawnAnimator;
+
+    [Header("탄막 이동 애니메이터")]
+    [SerializeField] private Animator moveAnimator;
 
     // 이동 방향
     Vector3 moveDirection;
@@ -27,7 +34,8 @@ public class GuidedBullet : MonoBehaviour, IBullet
     // 풀에서 꺼내질 때 호출됨 (초기화)
     public void OnSpawn()
     {
-        // 인디케이터 제거됨
+        SlowMotion.action += ChangeAnimationSpeed;
+        ChangeAnimationSpeed(SlowMotion.speed);
     }
 
     // 발사 시 방향 설정
@@ -47,6 +55,7 @@ public class GuidedBullet : MonoBehaviour, IBullet
     #endregion
 
     #region Update & 충돌 처리
+
     void Update()
     {
         BulletUpdate();
@@ -72,10 +81,11 @@ public class GuidedBullet : MonoBehaviour, IBullet
     void OnDisable()
     {
         // 사라짐 이펙트 출력
+        SlowMotion.action -= ChangeAnimationSpeed;
+
         if (!Application.isPlaying || !gameObject.activeInHierarchy) return;
         EffectPoolManager.Instance.SpawnEffect("VFX_MON001_Explode", transform.position, Quaternion.identity);
 
-        // 인디케이터 제거됨
     }
     #endregion
 
@@ -94,10 +104,10 @@ public class GuidedBullet : MonoBehaviour, IBullet
         transform.position = currentPos;
     }
 
-    // 애니메이션 정지 함수로 변경
-    public void ChangePitch(float val)
+    public void ChangeAnimationSpeed(float motionSpeed)
     {
-        //slowSpeed = val;
+        spawnAnimator.speed = motionSpeed;
+        moveAnimator.speed = motionSpeed;
     }
     #endregion
 }

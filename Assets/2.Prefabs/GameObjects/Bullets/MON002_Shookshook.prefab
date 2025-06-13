@@ -190,9 +190,9 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 3520494923555118306}
   - {fileID: 3728584568422919980}
   - {fileID: 1859536240197881480}
-  - {fileID: 3520494923555118306}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!135 &5199713861795064894
@@ -370,7 +370,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b2ca1e05a1513c14287f26200004051c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spawnAnimator: {fileID: 7366591221137688216}
+  moveAnimator: {fileID: 8938968048706179255}
   speed: 3
+  slowSpeed: 1
 --- !u!1 &2770477920229300657
 GameObject:
   m_ObjectHideFlags: 0
@@ -994,3 +997,9 @@ MonoBehaviour:
   - {fileID: 4292106193110943320}
   - {fileID: 2770477920229300657}
   isSpawned: 0
+--- !u!95 &7366591221137688216 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 5866666021909216657, guid: abef7f7b59f6026478fa45d0aeff064a,
+    type: 3}
+  m_PrefabInstance: {fileID: 3986237652820884233}
+  m_PrefabAsset: {fileID: 0}

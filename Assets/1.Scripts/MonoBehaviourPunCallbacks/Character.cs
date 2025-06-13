@@ -4,6 +4,7 @@ using UnityEngine;
 using Photon.Pun;
 using DG.Tweening;
 using Photon.Realtime;
+using UnityEngine.InputSystem.iOS;
 
 /// <summary>
 /// 플레이어가 조종하는 캐릭터를 나타내는 클래스
@@ -116,7 +117,7 @@ public class Character : MonoBehaviourPunCallbacks, IPunObservable
                 {
                     if (unmovable == true)
                     {
-                        ApplyFainting(false, unbeatable);
+                        RequestFainting(false, unbeatable);
                         if (unbeatable == true)
                         {
                             immuneTime = bulletImmuneDuration;
@@ -128,7 +129,7 @@ public class Character : MonoBehaviourPunCallbacks, IPunObservable
                     }
                     else
                     {
-                        ApplyFainting(false, false);
+                        RequestFainting(false, false);
                         immuneTime = 0;
                     }
                 }
@@ -173,8 +174,7 @@ public class Character : MonoBehaviourPunCallbacks, IPunObservable
     {
         if (photonView.IsMine == true)
         {
-            int convert = ExtensionMethod.Convert(mineralCount);
-            photonView.RPC(nameof(SetCharacterState), player, convert, unmovable, unbeatable);
+            photonView.RPC(nameof(SetCharacterState), player, ExtensionMethod.Convert(mineralCount), unmovable, unbeatable);
         }
         if (SlowMotion.IsOwner(PhotonNetwork.LocalPlayer) == true)
         {
@@ -218,13 +218,7 @@ public class Character : MonoBehaviourPunCallbacks, IPunObservable
         animator.SetParameter(HitParameter, this.unmovable);
     }
 
-    [PunRPC]
-    private void SetKnockback(Vector2 direction)
-    {
-        getRigidbody.velocity += new Vector3(direction.x, 0, direction.y).normalized * KnockBackForce;
-    }
-
-    private void ApplyFainting(bool unmovable, bool unbeatable)
+    private void RequestFainting(bool unmovable, bool unbeatable)
     {
         SetFainting(unmovable, unbeatable);
         if (PhotonNetwork.InRoom == true)
@@ -254,6 +248,29 @@ public class Character : MonoBehaviourPunCallbacks, IPunObservable
         if (PhotonNetwork.InRoom == true)
         {
             photonView.RPC(nameof(SetSlowMotion), RpcTarget.Others, actor, enabled);
+        }
+    }
+
+    [PunRPC]
+    private void ApplyBulletHit()
+    {
+        RequestFainting(true, true);
+        immuneTime = bulletStunDuration;
+        if (SlowMotion.IsOwner(PhotonNetwork.LocalPlayer) == true)
+        {
+            RequestSlowMotion(false);
+        }
+    }
+
+    [PunRPC]
+    private void ApplyPickaxeHit(Vector2 direction)
+    {
+        getRigidbody.velocity += new Vector3(direction.x, 0, direction.y).normalized * KnockBackForce;
+        RequestFainting(true, false);
+        immuneTime = pickaxeStunDuration;
+        if (SlowMotion.IsOwner(PhotonNetwork.LocalPlayer) == true)
+        {
+            RequestSlowMotion(false);
         }
     }
 
@@ -342,28 +359,24 @@ public class Character : MonoBehaviourPunCallbacks, IPunObservable
         {
             if (force == null)
             {
-                ApplyFainting(true, true);
-                immuneTime = bulletStunDuration;
-                if (SlowMotion.IsOwner(PhotonNetwork.LocalPlayer) == true)
+                if(PhotonNetwork.InRoom == true && photonView.IsMine == false)
                 {
-                    RequestSlowMotion(false);
+                    photonView.RPC(nameof(ApplyBulletHit), photonView.Owner);
+                }
+                else
+                {
+                    ApplyBulletHit();
                 }
             }
             else if(immuneTime == 0)
             {
-                ApplyFainting(true, false);
                 if (PhotonNetwork.InRoom == true && photonView.IsMine == false)
                 {
-                    photonView.RPC(nameof(SetKnockback), photonView.Owner, force.Value);
+                    photonView.RPC(nameof(ApplyPickaxeHit), photonView.Owner, force.Value);
                 }
                 else
                 {
-                    SetKnockback(force.Value);
-                }
-                immuneTime = pickaxeStunDuration;
-                if (SlowMotion.IsOwner(PhotonNetwork.LocalPlayer) == true)
-                {
-                    RequestSlowMotion(false);
+                    ApplyPickaxeHit(force.Value);
                 }
             }
         }
