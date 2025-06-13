@@ -101,6 +101,12 @@ public class StageData : ScriptableObject
         return mapObject;
     }
 
+    //맵 스카이박스를 반환하는 메서드
+    public Material GetSkybox()
+    {
+        return skybox;
+    }
+
     public static readonly string ReachingLevel = "ReachingLevel";
 
     //로딩할 스테이지 데이터
