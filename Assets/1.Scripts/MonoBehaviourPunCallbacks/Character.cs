@@ -93,6 +93,7 @@ public class Character : MonoBehaviourPunCallbacks, IPunObservable
         }
     }
 
+    private static readonly float KnockBackForce = 10f;
     private static readonly string HitParameter = "hit";
     private static readonly string SlowMotionParameter = "slowmotion";
     private static readonly string GatheringParameter = "gathering";
@@ -217,7 +218,12 @@ public class Character : MonoBehaviourPunCallbacks, IPunObservable
         animator.SetParameter(HitParameter, this.unmovable);
     }
 
-    //기절 상태를 적용하는 메서드
+    [PunRPC]
+    private void SetKnockback(Vector2 direction)
+    {
+        getRigidbody.velocity += new Vector3(direction.x, 0, direction.y).normalized * KnockBackForce;
+    }
+
     private void ApplyFainting(bool unmovable, bool unbeatable)
     {
         SetFainting(unmovable, unbeatable);
@@ -324,7 +330,7 @@ public class Character : MonoBehaviourPunCallbacks, IPunObservable
 #endif
 
     //탄막이나 상대방 곡괭이에 맞으면 발동하는 메서드
-    public void Hit(Vector3? force = null)
+    public void Hit(Vector2? force = null)
     {
 #if UNITY_EDITOR
         if (invincibleMode == true)
@@ -346,8 +352,15 @@ public class Character : MonoBehaviourPunCallbacks, IPunObservable
             else if(immuneTime == 0)
             {
                 ApplyFainting(true, false);
+                if (PhotonNetwork.InRoom == true && photonView.IsMine == false)
+                {
+                    photonView.RPC(nameof(SetKnockback), photonView.Owner, force.Value);
+                }
+                else
+                {
+                    SetKnockback(force.Value);
+                }
                 immuneTime = pickaxeStunDuration;
-                //넉백
                 if (SlowMotion.IsOwner(PhotonNetwork.LocalPlayer) == true)
                 {
                     RequestSlowMotion(false);

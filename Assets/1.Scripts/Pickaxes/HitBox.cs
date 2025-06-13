@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using Photon.Pun;
 
 //곡괭이 클래스 객체의 하위 오브젝트에 붙어 광물과의 충돌을 감지하는 클래스
 [DisallowMultipleComponent]
@@ -14,41 +15,78 @@ public class HitBox : MonoBehaviour
 
     private static readonly float ImpactDistance = 0.1f; //충돌 판정 거리
     private static readonly float ImpactDuration = 0.1f; //충돌 판정 지속 시간
-    private static readonly string TargetTag = "Interactable";
+
+    private const string MineralTag = "Interactable";
+    private const string PlayerTag = "Player";
 
     private void OnTriggerEnter(Collider collider)
     {
-        if (collider.tag == TargetTag && colliders != null && colliders.ContainsKey(collider) == false)
+        if(colliders != null)
         {
-            if (colliders.Count < 1)
+            switch(collider.tag)
             {
-                DOVirtual.DelayedCall(ImpactDuration, () =>
-                {
-                    if (colliders != null)
+                case MineralTag:
+                case PlayerTag:
+                    if (colliders.ContainsKey(collider) == false)
                     {
-                        colliders.Clear();
+                        if (colliders.Count < 1)
+                        {
+                            DOVirtual.DelayedCall(ImpactDuration, () =>
+                            {
+                                if (colliders != null)
+                                {
+                                    colliders.Clear();
+                                }
+                            });
+                        }
+                        colliders.Add(collider, transform.position);
                     }
-                });
+                    break;
             }
-            colliders.Add(collider, transform.position);
         }
     }
 
     private void OnTriggerStay(Collider collider)
     {
-        if (collider.tag == TargetTag && colliders != null && colliders.ContainsKey(collider) == true && ImpactDistance <= Vector3.Distance(colliders[collider], transform.position))
+        if (colliders != null && colliders.ContainsKey(collider) == true && ImpactDistance <= Vector3.Distance(colliders[collider], transform.position))
         {
-            action?.Invoke(collider, transform.position);
+            switch(collider.tag)
+            {
+                case MineralTag:
+                    action?.Invoke(collider, transform.position);
+                    break;
+                case PlayerTag:
+                    Hit(collider.gameObject.GetComponent<Character>());
+                    break;
+            }
             colliders.Remove(collider);
         }
     }
 
     private void OnTriggerExit(Collider collider)
     {
-        if (collider.tag == TargetTag && colliders != null && colliders.ContainsKey(collider) == true)
+        if (colliders != null && colliders.ContainsKey(collider) == true)
         {
-            action?.Invoke(collider, transform.position);
+            switch (collider.tag)
+            {
+                case MineralTag:
+                    action?.Invoke(collider, transform.position);
+                    break;
+                case PlayerTag:
+                    Hit(collider.gameObject.GetComponent<Character>());
+                    break;
+            }
             colliders.Remove(collider);
+        }
+    }
+
+    private void Hit(Character character)
+    {
+        if(character != null && character.photonView.Owner != PhotonNetwork.LocalPlayer)
+        {
+            Vector3 hitPoint = transform.position;
+            Vector3 targetPoint = character.transform.position;
+            character.Hit(new Vector2(targetPoint.x - hitPoint.x, targetPoint.z - hitPoint.z));
         }
     }
 
