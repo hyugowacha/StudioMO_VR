@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using DG.Tweening;
@@ -13,8 +12,7 @@ public class BattleManager : Manager
 
     [Header("배틀 매니저 구간"), SerializeField]
     private Character prefabCharacter;                          //생성할 캐릭터
-    private Character myCharacter = null;                       //내 캐릭터
-    private Character bestCharacter = null;                     //선두 캐릭터
+    private Character myCharacter = null;                       //내 캐릭터\
 
     [SerializeField]
     private Vector3 leftHandOffset;                             //왼쪽 손잡이 간격
@@ -56,6 +54,7 @@ public class BattleManager : Manager
     private RankingPanel rankingPanel;                          //랭킹 표시 패널
 
     private const string Time = "time"; //방의 시간 속성 키
+    private const string Player1 = "player1";
 
     System.Collections.IEnumerator Test()
     {
@@ -158,14 +157,14 @@ public class BattleManager : Manager
             {
                 myCharacter.UpdateRightHand(rightActionBasedController.transform.position + rightHandOffset, rightActionBasedController.transform.rotation);
             }
-            bool faintingState = myCharacter.faintingState;
+            bool faintingState = myCharacter.unmovable;
             SetTunnelingVignette(faintingState);
             if (faintingState == true && pickaxe != null && pickaxe.grip == true)
             {
                 pickaxe.grip = false;
             }
             float full = SlowMotion.MaximumFillValue;
-            float current = myCharacter.remainingSlowMotionTime;
+            float current = myCharacter.slowMotionTime;
             if (SlowMotion.IsOwner(PhotonNetwork.LocalPlayer) == true)
             {
                 slowMotionPanel?.Fill(current, full, false);
@@ -192,7 +191,7 @@ public class BattleManager : Manager
     {
         if (callbackContext.performed == true)
         {
-            if (myCharacter != null && (myCharacter.faintingState == true || myCharacter.remainingSlowMotionTime < SlowMotion.MinimumUseValue))
+            if (myCharacter != null && (myCharacter.unmovable == true || myCharacter.unbeatable == true || myCharacter.slowMotionTime < SlowMotion.MinimumUseValue))
             {
                 slowMotionPanel?.Blink();
             }
@@ -212,7 +211,7 @@ public class BattleManager : Manager
     {
         if (pickaxe != null)
         {
-            if (callbackContext.performed == true && myCharacter != null && myCharacter.faintingState == false)
+            if (callbackContext.performed == true && myCharacter != null && myCharacter.unmovable == false && myCharacter.unbeatable == false)
             {
                 pickaxe.grip = true;
             }
@@ -261,10 +260,6 @@ public class BattleManager : Manager
 
     public override void OnPlayerLeftRoom(Player player)
     {
-        if (bestCharacter == null)
-        {
-            //최고 플레이어가 사라질 시
-        }
         //랭킹패널 갱신
         //혼자 남으면 이긴거
     }
@@ -324,24 +319,6 @@ public class BattleManager : Manager
 
     private void AddMineral(int actor, uint value)
     {
-        IReadOnlyList<Character> characters = Character.list;
-        if (characters != null && value > 0)
-        {
-            foreach (Character character in characters)
-            {
-                if (character != null && character.photonView.OwnerActorNr == actor)
-                {
-                    if (bestCharacter == null)
-                    {
-                        bestCharacter = character;
-                    }
-                    else if(bestCharacter != character && bestCharacter.mineralCount < (ulong)character.mineralCount + value)
-                    {
-                        bestCharacter = character;
-                    }
-                }
-            }
-        }
         if(PhotonNetwork.LocalPlayer.ActorNumber == actor)
         {
             myCharacter?.AddMineral(value);

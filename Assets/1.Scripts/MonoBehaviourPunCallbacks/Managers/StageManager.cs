@@ -179,14 +179,14 @@ public class StageManager : Manager
             {
                 character.UpdateRightHand(rightActionBasedController.transform.position + rightHandOffset, rightActionBasedController.transform.rotation);
             }
-            bool faintingState = character.faintingState;
+            bool faintingState = character.unmovable;
             SetTunnelingVignette(faintingState);
             if (faintingState == true && pickaxe != null && pickaxe.grip == true)
             {
                 pickaxe.grip = false;
             }
             float full = SlowMotion.MaximumFillValue;
-            float current = character.remainingSlowMotionTime;
+            float current = character.slowMotionTime;
             if (SlowMotion.IsOwner(PhotonNetwork.LocalPlayer) == true)
             {
                 slowMotionPanel?.Fill(current, full, false);
@@ -218,7 +218,7 @@ public class StageManager : Manager
         {
             if (callbackContext.performed == true)
             {
-                if (character != null && (character.faintingState == true || character.remainingSlowMotionTime < SlowMotion.MinimumUseValue))
+                if (character != null && (character.unmovable == true || character.unbeatable == true || character.slowMotionTime < SlowMotion.MinimumUseValue))
                 {
                     slowMotionPanel?.Blink();
                 }
@@ -239,7 +239,7 @@ public class StageManager : Manager
     {
         if (stop == false && pickaxe != null)
         {
-            if (callbackContext.performed == true && character != null && character.faintingState == false)
+            if (callbackContext.performed == true && character != null && character.unmovable == false && character.unbeatable == false)
             {
                 pickaxe.grip = true;
             }
