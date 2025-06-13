@@ -14,8 +14,8 @@ public class GuidedBullet : MonoBehaviour, IBullet
     [Header("탄막 이동 속도")]
     public float speed = 3f;
 
-    [Header("슬로우 모션 시")]
-    public float slowSpeed = 1f;
+    //[Header("슬로우 모션 시")]
+    //public float slowSpeed = 1f;
     #endregion
 
     #region 오브젝트 풀 관련
@@ -88,15 +88,16 @@ public class GuidedBullet : MonoBehaviour, IBullet
 
         // Y값 고정
         Vector3 currentPos = transform.position;
-        currentPos += flatDir * speed * Time.deltaTime * slowSpeed;
+        currentPos += flatDir * speed * Time.deltaTime * SlowMotion.speed;
         currentPos.y = transform.position.y; // Y 위치 고정
 
         transform.position = currentPos;
     }
 
+    // 애니메이션 정지 함수로 변경
     public void ChangePitch(float val)
     {
-        slowSpeed = val;
+        //slowSpeed = val;
     }
     #endregion
 }
