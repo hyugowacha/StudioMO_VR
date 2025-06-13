@@ -93,16 +93,15 @@ public class RangePatternBullet : MonoBehaviour, IBullet
 
         // Y값 고정
         Vector3 currentPos = transform.position;
-        currentPos += flatDir * speed * Time.deltaTime * slowSpeed;
+        currentPos += flatDir * speed * Time.deltaTime * SlowMotion.speed;
         currentPos.y = transform.position.y; // Y 위치 고정
 
         transform.position = currentPos;
     }
     #endregion
 
-    // 탄막 객체에 대한 속도 조절
-    public void ChangePitch(float val)
+    public void ChangeAnimationSpeed()
     {
-        slowSpeed = val;
+
     }
 }
