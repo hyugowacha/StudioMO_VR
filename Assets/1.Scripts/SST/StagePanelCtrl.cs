@@ -52,8 +52,6 @@ public class StagePanelCtrl : MonoBehaviour
             iconScript.Init(data, infoPanel);
             index++;
         }
-
-        Debug.Log($"[StagePanelCtrl] {stagePanelType} 스테이지 {index} 개 생성.");
     }
 
     // ▼ 스테이지 패널 나가기 버튼
