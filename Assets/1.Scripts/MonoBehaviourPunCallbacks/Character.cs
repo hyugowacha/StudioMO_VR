@@ -265,7 +265,7 @@ public class Character : MonoBehaviourPunCallbacks, IPunObservable
     [PunRPC]
     private void ApplyPickaxeHit(Vector2 direction)
     {
-        getRigidbody.velocity += new Vector3(direction.x, 0, direction.y).normalized * KnockBackForce;
+        getRigidbody.velocity += new Vector3(direction.x, 0, direction.y).normalized * KnockBackForce * SlowMotion.speed;
         RequestFainting(true, false);
         immuneTime = pickaxeStunDuration;
         if (SlowMotion.IsOwner(PhotonNetwork.LocalPlayer) == true)

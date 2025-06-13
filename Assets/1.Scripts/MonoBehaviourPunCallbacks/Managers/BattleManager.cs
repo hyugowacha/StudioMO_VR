@@ -67,10 +67,12 @@ public class BattleManager : Manager
         if (prefabCharacter != null && Resources.Load<GameObject>(prefabCharacter.name) != null)
         {
             GameObject gameObject = PhotonNetwork.Instantiate(prefabCharacter.name, Vector3.zero, Quaternion.identity, 0, null);
+            yield return new WaitUntil(() => gameObject != null);
             SetFixedPosition(gameObject.transform.position);
             myCharacter = gameObject.GetComponent<Character>();
             if(myCharacter != null)
             {
+                Debug.Log(myCharacter.GetComponent<PhotonView>().ViewID);
                 slowMotionPanel?.Set(myCharacter.GetPortraitMaterial());
             }
         }
