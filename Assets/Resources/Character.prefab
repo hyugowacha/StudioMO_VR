@@ -1263,7 +1263,7 @@ Rigidbody:
   m_GameObject: {fileID: 5540131540651068354}
   serializedVersion: 4
   m_Mass: 1
-  m_Drag: 0
+  m_Drag: 1
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
@@ -1339,8 +1339,10 @@ MonoBehaviour:
   leftHandTransform: {fileID: 4863256304461801624}
   rightHandTransform: {fileID: 1919828657170651413}
   moveSpeed: 5
-  faintingTime: 2
-  invincibleTime: 3
+  pickaxeStunDuration: 2
+  pickaxeImmuneDuration: 2
+  bulletStunDuration: 3
+  bulletImmuneDuration: 2
   invincibleMode: 0
 --- !u!1 &5578653984774411108
 GameObject:

@@ -87,5 +87,6 @@ public class StageIconButton : MonoBehaviour
         }
 
         infoPanel.Show(stageInfoData);
+        Debug.Log($"이 스테이지는 {stageInfoData.stageIndex} 스테이지이다.");
     }
 }

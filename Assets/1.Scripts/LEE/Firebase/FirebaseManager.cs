@@ -11,6 +11,7 @@ public class FirebaseManager : MonoBehaviourPunCallbacks
 {
     #region 파이어베이스 필드
     [Header("LoginCanvas 관련 필드")]
+    [SerializeField] private GameObject lobbyUI;            // 로비 화면
     [SerializeField] private Canvas loginCanvas;            // 로그인 캔버스
     [SerializeField] private TMP_InputField loginInputID;   // ID 입력창
     [SerializeField] private TMP_InputField loginInputPW;   // 비밀번호 입력창
@@ -60,6 +61,9 @@ public class FirebaseManager : MonoBehaviourPunCallbacks
     [SerializeField] private GameObject nicknameCanvas;         // 닉네임 캔버스
     [SerializeField] private TMP_InputField nickname_Input;     // 닉네임 인풋 필드
     [SerializeField] private Button nickname_okButton;          // OK 버튼
+
+    [Header("스테이지 데이터")]
+    [SerializeField] StageInfoDataSet stageInfoDataSet; // 스테이지 데이터 스크립터블 오브젝트
     #endregion
 
     #region 시작 시 초기화 및 버튼 등록
@@ -172,6 +176,9 @@ public class FirebaseManager : MonoBehaviourPunCallbacks
                     // 프로필 이미지 정보 가져오기 
                     UserGameData.LoadEquippedProfile(Authentication.UserId);
 
+                    // 유저의 점수를 서버에서 불러오고 스테이지 데이터에 반영
+                    UserGameData.LoadMapHighScores(stageInfoDataSet);
+
                     if (!PhotonNetwork.IsConnected)
                     {
                         Debug.Log("Photon 연결 시작");
@@ -187,7 +194,7 @@ public class FirebaseManager : MonoBehaviourPunCallbacks
                     PhotonNetwork.AuthValues = new Photon.Realtime.AuthenticationValues(Authentication.UserId);
 
                     loginCanvas.gameObject.SetActive(false);
-
+                    lobbyUI.gameObject.SetActive(true);
                     break;
                 case Authentication.State.SignInAlready:
                     WarningLogSetActiveTrue("이미 로그인 된 계정입니다.");
