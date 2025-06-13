@@ -93,6 +93,14 @@ public class StageManager : Manager
                 {
                     Instantiate(gameObject, Vector3.zero, Quaternion.identity);
                 }
+
+                Material skyboxMaterial = stageData.GetSkybox();
+                if (skyboxMaterial != null)
+                {
+                    RenderSettings.skybox = skyboxMaterial;
+                    DynamicGI.UpdateEnvironment(); // 라이트 프로브 및 반사 업데이트
+                }
+
                 score = stageData.GetScore();
                 (TextAsset pattern, TextAsset nonPattern) = stageData.GetBulletTextAsset();
                 getBulletPatternLoader.SetnonPatternCSVData(nonPattern);

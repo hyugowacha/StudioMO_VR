@@ -29,6 +29,9 @@ public class StageData : ScriptableObject
     [Header("비패턴형 탄막 패턴"), SerializeField]
     private TextAsset nonPatternBulletTextAsset;
 
+    [Header("Skybox"), SerializeField]
+    private Material skybox;
+
     [Serializable]
     public struct Score
     {
@@ -96,6 +99,12 @@ public class StageData : ScriptableObject
     public GameObject GetMapObject()
     {
         return mapObject;
+    }
+
+    //맵 스카이박스를 반환하는 메서드
+    public Material GetSkybox()
+    {
+        return skybox;
     }
 
     public static readonly string ReachingLevel = "ReachingLevel";
