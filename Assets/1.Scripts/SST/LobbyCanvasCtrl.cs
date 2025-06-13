@@ -12,8 +12,9 @@ public class LobbyCanvasCtrl : MonoBehaviour
     [Header("로비에서 버튼 클릭 시 활성화 될 해당 패널들")]
     [SerializeField] private GameObject stageSelectPanel;       // 스테이지 모드 패널
 
-    [Header("상점 캔버스"), SerializeField]
-    private Canvas shopCanvas;                                   // 상점 캔버스
+    [Header("상점 캔버스")]
+    [SerializeField] private Canvas shopCanvas;                 // 상점 캔버스
+    [SerializeField] private ShopCanvasCtrl shopCanvasCtrl;
 
     private void Start()
     {
@@ -33,7 +34,8 @@ public class LobbyCanvasCtrl : MonoBehaviour
     // ▼ 상점 버튼 클릭 시 호출되는 함수
     public void OnClickShop()
     {
-        lobbyPanel.SetActive(false);
-        shopCanvas.gameObject.SetActive(true);
+        lobbyCanvas.gameObject.SetActive(false);
+        shopCanvasCtrl.TestShowShopCanvas();        // 상점 캔버스 활성화(테스트용)
+        //shopCanvasCtrl.ShowShopCanvas();
     }
 }
