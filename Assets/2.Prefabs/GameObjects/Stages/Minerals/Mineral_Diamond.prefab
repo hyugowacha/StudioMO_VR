@@ -319,7 +319,7 @@ GameObject:
   - component: {fileID: 2227258531161535009}
   m_Layer: 0
   m_Name: SM_LP_Mineral_1_Piece_3
-  m_TagString: Untagged
+  m_TagString: Interactable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -717,7 +717,7 @@ GameObject:
   - component: {fileID: 1563308402872881509}
   m_Layer: 0
   m_Name: SM_LP_Mineral_1_Piece_4
-  m_TagString: Untagged
+  m_TagString: Interactable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1001,7 +1001,7 @@ GameObject:
   - component: {fileID: 6233214536676432325}
   m_Layer: 0
   m_Name: SM_LP_Mineral_1_Piece_8
-  m_TagString: Untagged
+  m_TagString: Interactable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -11158,7 +11158,7 @@ GameObject:
   - component: {fileID: 653710598684521026}
   m_Layer: 0
   m_Name: SM_LP_Mineral_1_Piece_5
-  m_TagString: Untagged
+  m_TagString: Interactable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -11286,13 +11286,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3190824953228347546}
-  - component: {fileID: 6867462508037938344}
-  - component: {fileID: 8033834290208446677}
   - component: {fileID: 7123649620017681977}
   - component: {fileID: 3544343458096370651}
   m_Layer: 0
   m_Name: Mineral_Diamond
-  m_TagString: Interactable
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -11314,54 +11312,6 @@ Transform:
   - {fileID: 1600047235070251874}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &6867462508037938344
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8741619380359958490}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.7320783, y: 1.161514, z: 0.79798985}
-  m_Center: {x: -0.07860029, y: 0.5447537, z: -0.053004384}
---- !u!54 &8033834290208446677
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8741619380359958490}
-  serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 0
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
 --- !u!114 &7123649620017681977
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11400,24 +11350,18 @@ MonoBehaviour:
   maxValue: 4
   acquisitionAmount: 10
   chargingTime: 3
-  canvasObject: {fileID: 6791184304848344712}
+  crystals:
+  - {fileID: 4528235874842617737}
+  - {fileID: 5265697639233186770}
+  - {fileID: 2760893232733647404}
+  - {fileID: 4330246008554560294}
+  - {fileID: 8949806682706264546}
   progressSlider: {fileID: 7506834382782622126}
   progressFadeTime: 0.8
-  pieceOfMinerals:
-  - {fileID: 5265697639233186770}
-  - {fileID: 8949806682706264546}
-  - {fileID: 4330246008554560294}
-  - {fileID: 2760893232733647404}
-  pieceOfTransform:
-  - {fileID: 8283053023808419452}
-  - {fileID: 7335829708275788709}
-  - {fileID: 3830501436679793764}
-  - {fileID: 6234964709612111930}
-  hidePieceGroups: []
-  debris: {fileID: 2093385670141205680}
   sliderFillSpeed: 0.3
-  hitParticle: {fileID: 0}
-  dustParticle: {fileID: 0}
+  hitParticle: {fileID: 2394219387133387349, guid: db8bc4c67b3d49741b20fd480e29eff6,
+    type: 3}
+  debris: {fileID: 2093385670141205680}
 --- !u!1 &9120622059025273868
 GameObject:
   m_ObjectHideFlags: 0
@@ -11433,7 +11377,7 @@ GameObject:
   - component: {fileID: 4201198423885409730}
   m_Layer: 0
   m_Name: SM_LP_Mineral_1_Piece_9
-  m_TagString: Untagged
+  m_TagString: Interactable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

@@ -1,8 +1,9 @@
-using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using Photon.Realtime;
+using Photon.Pun;
 
 /// <summary>
 /// 멀티 플레이에서 현재 상황을 보여주는 랭킹 패널
@@ -18,6 +19,7 @@ public class RankingPanel : Panel
         End
     }
 
+    private int?[] actorNumbers = new int?[(int)Index.End];
     [SerializeField]
     private Color[] colors = new Color[(int)Index.End];
     [SerializeField]
@@ -45,29 +47,66 @@ public class RankingPanel : Panel
     }
 #endif
 
-    //현재 플레이어들의 랭킹을 보여주는 패널
-    public void Show(IEnumerable<Character> characters)
+    public void Set(Dictionary<int, Player> players)
     {
-        if(characters != null)
+        if(players != null)
         {
-            characters = characters.OrderByDescending(character => character.mineralCount);
             int index = 0;
-            foreach(Character character in characters)
+            foreach (Player player in players.Values)
             {
-                if(character != null && index < (int)Index.End)
+                if (index < (int)Index.End)
                 {
-                    portraitImages[index].Set(character.GetPortraitMaterial());
+                    if (player != null)
+                    {
+                        actorNumbers[index] = player.ActorNumber;
+                        index++;
+                    }
                 }
-                index++;
-            }
-            for(; index < (int)Index.End; index++)
-            {
-
+                else
+                {
+                    break;
+                }
             }
         }
-        else
+    }
+
+    //현재 플레이어들의 랭킹을 보여주는 패널
+    public void Show()
+    {
+        List<int> actorList = new List<int>();
+        Room room = PhotonNetwork.CurrentRoom;
+        if (room != null)
         {
-
+            Dictionary<int, Player> players = room.Players;
+            if(players != null)
+            {
+                foreach (Player player in players.Values)
+                {
+                    if (player != null)
+                    {
+                        actorList.Add(player.ActorNumber);
+                    }
+                }
+            }
         }
+        for(int i = 0; i < actorNumbers.Length; i++)
+        {
+            if (actorNumbers[i] != null && actorList.Contains(actorNumbers[i].Value) == false)
+            {
+                actorNumbers[i] = null;
+            }
+        }
+        IReadOnlyList<Character> characterList = Character.list;
+        //if(list != null && list.Count > 0)
+        //{
+
+        //}
+        //else
+        //{
+        //    for(int i = 0; i < panelImages.Length; i++)
+        //    {
+        //        panelImages[i].SetActive(false);
+        //    }
+        //}
     }
 }

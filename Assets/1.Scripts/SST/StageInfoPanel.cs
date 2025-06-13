@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using UnityEditor.SearchService;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class StageInfoPanel : MonoBehaviour
@@ -18,6 +20,9 @@ public class StageInfoPanel : MonoBehaviour
     [SerializeField] private Image[] filledStars;               // 일반 별 이미지
     [SerializeField] private Image[] perfectStars;              // 퍼펙트 별 이미지
 
+    [Header("플레이 버튼")]
+    [SerializeField] private Button playButton;                 // 플레이 시작 버튼 클릭 시
+
     // ▼ 외부에서 StageInfoData를 받아와서 스테이지 정보 패널 초기화
     public void Show(StageInfoData data)
     {
@@ -27,6 +32,9 @@ public class StageInfoPanel : MonoBehaviour
         storyText.text = data.storyText;
 
         SetStars(data.bestScore);
+
+        playButton.onClick.RemoveAllListeners();
+        playButton.onClick.AddListener(() => OnClickPlayButton(data));
     }
 
     private void SetStars(int score)
@@ -66,8 +74,11 @@ public class StageInfoPanel : MonoBehaviour
     }
 
     // 게임 플레이 버튼 눌렀을 때 호출 될 함수
-    public void OnClickPlayButton()
+    public void OnClickPlayButton(StageInfoData data)
     {
+        // 현재 선택된 스테이지 씬 int값
+        StageData.SetCurrentStage(data.stageIndex);
 
+        SceneManager.LoadScene("StageScene");
     } 
 }

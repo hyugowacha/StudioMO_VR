@@ -33,9 +33,9 @@ Transform:
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 1824781688898424845}
-  - {fileID: 7468926572034788202}
-  - {fileID: 9021766629439997080}
   - {fileID: 1393993307722373687}
+  - {fileID: 9021766629439997080}
+  - {fileID: 7468926572034788202}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &1072457946450581014
@@ -92,8 +92,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9853ec411ddd60442b7c713dface6e7c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spawnAnimator: {fileID: 7472106533404310348}
+  moveAnimator: {fileID: 1072457946450581014}
   speed: 3
-  slowSpeed: 1
 --- !u!1 &1393993307722373672
 GameObject:
   m_ObjectHideFlags: 0

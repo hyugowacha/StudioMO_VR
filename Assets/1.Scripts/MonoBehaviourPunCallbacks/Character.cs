@@ -4,6 +4,7 @@ using UnityEngine;
 using Photon.Pun;
 using DG.Tweening;
 using Photon.Realtime;
+using UnityEngine.InputSystem.iOS;
 
 /// <summary>
 /// 플레이어가 조종하는 캐릭터를 나타내는 클래스
@@ -46,16 +47,20 @@ public class Character : MonoBehaviourPunCallbacks, IPunObservable
     private Transform rightHandTransform;
     [Header("이동 속도"), SerializeField, Range(1, 5)]
     private float moveSpeed = 5;
-    [Header("기절 지속 시간"), SerializeField, Range(0, int.MaxValue)]
-    private float faintingTime = 2f;
-    [Header("무적 지속 시간"), SerializeField, Range(0, int.MaxValue)]
-    private float invincibleTime = 3f;
+    [Header("곡괭이 기절 지속 시간"), SerializeField, Range(0, int.MaxValue)]
+    private float pickaxeStunDuration = 2f;
+    [Header("곡괭이 면역 지속 시간"), SerializeField, Range(0, int.MaxValue)]
+    private float pickaxeImmuneDuration = 2f;
+    [Header("탄막 기절 지속 시간"), SerializeField, Range(0, int.MaxValue)]
+    private float bulletStunDuration = 3f;
+    [Header("탄막 면역 지속 시간"), SerializeField, Range(0, int.MaxValue)]
+    private float bulletImmuneDuration = 2f;
 
     //캐릭터가 탄막에 맞은 후 남은 면역 시간
-    private float remainingImmuneTime = 0;
+    private float immuneTime = 0;
 
     //캐릭터의 슬로우 모션 시간
-    public float remainingSlowMotionTime {
+    public float slowMotionTime {
         private set;
         get;
     } = SlowMotion.MaximumFillValue;
@@ -66,8 +71,14 @@ public class Character : MonoBehaviourPunCallbacks, IPunObservable
         get;
     }
 
-    //캐릭터가 기절 상태인지 여부를 나타내는 프로퍼티
-    public bool faintingState {
+    //움직일 수 없는 상태
+    public bool unmovable {
+        private set;
+        get;
+    }
+
+    //모든 내성에 대한 무적 상태
+    public bool unbeatable {
         private set;
         get;
     }
@@ -83,29 +94,43 @@ public class Character : MonoBehaviourPunCallbacks, IPunObservable
         }
     }
 
+    private static readonly float KnockBackForce = 10f;
     private static readonly string HitParameter = "hit";
     private static readonly string SlowMotionParameter = "slowmotion";
     private static readonly string GatheringParameter = "gathering";
     private static readonly string ShaderPath = "UI/UnlitMaskShader";
+
+    private void Start()
+    {
+        characters.Add(this);
+    }
 
     private void Update()
     {
         if(photonView.IsMine == true)
         {
             float deltaTime = Time.deltaTime;
-            if (remainingImmuneTime > 0)
+            if (immuneTime > 0)
             {
-                remainingImmuneTime -= deltaTime;
-                if (remainingImmuneTime <= 0)
+                immuneTime -= deltaTime;
+                if (immuneTime <= 0)
                 {
-                    if (faintingState == true)
+                    if (unmovable == true)
                     {
-                        ApplyFainting(false);
-                        remainingImmuneTime = invincibleTime;
+                        RequestFainting(false, unbeatable);
+                        if (unbeatable == true)
+                        {
+                            immuneTime = bulletImmuneDuration;
+                        }
+                        else
+                        {
+                            immuneTime = pickaxeImmuneDuration;
+                        }
                     }
                     else
                     {
-                        remainingImmuneTime = 0;
+                        RequestFainting(false, false);
+                        immuneTime = 0;
                     }
                 }
             }
@@ -113,26 +138,26 @@ public class Character : MonoBehaviourPunCallbacks, IPunObservable
             switch (slowMotionOwner)
             {
                 case true:
-                    if (remainingSlowMotionTime > 0)
+                    if (slowMotionTime > 0)
                     {
-                        remainingSlowMotionTime -= deltaTime * SlowMotion.ConsumeRate;
+                        slowMotionTime -= deltaTime * SlowMotion.ConsumeRate;
                     }
-                    if (remainingSlowMotionTime < 0)
+                    if (slowMotionTime < 0)
                     {
-                        remainingSlowMotionTime = 0;
+                        slowMotionTime = 0;
                     }
-                    if (remainingSlowMotionTime == 0)
+                    if (slowMotionTime == 0)
                     {
                         RequestSlowMotion(false);
                     }
                     break;
                 case false:
-                    if (slowMotionChargingDelayer == null && remainingSlowMotionTime < SlowMotion.MaximumFillValue)
+                    if (slowMotionChargingDelayer == null && slowMotionTime < SlowMotion.MaximumFillValue)
                     {
-                        remainingSlowMotionTime += deltaTime * SlowMotion.RecoverRate;
-                        if (remainingSlowMotionTime > SlowMotion.MaximumFillValue)
+                        slowMotionTime += deltaTime * SlowMotion.RecoverRate;
+                        if (slowMotionTime > SlowMotion.MaximumFillValue)
                         {
-                            remainingSlowMotionTime = SlowMotion.MaximumFillValue;
+                            slowMotionTime = SlowMotion.MaximumFillValue;
                         }
                     }
                     break;
@@ -140,15 +165,8 @@ public class Character : MonoBehaviourPunCallbacks, IPunObservable
         }
     }
 
-    public override void OnEnable()
+    private void OnDestroy()
     {
-        base.OnEnable();
-        characters.Add(this);
-    }
-
-    public override void OnDisable()
-    {
-        base.OnDisable();
         characters.Remove(this);
     }
 
@@ -156,28 +174,27 @@ public class Character : MonoBehaviourPunCallbacks, IPunObservable
     {
         if (photonView.IsMine == true)
         {
-            int convert = ExtensionMethod.Convert(mineralCount);
-            photonView.RPC(nameof(SetCharacterState), player, convert, faintingState);
-            if(SlowMotion.actor != null)
-            {
-                photonView.RPC(nameof(SetSlowMotionState), player, SlowMotion.actor, SlowMotion.speed);
-            }
+            photonView.RPC(nameof(SetCharacterState), player, ExtensionMethod.Convert(mineralCount), unmovable, unbeatable);
+        }
+        if (SlowMotion.IsOwner(PhotonNetwork.LocalPlayer) == true)
+        {
+            photonView.RPC(nameof(SetSlowMotionState), player, SlowMotion.actor, SlowMotion.speed);
         }
     }
 
     public override void OnPlayerLeftRoom(Player player)
     {
-        Debug.Log(player.ActorNumber);
         if (SlowMotion.IsOwner(player) == true)
         {
+            SlowMotion.Stop();
         }
     }
 
     [PunRPC]
-    private void SetCharacterState(int mineralCount, bool faintingState)
+    private void SetCharacterState(int mineralCount, bool unmovable, bool unbeatable)
     {
         this.mineralCount = ExtensionMethod.Convert(mineralCount);
-        SetFainting(faintingState);
+        SetFainting(unmovable, unbeatable);
     }
 
     [PunRPC]
@@ -193,21 +210,20 @@ public class Character : MonoBehaviourPunCallbacks, IPunObservable
         animator.SetParameter(GatheringParameter);
     }
 
-    //기절 상태를 설정하는 메서드
     [PunRPC]
-    private void SetFainting(bool value)
+    private void SetFainting(bool unmovable, bool unbeatable)
     {
-        faintingState = value;
-        animator.SetParameter(HitParameter, value);
+        this.unmovable = unmovable;
+        this.unbeatable = unbeatable;
+        animator.SetParameter(HitParameter, this.unmovable);
     }
 
-    //기절 상태를 적용하는 메서드
-    private void ApplyFainting(bool value)
+    private void RequestFainting(bool unmovable, bool unbeatable)
     {
-        SetFainting(value);
+        SetFainting(unmovable, unbeatable);
         if (PhotonNetwork.InRoom == true)
         {
-            photonView.RPC(nameof(SetFainting), RpcTarget.Others, value);
+            photonView.RPC(nameof(SetFainting), RpcTarget.Others, unmovable, unbeatable);
         }
     }
 
@@ -235,6 +251,29 @@ public class Character : MonoBehaviourPunCallbacks, IPunObservable
         }
     }
 
+    [PunRPC]
+    private void ApplyBulletHit()
+    {
+        RequestFainting(true, true);
+        immuneTime = bulletStunDuration;
+        if (SlowMotion.IsOwner(PhotonNetwork.LocalPlayer) == true)
+        {
+            RequestSlowMotion(false);
+        }
+    }
+
+    [PunRPC]
+    private void ApplyPickaxeHit(Vector2 direction)
+    {
+        getRigidbody.velocity += new Vector3(direction.x, 0, direction.y).normalized * KnockBackForce * SlowMotion.speed;
+        RequestFainting(true, false);
+        immuneTime = pickaxeStunDuration;
+        if (SlowMotion.IsOwner(PhotonNetwork.LocalPlayer) == true)
+        {
+            RequestSlowMotion(false);
+        }
+    }
+
     //슬로우 모션 사용을 마스터에게 허락을 요청하는 메서드
     private void RequestSlowMotion(bool enabled)
     {
@@ -253,13 +292,13 @@ public class Character : MonoBehaviourPunCallbacks, IPunObservable
     {
         if (photonView.IsMine == true)
         {
-            stream.SendNext(remainingImmuneTime);
-            stream.SendNext(remainingSlowMotionTime);
+            stream.SendNext(immuneTime);
+            stream.SendNext(slowMotionTime);
         }
         else
         {
-            remainingImmuneTime = (float)stream.ReceiveNext();
-            remainingSlowMotionTime = (float)stream.ReceiveNext();
+            immuneTime = (float)stream.ReceiveNext();
+            slowMotionTime = (float)stream.ReceiveNext();
         }
     }
 
@@ -293,7 +332,7 @@ public class Character : MonoBehaviourPunCallbacks, IPunObservable
     //플레이어의 이동을 담당하는 메서드
     public void UpdateMove(Vector2 input)
     {
-        if (photonView.IsMine == true && headTransform != null && faintingState == false)
+        if (photonView.IsMine == true && headTransform != null && unmovable == false)
         {
             Vector3 direction = headTransform.right * input.x + headTransform.forward * input.y;
             direction.y = 0;
@@ -307,22 +346,38 @@ public class Character : MonoBehaviourPunCallbacks, IPunObservable
     private bool invincibleMode = false;
 #endif
 
-    //탄막에 맞으면 발동하는 메서드
-    public void Hit()
+    //탄막이나 상대방 곡괭이에 맞으면 발동하는 메서드
+    public void Hit(Vector2? force = null)
     {
-        if (photonView.IsMine == true && faintingState == false && remainingImmuneTime == 0)
-        {
 #if UNITY_EDITOR
-            if (invincibleMode == true)
-            {
-                return;
-            }
+        if (invincibleMode == true)
+        {
+            return;
+        }
 #endif
-            ApplyFainting(true);
-            remainingImmuneTime = faintingTime;
-            if(SlowMotion.IsOwner(PhotonNetwork.LocalPlayer) == true)
+        if(unbeatable == false)
+        {
+            if (force == null)
             {
-                RequestSlowMotion(false);
+                if(PhotonNetwork.InRoom == true && photonView.IsMine == false)
+                {
+                    photonView.RPC(nameof(ApplyBulletHit), photonView.Owner);
+                }
+                else
+                {
+                    ApplyBulletHit();
+                }
+            }
+            else if(immuneTime == 0)
+            {
+                if (PhotonNetwork.InRoom == true && photonView.IsMine == false)
+                {
+                    photonView.RPC(nameof(ApplyPickaxeHit), photonView.Owner, force.Value);
+                }
+                else
+                {
+                    ApplyPickaxeHit(force.Value);
+                }
             }
         }
     }
@@ -330,15 +385,27 @@ public class Character : MonoBehaviourPunCallbacks, IPunObservable
     //슬로우 모션을 활성화하거나 비활성화하는 메서드
     public void SetSlowMotion(bool enabled)
     {
-        if ((enabled == true && faintingState == false && SlowMotion.actor == null && remainingSlowMotionTime >= SlowMotion.MinimumUseValue) || (enabled == false && SlowMotion.IsOwner(PhotonNetwork.LocalPlayer) == true))
+        if(enabled == true && SlowMotion.actor == null && slowMotionTime >= SlowMotion.MinimumUseValue && unmovable == false && unbeatable == false)
         {
-            RequestSlowMotion(enabled);
+            if(immuneTime > 0)
+            {
+                immuneTime = 0; //곡괭이 기절 면역 상태일 때 슬로우 모션을 사용하면 면역 상태 해제
+            }
+            RequestSlowMotion(true);
+        }
+        else if (enabled == false && SlowMotion.IsOwner(PhotonNetwork.LocalPlayer) == true)
+        {
+            RequestSlowMotion(false);
         }
     }
 
     //광물을 획득한 현재 양을 적용시켜주는 메서드
     public void AddMineral(uint value)
     {
+        if(unmovable == false && unbeatable == false && immuneTime > 0)
+        {
+            immuneTime = 0; //곡괭이 기절 면역 상태일 때 채광을 시도하면 면역 상태 해제
+        }
         uint count = mineralCount + value;
         int convert = ExtensionMethod.Convert(count);
         SetMineral(convert);

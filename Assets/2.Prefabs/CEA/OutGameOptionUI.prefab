@@ -3600,7 +3600,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6080409192890017593}
-  - {fileID: 560340766048212871}
   - {fileID: 702165389513905944}
   m_Father: {fileID: 3593172066735791475}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -4696,7 +4695,8 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 560340766048212871}
   m_Father: {fileID: 3593172066735791475}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
@@ -6490,9 +6490,6 @@ MonoBehaviour:
   bunnySelect: {fileID: 476569544799786947}
   sharkProfile: {fileID: 5079093894772266323}
   sharkSelect: {fileID: 6344350310936144644}
-  hasCat: 1
-  hasBunny: 1
-  hasShark: 1
   snapButton: {fileID: 6308418991180392}
   smoothButton: {fileID: 282021313926177454}
   rightButton: {fileID: 216175390601018917}
@@ -6950,15 +6947,15 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8094460916237985152}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -0.000047683716}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 4597287700284815234}
+  m_Father: {fileID: 141947290474983429}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -161.6, y: 0}
+  m_AnchoredPosition: {x: 0.06996155, y: 0}
   m_SizeDelta: {x: 23.2, y: 7.2037}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7177799084622928426

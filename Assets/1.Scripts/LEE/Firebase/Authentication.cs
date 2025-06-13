@@ -175,9 +175,10 @@ public static class Authentication
                     { "Coins", testStartCoin },                                 // 시작 코인
                     { "Stars", 0 },                                             // 상점에서 사용하는 실제 별 수
                     { "UnlockedSkins", new List<string> { "SkinData_Libee" } }, // 기본 스킨 1개 지급
-                    { "EquippedProfile", "SkinData_Libee" },               // 기본 프로필 (Sprite 이름 또는 ID)
-                    { "EquippedSkin", "SkinData_Libee" },                  // 기본 장착 스킨
-                    { "MapHighScore", new List<int>(new int[50])}          // 각 맵의 최고 점수
+                    { "EquippedProfile", "SkinData_Libee" },                // 기본 프로필 (Sprite 이름 또는 ID)
+                    { "EquippedSkin", "SkinData_Libee" },                   // 기본 장착 스킨
+                    { "MapHighScore", new List<int>(new int[50])},          // 각 맵의 최고 점수
+                    { "IsTester", "false"}                                  // 테스트 상태인가?
                 };
 
                 // Firebase Realtime Database에 사용자 데이터 저장

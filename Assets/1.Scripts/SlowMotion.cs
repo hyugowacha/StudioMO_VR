@@ -14,6 +14,9 @@ public static class SlowMotion
     //슬로우 모션이 적용 후의 속도
     public static readonly float AfterSpeed = 0.2f;
 
+    //퍼즈 시 속도
+    public static readonly float PauseSpeed = 0;
+
     //슬로우 모션 적용 시간
     public static readonly float ApplySpeed = 0.5f;
 
@@ -47,11 +50,23 @@ public static class SlowMotion
         get;
     }
 
+    private static float currentSpeed = BeforeSpeed;
+
     //슬로우 모션의 현재 속도를 나타내는 프로퍼티
     public static float speed {
-        private set;
-        get;
-    } = BeforeSpeed;
+        private set
+        {
+            currentSpeed = value;
+        }
+        get
+        {
+            if(currentTween.IsActive() == true && currentTween.IsPlaying() == false && currentTween.Elapsed() < currentTween.Duration())
+            {
+                return 0;
+            }
+            return currentSpeed;
+        }
+    }
 
     //슬로우 모션 속도를 점진적으로 변경하는 함수
     private static void Play(float before, float after, float duration)
@@ -100,11 +115,15 @@ public static class SlowMotion
     public static void Pause()
     {
         currentTween.Pause();
+        speed = PauseSpeed;
+        action?.Invoke(speed);
     }
 
     public static void Play()
     {
         currentTween.Play();
+        speed = BeforeSpeed;
+        action?.Invoke(speed);
     }
 
     public static void Stop()
