@@ -446,19 +446,19 @@ public class MatchingSystem : MonoBehaviourPunCallbacks
 
         if (!string.IsNullOrEmpty(UserGameData.EquippedSkin))
         {
-            playerProps["EquippedSkin"] = UserGameData.EquippedSkin ?? "SkinData_Libee";
+            playerProps["EquippedSkin"] = UserGameData.EquippedSkin;
             Debug.Log($"스킨 설정 완료: {UserGameData.EquippedSkin}");
         }
 
         if (!string.IsNullOrEmpty(UserGameData.EquippedProfile))
         {
-            playerProps["EquippedProfile"] = UserGameData.EquippedProfile ?? "SkinData_Libee";
+            playerProps["EquippedProfile"] = UserGameData.EquippedProfile;
             Debug.Log($"프로필 설정 완료: {UserGameData.EquippedProfile}");
         }
 
         if (!string.IsNullOrEmpty(PhotonNetwork.NickName))
         {
-            playerProps["Nickname"] = PhotonNetwork.NickName ?? "Player";
+            playerProps["Nickname"] = PhotonNetwork.NickName;
             Debug.Log($"닉네임 설정 완료: {PhotonNetwork.NickName}");
         }
 

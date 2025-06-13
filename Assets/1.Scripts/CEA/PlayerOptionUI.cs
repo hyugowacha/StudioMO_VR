@@ -74,7 +74,7 @@ public class PlayerOptionUI : MonoBehaviour
         UserGameData.Load(() =>
         {
             ApplyUnlockedSkinsFromUserData();
-            SelectSkin(UserGameData.EquippedSkin);  // 장착된 스킨 자동 선택
+            SelectSkin(UserGameData.EquippedProfile);  // 장착된 프로필 자동 선택
         });
 
         // 회전 및 손잡이 관련 정보는 로컬에 저장되므로 그대로 적용
@@ -244,7 +244,7 @@ public class PlayerOptionUI : MonoBehaviour
         PlayerPrefs.SetString(HAND_PREFS_KEY, usedHand);
         PlayerPrefs.Save();
 
-        UserGameData.SetEquippedSkin(currentlySelectedSkin);
+        UserGameData.SetEquippedProfile(currentlySelectedSkin);
 
         Authentication.TrySetNickname(newNickname, success =>
         {

@@ -58,10 +58,9 @@ public static class UserGameData
                 UnlockedSkins.Add(skin.Value.ToString());
             }
 
-            // 장착 중인 스킨 불러오기
-            EquippedSkin = snapshot.Child("EquippedSkin").Value?.ToString() ?? "";
-
-            Debug.Log($"[UserGameData] 로드 완료 - 코인: {Coins}, 장착: {EquippedSkin}");
+            // 장착 중인 프로필 불러오기
+            EquippedProfile = snapshot.Child("EquippedProfile").Value?.ToString() ?? "";
+            Debug.Log($"[UserGameData] 로드 완료 - 코인: {Coins}, 장착: {EquippedProfile}");
 
             // 콜백 실행
             onComplete?.Invoke();
@@ -89,6 +88,13 @@ public static class UserGameData
     {
         EquippedSkin = skinName;
         dbRef.Child("Users").Child(UID).Child("EquippedSkin").SetValueAsync(skinName);
+    }
+
+    // 현재 장착중인 프로필을 변경하고 Firebase에 저장
+    public static void SetEquippedProfile(string skinName)
+    {
+        EquippedSkin = skinName;
+        dbRef.Child("Users").Child(UID).Child("EquippedProfile").SetValueAsync(skinName);
     }
 
     // 해금된 스킨 리스트를 Firebase에 저장
