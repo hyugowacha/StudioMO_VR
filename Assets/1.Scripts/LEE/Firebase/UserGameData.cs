@@ -25,10 +25,104 @@ public static class UserGameData
 
     // 현재 유저가 장착 중인 프로필 이름
     public static string EquippedProfile { get; set; } = "Profile_Default";
+
+    // 현재 유저의 맵 최고 점수 리스트
+    public static List<int> MapHighScores { get; private set; } = new();
+
+    // 현재 테스트 아이디 인것인가?
+    public static bool IsTester { get; private set; } = false;
+    #endregion
+
+    #region 파이어베이스에 값을 다시 저장
+    /// <summary>
+    /// 보유 코인을 Firebase에 저장
+    /// </summary>
+    /// <param name="amount"></param>
+    public static void SetCoins(int amount)
+    {
+        Coins = amount;
+        dbRef.Child("Users").Child(UID).Child("Coins").SetValueAsync(amount);
+    }
+
+    /// <summary>
+    /// 새로운 스킨 해금 후 저장
+    /// </summary>
+    /// <param name="skinName"></param>
+    public static void UnlockSkin(string skinName)
+    {
+        if (UnlockedSkins.Add(skinName))
+        {
+            SaveUnlockedSkins();
+        }
+    }
+
+    /// <summary>
+    /// 현재 장착 중인 스킨을 변경하고 Firebase에 저장
+    /// </summary>
+    /// <param name="skinName"></param>
+    public static void SetEquippedSkin(string skinName)
+    {
+        EquippedSkin = skinName;
+        dbRef.Child("Users").Child(UID).Child("EquippedSkin").SetValueAsync(skinName);
+    }
+
+    /// <summary>
+    /// 현재 장착중인 프로필을 변경하고 Firebase에 저장
+    /// </summary>
+    /// <param name="skinName"></param>
+    public static void SetEquippedProfile(string skinName)
+    {
+        EquippedSkin = skinName;
+        dbRef.Child("Users").Child(UID).Child("EquippedProfile").SetValueAsync(skinName);
+    }
+
+    /// <summary>
+    /// 해금된 스킨 리스트를 Firebase에 저장
+    /// </summary>
+    private static void SaveUnlockedSkins()
+    {
+        dbRef.Child("Users").Child(UID).Child("UnlockedSkins").SetValueAsync(new List<string>(UnlockedSkins));
+    }
+
+    /// <summary>
+    /// StageInfoDataSet에 있는 점수를 Firebase에 저장
+    /// </summary>
+    public static void SaveMapHighScores(StageInfoDataSet stageDataSet, Action onComplete = null)
+    {
+        List<int> scores = new();
+
+        foreach (var stage in stageDataSet.stageInfoList)
+        {
+            scores.Add(stage.bestScore);
+        }
+
+        FirebaseDatabase.DefaultInstance
+            .GetReference("Users")
+            .Child(UID)
+            .Child("MapHighScore")
+            .SetValueAsync(scores)
+            .ContinueWithOnMainThread(task =>
+            {
+                if (task.IsFaulted || task.IsCanceled)
+                {
+                    Debug.LogError("맵 점수 저장 실패");
+                }
+                else
+                {
+                    MapHighScores = scores;
+                    Debug.Log("맵 점수 저장 성공");
+                }
+
+                onComplete?.Invoke();
+            });
+    }
     #endregion
 
     #region 파이어베이스에서 값을 가져오는 함수들
-    // Firebase에서 유저 데이터를 불러옴
+    /// <summary>
+    /// Firebase에서 유저 데이터를 불러옴
+    /// </summary>
+    /// <param name="onComplete"></param>
     public static void Load(Action onComplete = null)
     {
         if (string.IsNullOrEmpty(UID))
@@ -62,51 +156,27 @@ public static class UserGameData
             EquippedProfile = snapshot.Child("EquippedProfile").Value?.ToString() ?? "";
             Debug.Log($"[UserGameData] 로드 완료 - 코인: {Coins}, 장착: {EquippedProfile}");
 
+            // 테스트 아이디인지 값 가져오기
+            IsTester = bool.TryParse(snapshot.Child("IsTester").Value?.ToString(), out bool result) && result;
+
+            Debug.Log($"{IsTester}");
+
             // 콜백 실행
             onComplete?.Invoke();
         });
     }
 
-    // 보유 코인을 Firebase에 저장
-    public static void SetCoins(int amount)
-    {
-        Coins = amount;
-        dbRef.Child("Users").Child(UID).Child("Coins").SetValueAsync(amount);
-    }
-
-    // 새로운 스킨 해금 후 저장
-    public static void UnlockSkin(string skinName)
-    {
-        if (UnlockedSkins.Add(skinName))
-        {
-            SaveUnlockedSkins();
-        }
-    }
-
-    // 현재 장착 중인 스킨을 변경하고 Firebase에 저장
-    public static void SetEquippedSkin(string skinName)
-    {
-        EquippedSkin = skinName;
-        dbRef.Child("Users").Child(UID).Child("EquippedSkin").SetValueAsync(skinName);
-    }
-
-    // 현재 장착중인 프로필을 변경하고 Firebase에 저장
-    public static void SetEquippedProfile(string skinName)
-    {
-        EquippedSkin = skinName;
-        dbRef.Child("Users").Child(UID).Child("EquippedProfile").SetValueAsync(skinName);
-    }
-
-    // 해금된 스킨 리스트를 Firebase에 저장
-    private static void SaveUnlockedSkins()
-    {
-        dbRef.Child("Users").Child(UID).Child("UnlockedSkins").SetValueAsync(new List<string>(UnlockedSkins));
-    }
-
-    // 해당 스킨을 해금했는지 확인
+    /// <summary>
+    /// 해당 스킨을 해금했는지 확인
+    /// </summary>
+    /// <param name="skinName"></param>
+    /// <returns></returns>
     public static bool HasSkin(string skinName) => UnlockedSkins.Contains(skinName);
 
-    // 닉네임 가져오는 함수
+    /// <summary>
+    /// 닉네임 가져오는 함수
+    /// </summary>
+    /// <param name="uid"></param>
     public static void SetPhotonNicknameFromFirebase(string uid)
     {
         FirebaseDatabase.DefaultInstance
@@ -128,7 +198,10 @@ public static class UserGameData
             });
     }
 
-    // 프로필 정보 가져오는 함수
+    /// <summary>
+    /// 프로필 정보 가져오는 함수
+    /// </summary>
+    /// <param name="uid"></param>
     public static void LoadEquippedProfile(string uid)
     {
         FirebaseDatabase.DefaultInstance
@@ -156,7 +229,10 @@ public static class UserGameData
             });
     }
 
-    // 리소스 폴더안 스킨 데이터 가져오기
+    /// <summary>
+    /// 리소스 폴더안 스킨 데이터 가져오기
+    /// </summary>
+    /// <returns></returns>
     public static List<SkinData> GetUnlockedSkinData()
     {
         List<SkinData> result = new();
@@ -171,6 +247,55 @@ public static class UserGameData
         }
 
         return result;
+    }
+
+    /// <summary>
+    /// 유저의 맵 최고 점수를 불러와 StageInfoDataSet에 반영
+    /// </summary>
+    /// <param name="stageDataSet"></param>
+    /// <param name="onComplete"></param>
+    public static void LoadMapHighScores(StageInfoDataSet stageDataSet, Action onComplete = null)
+    {
+        if (string.IsNullOrEmpty(UID))
+        {
+            Debug.LogWarning("UID가 없습니다. 점수 로드 실패");
+            return;
+        }
+
+        FirebaseDatabase.DefaultInstance
+            .GetReference("Users")
+            .Child(UID)
+            .Child("MapHighScore")
+            .GetValueAsync()
+            .ContinueWithOnMainThread(task =>
+            {
+                if (task.IsFaulted || task.IsCanceled)
+                {
+                    Debug.LogError("MapHighScore 로드 실패");
+                    onComplete?.Invoke();
+                    return;
+                }
+
+                MapHighScores.Clear();
+
+                var snapshot = task.Result;
+                foreach (var child in snapshot.Children)
+                {
+                    if (int.TryParse(child.Value.ToString(), out int score))
+                        MapHighScores.Add(score);
+                    else
+                        MapHighScores.Add(0);
+                }
+
+                // 스크립터블 오브젝트에도 반영
+                for (int i = 0; i < stageDataSet.stageInfoList.Count && i < MapHighScores.Count; i++)
+                {
+                    stageDataSet.stageInfoList[i].bestScore = MapHighScores[i];
+                }
+
+                Debug.Log("맵 최고 점수 로드 완료");
+                onComplete?.Invoke();
+            });
     }
     #endregion
 }

@@ -463,6 +463,12 @@ public class MatchingSystem : MonoBehaviourPunCallbacks
         }
 
         PhotonNetwork.LocalPlayer.SetCustomProperties(playerProps);
+
+        // 유저 데이터 로드
+        UserGameData.Load(() =>
+        {
+            Debug.Log($"[PhotonLobbyHandler] 유저 데이터 로드 완료. IsTester = {UserGameData.IsTester}");
+        });
     }
 
     // 방 입장 실패 시

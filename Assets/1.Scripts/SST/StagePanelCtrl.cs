@@ -21,6 +21,8 @@ public class StagePanelCtrl : MonoBehaviour
 
     private void OnEnable()
     {
+        stageInfoDataSet.UpdateUnlockedStages();
+
         infoImage.gameObject.SetActive(false);
     }
 

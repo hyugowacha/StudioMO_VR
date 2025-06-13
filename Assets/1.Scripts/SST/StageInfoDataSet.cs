@@ -6,6 +6,28 @@ using UnityEngine;
 public class StageInfoDataSet : ScriptableObject
 {
     public List<StageInfoData> stageInfoList;   // 스테이지 정보 데이터 50개를 담는 리스트
+
+    public void UpdateUnlockedStages(int unlockScoreThreshold = 50)
+    {
+        for (int i = 0; i < stageInfoList.Count; i++)
+        {
+            if (UserGameData.IsTester)
+            {
+                stageInfoList[i].isUnlocked = true;
+            }
+            else
+            {
+                if (i == 0)
+                {
+                    stageInfoList[i].isUnlocked = true; // 첫 스테이지는 항상 해금
+                }
+                else
+                {
+                    stageInfoList[i].isUnlocked = stageInfoList[i - 1].bestScore >= unlockScoreThreshold;
+                }
+            }
+        }
+    }
 }
 
 // ▼ 스테이지 정보 데이터 - 하나의 스크립터블 오브젝트에 여러 데이터를 담기 위함
