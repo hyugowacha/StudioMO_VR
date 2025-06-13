@@ -157,9 +157,9 @@ public class BattleManager : Manager
             {
                 myCharacter.UpdateRightHand(rightActionBasedController.transform.position + rightHandOffset, rightActionBasedController.transform.rotation);
             }
-            bool faintingState = myCharacter.unmovable;
-            SetTunnelingVignette(faintingState);
-            if (faintingState == true && pickaxe != null && pickaxe.grip == true)
+            bool unmovable = myCharacter.unmovable;
+            SetTunnelingVignette(unmovable);
+            if (unmovable == true && pickaxe != null && pickaxe.grip == true)
             {
                 pickaxe.grip = false;
             }
@@ -169,7 +169,7 @@ public class BattleManager : Manager
             {
                 slowMotionPanel?.Fill(current, full, false);
             }
-            else if (current >= SlowMotion.MinimumUseValue && faintingState == false)
+            else if (current >= SlowMotion.MinimumUseValue && unmovable == false)
             {
                 slowMotionPanel?.Fill(current, full, true);
             }

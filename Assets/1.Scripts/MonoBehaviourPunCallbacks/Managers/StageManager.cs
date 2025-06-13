@@ -179,9 +179,9 @@ public class StageManager : Manager
             {
                 character.UpdateRightHand(rightActionBasedController.transform.position + rightHandOffset, rightActionBasedController.transform.rotation);
             }
-            bool faintingState = character.unmovable;
-            SetTunnelingVignette(faintingState);
-            if (faintingState == true && pickaxe != null && pickaxe.grip == true)
+            bool unmovable = character.unmovable;
+            SetTunnelingVignette(unmovable);
+            if (unmovable == true && pickaxe != null && pickaxe.grip == true)
             {
                 pickaxe.grip = false;
             }
@@ -191,7 +191,7 @@ public class StageManager : Manager
             {
                 slowMotionPanel?.Fill(current, full, false);
             }
-            else if (current >= SlowMotion.MinimumUseValue && faintingState == false)
+            else if (current >= SlowMotion.MinimumUseValue && unmovable == false)
             {
                 slowMotionPanel?.Fill(current, full, true);
             }

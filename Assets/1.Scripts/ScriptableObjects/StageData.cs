@@ -163,5 +163,4 @@ public class StageData : ScriptableObject
     {
         current = GetStageData(level);
     }
-
 }
