@@ -88,6 +88,11 @@ public class Character : MonoBehaviourPunCallbacks, IPunObservable
     private static readonly string GatheringParameter = "gathering";
     private static readonly string ShaderPath = "UI/UnlitMaskShader";
 
+    private void Start()
+    {
+        characters.Add(this);
+    }
+
     private void Update()
     {
         if(photonView.IsMine == true)
@@ -140,15 +145,8 @@ public class Character : MonoBehaviourPunCallbacks, IPunObservable
         }
     }
 
-    public override void OnEnable()
+    private void OnDestroy()
     {
-        base.OnEnable();
-        characters.Add(this);
-    }
-
-    public override void OnDisable()
-    {
-        base.OnDisable();
         characters.Remove(this);
     }
 
@@ -158,18 +156,18 @@ public class Character : MonoBehaviourPunCallbacks, IPunObservable
         {
             int convert = ExtensionMethod.Convert(mineralCount);
             photonView.RPC(nameof(SetCharacterState), player, convert, faintingState);
-            if(SlowMotion.actor != null)
-            {
-                photonView.RPC(nameof(SetSlowMotionState), player, SlowMotion.actor, SlowMotion.speed);
-            }
+        }
+        if (SlowMotion.IsOwner(PhotonNetwork.LocalPlayer) == true)
+        {
+            photonView.RPC(nameof(SetSlowMotionState), player, SlowMotion.actor, SlowMotion.speed);
         }
     }
 
     public override void OnPlayerLeftRoom(Player player)
     {
-        Debug.Log(player.ActorNumber);
         if (SlowMotion.IsOwner(player) == true)
         {
+            SlowMotion.Stop();
         }
     }
 
@@ -307,8 +305,8 @@ public class Character : MonoBehaviourPunCallbacks, IPunObservable
     private bool invincibleMode = false;
 #endif
 
-    //탄막에 맞으면 발동하는 메서드
-    public void Hit()
+    //탄막이나 상대방 곡괭이에 맞으면 발동하는 메서드
+    public void Hit(Vector3? force = null)
     {
         if (photonView.IsMine == true && faintingState == false && remainingImmuneTime == 0)
         {

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using DG.Tweening;
@@ -11,8 +12,10 @@ public class BattleManager : Manager
     public static readonly string SceneName = "BattleScene";
 
     [Header("배틀 매니저 구간"), SerializeField]
-    private Character prefab;                                   //생성할 캐릭터
-    private Character character = null;
+    private Character prefabCharacter;                          //생성할 캐릭터
+    private Character myCharacter = null;                       //내 캐릭터
+    private Character bestCharacter = null;                     //선두 캐릭터
+
     [SerializeField]
     private Vector3 leftHandOffset;                             //왼쪽 손잡이 간격
     [SerializeField]
@@ -54,24 +57,22 @@ public class BattleManager : Manager
 
     private const string Time = "time"; //방의 시간 속성 키
 
-    private Player bestPlayer = null; //최고 플레이어
-
     System.Collections.IEnumerator Test()
     {
         PhotonNetwork.ConnectUsingSettings();
-        yield return new WaitUntil(() => PhotonNetwork.NetworkClientState == Photon.Realtime.ClientState.ConnectedToMasterserver);
+        yield return new WaitUntil(() => PhotonNetwork.NetworkClientState == ClientState.ConnectedToMasterserver);
         PhotonNetwork.JoinLobby();
         yield return new WaitUntil(() => PhotonNetwork.InLobby);
         PhotonNetwork.JoinRandomOrCreateRoom();
         yield return new WaitUntil(() => PhotonNetwork.InRoom);
-        if (prefab != null && Resources.Load<GameObject>(prefab.name) != null)
+        if (prefabCharacter != null && Resources.Load<GameObject>(prefabCharacter.name) != null)
         {
-            GameObject gameObject = PhotonNetwork.Instantiate(prefab.name, Vector3.zero, Quaternion.identity, 0, null);
+            GameObject gameObject = PhotonNetwork.Instantiate(prefabCharacter.name, Vector3.zero, Quaternion.identity, 0, null);
             SetFixedPosition(gameObject.transform.position);
-            character = gameObject.GetComponent<Character>();
-            if(character != null)
+            myCharacter = gameObject.GetComponent<Character>();
+            if(myCharacter != null)
             {
-                slowMotionPanel?.Set(character.GetPortraitMaterial());
+                slowMotionPanel?.Set(myCharacter.GetPortraitMaterial());
             }
         }
         StageData stageData = StageData.current;
@@ -95,6 +96,7 @@ public class BattleManager : Manager
             }
         }
         Room room = PhotonNetwork.CurrentRoom;
+        rankingPanel?.Set(room.Players); //랭킹 패널 갱신
         if (PhotonNetwork.IsMasterClient == false)
         {
             OnRoomPropertiesUpdate(room.CustomProperties);
@@ -129,41 +131,41 @@ public class BattleManager : Manager
 
     private void Update()
     {
-        if (character != null)
+        if (myCharacter != null)
         {
-            SetFixedPosition(character.transform.position);
+            SetFixedPosition(myCharacter.transform.position);
         }
     }
 
     private void FixedUpdate()
     {
-        character?.UpdateMove(moveInput);
+        myCharacter?.UpdateMove(moveInput);
     }
 
     private void LateUpdate()
     {
-        if (character != null)
+        if (myCharacter != null)
         {
             if (Camera.main != null)
             {
-                character.UpdateHead(Camera.main.transform.rotation);
+                myCharacter.UpdateHead(Camera.main.transform.rotation);
             }
             if (leftActionBasedController != null)
             {
-                character.UpdateLeftHand(leftActionBasedController.transform.position + leftHandOffset, leftActionBasedController.transform.rotation);
+                myCharacter.UpdateLeftHand(leftActionBasedController.transform.position + leftHandOffset, leftActionBasedController.transform.rotation);
             }
             if (rightActionBasedController != null)
             {
-                character.UpdateRightHand(rightActionBasedController.transform.position + rightHandOffset, rightActionBasedController.transform.rotation);
+                myCharacter.UpdateRightHand(rightActionBasedController.transform.position + rightHandOffset, rightActionBasedController.transform.rotation);
             }
-            bool faintingState = character.faintingState;
+            bool faintingState = myCharacter.faintingState;
             SetTunnelingVignette(faintingState);
             if (faintingState == true && pickaxe != null && pickaxe.grip == true)
             {
                 pickaxe.grip = false;
             }
             float full = SlowMotion.MaximumFillValue;
-            float current = character.remainingSlowMotionTime;
+            float current = myCharacter.remainingSlowMotionTime;
             if (SlowMotion.IsOwner(PhotonNetwork.LocalPlayer) == true)
             {
                 slowMotionPanel?.Fill(current, full, false);
@@ -177,7 +179,7 @@ public class BattleManager : Manager
                 slowMotionPanel?.Fill(current, full, null);
             }
         }
-        rankingPanel?.Show(Character.list);
+        rankingPanel?.Show();
     }
 
     protected override void ChangeText()
@@ -190,19 +192,19 @@ public class BattleManager : Manager
     {
         if (callbackContext.performed == true)
         {
-            if (character != null && (character.faintingState == true || character.remainingSlowMotionTime < SlowMotion.MinimumUseValue))
+            if (myCharacter != null && (myCharacter.faintingState == true || myCharacter.remainingSlowMotionTime < SlowMotion.MinimumUseValue))
             {
                 slowMotionPanel?.Blink();
             }
             else
             {
-                slowMotionTween = DOVirtual.DelayedCall(SlowMotion.ActiveDelay, () => { character?.SetSlowMotion(true); });
+                slowMotionTween = DOVirtual.DelayedCall(SlowMotion.ActiveDelay, () => { myCharacter?.SetSlowMotion(true); });
             }
         }
         else if (callbackContext.canceled)
         {
             slowMotionTween.Kill();
-            character?.SetSlowMotion(false);
+            myCharacter?.SetSlowMotion(false);
         }
     }
 
@@ -210,7 +212,7 @@ public class BattleManager : Manager
     {
         if (pickaxe != null)
         {
-            if (callbackContext.performed == true && character != null && character.faintingState == false)
+            if (callbackContext.performed == true && myCharacter != null && myCharacter.faintingState == false)
             {
                 pickaxe.grip = true;
             }
@@ -252,6 +254,21 @@ public class BattleManager : Manager
         }
     }
 
+    public override void OnPlayerEnteredRoom(Player player)
+    {
+        //새로운 멤버로 인하여 랭킹패널 갱신
+    }
+
+    public override void OnPlayerLeftRoom(Player player)
+    {
+        if (bestCharacter == null)
+        {
+            //최고 플레이어가 사라질 시
+        }
+        //랭킹패널 갱신
+        //혼자 남으면 이긴거
+    }
+
     //입력 시스템과 관련된 바인딩을 연결 및 해제에 사용하는 메서드 
     private void SetBinding(bool value)
     {
@@ -262,7 +279,7 @@ public class BattleManager : Manager
         switch (value)
         {
             case true:
-                Mineral.miningAction += (actor, value) => { character?.AddMineral(value); };
+                Mineral.miningAction += AddMineral;
                 SlowMotion.action += (speed) =>
                 {
                     if (audioSource != null)
@@ -276,7 +293,7 @@ public class BattleManager : Manager
                 }
                 break;
             case false:
-                Mineral.miningAction -= (actor, value) => { character?.AddMineral(value); };
+                Mineral.miningAction -= AddMineral;
                 SlowMotion.action -= (speed) =>
                 {
                     if (audioSource != null)
@@ -302,6 +319,32 @@ public class BattleManager : Manager
         else if (callbackContext.canceled == true)
         {
             moveInput = Vector2.zero;
+        }
+    }
+
+    private void AddMineral(int actor, uint value)
+    {
+        IReadOnlyList<Character> characters = Character.list;
+        if (characters != null && value > 0)
+        {
+            foreach (Character character in characters)
+            {
+                if (character != null && character.photonView.OwnerActorNr == actor)
+                {
+                    if (bestCharacter == null)
+                    {
+                        bestCharacter = character;
+                    }
+                    else if(bestCharacter != character && bestCharacter.mineralCount < (ulong)character.mineralCount + value)
+                    {
+                        bestCharacter = character;
+                    }
+                }
+            }
+        }
+        if(PhotonNetwork.LocalPlayer.ActorNumber == actor)
+        {
+            myCharacter?.AddMineral(value);
         }
     }
 }

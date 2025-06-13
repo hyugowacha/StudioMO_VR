@@ -38,8 +38,6 @@ public class Mineral : MonoBehaviourPunCallbacks, IPunObservable
     private ParticleSystem debris;
 
     private static uint maxCount = 0;
-    private List<Mineral> list = new List<Mineral>();
-    private List<GameObject> effects = new List<GameObject>();
 
     public static event Action<int, uint> miningAction = null;
 
@@ -69,7 +67,7 @@ public class Mineral : MonoBehaviourPunCallbacks, IPunObservable
     {
         if (photonView.IsMine == true && remainingTime > 0)
         {
-            remainingTime -= Time.deltaTime; // 매 프레임마다 충전시간 감소
+            remainingTime -= Time.deltaTime * SlowMotion.speed;
             if (remainingTime <= 0)
             {
                 // 충전 완료 시 → 다시 채집 가능 상태로
@@ -84,7 +82,6 @@ public class Mineral : MonoBehaviourPunCallbacks, IPunObservable
     {
         base.OnEnable();
         progressSlider.SetActive(false); //UI 슬라이더 숨기기
-        list.Add(this);
     }
 
     // ▼ 오브젝트가 비활성화될 때 호출됨 (게임 내에서 꺼질 때)
@@ -92,7 +89,6 @@ public class Mineral : MonoBehaviourPunCallbacks, IPunObservable
     {
         base.OnDisable();
         StopAllCoroutines(); // 실행 중인 코루틴 전부 중지
-        list.Remove(this);
     }
 
     public override void OnPlayerEnteredRoom(Player player)
@@ -130,6 +126,14 @@ public class Mineral : MonoBehaviourPunCallbacks, IPunObservable
                 }
             }
         }
+        if (maxCount < currentValue)
+        {
+            maxCount = currentValue;
+        }
+        if (currentValue == maxCount && currentValue > 0)
+        {
+            //채집량이 높은 광물을 표시해주는 이펙트
+        }
     }
 
     [PunRPC]
@@ -163,14 +167,18 @@ public class Mineral : MonoBehaviourPunCallbacks, IPunObservable
     [PunRPC]
     private void ApplyMining(int actor, int remainCount, int gatherAmount, float value)
     {
-        if(remainCount != ExtensionMethod.Convert(currentValue) && debris != null)
+        if(remainCount != ExtensionMethod.Convert(currentValue))
         {
             int index = (int)((maxValue > 0 ? (float)currentValue / maxValue : 1.0f) * crystals.Length) - 1;
-            if (crystals[index] != null)
+            if (crystals[index] != null && debris != null)
             {
                 debris.transform.SetPositionAndRotation(crystals[index].transform.position, crystals[index].transform.rotation);
                 debris.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
                 debris.Play();
+            }
+            if (maxCount > 0 && maxCount == currentValue && maxCount > ExtensionMethod.Convert(remainCount))
+            {
+                //채집량이 높은 광물을 파괴했을 때 이펙트가 소멸되며 등장하는 이펙트
             }
         }
         if (progressSlider != null)
