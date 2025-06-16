@@ -17,6 +17,9 @@ public static class UserGameData
     // 현재 유저의 보유 코인
     public static int Coins { get; private set; }
 
+    // 유저의 총 스타 수
+    public static int totalStars = 0;
+
     // 현재 유저가 잠금 해제한 스킨 목록
     public static HashSet<string> UnlockedSkins { get; private set; } = new();
 
@@ -34,6 +37,7 @@ public static class UserGameData
 
     // 스테이지 정보
     public static StageInfoDataSet stageInfoDataSet;
+
     #endregion
 
     #region 파이어베이스에 값을 다시 저장
@@ -117,6 +121,32 @@ public static class UserGameData
                 }
 
                 onComplete?.Invoke();
+            });
+    }
+
+    /// <summary>
+    /// 별 갯수 저장
+    /// </summary>
+    /// <param name="starCount"></param>
+    public static void UpdateStars(int starCount)
+    {
+        if (string.IsNullOrEmpty(UID)) return;
+
+        FirebaseDatabase.DefaultInstance
+            .GetReference("Users")
+            .Child(UID)
+            .Child("Stars")
+            .SetValueAsync(starCount)
+            .ContinueWithOnMainThread(task =>
+            {
+                if (task.IsCompleted)
+                {
+                    Debug.Log($"별 개수 {starCount}개 Firebase 저장 완료");
+                }
+                else
+                {
+                    Debug.LogError("별 개수 저장 실패");
+                }
             });
     }
     #endregion
@@ -290,9 +320,13 @@ public static class UserGameData
                         MapHighScores.Add(0);
                 }
 
+                Debug.Log($"[Debug] stageInfoDataSet count: {stageDataSet.stageInfoList.Count}");
+                Debug.Log($"[Debug] MapHighScores count: {MapHighScores.Count}");
+
                 // 스크립터블 오브젝트에도 반영
                 for (int i = 0; i < stageDataSet.stageInfoList.Count && i < MapHighScores.Count; i++)
                 {
+                    Debug.Log($"[Debug] bestScore 적용: index {i}, score {MapHighScores[i]}");
                     stageDataSet.stageInfoList[i].bestScore = MapHighScores[i];
                 }
 

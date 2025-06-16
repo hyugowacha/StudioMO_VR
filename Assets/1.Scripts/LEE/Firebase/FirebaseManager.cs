@@ -147,6 +147,8 @@ public class FirebaseManager : MonoBehaviourPunCallbacks
         {
             Debug.Log("[MainLobby] 스테이지 점수 데이터 로드 완료");
         });
+
+        UserGameData.UpdateStars(UserGameData.totalStars);
     }
 
     private void GameOver()
@@ -194,6 +196,13 @@ public class FirebaseManager : MonoBehaviourPunCallbacks
 
                     // 유저 점수 정보 불러오기
                     UserGameData.LoadMapHighScores(stageInfoDataSet);
+
+                    UserGameData.LoadMapHighScores(UserGameData.stageInfoDataSet, () =>
+                    {
+                        Debug.Log("[MainLobby] 스테이지 점수 데이터 로드 완료");
+                    });
+
+                    UserGameData.UpdateStars(UserGameData.totalStars);
 
                     if (!PhotonNetwork.IsConnected)
                     {

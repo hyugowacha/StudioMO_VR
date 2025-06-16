@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -19,6 +20,8 @@ public class StagePanelCtrl : MonoBehaviour
 
     [SerializeField] StageInfoPanel infoPanel;          // 이 테마 전용 InfoPanel 연결
 
+    [SerializeField] TextMeshProUGUI starText;          // 스타 텍스트
+
     private void OnEnable()
     {
         stageInfoDataSet.UpdateUnlockedStages();
@@ -28,6 +31,7 @@ public class StagePanelCtrl : MonoBehaviour
 
     private void Start()
     {
+        starText.text = UserGameData.totalStars.ToString();
         SetStageIcons();
     }
 

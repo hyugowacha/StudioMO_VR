@@ -34,6 +34,8 @@ public class StageIconButton : MonoBehaviour
         stageNumText.text = data.stageId;       // 버튼에 표시될 스테이지 번호 텍스트 설정
         SetStars(data.bestScore);               // 해당 데이터 점수에 따라 별 이미지 표시
 
+        Debug.Log(data.stageIndex + "의 최고 값은" + data.bestScore);
+
         // ▼ 버튼 클릭 가능 여부 설정
         stageIconButton.interactable = data.isUnlocked;
     }
