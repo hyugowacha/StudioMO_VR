@@ -1,4 +1,3 @@
-using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -8,7 +7,8 @@ using Photon.Realtime;
 using ExitGames.Client.Photon;
 
 [RequireComponent(typeof(BulletPatternLoader))]
-public class BattleManager : Manager
+[RequireComponent(typeof(PhotonView))]
+public class BattleManager : Manager, IPunObservable
 {
     public static readonly string SceneName = "BattleScene";
 
@@ -47,11 +47,13 @@ public class BattleManager : Manager
     [SerializeField]
     private SlowMotionPanel slowMotionPanel;                    //슬로우 모션 표시 패널
     private Tween slowMotionTween = null;                       //슬로우 모션 트윈
+
     [SerializeField]
     private PausePanel pausePanel;                              //일시정지 패널
     [SerializeField]
     private TimerPanel timerPanel;                              //남은 시간 표시 패널
-    private double startTime = 0;
+
+    private double limitTime = 0;                               //제한 시간
     [SerializeField]
     private RankingPanel rankingPanel;                          //랭킹 표시 패널
 
@@ -95,6 +97,7 @@ public class BattleManager : Manager
                 if (audioClip != null)
                 {
                     audioSource.clip = audioClip;
+                    limitTime = audioClip.length;
                 }
             }
         }
@@ -102,10 +105,12 @@ public class BattleManager : Manager
         if (PhotonNetwork.IsMasterClient == false)
         {
             OnRoomPropertiesUpdate(room.CustomProperties);
+
         }
-        else if (audioSource != null && audioSource.clip != null)
+        else
         {
-            room.SetCustomProperties(new Hashtable() { { Time, PhotonNetwork.Time + audioSource.clip.length } });
+            phasePanel?.Play(PhasePanel.ReadyDelay, PhasePanel.StartDelay, PhasePanel.EndDelay);
+            DOVirtual.DelayedCall(PhasePanel.ReadyDelay + PhasePanel.StartDelay, () => room?.SetCustomProperties(new Hashtable() { { Time, PhotonNetwork.Time + limitTime } }));
         }
     }
 
@@ -181,6 +186,7 @@ public class BattleManager : Manager
                 slowMotionPanel?.Fill(current, full, null);
             }
         }
+        rankingPanel?.Sort(Character.list);
     }
 
     protected override void ChangeText()
@@ -213,7 +219,7 @@ public class BattleManager : Manager
     {
         if (pickaxe != null)
         {
-            if (callbackContext.performed == true && myCharacter != null && myCharacter.unmovable == false && myCharacter.unbeatable == false)
+            if (callbackContext.performed == true && myCharacter != null && myCharacter.unmovable == false && myCharacter.unbeatable == false && limitTime - PhotonNetwork.Time > 0)
             {
                 pickaxe.grip = true;
             }
@@ -226,7 +232,7 @@ public class BattleManager : Manager
 
     protected override void OnSecondaryFunction(InputAction.CallbackContext callbackContext)
     {
-        if (callbackContext.performed == true && pausePanel != null && pausePanel.gameObject.activeSelf == false)
+        if (callbackContext.performed == true && pausePanel != null && pausePanel.gameObject.activeSelf == false && limitTime - PhotonNetwork.Time > 0)
         {
             pausePanel.Open(() => SetTurnMode(true), () => SetTurnMode(false), CheckTurnMode());
         }
@@ -241,12 +247,12 @@ public class BattleManager : Manager
                 switch (key)
                 {
                     case Time:
-                        if (hashtable[key] != null && double.TryParse(hashtable[key].ToString(), out startTime) == true)
+                        if (hashtable[key] != null && double.TryParse(hashtable[key].ToString(), out limitTime) == true)
                         {
-                            double currentTime = startTime - PhotonNetwork.Time;
+                            double currentTime = limitTime - PhotonNetwork.Time;
                             if (currentTime <= 0)
                             {
-
+                                Debug.Log(currentTime);
                             }
                         }
                         break;
@@ -262,12 +268,6 @@ public class BattleManager : Manager
                 }
             }
         }
-    }
-
-    public override void OnPlayerEnteredRoom(Player player)
-    {
-        //새로운 멤버로 인하여 랭킹패널 갱신
-        Debug.Log(Character.list.Count);
     }
 
     public override void OnPlayerLeftRoom(Player player)
@@ -319,7 +319,7 @@ public class BattleManager : Manager
                 }
             }
         }
-        //혼자 남으면 이긴거
+        //혼자 남으면 이김
     }
 
     //입력 시스템과 관련된 바인딩을 연결 및 해제에 사용하는 메서드 
@@ -456,6 +456,18 @@ public class BattleManager : Manager
         if (PhotonNetwork.LocalPlayer.ActorNumber == actor)
         {
             myCharacter?.AddMineral(value);
+        }
+    }
+
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        if (photonView.IsMine == true)
+        {
+           // stream.SendNext(remainingTime);
+        }
+        else
+        {
+            //remainingTime = (float)stream.ReceiveNext();
         }
     }
 }
