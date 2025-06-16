@@ -233,7 +233,39 @@ public static class Korean
                 case Translation.Letter.SmoosthTurn:
                     letters[i] = "스무스";
                     break;
-
+                case Translation.Letter.PlayAgain:
+                    letters[i] = "한번 더 플레이 하시겠습니까?";
+                    break;
+                case Translation.Letter.RoomNotExist:
+                    letters[i] = "존재하지 않는 방입니다.";
+                    break;
+                case Translation.Letter.HostRoom:
+                    letters[i] = "호스트의 방";
+                    break;
+                case Translation.Letter.EnterInviteCode:
+                    letters[i] = "초대코드 입력";
+                    break;
+                case Translation.Letter.CancelMatching:
+                    letters[i] = "매칭을 종료하시겠습니까?";
+                    break;
+                case Translation.Letter.MatchFailed:
+                    letters[i] = "매칭실패";
+                    break;
+                case Translation.Letter.NoPlayersAvailable:
+                    letters[i] = "현재 매칭 가능한 플레이어가 없습니다.";
+                    break;
+                case Translation.Letter.Save:
+                    letters[i] = "저장하기";
+                    break;
+                case Translation.Letter.PurchaseItem:
+                    letters[i] = "해당 아이템을 구매하시겠습니까?";
+                    break;
+                case Translation.Letter.ApplyContent:
+                    letters[i] = "해당 내용을 적용하겠습까?";
+                    break;
+                case Translation.Letter.InsufficientCurrency:
+                    letters[i] = "유료재화가 부족합니다.";
+                    break;
 
                 case Translation.Letter.Select:
                     letters[i] = "선택";
