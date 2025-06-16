@@ -15,7 +15,7 @@ public class AllLanguage : MonoBehaviour
     public TextMeshProUGUI PVP;
     public TextMeshProUGUI store;
     public TextMeshProUGUI options;
-    public TextMeshProUGUI gameOver;
+    public TextMeshProUGUI exitGame;
 
     [Header("대전모드")]
     public TextMeshProUGUI withFriends0;
@@ -27,6 +27,7 @@ public class AllLanguage : MonoBehaviour
     public TextMeshProUGUI withFriends1;
     public TextMeshProUGUI enterInvitationCode;
     public TextMeshProUGUI participate;
+    public TextMeshProUGUI createRoom;
     #endregion
 
     #region 추후 진행 예정
@@ -54,6 +55,10 @@ public class AllLanguage : MonoBehaviour
 
         stage.Set(Translation.Get(Translation.Letter.Stage), currentFont);
         PVP.Set(Translation.Get(Translation.Letter.PVP), currentFont);
+        store.Set(Translation.Get(Translation.Letter.Store), currentFont);
+        options.Set(Translation.Get(Translation.Letter.Option), currentFont);
+        exitGame.Set(Translation.Get(Translation.Letter.ExitGame), currentFont);
+        
     }
     #endregion
 }

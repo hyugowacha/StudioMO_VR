@@ -56,7 +56,7 @@ public class Mineral : MonoBehaviourPunCallbacks, IPunObservable
     // ▼ 시작 시 최대치로 초기화
     private void Start()
     {
-        if (photonView.IsMine == true)
+        if (PhotonNetwork.InRoom == false || photonView.IsMine == true)
         {
             Regenerate();
         }

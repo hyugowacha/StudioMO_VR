@@ -52,12 +52,11 @@ public class BattleManager : Manager, IPunObservable
     private PausePanel pausePanel;                              //일시정지 패널
     [SerializeField]
     private TimerPanel timerPanel;                              //남은 시간 표시 패널
-
+    private double remainingTime = 0.0f;                        //남은 시간
     private double limitTime = 0;                               //제한 시간
     [SerializeField]
     private RankingPanel rankingPanel;                          //랭킹 표시 패널
 
-    private const string Time = "time";                         //방의 시간 속성 키
     private const string First = "first";
     private const string Second = "second";
     private const string Third = "third";
@@ -88,6 +87,12 @@ public class BattleManager : Manager, IPunObservable
             {
                 Instantiate(gameObject, Vector3.zero, Quaternion.identity);
             }
+            Material skyboxMaterial = stageData.GetSkybox();
+            if (skyboxMaterial != null)
+            {
+                RenderSettings.skybox = skyboxMaterial;
+                DynamicGI.UpdateEnvironment(); // 라이트 프로브 및 반사 업데이트
+            }
             (TextAsset pattern, TextAsset nonPattern) = stageData.GetBulletTextAsset();
             getBulletPatternLoader.SetnonPatternCSVData(nonPattern);
             getBulletPatternLoader.SetPatternCSVData(pattern);
@@ -105,12 +110,11 @@ public class BattleManager : Manager, IPunObservable
         if (PhotonNetwork.IsMasterClient == false)
         {
             OnRoomPropertiesUpdate(room.CustomProperties);
-
         }
         else
         {
             phasePanel?.Play(PhasePanel.ReadyDelay, PhasePanel.StartDelay, PhasePanel.EndDelay);
-            DOVirtual.DelayedCall(PhasePanel.ReadyDelay + PhasePanel.StartDelay, () => room?.SetCustomProperties(new Hashtable() { { Time, PhotonNetwork.Time + limitTime } }));
+            remainingTime = limitTime + PhasePanel.ReadyDelay + PhasePanel.StartDelay;
         }
     }
 
@@ -246,16 +250,6 @@ public class BattleManager : Manager, IPunObservable
             {
                 switch (key)
                 {
-                    case Time:
-                        if (hashtable[key] != null && double.TryParse(hashtable[key].ToString(), out limitTime) == true)
-                        {
-                            double currentTime = limitTime - PhotonNetwork.Time;
-                            if (currentTime <= 0)
-                            {
-                                Debug.Log(currentTime);
-                            }
-                        }
-                        break;
                     case First:
                         rankingPanel?.SetFirst(hashtable[key]);
                         break;
@@ -463,11 +457,13 @@ public class BattleManager : Manager, IPunObservable
     {
         if (photonView.IsMine == true)
         {
-           // stream.SendNext(remainingTime);
+            stream.SendNext(remainingTime);
         }
         else
         {
-            //remainingTime = (float)stream.ReceiveNext();
+            double value = (double)stream.ReceiveNext();
+
+            remainingTime = value;
         }
     }
 }
