@@ -4,6 +4,7 @@ using Photon.Realtime;
 using TMPro;
 using UnityEngine.UI;
 using UnityEngine.Profiling;
+using System.Collections;
 
 public class MatchingSystem : MonoBehaviourPunCallbacks
 {
@@ -73,6 +74,7 @@ public class MatchingSystem : MonoBehaviourPunCallbacks
 
     [Header("로딩 화면")]
     [SerializeField] GameObject loadingObject;
+
     #endregion
 
     #region 일반 필드
@@ -81,6 +83,9 @@ public class MatchingSystem : MonoBehaviourPunCallbacks
 
     // 사설방 Ready 관련 (커스텀 프로퍼티 키 상수)
     private const string READY_KEY = "IsReady";
+
+    // 로비를 처음만 입장했는가
+    private static bool hasEnteredLobbyOnce = false;
     #endregion
 
     #region Start, Update 초기화 및 버튼 연결
@@ -188,6 +193,7 @@ public class MatchingSystem : MonoBehaviourPunCallbacks
 
         isMatching = false;
         RandomMatchUI.SetActive(false);
+        IsRandomMatchUIActive = false;
         if (PhotonNetwork.InRoom)
         {
             PhotonNetwork.LeaveRoom();
@@ -201,6 +207,7 @@ public class MatchingSystem : MonoBehaviourPunCallbacks
     {
         RandomMatchError.SetActive(false);
         CancelMatching();
+        IsRandomMatchUIActive = false;
     }
 
     // 매칭 유지 함수
@@ -248,6 +255,26 @@ public class MatchingSystem : MonoBehaviourPunCallbacks
     {
         string code = GenerateRoomCode(7);
 
+        UserGameData.Load(() =>
+        {
+            // 커스텀 프로퍼티 다시 설정
+            ExitGames.Client.Photon.Hashtable props = new();
+            props["EquippedProfile"] = UserGameData.EquippedProfile;
+            props["Nickname"] = PhotonNetwork.NickName;
+            PhotonNetwork.LocalPlayer.SetCustomProperties(props);
+
+            StartCoroutine(DelayedCreateRoom(code));
+        });
+
+        isRoomPrivate = true;
+
+        PVP_CodePopUp.SetActive(false);
+    }
+
+    private IEnumerator DelayedCreateRoom(string code)
+    {
+        yield return new WaitForSeconds(0.2f); // 커스텀 프로퍼티 반영 기다림
+
         RoomOptions options = new RoomOptions
         {
             MaxPlayers = 4,
@@ -256,14 +283,10 @@ public class MatchingSystem : MonoBehaviourPunCallbacks
         {
             { "RoomCode", code }
         },
-            CustomRoomPropertiesForLobby = new string[] { "RoomCode" } // 필요하면
+            CustomRoomPropertiesForLobby = new string[] { "RoomCode" }
         };
 
         PhotonNetwork.CreateRoom(code, options);
-
-        isRoomPrivate = true;
-
-        PVP_CodePopUp.SetActive(false);
     }
     #endregion
 
@@ -442,7 +465,13 @@ public class MatchingSystem : MonoBehaviourPunCallbacks
     // 로비 입장 시 호출됨
     public override void OnJoinedLobby()
     {
-        Debug.Log("Photon 로비 입장 완료");
+        if (hasEnteredLobbyOnce)
+        {
+            Debug.Log("로비 최초 진입 이후 → UI 처리 생략");
+            return;
+        }
+
+        hasEnteredLobbyOnce = true;
 
         // Photon 커스텀 프로퍼티 설정
         ExitGames.Client.Photon.Hashtable playerProps = new();
@@ -450,19 +479,16 @@ public class MatchingSystem : MonoBehaviourPunCallbacks
         if (!string.IsNullOrEmpty(UserGameData.EquippedSkin))
         {
             playerProps["EquippedSkin"] = UserGameData.EquippedSkin;
-            Debug.Log($"스킨 설정 완료: {UserGameData.EquippedSkin}");
         }
 
         if (!string.IsNullOrEmpty(UserGameData.EquippedProfile))
         {
             playerProps["EquippedProfile"] = UserGameData.EquippedProfile;
-            Debug.Log($"프로필 설정 완료: {UserGameData.EquippedProfile}");
         }
 
         if (!string.IsNullOrEmpty(PhotonNetwork.NickName))
         {
             playerProps["Nickname"] = PhotonNetwork.NickName;
-            Debug.Log($"닉네임 설정 완료: {PhotonNetwork.NickName}");
         }
 
         PhotonNetwork.LocalPlayer.SetCustomProperties(playerProps);
@@ -474,7 +500,6 @@ public class MatchingSystem : MonoBehaviourPunCallbacks
         });
 
         loadingObject.gameObject.SetActive(false);
-
     }
 
     // 방 입장 실패 시
