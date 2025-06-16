@@ -36,6 +36,8 @@ public class StageInfoPanel : MonoBehaviour
 
         SetStars(data.bestScore);
 
+        //data.
+
         playButton.onClick.RemoveAllListeners();
         playButton.onClick.AddListener(() => OnClickPlayButton(data));
     }
@@ -94,6 +96,6 @@ public class StageInfoPanel : MonoBehaviour
         yield return new WaitForSeconds(1.5f);
 
         // ¾À ÀüÈ¯
-        SceneManager.LoadScene("StageScene");
+        SceneManager.LoadScene(StageManager.SceneName);
     }
 }
