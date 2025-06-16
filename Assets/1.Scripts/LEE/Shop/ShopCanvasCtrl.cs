@@ -8,7 +8,6 @@ public class ShopCanvasCtrl : MonoBehaviour
 {
     [Header("상점 캔버스, 로비 캔버스")]
     [SerializeField] Canvas shopCanvas;
-    [SerializeField] Canvas lobbyCanvas;
 
     [Header("기본 적용 스킨 아이템 데이터")]
     [SerializeField] SkinData basicSkinData;
@@ -51,7 +50,7 @@ public class ShopCanvasCtrl : MonoBehaviour
     public void Start()
     {
         // ▼ 시작 시, 상점 캔버스, 스킨 구매 패널 끔
-        shopCanvas.gameObject.SetActive(false);
+        shopCanvas.gameObject.SetActive(true);
         purchaseSkinTabPanel.SetActive(false);
         achievementSkinTabPanel.SetActive(false);
         purchaseSkinTabPanel.SetActive(false);
@@ -61,8 +60,6 @@ public class ShopCanvasCtrl : MonoBehaviour
     // ▼ 상점 화면 활성화
     public void ShowShopCanvas()
     {
-        shopCanvas.gameObject.SetActive(true);
-
         // 처음 한번만 로드
         if (isInitialized) return;
         isInitialized = true;
@@ -120,8 +117,21 @@ public class ShopCanvasCtrl : MonoBehaviour
     {
         shopCanvas.gameObject.SetActive(true);
 
+        // ▼ 선택 상태 초기화는 선택된 값이 null일 때만 초기화
+        if (selectedSkin == null)
+            selectedSkin = null;
+        if (selectedShopButton == null)
+            selectedShopButton = null;
+
+        selectedShopType = ShopTabType.Purchase;
+
         // 처음 한번만 로드
-        if (isInitialized) return;
+        if (isInitialized)
+        {
+            Debug.Log("이미 초기화 됨");
+            return;
+        }
+        
         isInitialized = true;
 
         // ▼ 유저 데이터를 불러온 후 실행할 콜백
@@ -139,7 +149,10 @@ public class ShopCanvasCtrl : MonoBehaviour
                 SkinData skinData = purchaseSkinData[i];
 
                 // ▼ 해당 스킨이 유저에게 해금이 되었는지 확인
-                bool isUnlocked = TestUserData.HasSkin(skinData.skinName);
+                //bool isUnlocked = TestUserData.HasSkin(skinData.skinName);
+
+                // ▼ 테스트용 강제 잠금 상태 설정
+                bool isUnlocked = false;
 
                 // ▼ 구매 버튼(i번째)에 해당하는 스킨 데이터를 세팅 (이미지, 가격, 잠금상태)
                 purchaseSkinButtons[i].SetSkin(skinData, this, isUnlocked, ShopTabType.Purchase);
@@ -239,11 +252,14 @@ public class ShopCanvasCtrl : MonoBehaviour
         selectedSkin = skin;
         selectedShopButton = button;
         selectedShopType = tabType;
+        Debug.Log($"스킨 선택됨 : {skin.skinName}, Button : {button.name}");
     }
 
     // ▼ 스킨 아이템 버튼을 클릭한 후 , 구매 버튼을 클릭하면 해당 스킨 아이템 정보를 토대로 구매 패널 염
     public void OnClickOpenBuyPanel()
     {
+        Debug.Log($"[구매 시도] selectedSkin: {selectedSkin?.skinName}, Button: {selectedShopButton?.name}");
+
         if (selectedSkin == null || selectedShopButton == null)
         {
             Debug.LogError("선택된 아이템이 없습니다.");
@@ -292,7 +308,6 @@ public class ShopCanvasCtrl : MonoBehaviour
     public void OnClickCloseShop()
     {
         shopCanvas.gameObject.SetActive(false);
-        lobbyCanvas.gameObject.SetActive(true);
     }
 
     // ▼ 기본 스킨으로 적용하는 버튼

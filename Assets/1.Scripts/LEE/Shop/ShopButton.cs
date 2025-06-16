@@ -39,6 +39,8 @@ public class ShopButton : MonoBehaviour
             return;
         }
 
+        shopCanvasCtrl.OnClickSkinButton(this, mySkinData, checkUnlocked, myTabType);
+
         // ▼ 만약 스킨이 잠금이 풀려있다면
         if (checkUnlocked)
         {
@@ -48,7 +50,7 @@ public class ShopButton : MonoBehaviour
         else
         {
             // ▼ 클릭한 스킨 아이템 정보 저장 (기억하기)
-            shopCanvasCtrl.OnClickSkinButton(this, mySkinData, checkUnlocked, myTabType);
+            //shopCanvasCtrl.OnClickSkinButton(this, mySkinData, checkUnlocked, myTabType);
         }
     }
 

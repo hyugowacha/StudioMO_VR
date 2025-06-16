@@ -23,14 +23,16 @@ public class LobbyCanvasCtrl : MonoBehaviour
     [Header("대전모드 UI 전체")]
     [SerializeField] private MatchingSystem matchingSystem;
 
+    [SerializeField] private ShopCanvasCtrl shopCanvasCtrl;
+
     private void Start()
     {
         // 초기화
         lobbyCanvas.gameObject.SetActive(true);
-        lobbyPanel.SetActive(false);
+        lobbyPanel.SetActive(true);
         stageSelectPanel.SetActive(false);
         versusPanel.SetActive(false);
-        //shopPanel.SetActive(false);
+        shopPanel.SetActive(false);
         optionPanel.SetActive(false);
 
         // 버튼 클릭 이벤트 연결
@@ -46,7 +48,7 @@ public class LobbyCanvasCtrl : MonoBehaviour
         lobbyPanel.SetActive(false);
         stageSelectPanel.SetActive(false);
         versusPanel.SetActive(false);
-        //shopPanel.SetActive(false);
+        shopPanel.SetActive(false);
         optionPanel.SetActive(false);
     }
 
@@ -71,8 +73,10 @@ public class LobbyCanvasCtrl : MonoBehaviour
 
     private void OnClickShop()
     {
+        TestUserData.ResetTestData();
         DeactivateAllPanels();
         shopPanel.SetActive(true);
+        shopCanvasCtrl.TestShowShopCanvas();
     }
 
     private void OnClickOption()

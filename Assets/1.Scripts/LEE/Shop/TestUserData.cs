@@ -8,6 +8,16 @@ public static class TestUserData
     public static int Coins = 200;
     public static string EquippedSkin = "테스트스킨";
 
+    private static HashSet<string> unlockedSkins = new HashSet<string>();
+
+    public static void ResetTestData()
+    {
+        Coins = 200;
+        EquippedSkin = "테스트스킨";
+        unlockedSkins.Clear();
+        Debug.Log("[TEST] 사용자 데이터 초기화 완료");
+    }
+
     public static void Load(System.Action onComplete = null)
     {
         Debug.Log("파이어베이스 제외, 테스트 용 콜백 실행");
@@ -22,6 +32,7 @@ public static class TestUserData
 
     public static void UnlockSkin(string skinName)
     {
+        unlockedSkins.Add(skinName);
         Debug.Log($"[TEST] 스킨 해금 처리: {skinName}");
     }
 
@@ -33,6 +44,6 @@ public static class TestUserData
 
     public static bool HasSkin(string skinName)
     {
-        return false;
+        return unlockedSkins.Contains(skinName);
     }
 }
