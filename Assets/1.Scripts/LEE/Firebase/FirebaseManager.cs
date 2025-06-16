@@ -161,10 +161,9 @@ public class FirebaseManager : MonoBehaviourPunCallbacks
     /// </summary>
     public void OnClickSignIn()
     {
-        string ID = loginInputID.text;   // 입력한 ID로 이메일 생성
-        string PW = loginInputPW.text;             // 비밀번호 입력값
+        string ID = loginInputID.text;
+        string PW = loginInputPW.text;
 
-        // 로그인 요청
         Authentication.SignIn(ID, PW, result =>
         {
             switch (result)
@@ -175,41 +174,48 @@ public class FirebaseManager : MonoBehaviourPunCallbacks
 
                     // 닉네임 정보 가져오기
                     UserGameData.SetPhotonNicknameFromFirebase(Authentication.UserId);
+
                     // 프로필 이미지 정보 가져오기 
                     UserGameData.LoadEquippedProfile(Authentication.UserId);
 
-                    // 유저의 점수를 서버에서 불러오고 스테이지 데이터에 반영
+                    // 유저 점수 정보 불러오기
                     UserGameData.LoadMapHighScores(stageInfoDataSet);
 
                     if (!PhotonNetwork.IsConnected)
                     {
-                        Debug.Log("Photon 연결 시작");
                         PhotonNetwork.ConnectUsingSettings();
                     }
                     else
                     {
-                        Debug.Log("이미 Photon 연결됨 → 로비 진입");
+                        Debug.Log("[FirebaseManager] 이미 Photon 연결됨 → 로비 입장");
                         PhotonNetwork.JoinLobby();
                     }
 
-                    // Photon AuthValues 설정
+                    // AuthValues 설정
                     PhotonNetwork.AuthValues = new Photon.Realtime.AuthenticationValues(Authentication.UserId);
-                    
+
                     loadingObject.gameObject.SetActive(true);
                     loginCanvas.gameObject.SetActive(false);
                     break;
+
                 case Authentication.State.SignInAlready:
+                    Debug.LogWarning("[FirebaseManager] 로그인 거부 - 이미 로그인된 계정");
                     WarningLogSetActiveTrue("이미 로그인 된 계정입니다.");
                     break;
+
                 case Authentication.State.SignInInvalidEmail:
+                    Debug.LogWarning("[FirebaseManager] 로그인 거부 - 이메일 형식 오류");
                     WarningLogSetActiveTrue("ID의 이메일 형식이 올바르지 않습니다.");
                     break;
+
                 default:
+                    Debug.LogError("[FirebaseManager] 로그인 실패 - ID/PW 불일치 또는 기타 오류");
                     WarningLogSetActiveTrue("ID 혹은 PW가 일치 하지 않습니다.");
                     break;
             }
         });
     }
+
     #endregion
 
     #region 팝업창 관련 함수
