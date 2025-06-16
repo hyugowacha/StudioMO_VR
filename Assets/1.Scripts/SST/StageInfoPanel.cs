@@ -22,6 +22,9 @@ public class StageInfoPanel : MonoBehaviour
     [Header("플레이 버튼")]
     [SerializeField] private Button playButton;                 // 플레이 시작 버튼 클릭 시
 
+    [Header("로딩 화면 오브젝트")]
+    [SerializeField] private GameObject loadingAnimation; // 로딩 애니메이션용 오브젝트
+
     // ▼ 외부에서 StageInfoData를 받아와서 스테이지 정보 패널 초기화
     public void Show(StageInfoData data)
     {
@@ -31,6 +34,8 @@ public class StageInfoPanel : MonoBehaviour
         storyText.text = data.storyText;
 
         SetStars(data.bestScore);
+
+        //data.
 
         playButton.onClick.RemoveAllListeners();
         playButton.onClick.AddListener(() => OnClickPlayButton(data));
@@ -75,9 +80,21 @@ public class StageInfoPanel : MonoBehaviour
     // 게임 플레이 버튼 눌렀을 때 호출 될 함수
     public void OnClickPlayButton(StageInfoData data)
     {
-        // 현재 선택된 스테이지 씬 int값
+        StartCoroutine(PlayLoadingAndLoadScene(data));
+    }
+
+    private IEnumerator PlayLoadingAndLoadScene(StageInfoData data)
+    {
+        // 현재 선택된 스테이지 인덱스 저장
         StageData.SetCurrentStage(data.stageIndex);
 
-        SceneManager.LoadScene("StageScene");
-    } 
+        // 로딩 애니메이션 오브젝트 활성화
+        loadingAnimation.SetActive(true);
+
+        // (선택) 애니메이션 길이만큼 대기 - 예: 1.5초
+        yield return new WaitForSeconds(1.5f);
+
+        // 씬 전환
+        SceneManager.LoadScene(StageManager.SceneName);
+    }
 }

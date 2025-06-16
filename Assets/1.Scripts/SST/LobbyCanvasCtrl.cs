@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -23,6 +24,8 @@ public class LobbyCanvasCtrl : MonoBehaviour
     [Header("대전모드 UI 전체")]
     [SerializeField] private MatchingSystem matchingSystem;
 
+    [SerializeField] private ShopCanvasCtrl shopCanvasCtrl;
+
     private void Start()
     {
         // 초기화
@@ -41,9 +44,11 @@ public class LobbyCanvasCtrl : MonoBehaviour
         quitButton.onClick.AddListener(OnClickQuit);
     }
 
-    private void DeactivateAllPanels()
+    private void DeactivateAllPanels(GameObject nextPanelToActivate)
     {
-        lobbyPanel.SetActive(false);
+        StartCoroutine(FadeOutAndDeactivate(lobbyPanel, 1f, 0.5f, nextPanelToActivate));
+
+        // 나머지는 즉시 비활성화
         stageSelectPanel.SetActive(false);
         versusPanel.SetActive(false);
         //shopPanel.SetActive(false);
@@ -58,27 +63,23 @@ public class LobbyCanvasCtrl : MonoBehaviour
         }
         else
         {
-            DeactivateAllPanels();
-            stageSelectPanel.SetActive(true);
+            DeactivateAllPanels(stageSelectPanel);
         }
     }
 
     private void OnClickVersusMode()
     {
-        DeactivateAllPanels();
-        versusPanel.SetActive(true);
+        DeactivateAllPanels(versusPanel);
     }
 
     private void OnClickShop()
     {
-        DeactivateAllPanels();
-        shopPanel.SetActive(true);
+        DeactivateAllPanels(shopPanel);
     }
 
     private void OnClickOption()
     {
-        DeactivateAllPanels();
-        optionPanel.SetActive(true);
+        DeactivateAllPanels(optionPanel);
     }
 
     private void OnClickQuit()
@@ -89,5 +90,39 @@ public class LobbyCanvasCtrl : MonoBehaviour
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false; // 에디터에서 실행 중일 경우 종료
 #endif
+    }
+
+    private IEnumerator FadeOutAndDeactivate(GameObject target, float delay, float duration, GameObject nextActivate)
+    {
+        CanvasGroup canvasGroup = target.GetComponent<CanvasGroup>();
+        if (canvasGroup == null)
+            canvasGroup = target.AddComponent<CanvasGroup>();
+
+        yield return new WaitForSeconds(delay);
+
+        float startAlpha = canvasGroup.alpha;
+        float time = 0f;
+
+        while (time < duration)
+        {
+            time += Time.deltaTime;
+            canvasGroup.alpha = Mathf.Lerp(startAlpha, 0f, time / duration);
+            yield return null;
+        }
+
+        canvasGroup.alpha = 0f;
+        target.SetActive(false);
+
+        // 다음에 켜질 패널 SetActive
+        if (nextActivate != null)
+            nextActivate.SetActive(true);
+
+        // 다음에 켜질 패널의 CanvasGroup 초기화 (투명 방지)
+        CanvasGroup nextGroup = nextActivate.GetComponent<CanvasGroup>();
+        if (nextGroup != null)
+            nextGroup.alpha = 1f;
+
+        // 자기 자신 원복
+        canvasGroup.alpha = 1f;
     }
 }

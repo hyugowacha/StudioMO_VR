@@ -31,7 +31,17 @@ public class StageInfoDataSet : ScriptableObject
         }
     }
 
+    public void ApplyLanguage(Translation.Language language)
+    {
+        foreach (var info in stageInfoList)
+        {
+            if (info.linkedStageData == null)
+                continue;
 
+            info.bgmTitle = info.linkedStageData.GetMusicText(language);
+            info.storyText = info.linkedStageData.GetStoryText(language);
+        }
+    }
 }
 
 // ▼ 스테이지 정보 데이터 - 하나의 스크립터블 오브젝트에 여러 데이터를 담기 위함
@@ -41,16 +51,24 @@ public class StageInfoData
     public string stageId;                      // 스테이지 고유 ID
     public StagePanelType stagePanelType;       // 테마 구분용
     public int stageIndex;                      // 테마 내 인덱스 번호
+
     public string bgmTitle;                     // 설정된 BGM 이름
     public string storyText;                    // 설정된 스토리 텍스트
+
+    public int clearValue;                      // 별 1개 획득 최소치
+    public int addValue;                        // 별 2개 획득 최소치
+
     public int bestScore;                       // 플레이어가 기록한 최고 점수
     public bool isUnlocked;                     // 스테이지 해금 여부 (true - 해금 )
+
+    public StageData linkedStageData;           // 실제 StageData와 연결
 }
 
 #if UNITY_EDITOR
 [CustomEditor(typeof(StageInfoDataSet))]
 public class StageInfoDataSetEditor : Editor
 {
+
     public override void OnInspectorGUI()
     {
         base.OnInspectorGUI();
@@ -83,13 +101,17 @@ public class StageInfoDataSetEditor : Editor
             var info = dataSet.stageInfoList[i];
             var stage = stageDatas[i];
 
-            info.stageId = $"Stage_{i + 1}";
+            info.stageId = $"{i + 1}";
             info.stageIndex = i;
-            info.bgmTitle = stage.GetMusicText(Translation.Language.Korean); // 언어 변경 가능
-            info.storyText = stage.GetStoryText(Translation.Language.Korean);
-            info.bestScore = (int)stage.GetScore().GetAddValue();
 
-            // 기본 잠금 상태로 두고, 최초만 해금
+            // 가장 중요! 연결시켜놔야 나중에 ApplyLanguage에서 텍스트 불러올 수 있음!
+            info.linkedStageData = stage;
+
+            // 초기 언어: 한국어 기준으로 기본값만 넣음 (런타임에 바뀜)
+            info.bgmTitle = stage.GetMusicText(Translation.Language.Korean);
+            info.storyText = stage.GetStoryText(Translation.Language.Korean);
+
+            info.bestScore = (int)stage.GetScore().GetAddValue();
             info.isUnlocked = (i == 0);
         }
 
