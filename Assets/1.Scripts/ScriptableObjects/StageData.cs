@@ -32,7 +32,9 @@ public class StageData : ScriptableObject
     [Header("Skybox"), SerializeField]
     private Material skybox;
 
-    [Serializable]
+    [Header("최고 점수"), SerializeField]
+    private uint bestScore;
+
     public struct Score
     {
         [SerializeField]
