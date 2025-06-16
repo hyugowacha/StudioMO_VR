@@ -207,6 +207,14 @@ public static class ExtensionMethod
         }
     }
 
+    public static void Fill(this Slider slider, float value)
+    {
+        if(slider != null)
+        {
+            slider.value = value;
+        }
+    }
+
     public static void Set(this Image image, Sprite sprite)
     {
         if (image != null)
@@ -253,6 +261,14 @@ public static class ExtensionMethod
                 image.type = Image.Type.Filled;
             }
             image.fillAmount = value;
+        }
+    }
+
+    public static void SetActive(this Image image, bool value)
+    {
+        if (image != null)
+        {
+            image.gameObject.SetActive(value);
         }
     }
 

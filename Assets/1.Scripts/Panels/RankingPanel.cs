@@ -51,6 +51,42 @@ public class RankingPanel : Panel
     }
 #endif
 
+    private void Sort(int index, int actor)
+    {
+        for (int i = (int)Index.End - 1; i >= index; i--)
+        {
+            if (characters[i] != null && characters[i].photonView.OwnerActorNr == actor)
+            {
+                if (maxMineralCount < characters[i].mineralCount)
+                {
+                    maxMineralCount = characters[i].mineralCount;
+                }
+                if (i > index)
+                {
+                    Character character = characters[i];
+                    Color color = colors[i];
+                    for (int j = i; j > index; j--)
+                    {
+                        characters[j] = characters[j - 1];
+                        colors[j] = colors[j - 1];
+                        nameTexts[j].SetText(characters[j].photonView.Owner.NickName);
+                        panelImages[j].Set(colors[j]);
+                        if (characters[j] != null)
+                        {
+                            portraitImages[j].Set(characters[j].GetPortraitMaterial());
+                        }
+                    }
+                    characters[index] = character;
+                    colors[index] = color;
+                    nameTexts[index].SetText(character.photonView.Owner.NickName);
+                    panelImages[index].Set(color);
+                    portraitImages[index].Set(character.GetPortraitMaterial());
+                }
+                break;
+            }
+        }
+    }
+
     public void Sort(IEnumerable<Character> characters)
     {
         int count = characters != null ? characters.Count() : 0;
@@ -59,33 +95,31 @@ public class RankingPanel : Panel
             List<Character> list = characters.OrderBy(value => value.photonView.OwnerActorNr).ToList();
             for (int i = 0; i < (int)Index.End; i++)
             {
-                if (list.Contains(this.characters[i]) == false && this.characters[i] == null)
+                if (this.characters[i] == null && list.Contains(this.characters[i]) == false)
                 {
                     Character character = list.FirstOrDefault(value => this.characters.Contains(value) == false);
                     if (character != null)
                     {
                         this.characters[i] = character;
                         list.Remove(character);
+                        portraitImages[i].Set(character.GetPortraitMaterial());
+                        nameTexts[i].SetText(character.photonView.Owner.NickName);
+                        panelImages[i].SetActive(true);
                     }
                 }
             }
         }
-        for(int i = 0; i < (int)Index.End; i++)
+        for (int i = 0; i < (int)Index.End; i++)
         {
-            if (this.characters[i] != null)
+            if (this.characters[i] == null)
             {
-                nameTexts[i].SetText(this.characters[i].photonView.Owner.NickName);
-                uint mineralCount = this.characters[i].mineralCount;
-                scoreTexts[i].SetText(this.characters[i].mineralCount.ToString());
-                if (panelImages[i] != null)
-                {
-                    panelImages[i].color = colors[i];
-                    panelImages[i].gameObject.SetActive(true);
-                }
+                panelImages[i].SetActive(false);
             }
-            else if (panelImages[i] != null && panelImages[i].gameObject.activeSelf == true)
+            else
             {
-                panelImages[i].gameObject.SetActive(false);
+                uint mineralCount = this.characters[i].mineralCount;
+                scoreTexts[i].SetText(mineralCount.ToString());
+                sliders[i].Fill(maxMineralCount > 0 ? (float)mineralCount / maxMineralCount : 1);
             }
         }
     }
@@ -94,20 +128,27 @@ public class RankingPanel : Panel
     {
         if (value != null && int.TryParse(value.ToString(), out int actor) == true)
         {
-
+            Sort(0, actor);
         }
         else
         {
+            maxMineralCount = 0;
         }
     }
 
     public void SetSecond(object value)
     {
-
+        if (value != null && int.TryParse(value.ToString(), out int actor) == true)
+        {
+            Sort(1, actor);
+        }
     }
 
     public void SetThird(object value)
     {
-
+        if (value != null && int.TryParse(value.ToString(), out int actor) == true)
+        {
+            Sort(2, actor);
+        }
     }
 }
