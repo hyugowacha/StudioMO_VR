@@ -11,6 +11,10 @@ public class ShopButton : MonoBehaviour
     [SerializeField] TextMeshProUGUI skinPrice;     // 스킨 아이템 버튼 가격
     [SerializeField] Image lockImage;               // 스킨 아이템 버튼 잠금 이미지
 
+    [Header("구매, 획득 버튼")]
+    [SerializeField] Button purchaseButton;
+    [SerializeField] Button achievementButton;
+
     private SkinData mySkinData;                    // 현재 내 스킨 데이터
     private ShopCanvasCtrl shopCanvasCtrl;          // 현재 상점 캔버스
     private bool checkUnlocked;                     // 잠금 체크용 불값
@@ -44,13 +48,17 @@ public class ShopButton : MonoBehaviour
         // ▼ 만약 스킨이 잠금이 풀려있다면
         if (checkUnlocked)
         {
-            // ▼ 적용중인 스킨 이미지 해당 스킨 이미지로 바꿈
-            shopCanvasCtrl.ApplySkin(mySkinData);
+            purchaseButton.interactable = false;
+            achievementButton.interactable = false;
         }
         else
         {
+            purchaseButton.interactable = true;
+            achievementButton.interactable = true;
+            //Debug.Log("잠금 걸려있으므로, 아이템 정보 기억합니다");
             // ▼ 클릭한 스킨 아이템 정보 저장 (기억하기)
             //shopCanvasCtrl.OnClickSkinButton(this, mySkinData, checkUnlocked, myTabType);
+
         }
     }
 

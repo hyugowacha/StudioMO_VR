@@ -76,7 +76,7 @@ public class LobbyCanvasCtrl : MonoBehaviour
         TestUserData.ResetTestData();
         DeactivateAllPanels();
         shopPanel.SetActive(true);
-        shopCanvasCtrl.TestShowShopCanvas();
+        shopCanvasCtrl.TestShowShopCanvas();        
     }
 
     private void OnClickOption()

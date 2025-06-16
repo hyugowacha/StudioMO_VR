@@ -5178,7 +5178,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 822815806}
+      - m_Target: {fileID: 5269272679711806480}
         m_TargetAssemblyTypeName: ShopCanvasCtrl, Assembly-CSharp
         m_MethodName: OnClickCloseBuySkin
         m_Mode: 1
@@ -6011,7 +6011,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 822815806}
+      - m_Target: {fileID: 5269272679711806480}
         m_TargetAssemblyTypeName: ShopCanvasCtrl, Assembly-CSharp
         m_MethodName: TestOnClickBuySkin
         m_Mode: 1
@@ -6820,8 +6820,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shopCanvas: {fileID: 2884980957214253843}
-  lobbyCanvas: {fileID: 0}
-  shopPanel: {fileID: 0}
   basicSkinData: {fileID: 11400000, guid: 4dd483c6a9fc5714887346d3d6a1503a, type: 2}
   purchaseSkinData: []
   achievementSkinData: []
@@ -6837,6 +6835,9 @@ MonoBehaviour:
   getSkinPrice: {fileID: 0}
   previewImage: {fileID: 5473776825083780834}
   coinValue: {fileID: 3738594305295194804}
+  starValue: {fileID: 0}
+  autoPopUpPaenl: {fileID: 0}
+  savePopUpPanel: {fileID: 0}
 --- !u!4 &625500467
 Transform:
   m_ObjectHideFlags: 0
@@ -9363,8 +9364,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shopCanvas: {fileID: 8984852520987829860}
-  lobbyCanvas: {fileID: 1784804289}
-  shopPanel: {fileID: 0}
   basicSkinData: {fileID: 11400000, guid: ffbb563ac03737343a8d52446d44a733, type: 2}
   purchaseSkinData:
   - {fileID: 11400000, guid: 604d5019bd2f806469481262ff897d9a, type: 2}
@@ -9392,6 +9391,9 @@ MonoBehaviour:
   getSkinPrice: {fileID: 1211873638498480411}
   previewImage: {fileID: 1587777320}
   coinValue: {fileID: 7235636577920920714}
+  starValue: {fileID: 0}
+  autoPopUpPaenl: {fileID: 0}
+  savePopUpPanel: {fileID: 0}
 --- !u!1 &854501352
 GameObject:
   m_ObjectHideFlags: 0
@@ -15697,7 +15699,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1620662966
 RectTransform:
   m_ObjectHideFlags: 0
@@ -16501,6 +16503,7 @@ GameObject:
   - component: {fileID: 1725203726}
   - component: {fileID: 1725203725}
   - component: {fileID: 1725203727}
+  - component: {fileID: 1725203728}
   m_Layer: 5
   m_Name: ErrorPopUpPanel
   m_TagString: Untagged
@@ -16574,10 +16577,25 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1725203723}
   m_Enabled: 1
-  m_Alpha: 0
+  m_Alpha: 1
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!114 &1725203728
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1725203723}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0dd1030f1283b7439635a13d31f87df, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  canvasGroup: {fileID: 1725203727}
+  fadeDuration: 0.5
+  visibleDuration: 2
 --- !u!1 &1774370428
 GameObject:
   m_ObjectHideFlags: 0
@@ -17940,7 +17958,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1868652605
 RectTransform:
   m_ObjectHideFlags: 0
@@ -23551,9 +23569,9 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 7194477619800437798}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 80.8006, y: -27.695}
   m_SizeDelta: {x: 50.1604, y: 60.04}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &461823216264667017
@@ -25162,7 +25180,7 @@ RectTransform:
   m_Father: {fileID: 3773346552946331673}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -29540,7 +29558,7 @@ RectTransform:
   m_Father: {fileID: 3281144666227513059}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: -6.4916, y: 0}
   m_SizeDelta: {x: 12.9833, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -32510,7 +32528,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 822815806}
+      - m_Target: {fileID: 5269272679711806480}
         m_TargetAssemblyTypeName: ShopCanvasCtrl, Assembly-CSharp
         m_MethodName: OnClickCloseGetSkin
         m_Mode: 1
@@ -33451,9 +33469,9 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 7194477619800437798}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 25.0802, y: -27.695}
   m_SizeDelta: {x: 50.1604, y: 60.04}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2323770399917399231
@@ -35516,7 +35534,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1382108131764503260}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 5269272679711806480}
+        m_TargetAssemblyTypeName: ShopCanvasCtrl, Assembly-CSharp
+        m_MethodName: OnClickSavePanel
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &2663453444229727601
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -38872,7 +38902,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 822815806}
+      - m_Target: {fileID: 5269272679711806480}
         m_TargetAssemblyTypeName: ShopCanvasCtrl, Assembly-CSharp
         m_MethodName: TestOnClickBuySkin
         m_Mode: 1
@@ -41710,9 +41740,9 @@ RectTransform:
   m_Father: {fileID: 5521981194628321004}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: -1.8699999}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &3973052506946404292
 MonoBehaviour:
@@ -41757,7 +41787,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 9124180596682288957}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 5269272679711806480}
+        m_TargetAssemblyTypeName: ShopCanvasCtrl, Assembly-CSharp
+        m_MethodName: SaveCurrentSkin
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &3976022146375742928
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -42872,7 +42914,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 822815806}
+      - m_Target: {fileID: 5269272679711806480}
         m_TargetAssemblyTypeName: ShopCanvasCtrl, Assembly-CSharp
         m_MethodName: OnClickOpenBuyPanel
         m_Mode: 1
@@ -47855,8 +47897,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shopCanvas: {fileID: 8984852520987829860}
-  lobbyCanvas: {fileID: 1784804289}
-  shopPanel: {fileID: 1620662965}
   basicSkinData: {fileID: 11400000, guid: ffbb563ac03737343a8d52446d44a733, type: 2}
   purchaseSkinData:
   - {fileID: 11400000, guid: 604d5019bd2f806469481262ff897d9a, type: 2}
@@ -47884,6 +47924,9 @@ MonoBehaviour:
   getSkinPrice: {fileID: 1211873638498480411}
   previewImage: {fileID: 1587777320}
   coinValue: {fileID: 7235636577920920714}
+  starValue: {fileID: 8444996228876039282}
+  autoPopUpPaenl: {fileID: 1725203723}
+  savePopUpPanel: {fileID: 1868652604}
 --- !u!114 &5272448256150084066
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -49018,9 +49061,9 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 7194477619800437798}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 192.2408, y: -27.695}
   m_SizeDelta: {x: 50.16, y: 60.04}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &5492459434678814736
@@ -50982,9 +51025,9 @@ RectTransform:
   - {fileID: 2040824144323066032}
   m_Father: {fileID: 7194477619800437798}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 136.5208, y: -27.695}
   m_SizeDelta: {x: 50.16, y: 60.04}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &5909019881793262850
@@ -53083,6 +53126,8 @@ MonoBehaviour:
   skinImage: {fileID: 4482912707011043597}
   skinPrice: {fileID: 3021702360568869515}
   lockImage: {fileID: 5220128201485504473}
+  purchaseButton: {fileID: 4210828160951847506}
+  achievementButton: {fileID: 8868680711702449548}
 --- !u!224 &6319533622931677083
 RectTransform:
   m_ObjectHideFlags: 0
@@ -53999,6 +54044,8 @@ MonoBehaviour:
   skinImage: {fileID: 3494735270402724977}
   skinPrice: {fileID: 5438810594924190026}
   lockImage: {fileID: 62120945}
+  purchaseButton: {fileID: 4210828160951847506}
+  achievementButton: {fileID: 8868680711702449548}
 --- !u!1 &6540785820932746925
 GameObject:
   m_ObjectHideFlags: 0
@@ -54640,7 +54687,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &6666884990537999827
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -55086,6 +55133,8 @@ MonoBehaviour:
   skinImage: {fileID: 2053097479272445457}
   skinPrice: {fileID: 591743272921442998}
   lockImage: {fileID: 4308130285111690704}
+  purchaseButton: {fileID: 4210828160951847506}
+  achievementButton: {fileID: 8868680711702449548}
 --- !u!1 &6722611230159471525
 GameObject:
   m_ObjectHideFlags: 0
@@ -56775,7 +56824,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 8572690407672999414}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 5269272679711806480}
+        m_TargetAssemblyTypeName: ShopCanvasCtrl, Assembly-CSharp
+        m_MethodName: OnClickExitSavePanel
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!222 &7088554363855832234
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -57205,7 +57266,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
   m_AnchoredPosition: {x: 0.00061416626, y: 34.315}
-  m_SizeDelta: {x: 0, y: 55.39}
+  m_SizeDelta: {x: 50.112106, y: 55.39}
   m_Pivot: {x: 0, y: 1}
 --- !u!1 &7195447799098568615
 GameObject:
@@ -58928,7 +58989,7 @@ RectTransform:
   m_Father: {fileID: 1897669654347376064}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 0.7694096, y: 1}
   m_AnchoredPosition: {x: -0.040000916, y: 0}
   m_SizeDelta: {x: 19.92, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -62797,6 +62858,8 @@ MonoBehaviour:
   skinImage: {fileID: 8395186477176387367}
   skinPrice: {fileID: 8421279600476297985}
   lockImage: {fileID: 786749262187384137}
+  purchaseButton: {fileID: 4210828160951847506}
+  achievementButton: {fileID: 8868680711702449548}
 --- !u!222 &8396574660547555333
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -64256,6 +64319,8 @@ MonoBehaviour:
   skinImage: {fileID: 4334936036265209407}
   skinPrice: {fileID: 5324759184203593587}
   lockImage: {fileID: 2218965016315581054}
+  purchaseButton: {fileID: 4210828160951847506}
+  achievementButton: {fileID: 8868680711702449548}
 --- !u!114 &8544086391401747543
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -65215,6 +65280,8 @@ MonoBehaviour:
   skinImage: {fileID: 8736137740089786090}
   skinPrice: {fileID: 1332032945224462861}
   lockImage: {fileID: 996634920}
+  purchaseButton: {fileID: 4210828160951847506}
+  achievementButton: {fileID: 8868680711702449548}
 --- !u!222 &8748594878762923333
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -66069,7 +66136,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 822815806}
+      - m_Target: {fileID: 5269272679711806480}
         m_TargetAssemblyTypeName: ShopCanvasCtrl, Assembly-CSharp
         m_MethodName: OnClickOpenBuyPanel
         m_Mode: 1

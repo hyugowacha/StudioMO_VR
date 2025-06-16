@@ -10,6 +10,11 @@ public class AutoPopUpPanel : MonoBehaviour
     [SerializeField] private float fadeDuration = 0.5f;     // 페이드 인 / 아웃 시간
     [SerializeField] private float visibleDuration = 2f;    // 완전히 나타나 상태로 유지하는 시간
 
+    private void OnEnable()
+    {
+        ShowTemporaryPanel();
+    }
+
     // ▼ 조건 만족시 호출할 패널 페이드 인 / 아웃 함수
     public void ShowTemporaryPanel()
     {
@@ -30,6 +35,7 @@ public class AutoPopUpPanel : MonoBehaviour
                         // ▼ 페이드 아웃이 끝나면 입력 차단
                         canvasGroup.interactable = false;
                         canvasGroup.blocksRaycasts = false;
+                        this.gameObject.SetActive(false);
                     });
                 });
             });
