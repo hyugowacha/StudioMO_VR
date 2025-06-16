@@ -142,6 +142,11 @@ public class FirebaseManager : MonoBehaviourPunCallbacks
             // 닉네임 확인 버튼 이벤트 등록
             nickname_okButton.onClick.AddListener(OnClickSetNickname);
         }
+
+        UserGameData.LoadMapHighScores(UserGameData.stageInfoDataSet, () =>
+        {
+            Debug.Log("[MainLobby] 스테이지 점수 데이터 로드 완료");
+        });
     }
 
     private void GameOver()

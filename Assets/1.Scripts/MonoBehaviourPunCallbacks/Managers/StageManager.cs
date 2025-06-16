@@ -361,13 +361,27 @@ public class StageManager : Manager
     // 최고 기록 값을 저장 시도하는 함수
     private void TryUpdateHighScoreAndStar(int totalScore, UnityAction onSaveComplete)
     {
+        // stageInfoDataSet이 null일 경우 Resources에서 수동 로드
         if (UserGameData.stageInfoDataSet == null)
+        {
+            UserGameData.stageInfoDataSet = Resources.Load<StageInfoDataSet>("StageInfo/StageInfoDataSet");
+
+            if (UserGameData.stageInfoDataSet == null)
+            {
+                onSaveComplete?.Invoke();
+                return;
+            }
+        }
+
+        // stageInfoList 유효성 검사
+        if (UserGameData.stageInfoDataSet.stageInfoList == null || UserGameData.stageInfoDataSet.stageInfoList.Count == 0)
         {
             onSaveComplete?.Invoke();
             return;
         }
 
         int stageIndex = StageData.currentIndex;
+
         if (stageIndex < 0 || stageIndex >= UserGameData.stageInfoDataSet.stageInfoList.Count)
         {
             onSaveComplete?.Invoke();
@@ -380,16 +394,16 @@ public class StageManager : Manager
         {
             info.bestScore = totalScore;
 
+
             UserGameData.SaveMapHighScores(UserGameData.stageInfoDataSet, () =>
             {
-                Debug.Log($"[StageManager] 새로운 최고 점수 저장됨: {totalScore}");
-                onSaveComplete?.Invoke(); // 저장 완료 후 실행
+                onSaveComplete?.Invoke();
             });
         }
         else
         {
-            Debug.Log($"[StageManager] 최고 점수 미갱신 (현재: {info.bestScore}, 이번 점수: {totalScore})");
-            onSaveComplete?.Invoke(); // 저장 안 해도 바로 다음 실행
+            onSaveComplete?.Invoke();
         }
     }
+
 }
