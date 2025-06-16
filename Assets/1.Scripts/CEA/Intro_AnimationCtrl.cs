@@ -14,13 +14,13 @@ public class Intro_AnimationCtrl : MonoBehaviour
 
     public void inspectTrigger()
     {
-        if(onDisappear)
+        if (onDisappear)
         {
             foreach (var controller in controller)
             {
                 controller.SetTrigger("onDisappear");
-                onDisappear = false;
             }
+            onDisappear = false;
         }
     }
 
@@ -29,5 +29,5 @@ public class Intro_AnimationCtrl : MonoBehaviour
         onDisappear = true;
     }
 
-   
+
 }
