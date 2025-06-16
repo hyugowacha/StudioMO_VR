@@ -27,6 +27,9 @@ public class AllLanguage : MonoBehaviour
     public TextMeshProUGUI withFriends1;
     public TextMeshProUGUI enterInvitationCode;
     public TextMeshProUGUI participate;
+
+    [Header("상점")]
+    public TextMeshProUGUI buy;
     #endregion
 
     #region 추후 진행 예정
