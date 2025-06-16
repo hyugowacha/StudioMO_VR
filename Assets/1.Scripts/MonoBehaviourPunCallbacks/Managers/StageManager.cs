@@ -112,13 +112,12 @@ public class StageManager : Manager
                     {
                         audioSource.clip = audioClip;
                         limitTime = audioClip.length;
-                        audioSource.Play();
                     }
                 }
             }
             remainingTime = limitTime;
             phasePanel?.Play(PhasePanel.ReadyDelay, PhasePanel.StartDelay, PhasePanel.EndDelay);
-            DOVirtual.DelayedCall(PhasePanel.ReadyDelay + PhasePanel.StartDelay, () => stop = false);
+            DOVirtual.DelayedCall(PhasePanel.ReadyDelay + PhasePanel.StartDelay, () => { stop = false; audioSource?.Play(); });
         }
     }
 
