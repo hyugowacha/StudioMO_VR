@@ -346,7 +346,7 @@ public class StageManager : Manager
         switch(exit)
         {
             case true:
-                statePanel?.Open(() => SceneManager.LoadScene("lobby"), null);
+                statePanel?.Open(() => SceneManager.LoadScene("MainLobbyScene"), null);
                 break;
             case false:
                 statePanel?.Open(() => SceneManager.LoadScene(SceneName), false);
