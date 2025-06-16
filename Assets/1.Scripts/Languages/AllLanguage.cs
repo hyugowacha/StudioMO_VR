@@ -27,6 +27,10 @@ public class AllLanguage : MonoBehaviour
     public TextMeshProUGUI withFriends1;
     public TextMeshProUGUI enterInvitationCode;
     public TextMeshProUGUI participate;
+
+    [Header("ªÛ¡°")]
+    public TextMeshProUGUI buy;
+
     public TextMeshProUGUI createRoom;
     #endregion
 
