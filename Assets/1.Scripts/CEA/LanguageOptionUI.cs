@@ -7,6 +7,9 @@ public class LanguageOptionUI : MonoBehaviour
     [Header("스테이지 텍스트 업데이트 대상")]
     public StageInfoDataSet stageInfoDataSet; // 인스펙터에서 연결
 
+    [Header("전체 언어 UI 처리 스크립트")]
+    public AllLanguage allLanguage; // 인스펙터에서 연결!!
+
     private void Start()
     {
         if (PlayerPrefs.HasKey(Translation.Preferences))
@@ -21,33 +24,13 @@ public class LanguageOptionUI : MonoBehaviour
 
         Translation.Set(selectedLanguage);
         stageInfoDataSet.ApplyLanguage(selectedLanguage);
-        Debug.Log("초기 언어 설정 적용: " + selectedLanguage.ToString());
+        allLanguage.SetLanguage(selectedLanguage);
     }
 
-    // ▼ 언어 설정 함수: "선택만" 처리 (적용은 SaveLanguage에서!)
-    public void SetEnglish()
-    {
-        selectedLanguage = Translation.Language.English;
-        Debug.Log("언어 선택: 영어");
-    }
-
-    public void SetKorean()
-    {
-        selectedLanguage = Translation.Language.Korean;
-        Debug.Log("언어 선택: 한국어");
-    }
-
-    public void SetChinese()
-    {
-        selectedLanguage = Translation.Language.Chinese;
-        Debug.Log("언어 선택: 중국어");
-    }
-
-    public void SetJapanese()
-    {
-        selectedLanguage = Translation.Language.Japanese;
-        Debug.Log("언어 선택: 일본어");
-    }
+    public void SetEnglish() => selectedLanguage = Translation.Language.English;
+    public void SetKorean() => selectedLanguage = Translation.Language.Korean;
+    public void SetChinese() => selectedLanguage = Translation.Language.Chinese;
+    public void SetJapanese() => selectedLanguage = Translation.Language.Japanese;
 
     // ▼ 실제 언어 저장 및 적용
     public void SaveLanguage()
@@ -57,6 +40,7 @@ public class LanguageOptionUI : MonoBehaviour
 
         Translation.Set(selectedLanguage);
         stageInfoDataSet.ApplyLanguage(selectedLanguage);
-        Debug.Log("언어 저장 및 적용 완료: " + selectedLanguage.ToString());
+        allLanguage.SetLanguage(selectedLanguage);
+        Debug.Log("언어 저장 및 적용 완료: " + selectedLanguage);
     }
 }

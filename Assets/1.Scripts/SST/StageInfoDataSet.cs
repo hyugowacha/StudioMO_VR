@@ -55,6 +55,9 @@ public class StageInfoData
     public string bgmTitle;                     // 설정된 BGM 이름
     public string storyText;                    // 설정된 스토리 텍스트
 
+    public int clearValue;                      // 별 1개 획득 최소치
+    public int addValue;                        // 별 2개 획득 최소치
+
     public int bestScore;                       // 플레이어가 기록한 최고 점수
     public bool isUnlocked;                     // 스테이지 해금 여부 (true - 해금 )
 
@@ -98,7 +101,7 @@ public class StageInfoDataSetEditor : Editor
             var info = dataSet.stageInfoList[i];
             var stage = stageDatas[i];
 
-            info.stageId = $"Stage_{i + 1}";
+            info.stageId = $"{i + 1}";
             info.stageIndex = i;
 
             // 가장 중요! 연결시켜놔야 나중에 ApplyLanguage에서 텍스트 불러올 수 있음!
