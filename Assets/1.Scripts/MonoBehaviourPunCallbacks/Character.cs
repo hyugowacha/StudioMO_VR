@@ -4,7 +4,6 @@ using UnityEngine;
 using Photon.Pun;
 using DG.Tweening;
 using Photon.Realtime;
-using UnityEngine.InputSystem.iOS;
 
 /// <summary>
 /// 플레이어가 조종하는 캐릭터를 나타내는 클래스
@@ -265,7 +264,7 @@ public class Character : MonoBehaviourPunCallbacks, IPunObservable
     [PunRPC]
     private void ApplyPickaxeHit(Vector2 direction)
     {
-        getRigidbody.velocity += new Vector3(direction.x, 0, direction.y).normalized * KnockBackForce * SlowMotion.speed;
+        getRigidbody.velocity = new Vector3(direction.x, 0, direction.y).normalized * KnockBackForce;
         RequestFainting(true, false);
         immuneTime = pickaxeStunDuration;
         if (SlowMotion.IsOwner(PhotonNetwork.LocalPlayer) == true)
@@ -425,6 +424,8 @@ public class Character : MonoBehaviourPunCallbacks, IPunObservable
                 material = new Material(shader);
                 if (portraitCamera != null)
                 {
+                    RenderTexture renderTexture = new RenderTexture(portraitCamera.targetTexture);
+                    portraitCamera.targetTexture = renderTexture;
                     material.mainTexture = portraitCamera.targetTexture;
                 }
                 hasMaterial = true;
