@@ -35,6 +35,10 @@ public class StageData : ScriptableObject
     [Header("최고 점수"), SerializeField]
     private uint bestScore;
 
+    [Header("현재 스테이지")]
+    public static int currentIndex = -1;
+
+    [Serializable]
     public struct Score
     {
         [SerializeField]
@@ -170,8 +174,10 @@ public class StageData : ScriptableObject
     }
 
     //씬 변환 전에 해당 스테이지 단계로 데이터를 설정해주는 함수
-    public static void SetCurrentStage(int level)
+    public static void SetCurrentStage(int index)
     {
-        current = GetStageData(level);
+        current = GetStageData(index);
+        currentIndex = index;
     }
+
 }

@@ -68,7 +68,6 @@ public class StageInfoData
 [CustomEditor(typeof(StageInfoDataSet))]
 public class StageInfoDataSetEditor : Editor
 {
-
     public override void OnInspectorGUI()
     {
         base.OnInspectorGUI();
@@ -111,7 +110,8 @@ public class StageInfoDataSetEditor : Editor
             info.bgmTitle = stage.GetMusicText(Translation.Language.Korean);
             info.storyText = stage.GetStoryText(Translation.Language.Korean);
 
-            info.bestScore = (int)stage.GetScore().GetAddValue();
+            info.clearValue = (int)stage.GetScore().GetClearValue();
+            info.addValue = (int)stage.GetScore().GetAddValue();
             info.isUnlocked = (i == 0);
         }
 

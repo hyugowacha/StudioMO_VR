@@ -31,6 +31,9 @@ public static class UserGameData
 
     // 현재 테스트 아이디 인것인가?
     public static bool IsTester { get; private set; } = false;
+
+    // 스테이지 정보
+    public static StageInfoDataSet stageInfoDataSet;
     #endregion
 
     #region 파이어베이스에 값을 다시 저장
