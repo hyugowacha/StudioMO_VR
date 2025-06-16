@@ -95,28 +95,27 @@ public class StageInfoDataSetEditor : Editor
             return;
         }
 
-        for (int i = 0; i < dataSet.stageInfoList.Count; i++)
+        foreach (var info in dataSet.stageInfoList)
         {
-            var info = dataSet.stageInfoList[i];
-            var stage = stageDatas[i];
+            string expectedName = info.stageId.Trim(); // 예: "1", "2", "3"
+            StageData matchedStage = System.Array.Find(stageDatas, s => s.name == expectedName);
 
-            info.stageId = $"{i + 1}";
-            info.stageIndex = i;
+            if (matchedStage == null)
+            {
+                Debug.LogWarning($"[AutoFill] StageData 이름이 '{expectedName}'인 것을 찾을 수 없습니다.");
+                continue;
+            }
 
-            // 가장 중요! 연결시켜놔야 나중에 ApplyLanguage에서 텍스트 불러올 수 있음!
-            info.linkedStageData = stage;
-
-            // 초기 언어: 한국어 기준으로 기본값만 넣음 (런타임에 바뀜)
-            info.bgmTitle = stage.GetMusicText(Translation.Language.Korean);
-            info.storyText = stage.GetStoryText(Translation.Language.Korean);
-
-            info.clearValue = (int)stage.GetScore().GetClearValue();
-            info.addValue = (int)stage.GetScore().GetAddValue();
-            info.isUnlocked = (i == 0);
+            info.linkedStageData = matchedStage;
+            info.bgmTitle = matchedStage.GetMusicText(Translation.Language.Korean);
+            info.storyText = matchedStage.GetStoryText(Translation.Language.Korean);
+            info.clearValue = (int)matchedStage.GetScore().GetClearValue();
+            info.addValue = (int)matchedStage.GetScore().GetAddValue();
+            info.isUnlocked = (info.stageIndex == 0);
         }
 
         EditorUtility.SetDirty(dataSet);
-        Debug.Log("StageInfoDataSet이 StageData로부터 성공적으로 채워졌습니다.");
+        Debug.Log("StageInfoDataSet에 StageData 연결 완료 (이름 기준)");
     }
 }
 #endif

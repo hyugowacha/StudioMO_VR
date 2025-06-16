@@ -30,7 +30,6 @@ public class LobbyCanvasCtrl : MonoBehaviour
     {
         // √ ±‚»≠
         lobbyCanvas.gameObject.SetActive(true);
-        lobbyPanel.SetActive(false);
         stageSelectPanel.SetActive(false);
         versusPanel.SetActive(false);
         //shopPanel.SetActive(false);

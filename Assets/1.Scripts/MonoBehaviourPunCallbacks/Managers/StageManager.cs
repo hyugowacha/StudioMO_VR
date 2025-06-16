@@ -156,7 +156,9 @@ public class StageManager : Manager
                 UnityAction next = null;
 
                 // 최고기록 값
-                TryUpdateHighScoreAndStar((int)totalScore);
+                TryUpdateHighScoreAndStar((int)totalScore, null);
+
+                Debug.Log("토탈 스코어"+totalScore);
 
                 //파이어베이스에서 받은 데이터 내용으로 next를 바인딩 할지 여부를 결정
                 stageResultPanel?.Open(totalScore, score.GetClearValue(), score.GetAddValue(), next, () => ChangeScene(false), () => ChangeScene(true));
@@ -346,6 +348,8 @@ public class StageManager : Manager
         switch(exit)
         {
             case true:
+                Authentication.isGamePlaying = true;
+                Debug.Log(Authentication.isGamePlaying);
                 statePanel?.Open(() => SceneManager.LoadScene("MainLobbyScene"), null);
                 break;
             case false:
@@ -355,16 +359,23 @@ public class StageManager : Manager
     }
 
     // 최고 기록 값을 저장 시도하는 함수
-    private void TryUpdateHighScoreAndStar(int totalScore)
+    private void TryUpdateHighScoreAndStar(int totalScore, UnityAction onSaveComplete)
     {
-        if (UserGameData.stageInfoDataSet == null) return;
+        if (UserGameData.stageInfoDataSet == null)
+        {
+            onSaveComplete?.Invoke();
+            return;
+        }
 
         int stageIndex = StageData.currentIndex;
-        if (stageIndex < 0 || stageIndex >= UserGameData.stageInfoDataSet.stageInfoList.Count) return;
+        if (stageIndex < 0 || stageIndex >= UserGameData.stageInfoDataSet.stageInfoList.Count)
+        {
+            onSaveComplete?.Invoke();
+            return;
+        }
 
         var info = UserGameData.stageInfoDataSet.stageInfoList[stageIndex];
 
-        // 1. 최고 점수 업데이트
         if (totalScore > info.bestScore)
         {
             info.bestScore = totalScore;
@@ -372,26 +383,13 @@ public class StageManager : Manager
             UserGameData.SaveMapHighScores(UserGameData.stageInfoDataSet, () =>
             {
                 Debug.Log($"[StageManager] 새로운 최고 점수 저장됨: {totalScore}");
+                onSaveComplete?.Invoke(); // 저장 완료 후 실행
             });
-        }
-
-        // 2. 별 개수 판정
-        int starCount = 0;
-        if (info.bestScore >= info.clearValue + info.addValue)
-        {
-            starCount = 2;
-        }
-        else if (info.bestScore >= info.clearValue)
-        {
-            starCount = 1;
         }
         else
         {
-            starCount = 0;
+            Debug.Log($"[StageManager] 최고 점수 미갱신 (현재: {info.bestScore}, 이번 점수: {totalScore})");
+            onSaveComplete?.Invoke(); // 저장 안 해도 바로 다음 실행
         }
-
-        Debug.Log($"[StageManager] 별 {starCount}개 달성 (최고 점수: {info.bestScore}, 기준: {info.clearValue}, {info.addValue})");
-
-        // 나중에 UI에 별 개수를 전달하거나 저장할 수도 있음 (필요 시 확장)
     }
 }

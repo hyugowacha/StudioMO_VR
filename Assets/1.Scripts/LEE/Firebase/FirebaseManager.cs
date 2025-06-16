@@ -64,8 +64,9 @@ public class FirebaseManager : MonoBehaviourPunCallbacks
     [Header("스테이지 데이터")]
     [SerializeField] StageInfoDataSet stageInfoDataSet; // 스테이지 데이터 스크립터블 오브젝트
 
-    [Header("로딩 화면")]
+    [Header("로딩 화면, 로비화면")]
     [SerializeField] GameObject loadingObject;
+    [SerializeField] GameObject lobbyObject;
     #endregion
 
     #region 시작 시 초기화 및 버튼 등록
@@ -102,37 +103,45 @@ public class FirebaseManager : MonoBehaviourPunCallbacks
 
     private void Start()
     {
-        MasterTest();
+        if (Authentication.isGamePlaying)
+        {
+            loginCanvas.gameObject.SetActive(false);
+            lobbyObject.SetActive(true);
+        }
+        else
+        {
+            MasterTest();
 
-        // 로그인 관련 버튼 이벤트 등록
-        signUpCanvasButton.onClick.AddListener(OnClickGoToSignUp);      // 회원가입 창 열기
-        signInButton.onClick.AddListener(OnClickSignIn);                // 로그인
-        findAccountButton.onClick.AddListener(OnClickFindAccount);      // 계정찾기
-        gameoverButton.onClick.AddListener(GameOver);                   // X 버튼 클릭
+            // 로그인 관련 버튼 이벤트 등록
+            signUpCanvasButton.onClick.AddListener(OnClickGoToSignUp);      // 회원가입 창 열기
+            signInButton.onClick.AddListener(OnClickSignIn);                // 로그인
+            findAccountButton.onClick.AddListener(OnClickFindAccount);      // 계정찾기
+            gameoverButton.onClick.AddListener(GameOver);                   // X 버튼 클릭
 
-        // 회원가입 관련 버튼 이벤트 등록
-        checkButton.onClick.AddListener(OnClickCheckDuplicate);             // 아이디 중복 확인 버튼 
-        signUpCancelBuuton.onClick.AddListener(OnClickBackToLogin);         // 취소 버튼 로그인 화면으로 되돌아감
-        SignUpOkBuuton.onClick.AddListener(OnClickSignUp);                  // 확인 버튼 (회원가입 실행)   
-        signUpInputPW.onValueChanged.AddListener(OnPasswordChanged);        // 올바른 비밀번호
-        signUpInputPWCheck.onValueChanged.AddListener(OnPasswordChanged);   // 비밀번호 확인 시스템
+            // 회원가입 관련 버튼 이벤트 등록
+            checkButton.onClick.AddListener(OnClickCheckDuplicate);             // 아이디 중복 확인 버튼 
+            signUpCancelBuuton.onClick.AddListener(OnClickBackToLogin);         // 취소 버튼 로그인 화면으로 되돌아감
+            SignUpOkBuuton.onClick.AddListener(OnClickSignUp);                  // 확인 버튼 (회원가입 실행)   
+            signUpInputPW.onValueChanged.AddListener(OnPasswordChanged);        // 올바른 비밀번호
+            signUpInputPWCheck.onValueChanged.AddListener(OnPasswordChanged);   // 비밀번호 확인 시스템
 
-        // ID 찾기 버튼 이벤트 등록
-        findID_okButton.onClick.AddListener(OnClickFindID);                 // ID 찾기의 확인 버튼
-        findID_cancelButton.onClick.AddListener(OnClickFindIDCancel);       // ID 찾기의 취소 버튼
-        findPWButton.onClick.AddListener(OnClickFindIDChangeToFindPW);      // PW 찾기 화면 전환
+            // ID 찾기 버튼 이벤트 등록
+            findID_okButton.onClick.AddListener(OnClickFindID);                 // ID 찾기의 확인 버튼
+            findID_cancelButton.onClick.AddListener(OnClickFindIDCancel);       // ID 찾기의 취소 버튼
+            findPWButton.onClick.AddListener(OnClickFindIDChangeToFindPW);      // PW 찾기 화면 전환
 
-        // PW 찾기 버튼 이벤트 등록
-        findPW_okButton.onClick.AddListener(OnClickFindPW);
-        findPW_cancelButton.onClick.AddListener(OnClickFindPWCancel);
-        findIDButton.onClick.AddListener(OnClickFindPWChangeToID);
+            // PW 찾기 버튼 이벤트 등록
+            findPW_okButton.onClick.AddListener(OnClickFindPW);
+            findPW_cancelButton.onClick.AddListener(OnClickFindPWCancel);
+            findIDButton.onClick.AddListener(OnClickFindPWChangeToID);
 
-        // 경고창 관련 버튼 이벤트 등록
-        logingWarning_OK.onClick.AddListener(CancelWarningIMG);
-        logingWarning_cancel.onClick.AddListener(CancelWarningIMG);
+            // 경고창 관련 버튼 이벤트 등록
+            logingWarning_OK.onClick.AddListener(CancelWarningIMG);
+            logingWarning_cancel.onClick.AddListener(CancelWarningIMG);
 
-        // 닉네임 확인 버튼 이벤트 등록
-        nickname_okButton.onClick.AddListener(OnClickSetNickname);
+            // 닉네임 확인 버튼 이벤트 등록
+            nickname_okButton.onClick.AddListener(OnClickSetNickname);
+        }
     }
 
     private void GameOver()
