@@ -1,4 +1,3 @@
-using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -181,6 +180,7 @@ public class BattleManager : Manager
                 slowMotionPanel?.Fill(current, full, null);
             }
         }
+        rankingPanel?.Sort(Character.list);
     }
 
     protected override void ChangeText()
@@ -264,12 +264,6 @@ public class BattleManager : Manager
         }
     }
 
-    public override void OnPlayerEnteredRoom(Player player)
-    {
-        //새로운 멤버로 인하여 랭킹패널 갱신
-        Debug.Log(Character.list.Count);
-    }
-
     public override void OnPlayerLeftRoom(Player player)
     {
         if (PhotonNetwork.IsMasterClient == true && player != null)
@@ -319,7 +313,7 @@ public class BattleManager : Manager
                 }
             }
         }
-        //혼자 남으면 이긴거
+        //혼자 남으면 이김
     }
 
     //입력 시스템과 관련된 바인딩을 연결 및 해제에 사용하는 메서드 
