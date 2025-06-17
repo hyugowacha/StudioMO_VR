@@ -17,6 +17,9 @@ public static class UserGameData
     // 현재 유저의 보유 코인
     public static int Coins { get; private set; }
 
+    // 유저의 총 스타 수
+    public static int totalStars = 0;
+
     // 현재 유저가 잠금 해제한 스킨 목록
     public static HashSet<string> UnlockedSkins { get; private set; } = new();
 
@@ -31,6 +34,10 @@ public static class UserGameData
 
     // 현재 테스트 아이디 인것인가?
     public static bool IsTester { get; private set; } = false;
+
+    // 스테이지 정보
+    public static StageInfoDataSet stageInfoDataSet;
+
     #endregion
 
     #region 파이어베이스에 값을 다시 저장
@@ -85,22 +92,22 @@ public static class UserGameData
     }
 
     /// <summary>
-    /// StageInfoDataSet에 있는 점수를 Firebase에 저장
+    /// StageInfoDataSet에 있는 점수를 Firebase에 저장 (인덱스 명시적으로 저장)
     /// </summary>
     public static void SaveMapHighScores(StageInfoDataSet stageDataSet, Action onComplete = null)
     {
-        List<int> scores = new();
+        Dictionary<string, object> scoreData = new();
 
-        foreach (var stage in stageDataSet.stageInfoList)
+        for (int i = 0; i < stageDataSet.stageInfoList.Count; i++)
         {
-            scores.Add(stage.bestScore);
+            scoreData[i.ToString()] = stageDataSet.stageInfoList[i].bestScore;
         }
 
         FirebaseDatabase.DefaultInstance
             .GetReference("Users")
             .Child(UID)
             .Child("MapHighScore")
-            .SetValueAsync(scores)
+            .SetValueAsync(scoreData)
             .ContinueWithOnMainThread(task =>
             {
                 if (task.IsFaulted || task.IsCanceled)
@@ -109,11 +116,43 @@ public static class UserGameData
                 }
                 else
                 {
-                    MapHighScores = scores;
+                    // MapHighScores도 덮어쓰기
+                    MapHighScores.Clear();
+                    for (int i = 0; i < stageDataSet.stageInfoList.Count; i++)
+                    {
+                        MapHighScores.Add(stageDataSet.stageInfoList[i].bestScore);
+                    }
+
                     Debug.Log("맵 점수 저장 성공");
                 }
 
                 onComplete?.Invoke();
+            });
+    }
+
+    /// <summary>
+    /// 별 갯수 저장
+    /// </summary>
+    /// <param name="starCount"></param>
+    public static void UpdateStars(int starCount)
+    {
+        if (string.IsNullOrEmpty(UID)) return;
+
+        FirebaseDatabase.DefaultInstance
+            .GetReference("Users")
+            .Child(UID)
+            .Child("Stars")
+            .SetValueAsync(starCount)
+            .ContinueWithOnMainThread(task =>
+            {
+                if (task.IsCompleted)
+                {
+                    Debug.Log($"별 개수 {starCount}개 Firebase 저장 완료");
+                }
+                else
+                {
+                    Debug.LogError("별 개수 저장 실패");
+                }
             });
     }
     #endregion
@@ -279,21 +318,75 @@ public static class UserGameData
                 MapHighScores.Clear();
 
                 var snapshot = task.Result;
+
+                // 순서를 보장하기 위해 Dictionary 사용 후 정렬
+                SortedDictionary<int, int> sortedScores = new();
+
                 foreach (var child in snapshot.Children)
                 {
-                    if (int.TryParse(child.Value.ToString(), out int score))
-                        MapHighScores.Add(score);
-                    else
-                        MapHighScores.Add(0);
+                    if (int.TryParse(child.Key, out int index) &&
+                        int.TryParse(child.Value.ToString(), out int score))
+                    {
+                        sortedScores[index] = score;
+                    }
                 }
 
-                // 스크립터블 오브젝트에도 반영
-                for (int i = 0; i < stageDataSet.stageInfoList.Count && i < MapHighScores.Count; i++)
+                // 정렬된 순서대로 MapHighScores 채우기
+                foreach (var pair in sortedScores)
                 {
-                    stageDataSet.stageInfoList[i].bestScore = MapHighScores[i];
+                    MapHighScores.Add(pair.Value);
+                }
+
+                Debug.Log($"[Debug] stageInfoDataSet count: {stageDataSet.stageInfoList.Count}");
+                Debug.Log($"[Debug] MapHighScores count: {MapHighScores.Count}");
+
+                // 스크립터블 오브젝트에도 반영
+                for (int i = 0; i < stageDataSet.stageInfoList.Count; i++)
+                {
+                    int score = (i < MapHighScores.Count) ? MapHighScores[i] : 0;
+                    stageDataSet.stageInfoList[i].bestScore = score;
                 }
 
                 Debug.Log("맵 최고 점수 로드 완료");
+                onComplete?.Invoke();
+            });
+    }
+
+    /// <summary>
+    /// Firebase에서 유저의 스타 수(totalStars)를 불러옴
+    /// </summary>
+    /// <param name="onComplete">불러오기 완료 후 실행할 콜백</param>
+    public static void LoadTotalStars(Action onComplete = null)
+    {
+        if (string.IsNullOrEmpty(UID))
+        {
+            Debug.LogWarning("UID가 없습니다. 별 수 로드 실패");
+            return;
+        }
+
+        FirebaseDatabase.DefaultInstance
+            .GetReference("Users")
+            .Child(UID)
+            .Child("Stars")
+            .GetValueAsync()
+            .ContinueWithOnMainThread(task =>
+            {
+                if (task.IsFaulted || task.IsCanceled)
+                {
+                    Debug.LogError("별 수 로드 실패");
+                    totalStars = 0; // 실패 시 0으로 초기화 (원하면 제거 가능)
+                }
+                else if (task.Result.Exists && int.TryParse(task.Result.Value.ToString(), out int starCount))
+                {
+                    totalStars = starCount;
+                    Debug.Log($"별 수 로드 성공: {totalStars}개");
+                }
+                else
+                {
+                    totalStars = 0;
+                    Debug.Log("별 수가 존재하지 않아 기본값 0으로 설정");
+                }
+
                 onComplete?.Invoke();
             });
     }

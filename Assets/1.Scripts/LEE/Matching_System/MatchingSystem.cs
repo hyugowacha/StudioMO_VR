@@ -455,7 +455,7 @@ public class MatchingSystem : MonoBehaviourPunCallbacks
         }
     }
 
-    // 사설방에서 게임시작 버튼을 클릭했을 시 호출
+    // 마스터 서버 입장 시
     public override void OnConnectedToMaster()
     {
         Debug.Log("Photon 마스터 서버 연결 완료");
@@ -465,6 +465,8 @@ public class MatchingSystem : MonoBehaviourPunCallbacks
     // 로비 입장 시 호출됨
     public override void OnJoinedLobby()
     {
+        Debug.Log("[MatchingSystem] 로비에 입장했습니다.");
+
         if (hasEnteredLobbyOnce)
         {
             Debug.Log("로비 최초 진입 이후 → UI 처리 생략");

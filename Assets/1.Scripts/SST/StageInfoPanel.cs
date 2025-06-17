@@ -33,16 +33,17 @@ public class StageInfoPanel : MonoBehaviour
         bgmTitleText.text = data.bgmTitle;
         storyText.text = data.storyText;
 
-        SetStars(data.bestScore);
-
-        //data.
+        int stars = SetStars(data.bestScore, data.clearValue, data.addValue);
+        UserGameData.totalStars += stars;
 
         playButton.onClick.RemoveAllListeners();
         playButton.onClick.AddListener(() => OnClickPlayButton(data));
     }
 
-    private void SetStars(int score)
+    private int SetStars(int bsetScore, int clearValue, int addValue)
     {
+        int starCount = 0;
+
         // ▼ 일단 초기화 별 이미지 모두 다 끔
         for (int i = 0; i < emptyStars.Length; i++)
         {
@@ -51,30 +52,32 @@ public class StageInfoPanel : MonoBehaviour
             perfectStars[i].gameObject.SetActive(false);
         }
 
-        // ▼ 50점 미만이라면 별 모두 빈 이미지로 표시
-        if (score < 50)
+        // ▼ clearValue값보다 미만이라면 별 모두 빈 이미지로 표시
+        if (bsetScore < clearValue)
         {
             for (int i = 0; i < emptyStars.Length; i++)
             {
                 emptyStars[i].gameObject.SetActive(true);
             }
         }
-
-        // ▼ 50점 이상이라면 일반 별 이미지 한개 채우기
-        else if (score < 100)
+        // ▼ clearValue 이상이라면 일반 별 이미지 한개 채우기
+        else if (clearValue <= bsetScore)
         {
             filledStars[0].gameObject.SetActive(true);
             emptyStars[1].gameObject.SetActive(true);
+            starCount = 1;
         }
-
-        // ▼ 100점이라면 퍼펙트 별 이미지 두개 채우기
-        else
+        // clearValue + addValue점이라면 퍼펙트 별 이미지 두개 채우기
+        else if(clearValue + addValue <= bsetScore)
         {
             for (int i = 0; i < emptyStars.Length; i++)
             {
                 perfectStars[i].gameObject.SetActive(true);
             }
+            starCount = 2;
         }
+
+        return starCount;
     }
 
     // 게임 플레이 버튼 눌렀을 때 호출 될 함수
