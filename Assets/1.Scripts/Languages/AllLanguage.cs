@@ -18,20 +18,34 @@ public class AllLanguage : MonoBehaviour
     public TextMeshProUGUI exitGame;
 
     [Header("대전모드")]
-    public TextMeshProUGUI withFriends0;
-    public TextMeshProUGUI randomMatching;
+    public TextMeshProUGUI withFriends0;                // PVP_ModeUI
+    public TextMeshProUGUI randomMatching;              // PVP_ModeUI
 
-    public TextMeshProUGUI Matching;
-    public TextMeshProUGUI waitingTime;
-    
-    public TextMeshProUGUI withFriends1;
-    public TextMeshProUGUI enterInvitationCode;
-    public TextMeshProUGUI participate;
+    public TextMeshProUGUI withFriends1;                // PVP_CodePopUp
+    public TextMeshProUGUI enterInvitationCode;         // PVP_CodePopUp
+    public TextMeshProUGUI join;                        // PVP_CodePopUp
+    public TextMeshProUGUI createRoom;                  // PVP_CodePopUp
+
+    public TextMeshProUGUI hostRoom;                    // PVP_HostPopUp
+    public TextMeshProUGUI inviteCode;                  // PVP_HostPopUp
+    public TextMeshProUGUI start;                       // PVP_HostPopUp
+
+    public TextMeshProUGUI roomNotExist;                // PVP_ErrorCode
+
+    public TextMeshProUGUI matching;                    // RandomMatchUI
+    public TextMeshProUGUI waitingTime;                 // RandomMatchUI
+
+    public TextMeshProUGUI cancelMatching;              // RandomMatchError
+    public TextMeshProUGUI yes;                         // RandomMatchError
+    public TextMeshProUGUI no;                          // RandomMatchError
+
+    public TextMeshProUGUI matchFailed;                 // MatchingFail
+    public TextMeshProUGUI noPlayersAvailable;          // MatchingFail
+
 
     [Header("상점")]
     public TextMeshProUGUI buy;
 
-    public TextMeshProUGUI createRoom;
     #endregion
 
     #region 추후 진행 예정
@@ -57,12 +71,44 @@ public class AllLanguage : MonoBehaviour
                 break;
         }
 
+        // ▼ 메인 로비 텍스트 세팅
         stage.Set(Translation.Get(Translation.Letter.Stage), currentFont);
         PVP.Set(Translation.Get(Translation.Letter.PVP), currentFont);
         store.Set(Translation.Get(Translation.Letter.Store), currentFont);
         options.Set(Translation.Get(Translation.Letter.Option), currentFont);
         exitGame.Set(Translation.Get(Translation.Letter.ExitGame), currentFont);
+
+        // ▼ 대전 모드 텍스트 세팅 ( PVP_ModeUI )
+        withFriends0.Set(Translation.Get(Translation.Letter.Custom), currentFont);
+        randomMatching.Set(Translation.Get(Translation.Letter.RandomMatch), currentFont);
+
+        // ▼ 대전 모드 텍스트 세팅 ( PVP_CodePopUp )
+        withFriends1.Set(Translation.Get(Translation.Letter.Custom), currentFont);
+        enterInvitationCode.Set(Translation.Get(Translation.Letter.EnterInviteCode), currentFont);
+        join.Set(Translation.Get(Translation.Letter.Join), currentFont);
+        createRoom.Set(Translation.Get(Translation.Letter.CreateRoom), currentFont);
+
+        // ▼ 대전 모드 텍스트 세팅 ( PVP_HostPopUp )
+        hostRoom.Set(Translation.Get(Translation.Letter.HostRoom), currentFont);
+        inviteCode.Set(Translation.Get(Translation.Letter.InviteCode), currentFont);
+        start.Set(Translation.Get(Translation.Letter.Start), currentFont);
         
+        // ▼ 대전 모드 텍스트 세팅 ( PVP_ErrorCode )
+        roomNotExist.Set(Translation.Get(Translation.Letter.RoomNotExist), currentFont);
+
+        // ▼ 대전 모드 텍스트 세팅 ( RandomMatchUI )
+        matching.Set(Translation.Get(Translation.Letter.RandomMatch), currentFont);
+        waitingTime.Set(Translation.Get(Translation.Letter.CreatingGame), currentFont);
+
+        // ▼ 대전 모드 텍스트 세팅 ( RandomMatchError )
+        cancelMatching.Set(Translation.Get(Translation.Letter.CancelMatching), currentFont);
+        yes.Set(Translation.Get(Translation.Letter.YES), currentFont);
+        no.Set(Translation.Get(Translation.Letter.NO), currentFont);
+
+        // ▼ 대전 모드 텍스트 세팅 ( MatchingFail )
+        matchFailed.Set(Translation.Get(Translation.Letter.MatchFailed), currentFont);
+        noPlayersAvailable.Set(Translation.Get(Translation.Letter.NoPlayersAvailable), currentFont);
+
     }
     #endregion
 }
