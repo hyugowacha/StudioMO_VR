@@ -311,7 +311,7 @@ public class StageManager : Manager
         stop = true;
         SlowMotion.Pause();
         SetRayInteractor(true);
-        pausePanel.Open(Resume, () => { SlowMotion.Stop(); SceneManager.LoadScene(SceneName);}, () => statePanel?.Open(() => SceneManager.LoadScene("lobby"), null), 
+        pausePanel.Open(Resume, () => { SlowMotion.Stop(); SceneManager.LoadScene(SceneName);}, () => statePanel?.Open(() => SceneManager.LoadScene("MainLobbyScene"), null), 
             () => SetTurnMode(true), () => SetTurnMode(false), CheckTurnMode());
     }
 
@@ -342,7 +342,7 @@ public class StageManager : Manager
         switch(exit)
         {
             case true:
-                statePanel?.Open(() => SceneManager.LoadScene("lobby"), null);
+                statePanel?.Open(() => SceneManager.LoadScene("MainLobbyScene"), null);
                 break;
             case false:
                 statePanel?.Open(() => SceneManager.LoadScene(SceneName), false);

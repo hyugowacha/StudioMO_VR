@@ -1,10 +1,10 @@
-using UnityEngine;
-using System.Collections;
 using System.Linq;
 using System.Collections.Generic;
-using UnityEngine.Rendering;
+using UnityEngine;
+using Photon.Pun;
 
-public class BulletPatternExecutor : MonoBehaviour
+[RequireComponent(typeof(PhotonView))]
+public class BulletPatternExecutor : MonoBehaviour, IPunObservable
 {
     [Header("CSV에서 탄막 패턴 불러오는 로더")]
     public BulletPatternLoader loader;
@@ -12,21 +12,18 @@ public class BulletPatternExecutor : MonoBehaviour
     [Header("실제 탄막을 발사시켜줄 매니저")]
     public BulletSpawnerManager spawnerManager;
 
-    public StageManager stageManager;
-
     [Header("분당 BPM")] 
     public float bpm = 110f;
 
     float _beatInterval;         // 비트 하나당 시간 (초 단위)
     float _timer;                // 시간 누적용
     int _currentBeatIndex = 1;   // 현재 몇번째 beat인지 (1부터 시작)
+    bool initialized = false;
 
     private float patternElapsedTime; //slowmotion speed 영향을 받는 시간 누적값
 
     List<BulletSpawnData> timePatterns; //패턴형 탄막 정보 리스트
-    float startTime; 
 
-    bool initialized = false;
     
      #region Start, Update문
     void Start()
@@ -36,11 +33,14 @@ public class BulletPatternExecutor : MonoBehaviour
 
     void Update()
     {
-        float delta = Time.deltaTime * SlowMotion.speed;
-        patternElapsedTime += delta;
+        if (PhotonNetwork.InRoom == false || PhotonNetwork.IsMasterClient == true)
+        {
+            float delta = Time.deltaTime * SlowMotion.speed;
+            patternElapsedTime += delta;
 
-        ProcessBeatTiming(delta);
-        ProcessPatternTiming();
+            ProcessBeatTiming(delta);
+            ProcessPatternTiming();
+        }
     }
     #endregion
 
@@ -209,5 +209,21 @@ public class BulletPatternExecutor : MonoBehaviour
         #endregion
 
         return presetResult.ToArray();
+    }
+
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        if(PhotonNetwork.IsMasterClient == true)
+        {
+            stream.SendNext(_timer);
+            stream.SendNext(_currentBeatIndex);
+            stream.SendNext(patternElapsedTime);
+        }
+        else
+        {
+            _timer = (float)stream.ReceiveNext();
+            _currentBeatIndex = (int)stream.ReceiveNext();
+            patternElapsedTime = (float)stream.ReceiveNext();
+        }
     }
 }
