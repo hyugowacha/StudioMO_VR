@@ -7,3 +7,5 @@ public enum ShopTabType
     Purchase,
     Achievement
 }
+
+public class ShoppingPanel : MonoBehaviour { }
