@@ -12,8 +12,6 @@ public class BulletPatternExecutor : MonoBehaviour
     [Header("실제 탄막을 발사시켜줄 매니저")]
     public BulletSpawnerManager spawnerManager;
 
-    public StageManager stageManager;
-
     [Header("분당 BPM")] 
     public float bpm = 110f;
 

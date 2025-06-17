@@ -926,10 +926,6 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 1165835260}
-    - targetCorrespondingSourceObject: {fileID: 4081115758712331995, guid: 4c4eaf457744d98419a094a6cdb13ae5,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1087242572}
   m_SourcePrefab: {fileID: 100100000, guid: 4c4eaf457744d98419a094a6cdb13ae5, type: 3}
 --- !u!1 &635768267 stripped
 GameObject:
@@ -1103,10 +1099,70 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1468301510}
     m_Modifications:
+    - target: {fileID: 1103814220257062649, guid: 39e8f707ba714b54f93213fcefc87c0e,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 904900835}
+    - target: {fileID: 1103814220257062649, guid: 39e8f707ba714b54f93213fcefc87c0e,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: SaveCurrentSkin
+      objectReference: {fileID: 0}
     - target: {fileID: 1141120046087994611, guid: 39e8f707ba714b54f93213fcefc87c0e,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1449073792190857055, guid: 39e8f707ba714b54f93213fcefc87c0e,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 904900835}
+    - target: {fileID: 1449073792190857055, guid: 39e8f707ba714b54f93213fcefc87c0e,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OnClickCloseBuySkin
+      objectReference: {fileID: 0}
+    - target: {fileID: 1553952499188408668, guid: 39e8f707ba714b54f93213fcefc87c0e,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 904900835}
+    - target: {fileID: 1553952499188408668, guid: 39e8f707ba714b54f93213fcefc87c0e,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: TestOnClickBuySkin
+      objectReference: {fileID: 0}
+    - target: {fileID: 2585679637133326420, guid: 39e8f707ba714b54f93213fcefc87c0e,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 904900835}
+    - target: {fileID: 2585679637133326420, guid: 39e8f707ba714b54f93213fcefc87c0e,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OnClickAchievementTAB
+      objectReference: {fileID: 0}
+    - target: {fileID: 2794945673035721431, guid: 39e8f707ba714b54f93213fcefc87c0e,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 904900835}
+    - target: {fileID: 2794945673035721431, guid: 39e8f707ba714b54f93213fcefc87c0e,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OnClickOpenBuyPanel
+      objectReference: {fileID: 0}
+    - target: {fileID: 2825731951297660759, guid: 39e8f707ba714b54f93213fcefc87c0e,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 904900835}
+    - target: {fileID: 2825731951297660759, guid: 39e8f707ba714b54f93213fcefc87c0e,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OnClickCloseShop
       objectReference: {fileID: 0}
     - target: {fileID: 4701036651633083979, guid: 39e8f707ba714b54f93213fcefc87c0e,
         type: 3}
@@ -1117,6 +1173,41 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: MarketCanvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 5261784639832374191, guid: 39e8f707ba714b54f93213fcefc87c0e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5316318428497407739, guid: 39e8f707ba714b54f93213fcefc87c0e,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 904900835}
+    - target: {fileID: 5316318428497407739, guid: 39e8f707ba714b54f93213fcefc87c0e,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OnClickOpenBuyPanel
+      objectReference: {fileID: 0}
+    - target: {fileID: 5769312967280238172, guid: 39e8f707ba714b54f93213fcefc87c0e,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 904900835}
+    - target: {fileID: 5769312967280238172, guid: 39e8f707ba714b54f93213fcefc87c0e,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OnClickExitSavePanel
+      objectReference: {fileID: 0}
+    - target: {fileID: 6164519713200113187, guid: 39e8f707ba714b54f93213fcefc87c0e,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 904900835}
+    - target: {fileID: 6164519713200113187, guid: 39e8f707ba714b54f93213fcefc87c0e,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OnClickSavePanel
       objectReference: {fileID: 0}
     - target: {fileID: 6462772776715977878, guid: 39e8f707ba714b54f93213fcefc87c0e,
         type: 3}
@@ -1222,6 +1313,26 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7146149873281439695, guid: 39e8f707ba714b54f93213fcefc87c0e,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 904900835}
+    - target: {fileID: 7146149873281439695, guid: 39e8f707ba714b54f93213fcefc87c0e,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: TestOnClickBuySkin
+      objectReference: {fileID: 0}
+    - target: {fileID: 7656446002153631703, guid: 39e8f707ba714b54f93213fcefc87c0e,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 904900835}
+    - target: {fileID: 7656446002153631703, guid: 39e8f707ba714b54f93213fcefc87c0e,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OnClickCloseGetSkin
       objectReference: {fileID: 0}
     - target: {fileID: 7739870909402943896, guid: 39e8f707ba714b54f93213fcefc87c0e,
         type: 3}
@@ -1389,6 +1500,16 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 9199403647652290786, guid: 39e8f707ba714b54f93213fcefc87c0e,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 904900835}
+    - target: {fileID: 9199403647652290786, guid: 39e8f707ba714b54f93213fcefc87c0e,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OnClickPurchaseTAB
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1400,6 +1521,18 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 904900833}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &904900835 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7739870909402943896, guid: 39e8f707ba714b54f93213fcefc87c0e,
+    type: 3}
+  m_PrefabInstance: {fileID: 904900833}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45938ae446fac0b4198fc82c629c834d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &913854329 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2269964715464759234, guid: 39e8f707ba714b54f93213fcefc87c0e,
@@ -1412,27 +1545,6 @@ Canvas:
     type: 3}
   m_PrefabInstance: {fileID: 904900833}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1087242570 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4081115758712331995, guid: 4c4eaf457744d98419a094a6cdb13ae5,
-    type: 3}
-  m_PrefabInstance: {fileID: 635768265}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1087242572
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1087242570}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 636669b4e5dfdc143b49360b7e8730b5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  stageIconButtons: []
-  stageInfoDataList: []
-  stageInfoPanel: {fileID: 0}
 --- !u!1001 &1142612851
 PrefabInstance:
   m_ObjectHideFlags: 0
