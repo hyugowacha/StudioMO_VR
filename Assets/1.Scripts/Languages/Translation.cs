@@ -138,6 +138,21 @@ public static class Translation
         Ready,                    // 준비
         TimesUp,                  // 시간종료
         SmoosthTurn,              //스무스턴
+        PlayAgain,                // 한번 더 플레이 하시겠습니까?
+        RoomNotExist,             // 존재하지 않는 방입니다.
+        HostRoom,                 // 호스트의 방
+        EnterInviteCode,          // 초대코드 입력
+        CancelMatching,           // 매칭을 종료하시겠습니까?
+        MatchFailed,              // 매칭실패
+        NoPlayersAvailable,       // 현재 매칭 가능한 플레이어가 없습니다.
+        Save,                     // 저장하기
+        PurchaseItem,             // 해당 아이템을 구매하시겠습니까?
+        ApplyContent,             // 해당 내용을 적용하겠습까?
+        InsufficientCurrency,     // 유료재화가 부족합니다.
+        Obtain,                  // Obtain (획득)
+        Common,                  // Common (일반)
+
+
         End
     }
 

@@ -232,8 +232,46 @@ public static class English
                 case Translation.Letter.SmoosthTurn:
                     letters[i] = "Smoosth Turn";
                     break;
-
-
+                case Translation.Letter.PlayAgain:
+                    letters[i] = "Would you like to play again?";
+                    break;
+               
+                case Translation.Letter.RoomNotExist:
+                    letters[i] = "The room does not exist.";
+                    break;
+                case Translation.Letter.HostRoom:
+                    letters[i] = "Host's Room";
+                    break;
+                case Translation.Letter.EnterInviteCode:
+                    letters[i] = "Enter Invite Code";
+                    break;
+                case Translation.Letter.CancelMatching:
+                    letters[i] = "Do you want to cancel the matchmaking?";
+                    break;
+                case Translation.Letter.MatchFailed:
+                    letters[i] = "Match Failed";
+                    break;
+                case Translation.Letter.NoPlayersAvailable:
+                    letters[i] = "No players available for matchmaking.";
+                    break;
+                case Translation.Letter.Save:
+                    letters[i] = "Save";
+                    break;
+                case Translation.Letter.PurchaseItem:
+                    letters[i] = "Would you like to purchase this item?";
+                    break;
+                case Translation.Letter.ApplyContent:
+                    letters[i] = "Apply this content?";
+                    break;
+                case Translation.Letter.InsufficientCurrency:
+                    letters[i] = "Not enough paid currency.";
+                    break;
+                case Translation.Letter.Obtain:
+                    letters[i] = "Obtain";
+                    break;
+                case Translation.Letter.Common:
+                    letters[i] = "Common";
+                    break;
                 case Translation.Letter.Select:
                     letters[i] = "SELECT";
                     break;
