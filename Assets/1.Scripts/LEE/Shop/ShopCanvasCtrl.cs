@@ -8,6 +8,8 @@ public class ShopCanvasCtrl : MonoBehaviour
 {
     [Header("상점 캔버스, 로비 캔버스")]
     [SerializeField] GameObject mainShopPanel;
+    [SerializeField] GameObject lobbyCanvas;
+    [SerializeField] LobbyCanvasCtrl lobbyCanvasCtrl;
 
     [Header("기본 적용 스킨 아이템 데이터")]
     [SerializeField] SkinData basicSkinData;
@@ -333,7 +335,9 @@ public class ShopCanvasCtrl : MonoBehaviour
     // ▼ 상점 캔버스 나가기 버튼
     public void OnClickCloseShop()
     {
-        mainShopPanel.gameObject.SetActive(false);
+        lobbyCanvasCtrl.isClickShopB = false;
+        mainShopPanel.SetActive(false);
+        lobbyCanvas.SetActive(true);
     }
 
     // ▼ 기본 스킨으로 적용하는 버튼

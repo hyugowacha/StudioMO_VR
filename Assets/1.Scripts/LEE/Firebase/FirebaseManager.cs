@@ -67,7 +67,6 @@ public class FirebaseManager : MonoBehaviourPunCallbacks
     [Header("로딩 화면, 로비화면")]
     [SerializeField] GameObject loadingObject;
     [SerializeField] GameObject lobbyObject;
-
     #endregion
 
     #region 시작 시 초기화 및 버튼 등록

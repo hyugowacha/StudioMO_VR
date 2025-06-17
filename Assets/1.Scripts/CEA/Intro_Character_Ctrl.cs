@@ -19,12 +19,17 @@ public class Intro_Character_Ctrl : MonoBehaviour
     private int prevSelectedIndex = -1;
     private bool[] prevStates = new bool[7];
 
+    private Vector3 originalPosition;  // 원래 위치 저장용
+
     private void Start()
     {
         int index = GetSelectedIndexFromBool();
 
         ApplySelection(index);
         UpdateBoolState(index);
+
+        // 현재 활성화된 캐릭터 위치 저장
+        originalPosition = characters[index].transform.position;
     }
 
     private void Update()
@@ -163,4 +168,30 @@ public class Intro_Character_Ctrl : MonoBehaviour
                 break;
         }
     }
+
+    public void SendAway()
+    {
+        for (int i = 0; i < characters.Length; i++)
+        {
+            if (characters[i] != null)
+            {
+                characters[i].transform.localPosition = new Vector3(999f, 999f, 999f);
+            }
+        }
+        Debug.Log("SendAway 호출됨: 모든 캐릭터 로컬 위치를 (999,999,999)로 이동");
+    }
+
+
+    public void ReturnBack()
+    {
+        for (int i = 0; i < characters.Length; i++)
+        {
+            if (characters[i] != null)
+            {
+                characters[i].transform.localPosition = Vector3.zero;
+            }
+        }
+        Debug.Log("ReturnBack 호출됨: 모든 캐릭터 로컬 위치를 (0,0,0)으로 복귀");
+    }
+
 }

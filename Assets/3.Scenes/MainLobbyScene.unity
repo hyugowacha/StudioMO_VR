@@ -372,6 +372,11 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 722785915860194154, guid: 4c4eaf457744d98419a094a6cdb13ae5,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 778273570176246789, guid: 4c4eaf457744d98419a094a6cdb13ae5,
         type: 3}
       propertyPath: m_IsActive
@@ -552,6 +557,11 @@ PrefabInstance:
       propertyPath: optionUI
       value: 
       objectReference: {fileID: 635768267}
+    - target: {fileID: 2909106801929604268, guid: 4c4eaf457744d98419a094a6cdb13ae5,
+        type: 3}
+      propertyPath: realSkin
+      value: 
+      objectReference: {fileID: 307964810}
     - target: {fileID: 2909106801929604268, guid: 4c4eaf457744d98419a094a6cdb13ae5,
         type: 3}
       propertyPath: m_Enabled
@@ -853,6 +863,11 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7720321164947760055, guid: 4c4eaf457744d98419a094a6cdb13ae5,
+        type: 3}
+      propertyPath: realSkin
+      value: 
+      objectReference: {fileID: 307964810}
     - target: {fileID: 7824296171709384360, guid: 4c4eaf457744d98419a094a6cdb13ae5,
         type: 3}
       propertyPath: m_LocalScale.x
@@ -1377,6 +1392,11 @@ PrefabInstance:
       objectReference: {fileID: 939932325}
     - target: {fileID: 7739870909402943896, guid: 39e8f707ba714b54f93213fcefc87c0e,
         type: 3}
+      propertyPath: lobbyCanvas
+      value: 
+      objectReference: {fileID: 2014372930}
+    - target: {fileID: 7739870909402943896, guid: 39e8f707ba714b54f93213fcefc87c0e,
+        type: 3}
       propertyPath: getSkinImage
       value: 
       objectReference: {fileID: 1419286960}
@@ -1410,6 +1430,11 @@ PrefabInstance:
       propertyPath: savePopUpPanel
       value: 
       objectReference: {fileID: 1763876822}
+    - target: {fileID: 7739870909402943896, guid: 39e8f707ba714b54f93213fcefc87c0e,
+        type: 3}
+      propertyPath: lobbyCanvasCtrl
+      value: 
+      objectReference: {fileID: 1145129888}
     - target: {fileID: 7739870909402943896, guid: 39e8f707ba714b54f93213fcefc87c0e,
         type: 3}
       propertyPath: purchaseSkinImage
@@ -1638,6 +1663,18 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 18ddb545287c546e19cc77dc9fbb2189, type: 3}
+--- !u!114 &1145129888 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2258562682529313651, guid: 4c4eaf457744d98419a094a6cdb13ae5,
+    type: 3}
+  m_PrefabInstance: {fileID: 635768265}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a153d59a348199a4a8ce7d7e5acc2620, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1164713179
 GameObject:
   m_ObjectHideFlags: 0
@@ -1833,13 +1870,22 @@ MonoBehaviour:
   exitGame: {fileID: 0}
   withFriends0: {fileID: 0}
   randomMatching: {fileID: 0}
-  Matching: {fileID: 0}
-  waitingTime: {fileID: 0}
   withFriends1: {fileID: 0}
   enterInvitationCode: {fileID: 0}
-  participate: {fileID: 0}
-  buy: {fileID: 0}
+  join: {fileID: 0}
   createRoom: {fileID: 0}
+  hostRoom: {fileID: 0}
+  inviteCode: {fileID: 0}
+  start: {fileID: 0}
+  roomNotExist: {fileID: 0}
+  matching: {fileID: 0}
+  waitingTime: {fileID: 0}
+  cancelMatching: {fileID: 0}
+  yes: {fileID: 0}
+  no: {fileID: 0}
+  matchFailed: {fileID: 0}
+  noPlayersAvailable: {fileID: 0}
+  buy: {fileID: 0}
 --- !u!4 &1282980241
 Transform:
   m_ObjectHideFlags: 0
@@ -1923,26 +1969,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1468301510}
     m_Modifications:
-    - target: {fileID: 3977933421897155058, guid: 3d34c976cd7691b499187ad24af0db47,
-        type: 3}
-      propertyPath: onClick
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4456370108230858218, guid: 3d34c976cd7691b499187ad24af0db47,
-        type: 3}
-      propertyPath: m_LocalScale.x
-      value: 1.2
-      objectReference: {fileID: 0}
-    - target: {fileID: 4456370108230858218, guid: 3d34c976cd7691b499187ad24af0db47,
-        type: 3}
-      propertyPath: m_LocalScale.y
-      value: 1.2
-      objectReference: {fileID: 0}
-    - target: {fileID: 4456370108230858218, guid: 3d34c976cd7691b499187ad24af0db47,
-        type: 3}
-      propertyPath: m_LocalScale.z
-      value: 1.2
-      objectReference: {fileID: 0}
     - target: {fileID: 4456370108230858218, guid: 3d34c976cd7691b499187ad24af0db47,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1992,11 +2018,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4456370108230858218, guid: 3d34c976cd7691b499187ad24af0db47,
-        type: 3}
-      propertyPath: m_ConstrainProportionsScale
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8465995820049208551, guid: 3d34c976cd7691b499187ad24af0db47,
         type: 3}

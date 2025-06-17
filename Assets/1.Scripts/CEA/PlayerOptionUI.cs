@@ -29,6 +29,9 @@ public class PlayerOptionUI : MonoBehaviour
     [SerializeField] private Image sharkProfile;
     [SerializeField] private Button sharkSelect;
 
+    [Header("리비 스킨 부분")]
+    [SerializeField] GameObject realSkin;
+
     // 스킨 불값
     bool hasLibee;
     bool hasCat;
@@ -263,5 +266,6 @@ public class PlayerOptionUI : MonoBehaviour
     {
         optionUI.SetActive(false);
         lobbyUI.SetActive(true);
+        realSkin.GetComponent<Intro_Character_Ctrl>().ReturnBack();
     }
 }

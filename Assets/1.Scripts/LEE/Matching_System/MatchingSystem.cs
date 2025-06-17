@@ -143,6 +143,7 @@ public class MatchingSystem : MonoBehaviourPunCallbacks
     {
         PVPModeUI.SetActive(false);
         LobbyUI.SetActive(true);
+        realSkin.GetComponent<Intro_Character_Ctrl>().ReturnBack();
     }
     #endregion
 
@@ -505,6 +506,7 @@ public class MatchingSystem : MonoBehaviourPunCallbacks
 
         loadingObject.gameObject.SetActive(false);
         realSkin.SetActive(true);
+        realSkin.GetComponent<Intro_Character_Ctrl>().ReturnBack();
         realSkin.GetComponent<Intro_Character_Ctrl>().SetBoolFromEquippedSkin();
     }
 

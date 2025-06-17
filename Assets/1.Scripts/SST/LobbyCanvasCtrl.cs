@@ -30,6 +30,8 @@ public class LobbyCanvasCtrl : MonoBehaviour
     [Header("리비 스킨 부분")]
     [SerializeField] GameObject realSkin;
 
+    public bool isClickShopB;
+
     private void Start()
     {
         // 초기화
@@ -49,7 +51,10 @@ public class LobbyCanvasCtrl : MonoBehaviour
 
     private void DeactivateAllPanels(GameObject nextPanelToActivate)
     {
-        StartCoroutine(FadeOutAndDeactivate(lobbyPanel, 1f, 0.5f, nextPanelToActivate));
+        if (!isClickShopB)
+            StartCoroutine(FadeOutAndDeactivate(lobbyPanel, 1f, 0.8f, nextPanelToActivate));
+        else
+            StartCoroutine(FadeOutAndDeactivate(lobbyPanel, 0f, 0.5f, nextPanelToActivate));
 
         // 나머지는 즉시 비활성화
         stageSelectPanel.SetActive(false);
@@ -60,14 +65,13 @@ public class LobbyCanvasCtrl : MonoBehaviour
 
     private void OnClickStageMode()
     {
-        SkinAnimation();
-
         if (matchingSystem.IsRandomMatchUIActive)
         {
             matchingSystem.RandomMatchError.SetActive(true);
         }
         else
         {
+            SkinAnimation();
             DeactivateAllPanels(stageSelectPanel);
         }
     }
@@ -81,8 +85,7 @@ public class LobbyCanvasCtrl : MonoBehaviour
 
     private void OnClickShop()
     {
-        SkinAnimation();
-
+        isClickShopB = true;
         DeactivateAllPanels(shopPanel);
     }
 
@@ -135,15 +138,15 @@ public class LobbyCanvasCtrl : MonoBehaviour
 
         // 자기 자신 원복
         canvasGroup.alpha = 1f;
+
+        if (!isClickShopB)
+            realSkin.GetComponent<Intro_Character_Ctrl>().SendAway();
     }
 
     private void SkinAnimation()
     {
         // 애니메이션 트리거
         realSkin.GetComponent<Intro_Character_Ctrl>().onClick = true;
-
-        // 위치 이동 (XYZ = 999,999,999)
-        realSkin.transform.position = new Vector3(999f, 999f, 999f);
     }
 
 }
