@@ -123,12 +123,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &21353605 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6714581830571873905, guid: 39e8f707ba714b54f93213fcefc87c0e,
-    type: 3}
-  m_PrefabInstance: {fileID: 904900833}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &45832625 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4701036651633083979, guid: 39e8f707ba714b54f93213fcefc87c0e,
@@ -147,6 +141,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &307964810 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8465995820049208551, guid: 3d34c976cd7691b499187ad24af0db47,
+    type: 3}
+  m_PrefabInstance: {fileID: 1478428687}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &338972399 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1141120046087994611, guid: 39e8f707ba714b54f93213fcefc87c0e,
@@ -449,6 +449,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1221010874718437557, guid: 4c4eaf457744d98419a094a6cdb13ae5,
         type: 3}
+      propertyPath: realSkin
+      value: 
+      objectReference: {fileID: 307964810}
+    - target: {fileID: 1221010874718437557, guid: 4c4eaf457744d98419a094a6cdb13ae5,
+        type: 3}
       propertyPath: loadingObject
       value: 
       objectReference: {fileID: 387074982}
@@ -494,7 +499,17 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2258562682529313651, guid: 4c4eaf457744d98419a094a6cdb13ae5,
         type: 3}
+      propertyPath: realSkin
+      value: 
+      objectReference: {fileID: 307964810}
+    - target: {fileID: 2258562682529313651, guid: 4c4eaf457744d98419a094a6cdb13ae5,
+        type: 3}
       propertyPath: shopPanel
+      value: 
+      objectReference: {fileID: 338972399}
+    - target: {fileID: 2258562682529313651, guid: 4c4eaf457744d98419a094a6cdb13ae5,
+        type: 3}
+      propertyPath: shopCanvasCtrl
       value: 
       objectReference: {fileID: 338972399}
     - target: {fileID: 2320612030984429205, guid: 4c4eaf457744d98419a094a6cdb13ae5,
@@ -1018,6 +1033,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &879311266 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8289418521662270228, guid: 39e8f707ba714b54f93213fcefc87c0e,
+    type: 3}
+  m_PrefabInstance: {fileID: 904900833}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &901772929
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1314,6 +1335,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6630082817996713963, guid: 39e8f707ba714b54f93213fcefc87c0e,
+        type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7146149873281439695, guid: 39e8f707ba714b54f93213fcefc87c0e,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -1403,12 +1429,12 @@ PrefabInstance:
         type: 3}
       propertyPath: purchaseSkinTabPanel
       value: 
-      objectReference: {fileID: 21353605}
+      objectReference: {fileID: 879311266}
     - target: {fileID: 7739870909402943896, guid: 39e8f707ba714b54f93213fcefc87c0e,
         type: 3}
       propertyPath: achievementSkinTabPanel
       value: 
-      objectReference: {fileID: 913854329}
+      objectReference: {fileID: 1720113595}
     - target: {fileID: 7739870909402943896, guid: 39e8f707ba714b54f93213fcefc87c0e,
         type: 3}
       propertyPath: purchaseSkinData.Array.size
@@ -1533,12 +1559,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 45938ae446fac0b4198fc82c629c834d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1 &913854329 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2269964715464759234, guid: 39e8f707ba714b54f93213fcefc87c0e,
-    type: 3}
-  m_PrefabInstance: {fileID: 904900833}
-  m_PrefabAsset: {fileID: 0}
 --- !u!223 &939932325 stripped
 Canvas:
   m_CorrespondingSourceObject: {fileID: 4695181751160763556, guid: 39e8f707ba714b54f93213fcefc87c0e,
@@ -1903,6 +1923,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1468301510}
     m_Modifications:
+    - target: {fileID: 3977933421897155058, guid: 3d34c976cd7691b499187ad24af0db47,
+        type: 3}
+      propertyPath: onClick
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4456370108230858218, guid: 3d34c976cd7691b499187ad24af0db47,
         type: 3}
       propertyPath: m_LocalScale.x
@@ -1921,17 +1946,17 @@ PrefabInstance:
     - target: {fileID: 4456370108230858218, guid: 3d34c976cd7691b499187ad24af0db47,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 2.43
+      value: 2.5
       objectReference: {fileID: 0}
     - target: {fileID: 4456370108230858218, guid: 3d34c976cd7691b499187ad24af0db47,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 4.43
+      value: 4.2
       objectReference: {fileID: 0}
     - target: {fileID: 4456370108230858218, guid: 3d34c976cd7691b499187ad24af0db47,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -2.1
+      value: -2.5
       objectReference: {fileID: 0}
     - target: {fileID: 4456370108230858218, guid: 3d34c976cd7691b499187ad24af0db47,
         type: 3}
@@ -1978,6 +2003,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Character_Intro
       objectReference: {fileID: 0}
+    - target: {fileID: 8465995820049208551, guid: 3d34c976cd7691b499187ad24af0db47,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1992,6 +2022,12 @@ Transform:
 --- !u!1 &1648148172 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1723540514443613198, guid: 39e8f707ba714b54f93213fcefc87c0e,
+    type: 3}
+  m_PrefabInstance: {fileID: 904900833}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1720113595 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7113556933874715920, guid: 39e8f707ba714b54f93213fcefc87c0e,
     type: 3}
   m_PrefabInstance: {fileID: 904900833}
   m_PrefabAsset: {fileID: 0}
@@ -2135,6 +2171,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5535215869466423044, guid: 990ea6d230b81144999fd84849072ca7,
         type: 3}
+      propertyPath: realSkin
+      value: 
+      objectReference: {fileID: 307964810}
+    - target: {fileID: 5535215869466423044, guid: 990ea6d230b81144999fd84849072ca7,
+        type: 3}
       propertyPath: lobbyObject
       value: 
       objectReference: {fileID: 2014372930}
@@ -2146,7 +2187,7 @@ PrefabInstance:
     - target: {fileID: 6790855426605159406, guid: 990ea6d230b81144999fd84849072ca7,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7676307267514384350, guid: 990ea6d230b81144999fd84849072ca7,
         type: 3}
