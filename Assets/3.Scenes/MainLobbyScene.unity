@@ -688,6 +688,11 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6366802158799927845, guid: 4c4eaf457744d98419a094a6cdb13ae5,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6546706624919991017, guid: 4c4eaf457744d98419a094a6cdb13ae5,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -878,6 +883,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 1165835260}
+    - targetCorrespondingSourceObject: {fileID: 4081115758712331995, guid: 4c4eaf457744d98419a094a6cdb13ae5,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1087242572}
   m_SourcePrefab: {fileID: 100100000, guid: 4c4eaf457744d98419a094a6cdb13ae5, type: 3}
 --- !u!1 &635768267 stripped
 GameObject:
@@ -1043,6 +1052,27 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 895f6f3c2d334633b5800312285058d2, type: 3}
+--- !u!1 &1087242570 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4081115758712331995, guid: 4c4eaf457744d98419a094a6cdb13ae5,
+    type: 3}
+  m_PrefabInstance: {fileID: 635768265}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1087242572
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1087242570}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 636669b4e5dfdc143b49360b7e8730b5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  stageIconButtons: []
+  stageInfoDataList: []
+  stageInfoPanel: {fileID: 0}
 --- !u!1001 &1142612851
 PrefabInstance:
   m_ObjectHideFlags: 0
