@@ -45,17 +45,23 @@ public class BattleManager : Manager, IPunObservable
     [SerializeField]
     private PhasePanel phasePanel;                              //진행 단계 표시 패널
     [SerializeField]
-    private SlowMotionPanel slowMotionPanel;                    //슬로우 모션 표시 패널
-    private Tween slowMotionTween = null;                       //슬로우 모션 트윈
-
-    [SerializeField]
     private PausePanel pausePanel;                              //일시정지 패널
     [SerializeField]
     private TimerPanel timerPanel;                              //남은 시간 표시 패널
     private double remainingTime = 0.0f;                        //남은 시간
     private double limitTime = 0;                               //제한 시간
+
+    [SerializeField]
+    private SlowMotionPanel slowMotionPanel;                    //슬로우 모션 표시 패널
+    private Tween slowMotionTween = null;                       //슬로우 모션 트윈
+
     [SerializeField]
     private RankingPanel rankingPanel;                          //랭킹 표시 패널
+
+    [SerializeField]
+    private BattleResultPanel battleResultPanel;                //대전 결과 패널
+    [SerializeField]
+    private StatePanel statePanel;                              //진행 상태 표시 패널
 
     private const string First = "first";
     private const string Second = "second";
@@ -63,12 +69,18 @@ public class BattleManager : Manager, IPunObservable
 
     System.Collections.IEnumerator Test()
     {
-        PhotonNetwork.ConnectUsingSettings();
-        yield return new WaitUntil(() => PhotonNetwork.NetworkClientState == ClientState.ConnectedToMasterserver);
-        PhotonNetwork.JoinLobby();
-        yield return new WaitUntil(() => PhotonNetwork.InLobby);
-        PhotonNetwork.JoinRandomOrCreateRoom();
-        yield return new WaitUntil(() => PhotonNetwork.InRoom);
+        if (PhotonNetwork.IsConnectedAndReady == false)
+        {
+            PhotonNetwork.ConnectUsingSettings();
+            yield return new WaitUntil(() => PhotonNetwork.NetworkClientState == ClientState.ConnectedToMasterserver);
+            PhotonNetwork.JoinLobby();
+            yield return new WaitUntil(() => PhotonNetwork.InLobby);
+        }
+        if (PhotonNetwork.InRoom == false)
+        {
+            PhotonNetwork.JoinRandomOrCreateRoom();
+            yield return new WaitUntil(() => PhotonNetwork.InRoom);
+        }
         if (prefabCharacter != null && Resources.Load<GameObject>(prefabCharacter.name) != null)
         {
             GameObject gameObject = PhotonNetwork.Instantiate(prefabCharacter.name, Vector3.zero, Quaternion.identity, 0, null);
@@ -106,6 +118,7 @@ public class BattleManager : Manager, IPunObservable
                 }
             }
         }
+        limitTime = 60; //테스트용
         Room room = PhotonNetwork.CurrentRoom;
         if (PhotonNetwork.IsMasterClient == false)
         {
@@ -146,11 +159,24 @@ public class BattleManager : Manager, IPunObservable
         {
             SetFixedPosition(myCharacter.transform.position);
         }
+        if(remainingTime > 0 && PhotonNetwork.IsMasterClient == true)
+        {
+            remainingTime -= Time.deltaTime * SlowMotion.speed;
+            if(remainingTime <= 0)
+            {
+                remainingTime = 0;
+                StopPlaying();
+            }
+        }
+        timerPanel?.Fill((float)remainingTime, (float)limitTime);
     }
 
     private void FixedUpdate()
     {
-        myCharacter?.UpdateMove(moveInput);
+        if (remainingTime > 0 && remainingTime <= limitTime)
+        {
+            myCharacter?.UpdateMove(moveInput);
+        }
     }
 
     private void LateUpdate()
@@ -197,33 +223,38 @@ public class BattleManager : Manager, IPunObservable
     {
         phasePanel?.ChangeText();
         pausePanel?.ChangeText();
+        battleResultPanel?.ChangeText();
+        statePanel?.ChangeText();
     }
 
     protected override void OnLeftFunction(InputAction.CallbackContext callbackContext)
     {
-        if (callbackContext.performed == true)
+        if (remainingTime > 0 && remainingTime <= limitTime)
         {
-            if (myCharacter != null && (myCharacter.unmovable == true || myCharacter.unbeatable == true || myCharacter.slowMotionTime < SlowMotion.MinimumUseValue))
+            if (callbackContext.performed == true)
             {
-                slowMotionPanel?.Blink();
+                if (myCharacter != null && (myCharacter.unmovable == true || myCharacter.unbeatable == true || myCharacter.slowMotionTime < SlowMotion.MinimumUseValue))
+                {
+                    slowMotionPanel?.Blink();
+                }
+                else
+                {
+                    slowMotionTween = DOVirtual.DelayedCall(SlowMotion.ActiveDelay, () => { myCharacter?.SetSlowMotion(true); });
+                }
             }
-            else
+            else if (callbackContext.canceled)
             {
-                slowMotionTween = DOVirtual.DelayedCall(SlowMotion.ActiveDelay, () => { myCharacter?.SetSlowMotion(true); });
+                slowMotionTween.Kill();
+                myCharacter?.SetSlowMotion(false);
             }
-        }
-        else if (callbackContext.canceled)
-        {
-            slowMotionTween.Kill();
-            myCharacter?.SetSlowMotion(false);
         }
     }
 
     protected override void OnRightFunction(InputAction.CallbackContext callbackContext)
     {
-        if (pickaxe != null)
+        if (remainingTime > 0 && remainingTime <= limitTime && pickaxe != null)
         {
-            if (callbackContext.performed == true && myCharacter != null && myCharacter.unmovable == false && myCharacter.unbeatable == false && limitTime - PhotonNetwork.Time > 0)
+            if (callbackContext.performed == true && myCharacter != null && myCharacter.unmovable == false && myCharacter.unbeatable == false)
             {
                 pickaxe.grip = true;
             }
@@ -236,7 +267,7 @@ public class BattleManager : Manager, IPunObservable
 
     protected override void OnSecondaryFunction(InputAction.CallbackContext callbackContext)
     {
-        if (callbackContext.performed == true && pausePanel != null && pausePanel.gameObject.activeSelf == false && limitTime - PhotonNetwork.Time > 0)
+        if (callbackContext.performed == true && pausePanel != null && pausePanel.gameObject.activeSelf == false && remainingTime > 0 && remainingTime <= limitTime)
         {
             pausePanel.Open(() => SetTurnMode(true), () => SetTurnMode(false), CheckTurnMode());
         }
@@ -312,8 +343,8 @@ public class BattleManager : Manager, IPunObservable
                     }
                 }
             }
+            //혼자 남으면 이김
         }
-        //혼자 남으면 이김
     }
 
     //입력 시스템과 관련된 바인딩을 연결 및 해제에 사용하는 메서드 
@@ -453,16 +484,49 @@ public class BattleManager : Manager, IPunObservable
         }
     }
 
+    private void StopPlaying()
+    {
+        myCharacter?.SetSlowMotion(false); //시간이 끝나면 슬로우 모션 해제
+        pausePanel?.Close();
+        phasePanel?.Stop();
+        if (rankingPanel != null)
+        {
+            battleResultPanel?.Open(rankingPanel.GetValue());
+        }
+    }
+
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
-        if (photonView.IsMine == true)
+        if (PhotonNetwork.IsMasterClient == true)
         {
             stream.SendNext(remainingTime);
         }
         else
         {
             double value = (double)stream.ReceiveNext();
-
+            if (phasePanel != null && phasePanel.IsActive() == false)
+            {
+                if (value > limitTime)
+                {
+                    double startDelay = value - limitTime;
+                    if(startDelay > PhasePanel.StartDelay)
+                    {
+                        phasePanel.Play(PhasePanel.ReadyDelay - (float)startDelay, PhasePanel.StartDelay, PhasePanel.EndDelay);
+                    }
+                    else
+                    {
+                        phasePanel.Play(0, PhasePanel.StartDelay - (float)startDelay, PhasePanel.EndDelay);
+                    }
+                }
+                else if(value > limitTime - PhasePanel.EndDelay)
+                {
+                    phasePanel.Play(0, 0, PhasePanel.EndDelay - (float)(limitTime - value));
+                }
+            }
+            if(remainingTime != value && value == 0)
+            {
+                StopPlaying();
+            }
             remainingTime = value;
         }
     }

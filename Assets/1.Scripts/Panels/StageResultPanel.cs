@@ -6,7 +6,7 @@ using TMPro;
 using DG.Tweening;
 
 /// <summary>
-/// 진행 단계에 관련된 내용을 표시해주는 패널
+/// 스테이지 결과에 관련된 내용을 표시해주는 패널
 /// </summary>
 [RequireComponent(typeof(Animator))]
 public class StageResultPanel : Panel

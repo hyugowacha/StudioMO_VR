@@ -144,4 +144,9 @@ public class PhasePanel : Panel
         }
         Set(state);
     }
+
+    public bool IsActive()
+    {
+        return tween != null && tween.IsActive();
+    }
 }

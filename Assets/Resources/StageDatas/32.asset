@@ -13,19 +13,26 @@ MonoBehaviour:
   m_Name: 32
   m_EditorClassIdentifier: 
   musicText:
-    english: Music
-    korean: "\uC74C\uC545"
-    chinese: "\u97F3\u4E50"
-    japanese: "\u304A\u3093\u304C\u304F"
+    english: 'Molten Path '
+    korean: 'Molten Path '
+    chinese: 'Molten Path '
+    japanese: 'Molten Path '
   storyText:
-    english: 
-    korean: 
-    chinese: 
-    japanese: 
+    english: "While wandering, Libby found herself lost in a blazing volcano planet
+      It's an unimaginable place, even for the brave Libby. If she doesn't escape
+      soon\u2026 it's terrifying even to imagine. "
+    korean: "\uBAA8\uD5D8\uB3C4\uC911 \uAE38\uC744 \uC783\uACE0 \uBD88\uC2DC\uCC29\uD55C
+      \uD654\uC0B0\uBCC4\uC740 \uC544\uBB34\uB9AC \uC6A9\uAC10\uD55C \uB9AC\uBE44\uC5D0\uAC8C\uB77C\uB3C4
+      \uC5B4\uB9C8\uBB34\uC2DC\uD55C \uACF3\uC774\uC5C8\uC5B4\uC694. \uB354 \uB2A6\uAE30
+      \uC804\uC5D0 \uD0C8\uCD9C\uD558\uC9C0 \uBABB\uD55C\uB2E4\uBA74..\uC0C1\uC0C1\uB9CC
+      \uD574\uB3C4 \uB054\uCC0D\uD560\uAC70\uC5D0\uC694. "
+    chinese: "\u5728\u5192\u9669\u9014\u4E2D\u8FF7\u8DEF\u5E76\u7D27\u6025\u964D\u843D\u7684\u706B\u5C71\u661F\uFF0C\u5373\u4FBF\u662F\u52C7\u6562\u7684\u8389\u6BD4\u4E5F\u96BE\u4EE5\u5E94\u5BF9\u3002\u82E5\u4E0D\u5C3D\u5FEB\u9003\u79BB\u2026\u2026\u5149\u662F\u60F3\u8C61\u5C31\u4EE4\u4EBA\u80C6\u5BD2\uFF01 "
+    japanese: "\u5192\u967A\u306E\u9014\u4E2D\u3067\u9053\u306B\u8FF7\u3044\u3001\u4E0D\u6642\u7740\u3057\u305F\u706B\u5C71\u661F\u306F\u3001\u3069\u3093\u306A\u306B\u52C7\u6562\u306A\u30EA\u30D3\u306B\u3068\u3063\u3066\u3082\u6050\u308D\u3057\u3044\u5834\u6240\u3067\u3057\u305F\u3002\u3082\u3063\u3068\u9045\u308C\u3066\u3044\u305F\u3089\u2026\u2026\u60F3\u50CF\u3059\u308B\u3060\u3051\u3067\u30BE\u30C3\u3068\u3057\u307E\u3059\u3002 "
   audioClip: {fileID: 0}
   mapObject: {fileID: 6613263428121346272, guid: 5d5acb2135d382343be0d6e80c9746c7,
     type: 3}
-  bulletTextAsset: {fileID: 0}
+  patternBulletTextAsset: {fileID: 0}
+  nonPatternBulletTextAsset: {fileID: 0}
   score:
     clearValue: 50
     addValue: 0

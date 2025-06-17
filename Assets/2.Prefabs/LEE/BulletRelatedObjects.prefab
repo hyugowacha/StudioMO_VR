@@ -177,8 +177,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bulletPooling: {fileID: 2683349994792768806}
   effectPool: {fileID: 210626297532153865}
-  rangePatternBullet: {fileID: 3465485197423747118, guid: 5704d5e047b21014b83a73011ad895cb,
-    type: 3}
+  rangePatternBullet: {fileID: 0}
   bulletParent: {fileID: 1359283471417940586}
   wallCollider: {fileID: 373154182424033467}
   fireAngle: 0
@@ -595,7 +594,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bulletPooling: {fileID: 2683349994792768806}
   effectPool: {fileID: 210626297532153865}
-  rangePatternBullet: {fileID: 3465485197423747118, guid: 5704d5e047b21014b83a73011ad895cb,
+  rangePatternBullet: {fileID: 3465485197423747118, guid: ddc39f84bef9b1546bc44179601ce6f6,
     type: 3}
   bulletParent: {fileID: 1359283471417940586}
   wallCollider: {fileID: 33885078876045380}
@@ -990,8 +989,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bulletPooling: {fileID: 2683349994792768806}
   effectPool: {fileID: 210626297532153865}
-  rangePatternBullet: {fileID: 3465485197423747118, guid: 5704d5e047b21014b83a73011ad895cb,
-    type: 3}
+  rangePatternBullet: {fileID: 0}
   bulletParent: {fileID: 1359283471417940586}
   wallCollider: {fileID: 5357988804628771163}
   fireAngle: 0
@@ -1207,8 +1205,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bulletPooling: {fileID: 2683349994792768806}
   effectPool: {fileID: 210626297532153865}
-  rangePatternBullet: {fileID: 3465485197423747118, guid: 5704d5e047b21014b83a73011ad895cb,
-    type: 3}
+  rangePatternBullet: {fileID: 0}
   bulletParent: {fileID: 1996177251712743555}
   wallCollider: {fileID: 2926523189867158994}
   fireAngle: 0
@@ -1455,8 +1452,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 77b2863f88d238f4da75391ff5c99a81, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  csvFile: {fileID: 4900000, guid: c79c8b4ffafa1534d87d89a837476c3f, type: 3}
-  patternCSVFile: {fileID: 4900000, guid: 34dbc705fd4076d47a64d7def772e905, type: 3}
+  csvFile: {fileID: 0}
+  patternCSVFile: {fileID: 0}
   patternData: []
   patternBulletData: []
 --- !u!1 &6654719288181944040
@@ -1469,6 +1466,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8740051871547373833}
   - component: {fileID: 6645819448736150994}
+  - component: {fileID: 6593900868514758988}
   m_Layer: 0
   m_Name: BulletPatternExecutor
   m_TagString: Untagged
@@ -1503,9 +1501,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3ab890c403d1584aa17f7f4d3111bf8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  loader: {fileID: 6141992579673468801}
+  loader: {fileID: 0}
   spawnerManager: {fileID: 7646841160314410175}
   bpm: 110
+--- !u!114 &6593900868514758988
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6654719288181944040}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents:
+  - {fileID: 6645819448736150994}
+  sceneViewId: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
 --- !u!1 &6748021379469309435
 GameObject:
   m_ObjectHideFlags: 0

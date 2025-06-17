@@ -13,7 +13,6 @@ public class BulletSpawnerManager : MonoBehaviour
     // GuidedBullet용 스포너를 side 값 기준으로 관리
     public Dictionary<int, GuidedBulletSpawner> guidedSpawners = new();
 
-
     public Dictionary<int, AnglePatternSpawner> angleSpawners = new();
 
     public Dictionary<int, RangePatternSpawner> rangeSpawners = new();
@@ -47,7 +46,6 @@ public class BulletSpawnerManager : MonoBehaviour
             spawner.FireGuidedBullet();
         }
     }
-
 
     /// <summary>
     /// 패턴형 탄막(각도) 스폰 함수

@@ -232,9 +232,47 @@
                 case Translation.Letter.SmoosthTurn:
                     letters[i] = "スムーズ移動";
                     break;
+                case Translation.Letter.PlayAgain:
+                    letters[i] = "もう一度プレイしますか？";
+                    break;
+                
+                case Translation.Letter.RoomNotExist:
+                    letters[i] = "存在しないルームです。";
+                    break;
+                case Translation.Letter.HostRoom:
+                    letters[i] = "ホストの部屋";
+                    break;
+                case Translation.Letter.EnterInviteCode:
+                    letters[i] = "待コードを入力";
+                    break;
+                case Translation.Letter.CancelMatching:
+                    letters[i] = "マッチングを終了しますか？";
+                    break;
+                case Translation.Letter.MatchFailed:
+                    letters[i] = "マッチング失敗";
+                    break;
+                case Translation.Letter.NoPlayersAvailable:
+                    letters[i] = "現在マッチング可能なプレイヤーがいません";
+                    break;
+                case Translation.Letter.Save:
+                    letters[i] = "保存";
+                    break;
+                case Translation.Letter.PurchaseItem:
+                    letters[i] = "このアイテムを購入しますか？";
+                    break;
+                case Translation.Letter.ApplyContent:
+                    letters[i] = "この内容を適用しますか？";
+                    break;
+                case Translation.Letter.InsufficientCurrency:
+                    letters[i] = "有料通貨が不足しています。";
+                    break;
+                case Translation.Letter.Obtain:
+                    letters[i] = "獲得";
+                    break;
+                case Translation.Letter.Common:
+                    letters[i] = "一般";
+                    break;
 
-               
-               
                 case Translation.Letter.Select:
                     letters[i] = "";
                     break;

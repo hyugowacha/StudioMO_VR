@@ -4367,7 +4367,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 45938ae446fac0b4198fc82c629c834d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  shopCanvas: {fileID: 0}
+  mainShopPanel: {fileID: 0}
   basicSkinData: {fileID: 0}
   purchaseSkinData: []
   achievementSkinData: []
@@ -5617,12 +5617,12 @@ RectTransform:
   m_LocalScale: {x: 0.005, y: 0.005, z: 0.005}
   m_ConstrainProportionsScale: 1
   m_Children:
+  - {fileID: 987262208839746142}
   - {fileID: 6110608886261498331}
   - {fileID: 4951272141532975784}
   - {fileID: 4089423765359389}
   - {fileID: 7664297616287454846}
   - {fileID: 4869329882688735301}
-  - {fileID: 987262208839746142}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}

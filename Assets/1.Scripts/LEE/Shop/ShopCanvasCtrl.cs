@@ -61,7 +61,7 @@ public class ShopCanvasCtrl : MonoBehaviour
     {
         // ▼ 시작 시, 상점 캔버스, 스킨 구매 패널 끔
         mainShopPanel.gameObject.SetActive(false);              // 상점 캔버스
-        purchaseSkinTabPanel.SetActive(false);              // 구매 패널
+        purchaseSkinTabPanel.SetActive(true);              // 구매 패널
         achievementSkinTabPanel.SetActive(false);           // 업적 패널
         purchaseSkinPanel.SetActive(false);                 // 구입 물어보는 패널
         getSkinPanel.SetActive(false);                      // 획득 물어보는 패널
@@ -222,7 +222,7 @@ public class ShopCanvasCtrl : MonoBehaviour
     //        coinValue.text = currentCoin.ToString();
 
     //        selectedShopButton.UnLock();
-            
+
     //        // 유저 게임 데이터 저장
     //        UserGameData.SetCoins(currentCoin);
     //        UserGameData.UnlockSkin(selectedSkin.skinName);
@@ -234,7 +234,6 @@ public class ShopCanvasCtrl : MonoBehaviour
     //        Debug.Log("코인이 부족합니다");
     //    }
     //}
-
 
     // ▼ !! 테스트용 스킨 구매 패널에서 해당 스킨 구매 버튼 눌렀을 때, 구매 처리 담당
     public void TestOnClickBuySkin()
@@ -317,12 +316,14 @@ public class ShopCanvasCtrl : MonoBehaviour
         getSkinPrice.text = skin.price.ToString();
     }
 
+    // ShoppingPurchasePanel NoB
     // ▼ 스킨 구매 패널에서 아니오 버튼 누를 시 실행 (나가기)
     public void OnClickCloseBuySkin()
     {
         purchaseSkinPanel.SetActive(false);
     }
 
+    // ShoppingAchievePanel NoB
     // ▼ 스킨 획득 패널에서 아니오 버튼 누를 시 실행 (나가기)
     public void OnClickCloseGetSkin()
     {
