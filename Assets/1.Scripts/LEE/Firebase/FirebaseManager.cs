@@ -67,6 +67,7 @@ public class FirebaseManager : MonoBehaviourPunCallbacks
     [Header("로딩 화면, 로비화면")]
     [SerializeField] GameObject loadingObject;
     [SerializeField] GameObject lobbyObject;
+
     #endregion
 
     #region 시작 시 초기화 및 버튼 등록
@@ -202,6 +203,9 @@ public class FirebaseManager : MonoBehaviourPunCallbacks
                     {
                         Debug.Log("[MainLobby] 스테이지 점수 데이터 로드 완료");
                     });
+
+                    // 스킨 정보 가져오기
+                    UserGameData.LoadEquippedSkin();
 
                     // 스타 가져오기
                     UserGameData.LoadTotalStars();

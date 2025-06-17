@@ -14,7 +14,7 @@ public class Intro_Character_Ctrl : MonoBehaviour
     [SerializeField] private bool isPenguin;
     [SerializeField] private bool isDirt;
 
-    [SerializeField, Header("애니메이션 발동 트리거")] private bool onClick = false;
+    [SerializeField, Header("애니메이션 발동 트리거")] public bool onClick = false;
 
     private int prevSelectedIndex = -1;
     private bool[] prevStates = new bool[7];
@@ -124,5 +124,43 @@ public class Intro_Character_Ctrl : MonoBehaviour
 
             anim.ChangeAnimTrue();
         } 
+    }
+
+    public void SetBoolFromEquippedSkin()
+    {
+        string equipped = UserGameData.EquippedSkin;
+
+        Debug.Log(equipped);
+
+        // 모든 값을 false로 초기화
+        isRibee = isCat = isBunny = isShark = isCactus = isPenguin = isDirt = false;
+
+        switch (equipped)
+        {
+            case "SkinData_Libee":
+                isRibee = true;
+                break;
+            case "SkinData_Cat":
+                isCat = true;
+                break;
+            case "SkinData_Bunny":
+                isBunny = true;
+                break;
+            case "SkinData_Fish":
+                isShark = true;
+                break;
+            case "SkinData_Cactus":
+                isCactus = true;
+                break;
+            case "SkinData_Penguin":
+                isPenguin = true;
+                break;
+            case "SkinData_Mole":
+                isDirt = true;
+                break;
+            default:
+                isRibee = true; // 기본값
+                break;
+        }
     }
 }
