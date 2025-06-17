@@ -42,9 +42,10 @@ public class AllLanguage : MonoBehaviour
     public TextMeshProUGUI matchFailed;                 // MatchingFail
     public TextMeshProUGUI noPlayersAvailable;          // MatchingFail
 
-
     [Header("상점")]
-    public TextMeshProUGUI buy;
+    public TextMeshProUGUI buyTab;                      // 구매 탭 텍스트
+    public TextMeshProUGUI achievementTab;              // 업적 탭 텍스트
+    public TextMeshProUGUI buyButton;                   // 구매 버튼 텍스트
 
     #endregion
 
@@ -108,6 +109,11 @@ public class AllLanguage : MonoBehaviour
         // ▼ 대전 모드 텍스트 세팅 ( MatchingFail )
         matchFailed.Set(Translation.Get(Translation.Letter.MatchFailed), currentFont);
         noPlayersAvailable.Set(Translation.Get(Translation.Letter.NoPlayersAvailable), currentFont);
+
+        // ▼ 상점 텍스트 세팅 ( 상점 메인 )
+        buyTab.Set(Translation.Get(Translation.Letter.Buy), currentFont);
+        achievementTab.Set(Translation.Get(Translation.Letter.Achievements), currentFont);
+        buyButton.Set(Translation.Get(Translation.Letter.Buy), currentFont);
 
     }
     #endregion
