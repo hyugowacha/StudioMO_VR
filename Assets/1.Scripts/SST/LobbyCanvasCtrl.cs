@@ -24,7 +24,11 @@ public class LobbyCanvasCtrl : MonoBehaviour
     [Header("대전모드 UI 전체")]
     [SerializeField] private MatchingSystem matchingSystem;
 
-    [SerializeField] private ShopCanvasCtrl shopCanvasCtrl;
+    [Header("상점모드 부분")]
+    [SerializeField] private GameObject shopCanvasCtrl;
+
+    [Header("리비 스킨 부분")]
+    [SerializeField] GameObject realSkin;
 
     private void Start()
     {
@@ -56,6 +60,8 @@ public class LobbyCanvasCtrl : MonoBehaviour
 
     private void OnClickStageMode()
     {
+        SkinAnimation();
+
         if (matchingSystem.IsRandomMatchUIActive)
         {
             matchingSystem.RandomMatchError.SetActive(true);
@@ -68,16 +74,22 @@ public class LobbyCanvasCtrl : MonoBehaviour
 
     private void OnClickVersusMode()
     {
+        SkinAnimation();
+
         DeactivateAllPanels(versusPanel);
     }
 
     private void OnClickShop()
     {
+        SkinAnimation();
+
         DeactivateAllPanels(shopPanel);
     }
 
     private void OnClickOption()
     {
+        SkinAnimation();
+
         DeactivateAllPanels(optionPanel);
     }
 
@@ -124,4 +136,14 @@ public class LobbyCanvasCtrl : MonoBehaviour
         // 자기 자신 원복
         canvasGroup.alpha = 1f;
     }
+
+    private void SkinAnimation()
+    {
+        // 애니메이션 트리거
+        realSkin.GetComponent<Intro_Character_Ctrl>().onClick = true;
+
+        // 위치 이동 (XYZ = 999,999,999)
+        realSkin.transform.position = new Vector3(999f, 999f, 999f);
+    }
+
 }

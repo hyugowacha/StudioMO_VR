@@ -32,8 +32,6 @@ public class ObjectPoolingBullet : MonoBehaviour
     private Dictionary<Type, List<IBullet>> _allCreatedBullets = new();
     #endregion
 
-   
-
     #region 슬로우모션 처리 (테스트용)
     private float _currentPitch = 1f;
 

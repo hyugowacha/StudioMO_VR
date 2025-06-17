@@ -75,6 +75,8 @@ public class MatchingSystem : MonoBehaviourPunCallbacks
     [Header("로딩 화면")]
     [SerializeField] GameObject loadingObject;
 
+    [Header("리비 스킨 부분")]
+    [SerializeField] GameObject realSkin;
     #endregion
 
     #region 일반 필드
@@ -502,6 +504,8 @@ public class MatchingSystem : MonoBehaviourPunCallbacks
         });
 
         loadingObject.gameObject.SetActive(false);
+        realSkin.SetActive(true);
+        realSkin.GetComponent<Intro_Character_Ctrl>().SetBoolFromEquippedSkin();
     }
 
     // 방 입장 실패 시

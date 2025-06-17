@@ -390,5 +390,39 @@ public static class UserGameData
                 onComplete?.Invoke();
             });
     }
+
+    /// <summary>
+    /// Firebase에서 유저의 스킨 가져오는 함수
+    /// </summary>
+    /// <param name="onComplete"></param>
+    public static void LoadEquippedSkin(Action onComplete = null)
+    {
+        if (string.IsNullOrEmpty(UID))
+        {
+            Debug.LogWarning("UID가 없습니다. 장착 스킨 로드 실패");
+            return;
+        }
+
+        FirebaseDatabase.DefaultInstance
+            .GetReference("Users")
+            .Child(UID)
+            .Child("EquippedSkin")
+            .GetValueAsync()
+            .ContinueWithOnMainThread(task =>
+            {
+                if (task.IsCompletedSuccessfully && task.Result.Exists)
+                {
+                    EquippedSkin = task.Result.Value.ToString();
+                    Debug.Log($"장착 스킨 로드 성공: {EquippedSkin}");
+                }
+                else
+                {
+                    EquippedSkin = "DefaultSkin"; // 기본값 설정
+                    Debug.LogWarning("장착 스킨 정보 없음, 기본값 사용");
+                }
+
+                onComplete?.Invoke();
+            });
+    }
     #endregion
 }
