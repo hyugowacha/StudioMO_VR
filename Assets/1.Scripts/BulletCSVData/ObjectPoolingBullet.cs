@@ -6,6 +6,18 @@ using UnityEngine.Pool;
 // 총알 종류가 공통으로 가져야 하는 기능 정의 (인터페이스)
 public interface IBullet
 {
+    protected const string PlayerTag = "Player";
+    protected const string StructuresTag = "Structures";
+
+    protected static List<IBullet> bullets = new List<IBullet>();
+
+    public static IReadOnlyList<IBullet> list {
+        get
+        {
+            return bullets.AsReadOnly();
+        }
+    }
+
     // 오브젝트 풀에서 꺼낼 때 자기 풀이 뭔지 받아놓는 함수
     void SetPool<T>(IObjectPool<T> pool) where T : Component;
 

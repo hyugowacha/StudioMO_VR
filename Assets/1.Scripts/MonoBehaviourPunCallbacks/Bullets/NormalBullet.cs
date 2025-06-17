@@ -1,114 +1,136 @@
-using System;
 using UnityEngine;
 using UnityEngine.Pool;
+using Photon.Pun;
+using Photon.Realtime;
 
 /// <summary>
 /// 일반 탄막(Bullet) 클래스 → 비인식 탄
 /// </summary>
-public class NormalBullet : MonoBehaviour, IBullet
+[RequireComponent(typeof(Animator))]
+[RequireComponent(typeof(SphereCollider))]
+[RequireComponent(typeof(PhotonView))]
+[RequireComponent(typeof(PhotonTransformView))]
+public class NormalBullet : MonoBehaviourPunCallbacks, IBullet
 {
-    #region 탄막(비인식) 필드
-    // 탄막을 관리하는 오브젝트 풀
-    IObjectPool<NormalBullet> _normalBulletPool;
+    #region 탄막(인식) 필드
+    //탄막 이동 애니메이터
+    private bool hasMoveAnimator = false;
 
-    [Header("탄막 스폰 애니메이터")]
-    [SerializeField] private Animator spawnAnimator;
+    private Animator moveAnimator = null;
 
-    [Header("탄막 이동 애니메이터")]
-    [SerializeField] private Animator moveAnimator;
+    private Animator getMoveAnimator {
+        get
+        {
+            if(hasMoveAnimator == false)
+            {
+                hasMoveAnimator = TryGetComponent(out moveAnimator);
+            }
+            return moveAnimator;
+        }
+    }
 
-    // 이동 방향
-    Vector3 moveDirection;
+    [Header("탄막 스폰 애니메이터"), SerializeField]
+    private Animator spawnAnimator;
 
     [Header("탄막 이동 속도")]
     public float speed = 3f;
-
     #endregion
 
-    #region 오브젝트 풀, 생성 시
+    private void Start()
+    {
+        IBullet.bullets.Add(this);
+        SlowMotion.action += SetAnimationSpeed;
+    }
+
+    private void Update()
+    {
+        if (photonView.IsMine == true)
+        {
+            // Y 방향 제거 → 수평 방향(XZ)만 유지
+            //Vector3 flatDir = new Vector3(moveDirection.x, 0f, moveDirection.z).normalized;
+            Vector3 flatDir = transform.forward;
+            // Y값 고정
+            Vector3 currentPos = transform.position;
+            currentPos += flatDir * speed * Time.deltaTime * SlowMotion.speed;
+            currentPos.y = transform.position.y; // Y 위치 고정
+            transform.position = currentPos;
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (photonView.IsMine == true)
+        {
+            switch (other.tag)
+            {
+                case IBullet.PlayerTag:
+                    Character character = other.GetComponentInParent<Character>();
+                    if (character != null)
+                    {
+                        character.Hit();
+                        EffectPoolManager.Instance.SpawnEffect("VFX_MON005_Explode", transform.position, Quaternion.identity);
+                        if (PhotonNetwork.InRoom == false)
+                        {
+                            Destroy(gameObject);
+                        }
+                        else
+                        {
+                            PhotonNetwork.Destroy(gameObject);
+                        }
+                    }
+                    break;
+                case IBullet.StructuresTag:
+                    EffectPoolManager.Instance.SpawnEffect("VFX_MON005_Explode", transform.position, Quaternion.identity);
+                    if (PhotonNetwork.InRoom == false)
+                    {
+                        Destroy(gameObject);
+                    }
+                    else
+                    {
+                        PhotonNetwork.Destroy(gameObject);
+                    }
+                    break;
+            }
+        }
+    }
+
+    private void OnDestroy()
+    {
+        IBullet.bullets.Remove(this);
+        SlowMotion.action -= SetAnimationSpeed;
+    }
+
+    [PunRPC]
+    private void SetAnimationSpeed(float value)
+    {
+        getMoveAnimator.speed = value;
+        if(spawnAnimator != null)
+        {
+            spawnAnimator.speed = value;
+        }
+    }
+
+    public override void OnPlayerEnteredRoom(Player player)
+    {
+        if(photonView.IsMine == true)
+        {
+            photonView.RPC(nameof(SetAnimationSpeed), player, SlowMotion.speed);
+        }
+    }
+
+    public void ChangeAnimationSpeed(float motionSpeed)
+    {
+        spawnAnimator.speed = motionSpeed;
+        getMoveAnimator.speed = motionSpeed;
+    }
+
     // 오브젝트 풀에서 꺼낼 때 호출됨
     public void SetPool<T>(IObjectPool<T> pool) where T : Component
     {
-        _normalBulletPool = pool as IObjectPool<NormalBullet>;
     }
 
     // 풀에서 꺼내질 때 호출됨 (초기화)
     public void OnSpawn()
     {
-        SlowMotion.action += ChangeAnimationSpeed;
-        ChangeAnimationSpeed(SlowMotion.speed);
     }
-
-    // 발사 시 방향 설정
-    public void Initialize(Vector3 direction)
-    {
-        moveDirection = direction.normalized;
-
-        // X축 기울어짐 방지: 수평 방향만 사용
-        Vector3 flatDir = new Vector3(direction.x, 0f, direction.z);
-
-        if (flatDir != Vector3.zero)
-        {
-            transform.rotation = Quaternion.LookRotation(flatDir);
-        }
-    }
-    #endregion
-
-    #region Update & 충돌 처리
-    void Update()
-    {
-        BulletUpdate();
-    }
-
-    void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Player"))
-        {
-            var player = other.GetComponentInParent<Character>();
-            if (player)
-            {
-                player.Hit();
-                _normalBulletPool?.Release(this);
-            }
-        }
-        else if (other.CompareTag("Structures"))
-        {
-            _normalBulletPool?.Release(this);
-        }
-    }
-
-    // 탄막 비활성화 시
-    void OnDisable()
-    {
-        // 탄막 인스펙터 이름 추가 후 이름을 삽입해야 함. 추후 자동화 생각해보긴 하기.
-        // 사라짐 이펙트 출력
-        SlowMotion.action -= ChangeAnimationSpeed;
-
-        if (!Application.isPlaying || !gameObject.activeInHierarchy) return;
-        EffectPoolManager.Instance.SpawnEffect("VFX_MON005_Explode", transform.position, Quaternion.identity);
-    }
-    #endregion
-
-    #region 실시간 행동 함수들
-    // Bullet 실시간 업데이트 필요한 함수
-    void BulletUpdate()
-    {
-        // Y 방향 제거 → 수평 방향(XZ)만 유지
-        Vector3 flatDir = new Vector3(moveDirection.x, 0f, moveDirection.z).normalized;
-
-        // Y값 고정
-        Vector3 currentPos = transform.position;
-        currentPos += flatDir * speed * Time.deltaTime * SlowMotion.speed;
-        currentPos.y = transform.position.y; // Y 위치 고정
-
-        transform.position = currentPos;
-    }
-
-
-    public void ChangeAnimationSpeed(float motionSpeed)
-    {
-        spawnAnimator.speed = motionSpeed;
-        moveAnimator.speed = motionSpeed;
-    }
-    #endregion
 }

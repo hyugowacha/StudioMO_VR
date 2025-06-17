@@ -1,13 +1,15 @@
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.Pool;
+using Photon.Pun;
 
 /// <summary>
 /// 다양한 이펙트를 이름으로 구분하고 풀링 방식으로 관리하는 클래스
 /// </summary>
-public class EffectPoolManager : MonoBehaviour
+[RequireComponent(typeof(PhotonView))]
+public class EffectPoolManager : MonoBehaviourPunCallbacks
 {
     [System.Serializable]
     public class EffectPrefab
@@ -64,6 +66,19 @@ public class EffectPoolManager : MonoBehaviour
         }
     }
 
+    [PunRPC]
+    private void ShowEffect(string name, Vector3 pos, Quaternion rot)
+    {
+        if (!_pools.TryGetValue(name, out var pool))
+        {
+            Debug.LogWarning($"[EffectPool] '{name}' 이펙트 풀이 없음");
+            return;
+        }
+        var effect = pool.Get();
+        effect.transform.SetPositionAndRotation(pos, rot);
+        StartCoroutine(AutoRelease(effect, name));
+    }
+
     /// <summary>
     /// 이펙트 풀 생성
     /// </summary>
@@ -103,16 +118,11 @@ public class EffectPoolManager : MonoBehaviour
     /// <param name="rot">스폰 회전</param>
     public void SpawnEffect(string name, Vector3 pos, Quaternion rot)
     {
-        if (!_pools.TryGetValue(name, out var pool))
+        ShowEffect(name, pos, rot);
+        if(PhotonNetwork.InRoom == true)
         {
-            Debug.LogWarning($"[EffectPool] '{name}' 이펙트 풀이 없음");
-            return;
+            photonView.RPC(nameof(ShowEffect), RpcTarget.Others, name, pos, rot);
         }
-
-        var effect = pool.Get();
-        effect.transform.SetPositionAndRotation(pos, rot);
-
-        StartCoroutine(AutoRelease(effect, name));
     }
 
     /// <summary>

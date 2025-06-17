@@ -1,11 +1,9 @@
+using Photon.Pun;
 using UnityEngine;
 
 public class NormalBulletSpawner : MonoBehaviour
 {
     #region 탄막(인식) 생성의 필드
-    [Header("Bullet 풀 매니저")]
-    public ObjectPoolingBullet bulletPooling;
-
     [Header("발사할 Bullet 프리팹")]
     public NormalBullet normalBulletPrefab;
 
@@ -50,21 +48,21 @@ public class NormalBulletSpawner : MonoBehaviour
             float randZ = Random.Range(bounds.min.z, bounds.max.z);
             spawnPos = new Vector3(transform.position.x, transform.position.y, randZ);
         }
-
-        // 탄막 풀에서 일반 탄막 객체 가져오기
-        NormalBullet bullet = bulletPooling.GetBullet<NormalBullet>();
-
-        // 탄막 위치 설정
-        bullet.transform.position = spawnPos;
-
-        // 맵 중앙을 향한 방향 벡터 계산
-        Vector3 fireDir = (mapCenter.transform.position - spawnPos).normalized;
-
-        // 좌우 각도 랜덤 오프셋 적용 (Y축 회전만)
-        float angleOffset = Random.Range(minusAngle, plusAngle);
-        fireDir = Quaternion.AngleAxis(angleOffset, Vector3.up) * fireDir;
-
-        // 탄막 초기화 및 회전 적용
-        bullet.Initialize(fireDir.normalized);
+        if (normalBulletPrefab != null)
+        {
+            Vector3 fireDir = (mapCenter.transform.position - spawnPos).normalized;
+            // 좌우 각도 랜덤 오프셋 적용 (Y축 회전만)
+            float angleOffset = Random.Range(minusAngle, plusAngle);
+            fireDir = (Quaternion.AngleAxis(angleOffset, Vector3.up) * fireDir).normalized;
+            Quaternion quaternion = Quaternion.LookRotation(new Vector3(fireDir.x, 0, fireDir.z));
+            if (PhotonNetwork.InRoom == false)
+            {
+                Instantiate(normalBulletPrefab, spawnPos, quaternion);
+            }
+            else if (PhotonNetwork.IsMasterClient == true && Resources.Load<GameObject>(normalBulletPrefab.name) != null)
+            {
+                PhotonNetwork.InstantiateRoomObject(normalBulletPrefab.name, spawnPos, quaternion);
+            }
+        }
     }
 }

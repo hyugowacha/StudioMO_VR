@@ -122,7 +122,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4941c90d564986644aaf4294098570de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bulletPooling: {fileID: 2683349994792768806}
   normalBulletPrefab: {fileID: 3506624416693514196, guid: 25e49bb6edf45f2448bc57beabb37c24,
     type: 3}
   bulletParent: {fileID: 8700159607488267589}
@@ -520,7 +519,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4941c90d564986644aaf4294098570de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bulletPooling: {fileID: 2683349994792768806}
   normalBulletPrefab: {fileID: 3506624416693514196, guid: 25e49bb6edf45f2448bc57beabb37c24,
     type: 3}
   bulletParent: {fileID: 8700159607488267589}
@@ -702,6 +700,7 @@ GameObject:
   m_Component:
   - component: {fileID: 132648451577283326}
   - component: {fileID: 210626297532153865}
+  - component: {fileID: 3745560400425855138}
   m_Layer: 0
   m_Name: ObjectPoolingEffect
   m_TagString: Untagged
@@ -762,6 +761,28 @@ MonoBehaviour:
     defaultCapacity: 50
     maxSize: 100
     parent: {fileID: 630711641702402388}
+--- !u!114 &3745560400425855138
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3719319373737522015}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents: []
+  sceneViewId: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
 --- !u!1 &3785167980610764659
 GameObject:
   m_ObjectHideFlags: 0
@@ -915,7 +936,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4941c90d564986644aaf4294098570de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bulletPooling: {fileID: 2683349994792768806}
   normalBulletPrefab: {fileID: 3506624416693514196, guid: 25e49bb6edf45f2448bc57beabb37c24,
     type: 3}
   bulletParent: {fileID: 8700159607488267589}
@@ -1150,7 +1170,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4941c90d564986644aaf4294098570de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bulletPooling: {fileID: 2683349994792768806}
   normalBulletPrefab: {fileID: 3506624416693514196, guid: 25e49bb6edf45f2448bc57beabb37c24,
     type: 3}
   bulletParent: {fileID: 8700159607488267589}
