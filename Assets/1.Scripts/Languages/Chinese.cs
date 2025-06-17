@@ -232,8 +232,46 @@
                 case Translation.Letter.SmoosthTurn:
                     letters[i] = "平移";
                     break;
-
-
+                case Translation.Letter.PlayAgain:
+                    letters[i] = "再来一局？";
+                    break;
+              
+                case Translation.Letter.RoomNotExist:
+                    letters[i] = "房间不存在。";
+                    break;
+                case Translation.Letter.HostRoom:
+                    letters[i] = "主持人的房间";
+                    break;
+                case Translation.Letter.EnterInviteCode:
+                    letters[i] = "输入邀请码";
+                    break;
+                case Translation.Letter.CancelMatching:
+                    letters[i] = "要结束匹配吗";
+                    break;
+                case Translation.Letter.MatchFailed:
+                    letters[i] = "匹配失败";
+                    break;
+                case Translation.Letter.NoPlayersAvailable:
+                    letters[i] = "当前没有可匹配的玩家。";
+                    break;
+                case Translation.Letter.Save:
+                    letters[i] = "保存";
+                    break;
+                case Translation.Letter.PurchaseItem:
+                    letters[i] = "要购买该道具吗？";
+                    break;
+                case Translation.Letter.ApplyContent:
+                    letters[i] = "要应用该内容吗？";
+                    break;
+                case Translation.Letter.InsufficientCurrency:
+                    letters[i] = "有偿货币不足。";
+                    break;
+                case Translation.Letter.Obtain:
+                    letters[i] = "获得";
+                    break;
+                case Translation.Letter.Common:
+                    letters[i] = "一般";
+                    break;
 
                 case Translation.Letter.Select:
                     letters[i] = "";

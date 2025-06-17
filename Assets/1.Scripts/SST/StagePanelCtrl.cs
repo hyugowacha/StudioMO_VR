@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -19,6 +20,8 @@ public class StagePanelCtrl : MonoBehaviour
 
     [SerializeField] StageInfoPanel infoPanel;          // 이 테마 전용 InfoPanel 연결
 
+    [SerializeField] TextMeshProUGUI starText;          // 스타 텍스트
+
     private void OnEnable()
     {
         stageInfoDataSet.UpdateUnlockedStages();
@@ -28,6 +31,7 @@ public class StagePanelCtrl : MonoBehaviour
 
     private void Start()
     {
+        starText.text = UserGameData.totalStars.ToString();
         SetStageIcons();
     }
 
@@ -44,15 +48,54 @@ public class StagePanelCtrl : MonoBehaviour
 
         foreach (var data in stageInfoDataSet.stageInfoList)
         {
-            // ▼ 만약에 타입이 서로 다를 경우에는 다음으로 건너 뜀
             if (stagePanelType != data.stagePanelType) continue;
 
             GameObject icon = Instantiate(stageIconPrefab, stageListPanel);
             StageIconButton iconScript = icon.GetComponent<StageIconButton>();
+
             iconScript.Init(data, infoPanel);
+            icon.SetActive(true);
+            icon.SetActive(false);
             index++;
         }
+
+        // 이 시점에 전체 스테이지 데이터를 넘겨야 정확한 별 갯수 계산 가능
+        CalculateTotalStars(stageInfoDataSet.stageInfoList);
+        starText.text = UserGameData.totalStars.ToString();
+
+        ShowStageButtons();
     }
+
+    // 시각화 별
+    public void ShowStageButtons()
+    {
+        foreach (Transform icon in stageListPanel)
+        {
+            icon.gameObject.SetActive(true);
+        }
+    }
+
+    // TotalStars확인
+    public static void CalculateTotalStars(List<StageInfoData> allStageInfoDatas)
+    {
+        int total = 0;
+
+        foreach (var data in allStageInfoDatas)
+        {
+            int score = data.bestScore;
+            int clear = data.clearValue;
+            int add = data.addValue;
+
+            if (score < clear) continue;
+            else if (score < clear + add) total += 1;
+            else total += 2;
+        }
+
+        UserGameData.totalStars = total;
+
+        UserGameData.UpdateStars(total);
+    }
+
 
     // ▼ 스테이지 패널 나가기 버튼
     public void OnClickExit()

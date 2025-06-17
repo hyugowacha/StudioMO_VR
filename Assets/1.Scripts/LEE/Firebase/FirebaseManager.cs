@@ -64,8 +64,9 @@ public class FirebaseManager : MonoBehaviourPunCallbacks
     [Header("스테이지 데이터")]
     [SerializeField] StageInfoDataSet stageInfoDataSet; // 스테이지 데이터 스크립터블 오브젝트
 
-    [Header("로딩 화면")]
+    [Header("로딩 화면, 로비화면")]
     [SerializeField] GameObject loadingObject;
+    [SerializeField] GameObject lobbyObject;
     #endregion
 
     #region 시작 시 초기화 및 버튼 등록
@@ -102,37 +103,52 @@ public class FirebaseManager : MonoBehaviourPunCallbacks
 
     private void Start()
     {
-        MasterTest();
+        if (Authentication.isGamePlaying)
+        {
+            loginCanvas.gameObject.SetActive(false);
+            lobbyObject.SetActive(true);
+        }
+        else
+        {
+            MasterTest();
 
-        // 로그인 관련 버튼 이벤트 등록
-        signUpCanvasButton.onClick.AddListener(OnClickGoToSignUp);      // 회원가입 창 열기
-        signInButton.onClick.AddListener(OnClickSignIn);                // 로그인
-        findAccountButton.onClick.AddListener(OnClickFindAccount);      // 계정찾기
-        gameoverButton.onClick.AddListener(GameOver);                   // X 버튼 클릭
+            // 로그인 관련 버튼 이벤트 등록
+            signUpCanvasButton.onClick.AddListener(OnClickGoToSignUp);      // 회원가입 창 열기
+            signInButton.onClick.AddListener(OnClickSignIn);                // 로그인
+            findAccountButton.onClick.AddListener(OnClickFindAccount);      // 계정찾기
+            gameoverButton.onClick.AddListener(GameOver);                   // X 버튼 클릭
 
-        // 회원가입 관련 버튼 이벤트 등록
-        checkButton.onClick.AddListener(OnClickCheckDuplicate);             // 아이디 중복 확인 버튼 
-        signUpCancelBuuton.onClick.AddListener(OnClickBackToLogin);         // 취소 버튼 로그인 화면으로 되돌아감
-        SignUpOkBuuton.onClick.AddListener(OnClickSignUp);                  // 확인 버튼 (회원가입 실행)   
-        signUpInputPW.onValueChanged.AddListener(OnPasswordChanged);        // 올바른 비밀번호
-        signUpInputPWCheck.onValueChanged.AddListener(OnPasswordChanged);   // 비밀번호 확인 시스템
+            // 회원가입 관련 버튼 이벤트 등록
+            checkButton.onClick.AddListener(OnClickCheckDuplicate);             // 아이디 중복 확인 버튼 
+            signUpCancelBuuton.onClick.AddListener(OnClickBackToLogin);         // 취소 버튼 로그인 화면으로 되돌아감
+            SignUpOkBuuton.onClick.AddListener(OnClickSignUp);                  // 확인 버튼 (회원가입 실행)   
+            signUpInputPW.onValueChanged.AddListener(OnPasswordChanged);        // 올바른 비밀번호
+            signUpInputPWCheck.onValueChanged.AddListener(OnPasswordChanged);   // 비밀번호 확인 시스템
 
-        // ID 찾기 버튼 이벤트 등록
-        findID_okButton.onClick.AddListener(OnClickFindID);                 // ID 찾기의 확인 버튼
-        findID_cancelButton.onClick.AddListener(OnClickFindIDCancel);       // ID 찾기의 취소 버튼
-        findPWButton.onClick.AddListener(OnClickFindIDChangeToFindPW);      // PW 찾기 화면 전환
+            // ID 찾기 버튼 이벤트 등록
+            findID_okButton.onClick.AddListener(OnClickFindID);                 // ID 찾기의 확인 버튼
+            findID_cancelButton.onClick.AddListener(OnClickFindIDCancel);       // ID 찾기의 취소 버튼
+            findPWButton.onClick.AddListener(OnClickFindIDChangeToFindPW);      // PW 찾기 화면 전환
 
-        // PW 찾기 버튼 이벤트 등록
-        findPW_okButton.onClick.AddListener(OnClickFindPW);
-        findPW_cancelButton.onClick.AddListener(OnClickFindPWCancel);
-        findIDButton.onClick.AddListener(OnClickFindPWChangeToID);
+            // PW 찾기 버튼 이벤트 등록
+            findPW_okButton.onClick.AddListener(OnClickFindPW);
+            findPW_cancelButton.onClick.AddListener(OnClickFindPWCancel);
+            findIDButton.onClick.AddListener(OnClickFindPWChangeToID);
 
-        // 경고창 관련 버튼 이벤트 등록
-        logingWarning_OK.onClick.AddListener(CancelWarningIMG);
-        logingWarning_cancel.onClick.AddListener(CancelWarningIMG);
+            // 경고창 관련 버튼 이벤트 등록
+            logingWarning_OK.onClick.AddListener(CancelWarningIMG);
+            logingWarning_cancel.onClick.AddListener(CancelWarningIMG);
 
-        // 닉네임 확인 버튼 이벤트 등록
-        nickname_okButton.onClick.AddListener(OnClickSetNickname);
+            // 닉네임 확인 버튼 이벤트 등록
+            nickname_okButton.onClick.AddListener(OnClickSetNickname);
+        }
+
+        UserGameData.LoadMapHighScores(UserGameData.stageInfoDataSet, () =>
+        {
+            Debug.Log("[MainLobby] 스테이지 점수 데이터 로드 완료");
+        });
+
+        UserGameData.LoadTotalStars();
     }
 
     private void GameOver()
@@ -161,10 +177,9 @@ public class FirebaseManager : MonoBehaviourPunCallbacks
     /// </summary>
     public void OnClickSignIn()
     {
-        string ID = loginInputID.text;   // 입력한 ID로 이메일 생성
-        string PW = loginInputPW.text;             // 비밀번호 입력값
+        string ID = loginInputID.text;
+        string PW = loginInputPW.text;
 
-        // 로그인 요청
         Authentication.SignIn(ID, PW, result =>
         {
             switch (result)
@@ -175,41 +190,57 @@ public class FirebaseManager : MonoBehaviourPunCallbacks
 
                     // 닉네임 정보 가져오기
                     UserGameData.SetPhotonNicknameFromFirebase(Authentication.UserId);
+
                     // 프로필 이미지 정보 가져오기 
                     UserGameData.LoadEquippedProfile(Authentication.UserId);
 
-                    // 유저의 점수를 서버에서 불러오고 스테이지 데이터에 반영
+                    // 유저 점수 정보 불러오기
                     UserGameData.LoadMapHighScores(stageInfoDataSet);
+
+                    // 스테이지 정보 가져오기
+                    UserGameData.LoadMapHighScores(UserGameData.stageInfoDataSet, () =>
+                    {
+                        Debug.Log("[MainLobby] 스테이지 점수 데이터 로드 완료");
+                    });
+
+                    // 스타 가져오기
+                    UserGameData.LoadTotalStars();
 
                     if (!PhotonNetwork.IsConnected)
                     {
-                        Debug.Log("Photon 연결 시작");
                         PhotonNetwork.ConnectUsingSettings();
                     }
                     else
                     {
-                        Debug.Log("이미 Photon 연결됨 → 로비 진입");
+                        Debug.Log("[FirebaseManager] 이미 Photon 연결됨 → 로비 입장");
                         PhotonNetwork.JoinLobby();
                     }
 
-                    // Photon AuthValues 설정
+                    // AuthValues 설정
                     PhotonNetwork.AuthValues = new Photon.Realtime.AuthenticationValues(Authentication.UserId);
-                    
+
                     loadingObject.gameObject.SetActive(true);
                     loginCanvas.gameObject.SetActive(false);
                     break;
+
                 case Authentication.State.SignInAlready:
+                    Debug.LogWarning("[FirebaseManager] 로그인 거부 - 이미 로그인된 계정");
                     WarningLogSetActiveTrue("이미 로그인 된 계정입니다.");
                     break;
+
                 case Authentication.State.SignInInvalidEmail:
+                    Debug.LogWarning("[FirebaseManager] 로그인 거부 - 이메일 형식 오류");
                     WarningLogSetActiveTrue("ID의 이메일 형식이 올바르지 않습니다.");
                     break;
+
                 default:
+                    Debug.LogError("[FirebaseManager] 로그인 실패 - ID/PW 불일치 또는 기타 오류");
                     WarningLogSetActiveTrue("ID 혹은 PW가 일치 하지 않습니다.");
                     break;
             }
         });
     }
+
     #endregion
 
     #region 팝업창 관련 함수

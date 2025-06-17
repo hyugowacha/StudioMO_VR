@@ -154,6 +154,12 @@ public class StageManager : Manager
                 }
                 phasePanel?.Stop();
                 UnityAction next = null;
+
+                // 최고기록 값
+                TryUpdateHighScoreAndStar((int)totalScore, null);
+
+                Debug.Log("토탈 스코어"+totalScore);
+
                 //파이어베이스에서 받은 데이터 내용으로 next를 바인딩 할지 여부를 결정
                 stageResultPanel?.Open(totalScore, score.GetClearValue(), score.GetAddValue(), next, () => ChangeScene(false), () => ChangeScene(true));
             }
@@ -311,7 +317,7 @@ public class StageManager : Manager
         stop = true;
         SlowMotion.Pause();
         SetRayInteractor(true);
-        pausePanel.Open(Resume, () => { SlowMotion.Stop(); SceneManager.LoadScene(SceneName);}, () => statePanel?.Open(() => SceneManager.LoadScene("MainLobbyScene"), null), 
+        pausePanel.Open(Resume, () => { SlowMotion.Stop(); SceneManager.LoadScene(SceneName);}, () => statePanel?.Open(() => SceneManager.LoadScene("lobby"), null), 
             () => SetTurnMode(true), () => SetTurnMode(false), CheckTurnMode());
     }
 
@@ -342,6 +348,8 @@ public class StageManager : Manager
         switch(exit)
         {
             case true:
+                Authentication.isGamePlaying = true;
+                Debug.Log(Authentication.isGamePlaying);
                 statePanel?.Open(() => SceneManager.LoadScene("MainLobbyScene"), null);
                 break;
             case false:
@@ -349,4 +357,53 @@ public class StageManager : Manager
                 break;
         }
     }
+
+    // 최고 기록 값을 저장 시도하는 함수
+    private void TryUpdateHighScoreAndStar(int totalScore, UnityAction onSaveComplete)
+    {
+        // stageInfoDataSet이 null일 경우 Resources에서 수동 로드
+        if (UserGameData.stageInfoDataSet == null)
+        {
+            UserGameData.stageInfoDataSet = Resources.Load<StageInfoDataSet>("StageInfo/StageInfoDataSet");
+
+            if (UserGameData.stageInfoDataSet == null)
+            {
+                onSaveComplete?.Invoke();
+                return;
+            }
+        }
+
+        // stageInfoList 유효성 검사
+        if (UserGameData.stageInfoDataSet.stageInfoList == null || UserGameData.stageInfoDataSet.stageInfoList.Count == 0)
+        {
+            onSaveComplete?.Invoke();
+            return;
+        }
+
+        int stageIndex = StageData.currentIndex;
+
+        if (stageIndex < 0 || stageIndex >= UserGameData.stageInfoDataSet.stageInfoList.Count)
+        {
+            onSaveComplete?.Invoke();
+            return;
+        }
+
+        var info = UserGameData.stageInfoDataSet.stageInfoList[stageIndex];
+
+        if (totalScore > info.bestScore)
+        {
+            info.bestScore = totalScore;
+
+
+            UserGameData.SaveMapHighScores(UserGameData.stageInfoDataSet, () =>
+            {
+                onSaveComplete?.Invoke();
+            });
+        }
+        else
+        {
+            onSaveComplete?.Invoke();
+        }
+    }
+
 }

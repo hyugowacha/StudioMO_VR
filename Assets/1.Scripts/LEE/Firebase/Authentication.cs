@@ -50,6 +50,9 @@ public static class Authentication
     // 유저 아이디 정보
     private static string userId;
     public static string UserId => userId;
+
+    // 로그인 안하기 위한 변수
+    public static bool isGamePlaying = false;
     #endregion
 
     // UID 안전하게 가져오는 유틸 메서드
