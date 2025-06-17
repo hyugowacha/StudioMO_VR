@@ -149,7 +149,8 @@ public static class Translation
         PurchaseItem,             // 해당 아이템을 구매하시겠습니까?
         ApplyContent,             // 해당 내용을 적용하겠습까?
         InsufficientCurrency,     // 유료재화가 부족합니다.
-
+        Obtain,                  // Obtain (획득)
+        Common,                  // Common (일반)
 
 
         End

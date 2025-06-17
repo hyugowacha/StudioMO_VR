@@ -266,7 +266,12 @@
                 case Translation.Letter.InsufficientCurrency:
                     letters[i] = "有偿货币不足。";
                     break;
-
+                case Translation.Letter.Obtain:
+                    letters[i] = "获得";
+                    break;
+                case Translation.Letter.Common:
+                    letters[i] = "一般";
+                    break;
 
                 case Translation.Letter.Select:
                     letters[i] = "";

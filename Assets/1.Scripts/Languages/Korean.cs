@@ -153,10 +153,10 @@ public static class Korean
                     letters[i] = "게임을 종료 하시겠습니까?";
                     break;
                 case Translation.Letter.YES:
-                    letters[i] = "YES";
+                    letters[i] = "예";
                     break;
                 case Translation.Letter.NO:
-                    letters[i] = "NO";
+                    letters[i] = "아니오";
                     break;
                 case Translation.Letter.SignUp:
                     letters[i] = "회원가입";
@@ -266,7 +266,12 @@ public static class Korean
                 case Translation.Letter.InsufficientCurrency:
                     letters[i] = "유료재화가 부족합니다.";
                     break;
-
+                case Translation.Letter.Obtain:
+                    letters[i] = "획득";
+                    break;
+                case Translation.Letter.Common:
+                    letters[i] = "일반";
+                    break;
                 case Translation.Letter.Select:
                     letters[i] = "선택";
                     break;

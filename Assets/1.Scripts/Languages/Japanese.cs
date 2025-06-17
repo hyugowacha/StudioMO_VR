@@ -266,7 +266,12 @@
                 case Translation.Letter.InsufficientCurrency:
                     letters[i] = "有料通貨が不足しています。";
                     break;
-
+                case Translation.Letter.Obtain:
+                    letters[i] = "獲得";
+                    break;
+                case Translation.Letter.Common:
+                    letters[i] = "一般";
+                    break;
 
                 case Translation.Letter.Select:
                     letters[i] = "";

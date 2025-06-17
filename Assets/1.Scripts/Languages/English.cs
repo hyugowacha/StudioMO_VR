@@ -266,7 +266,12 @@ public static class English
                 case Translation.Letter.InsufficientCurrency:
                     letters[i] = "Not enough paid currency.";
                     break;
-
+                case Translation.Letter.Obtain:
+                    letters[i] = "Obtain";
+                    break;
+                case Translation.Letter.Common:
+                    letters[i] = "Common";
+                    break;
                 case Translation.Letter.Select:
                     letters[i] = "SELECT";
                     break;
