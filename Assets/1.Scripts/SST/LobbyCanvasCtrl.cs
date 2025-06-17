@@ -32,7 +32,7 @@ public class LobbyCanvasCtrl : MonoBehaviour
         lobbyCanvas.gameObject.SetActive(true);
         stageSelectPanel.SetActive(false);
         versusPanel.SetActive(false);
-        //shopPanel.SetActive(false);
+        shopPanel.SetActive(false);
         optionPanel.SetActive(false);
 
         // 버튼 클릭 이벤트 연결
@@ -50,7 +50,7 @@ public class LobbyCanvasCtrl : MonoBehaviour
         // 나머지는 즉시 비활성화
         stageSelectPanel.SetActive(false);
         versusPanel.SetActive(false);
-        //shopPanel.SetActive(false);
+        shopPanel.SetActive(false);
         optionPanel.SetActive(false);
     }
 

@@ -8,7 +8,6 @@ public class SkinData : ScriptableObject
     public string skinID;
     public string skinName;
     public string description;
-    public GameObject inGameSkin; // 인게임에서 사용할 프리팹
     public Sprite profile;        // 프로필 이미지 (UI에서 사용)
     public int price;
 }

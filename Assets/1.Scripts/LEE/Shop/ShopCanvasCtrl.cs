@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class ShopCanvasCtrl : MonoBehaviour
 {
     [Header("상점 캔버스, 로비 캔버스")]
-    [SerializeField] Canvas shopCanvas;
+    [SerializeField] GameObject mainShopPanel;
 
     [Header("기본 적용 스킨 아이템 데이터")]
     [SerializeField] SkinData basicSkinData;
@@ -60,7 +60,7 @@ public class ShopCanvasCtrl : MonoBehaviour
     public void Start()
     {
         // ▼ 시작 시, 상점 캔버스, 스킨 구매 패널 끔
-        shopCanvas.gameObject.SetActive(true);              // 상점 캔버스
+        mainShopPanel.gameObject.SetActive(false);              // 상점 캔버스
         purchaseSkinTabPanel.SetActive(false);              // 구매 패널
         achievementSkinTabPanel.SetActive(false);           // 업적 패널
         purchaseSkinPanel.SetActive(false);                 // 구입 물어보는 패널
@@ -332,7 +332,7 @@ public class ShopCanvasCtrl : MonoBehaviour
     // ▼ 상점 캔버스 나가기 버튼
     public void OnClickCloseShop()
     {
-        shopCanvas.gameObject.SetActive(false);
+        mainShopPanel.gameObject.SetActive(false);
     }
 
     // ▼ 기본 스킨으로 적용하는 버튼
