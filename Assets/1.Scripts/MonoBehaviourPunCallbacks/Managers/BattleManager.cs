@@ -5,6 +5,7 @@ using DG.Tweening;
 using Photon.Pun;
 using Photon.Realtime;
 using ExitGames.Client.Photon;
+using Unity.VisualScripting;
 
 [RequireComponent(typeof(PhotonView))]
 public class BattleManager : Manager, IPunObservable
@@ -481,6 +482,19 @@ public class BattleManager : Manager, IPunObservable
         });
     }
 
+    private void DelayPlay(double value)
+    {
+        if (audioSource != null)
+        {
+            if (audioSource.clip != null)
+            {
+                audioSource.timeSamples = (int)(value * audioSource.clip.frequency);
+            }
+            audioSource.Play();
+        }
+        bulletPatternExecutor?.InitiallizeBeatTiming();
+    }
+
     private void StopPlaying()
     {
         myCharacter?.SetSlowMotion(false); //시간이 끝나면 슬로우 모션 해제
@@ -517,19 +531,12 @@ public class BattleManager : Manager, IPunObservable
                 }
                 else if (value > limitTime - PhasePanel.EndDelay)
                 {
-                    DelayCall(0, 0, PhasePanel.EndDelay - (float)(limitTime - value));
+                    phasePanel?.Play(0, 0, PhasePanel.EndDelay - (float)(limitTime - value));
+                    DelayPlay(limitTime - value);
                 }
                 else
                 {
-                    if(audioSource != null)
-                    {
-                        if(audioSource.clip != null)
-                        {
-                            audioSource.timeSamples = (int)((limitTime - value) * audioSource.clip.frequency);
-                        }
-                        audioSource.Play();
-                    }
-                    bulletPatternExecutor?.InitiallizeBeatTiming();
+                    DelayPlay(limitTime - value);
                 }
                 connected = true;
             }
