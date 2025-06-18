@@ -75,12 +75,11 @@ public class StageManager : Manager
 #endif
             if (stageData != null)
             {
-                GameObject gameObject = stageData.GetMapObject();
-                if (gameObject != null)
+                GameObject mapObject = stageData.GetMapObject();
+                if (mapObject != null)
                 {
-                    Instantiate(gameObject, Vector3.zero, Quaternion.identity);
+                    Instantiate(mapObject, Vector3.zero, Quaternion.identity);
                 }
-
                 Material skyboxMaterial = stageData.GetSkybox();
                 if (skyboxMaterial != null)
                 {
@@ -143,10 +142,10 @@ public class StageManager : Manager
                 }
                 phasePanel?.Stop();
                 UnityAction next = null;
-
-                // 최고기록 값
-                TryUpdateHighScoreAndStar((int)totalScore, null);
                 //파이어베이스에서 받은 데이터 내용으로 next를 바인딩 할지 여부를 결정
+
+                TryUpdateHighScoreAndStar((int)totalScore, null);
+                // 최고기록 값
                 stageResultPanel?.Open(totalScore, score.GetClearValue(), score.GetAddValue(), next, () => ChangeScene(false), () => ChangeScene(true));
             }
         }
@@ -303,7 +302,7 @@ public class StageManager : Manager
         stop = true;
         SlowMotion.Pause();
         SetRayInteractor(true);
-        pausePanel.Open(Resume, () => { SlowMotion.Stop(); SceneManager.LoadScene(SceneName);}, () => statePanel?.Open(() => SceneManager.LoadScene("lobby"), null), 
+        pausePanel.Open(Resume, () => { SlowMotion.Stop(); SceneManager.LoadScene(SceneName);}, () => statePanel?.Open(() => SceneManager.LoadScene("MainLobbyScene"), null), 
             () => SetTurnMode(true), () => SetTurnMode(false), CheckTurnMode());
     }
 
