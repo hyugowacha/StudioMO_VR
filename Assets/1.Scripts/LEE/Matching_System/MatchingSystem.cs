@@ -77,6 +77,7 @@ public class MatchingSystem : MonoBehaviourPunCallbacks
 
     [Header("리비 스킨 부분")]
     [SerializeField] GameObject realSkin;
+    [SerializeField] GameObject SaveSkinObject;
     #endregion
 
     #region 일반 필드
@@ -508,6 +509,7 @@ public class MatchingSystem : MonoBehaviourPunCallbacks
         realSkin.SetActive(true);
         realSkin.GetComponent<Intro_Character_Ctrl>().ReturnBack();
         realSkin.GetComponent<Intro_Character_Ctrl>().SetBoolFromEquippedSkin();
+        SaveSkinObject.GetComponent<Intro_Character_Ctrl>().SetBoolFromEquippedSkin();
     }
 
     // 방 입장 실패 시

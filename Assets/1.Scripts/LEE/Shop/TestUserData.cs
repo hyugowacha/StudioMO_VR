@@ -30,6 +30,8 @@ public static class TestUserData
     {
         Coins = amount;
         StarAmount = amount2;
+
+        // 파이어서버에 다시 쏴주는거 넣기.
         Debug.Log($"[TEST] 코인 저장: {amount}");
         Debug.Log($"[TEST] 별 갯수 저장: {amount2}");
     }
@@ -37,6 +39,8 @@ public static class TestUserData
     public static void UnlockSkin(string skinName)
     {
         unlockedSkins.Add(skinName);
+        // 해금 된 스킨 파이어서버에 넣기 UnlcokedSinks
+
         Debug.Log($"[TEST] 스킨 해금 처리: {skinName}");
     }
 

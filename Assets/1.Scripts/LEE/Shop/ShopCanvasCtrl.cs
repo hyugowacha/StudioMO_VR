@@ -51,13 +51,18 @@ public class ShopCanvasCtrl : MonoBehaviour
     [Header("저장 패널")]
     [SerializeField] GameObject savePopUpPanel;
 
-    private int currentCoin = 9999999;
-    private int currentStars;
+    // 현재 보유중인 코인 및 스타
+    private int currentCoin = 999;
+    private int currentStars = 999;
+
     private SkinData selectedSkin;                          // 현재 선택된 스킨 데이터
     private ShopButton selectedShopButton;                  // 현재 선택된 스킨 버튼
     private bool isInitialized = false;
 
     private ShopTabType selectedShopType;
+
+    [Header("적용 스킨 시각적")]
+    [SerializeField] private GameObject saveSkinObject;
 
     public void Start()
     {
@@ -87,10 +92,11 @@ public class ShopCanvasCtrl : MonoBehaviour
         // ▼ 유저 데이터를 불러온 후 실행할 콜백
         UserGameData.Load(() =>
         {
-            // ▼ 현재 보유 코인을 유저 데이터에서 받아와 변수에 저장
+            // (1) 코인/별 UI 갱신
             currentCoin = UserGameData.Coins;
-            // ▼ 코인 텍스트 UI에 현재 코인 값을 표시
             coinValue.text = currentCoin.ToString();
+            currentStars = UserGameData.totalStars;
+            starValue.text = currentStars.ToString();
 
             // ▼ 구매 탭에 있는 버튼들을 설정
             for (int i = 0; i < purchaseSkinData.Length; i++)
@@ -215,27 +221,29 @@ public class ShopCanvasCtrl : MonoBehaviour
         UserGameData.SetEquippedSkin(skin.skinName); // 장착 정보 저장
     }
 
-    // ▼ 스킨 구매 패널에서 해당 스킨 구매 버튼 눌렀을 때, 구매 처리 담당
-    //public void OnClickBuySkin()
-    //{
-    //    if (currentCoin >= selectedSkin.price)
-    //    {
-    //        currentCoin -= selectedSkin.price;
-    //        coinValue.text = currentCoin.ToString();
+    /*
+     ▼ 스킨 구매 패널에서 해당 스킨 구매 버튼 눌렀을 때, 구매 처리 담당
+    public void OnClickBuySkin()
+    {
+        if (currentCoin >= selectedSkin.price)
+        {
+            currentCoin -= selectedSkin.price;
+            coinValue.text = currentCoin.ToString();
 
-    //        selectedShopButton.UnLock();
+            selectedShopButton.UnLock();
 
-    //        // 유저 게임 데이터 저장
-    //        UserGameData.SetCoins(currentCoin);
-    //        UserGameData.UnlockSkin(selectedSkin.skinName);
+            // 유저 게임 데이터 저장
+            UserGameData.SetCoins(currentCoin);
+            UserGameData.UnlockSkin(selectedSkin.skinName);
 
-    //        buySkinPanel.SetActive(false);
-    //    }
-    //    else
-    //    {
-    //        Debug.Log("코인이 부족합니다");
-    //    }
-    //}
+            buySkinPanel.SetActive(false);
+        }
+        else
+        {
+            Debug.Log("코인이 부족합니다");
+        }
+    } 
+    */
 
     // ▼ !! 테스트용 스킨 구매 패널에서 해당 스킨 구매 버튼 눌렀을 때, 구매 처리 담당
     public void TestOnClickBuySkin()
@@ -300,6 +308,7 @@ public class ShopCanvasCtrl : MonoBehaviour
     {
         previewImage.sprite = selectedSkin.profile;
         savePopUpPanel.SetActive(false);
+        saveSkinObject.SetActive(false);
     }
 
     // ▼ 스킨 구입할지 말지 고르는 패널
@@ -366,12 +375,14 @@ public class ShopCanvasCtrl : MonoBehaviour
     public void OnClickSavePanel()
     {
         savePopUpPanel.SetActive(true);
+        saveSkinObject.SetActive(true);
     }
 
     // ▼ 저장하기 패널 나가기 버튼 누를 시 실행
     public void OnClickExitSavePanel()
     {
         savePopUpPanel.SetActive(false);
+        saveSkinObject.SetActive(false);
     }
 }
 

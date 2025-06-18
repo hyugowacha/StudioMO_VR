@@ -21,6 +21,9 @@ public class Intro_Character_Ctrl : MonoBehaviour
 
     private Vector3 originalPosition;  // 원래 위치 저장용
 
+    // 상점용
+    [SerializeField] private bool canMoveCharacters = false;
+
     private void Start()
     {
         int index = GetSelectedIndexFromBool();
@@ -171,6 +174,12 @@ public class Intro_Character_Ctrl : MonoBehaviour
 
     public void SendAway()
     {
+        if (canMoveCharacters)
+        {
+            Debug.Log("SendAway 차단됨: 상점 모드에서는 위치 이동 금지");
+            return;
+        }
+
         for (int i = 0; i < characters.Length; i++)
         {
             if (characters[i] != null)
@@ -178,12 +187,17 @@ public class Intro_Character_Ctrl : MonoBehaviour
                 characters[i].transform.localPosition = new Vector3(999f, 999f, 999f);
             }
         }
-        Debug.Log("SendAway 호출됨: 모든 캐릭터 로컬 위치를 (999,999,999)로 이동");
     }
 
 
     public void ReturnBack()
     {
+        if (canMoveCharacters)
+        {
+            Debug.Log("ReturnBack 차단됨: 상점 모드에서는 위치 복귀 금지");
+            return;
+        }
+
         for (int i = 0; i < characters.Length; i++)
         {
             if (characters[i] != null)
@@ -191,7 +205,6 @@ public class Intro_Character_Ctrl : MonoBehaviour
                 characters[i].transform.localPosition = Vector3.zero;
             }
         }
-        Debug.Log("ReturnBack 호출됨: 모든 캐릭터 로컬 위치를 (0,0,0)으로 복귀");
     }
 
 }

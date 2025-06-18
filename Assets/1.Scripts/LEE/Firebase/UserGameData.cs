@@ -184,6 +184,9 @@ public static class UserGameData
             // 코인 값 파싱
             Coins = int.Parse(snapshot.Child("Coins").Value?.ToString() ?? "0");
 
+            // 별 개수
+            totalStars = int.TryParse(snapshot.Child("Stars").Value?.ToString(), out int stars) ? stars : 0;
+
             // 해금된 스킨 목록 초기화 및 로드
             UnlockedSkins.Clear();
             foreach (var skin in snapshot.Child("UnlockedSkins").Children)
@@ -191,14 +194,14 @@ public static class UserGameData
                 UnlockedSkins.Add(skin.Value.ToString());
             }
 
-            // 장착 중인 프로필 불러오기
-            EquippedProfile = snapshot.Child("EquippedProfile").Value?.ToString() ?? "";
-            Debug.Log($"[UserGameData] 로드 완료 - 코인: {Coins}, 장착: {EquippedProfile}");
+            // 장착 중인 스킨
+            EquippedSkin = snapshot.Child("EquippedSkin").Value?.ToString() ?? "SkinData_Libee";
+
+            // 장착 중인 프로필
+            EquippedProfile = snapshot.Child("EquippedProfile").Value?.ToString() ?? "SkinData_Libee";
 
             // 테스트 아이디인지 값 가져오기
             IsTester = bool.TryParse(snapshot.Child("IsTester").Value?.ToString(), out bool result) && result;
-
-            Debug.Log($"{IsTester}");
 
             // 콜백 실행
             onComplete?.Invoke();
