@@ -46,6 +46,27 @@ public class AllLanguage : MonoBehaviour
     public TextMeshProUGUI buyTab;                      // 구매 탭 텍스트
     public TextMeshProUGUI achievementTab;              // 업적 탭 텍스트
     public TextMeshProUGUI buyButton;                   // 구매 버튼 텍스트
+    public TextMeshProUGUI obtainButton;                // 획득 버튼 텍스트    
+    public TextMeshProUGUI save;                        // 저장 버튼 텍스트
+
+    public TextMeshProUGUI applyContent;                // 해당 내용 적용 확인 텍스트
+    public TextMeshProUGUI applyContentYes;             // 해당 내용 적용 확인 예 버튼
+    public TextMeshProUGUI applyContentNo;              // 해당 내용 적용 확인 아니오 버튼
+
+    public TextMeshProUGUI purchaseItem;                // 해당 아이템 구매 확인 텍스트 
+    public TextMeshProUGUI purchaseItemYes;             // 해당 아이템 구매 확인 예 버튼
+    public TextMeshProUGUI purchaseItemNo;              // 해당 아이템 구매 확인 아니오 버튼
+
+    public TextMeshProUGUI obtainItemYes;               // 해당 아이템 해금 확인 예 버튼
+    public TextMeshProUGUI obtainItemNo;                // 해당 아이템 해금 확인 아니오 버튼
+
+    public TextMeshProUGUI insufficientCurrency;        // 유료 재화 부족 텍스트
+
+    [Header("옵션")]
+    public TextMeshProUGUI optionWindow;                // 옵션창 텍스트
+    public TextMeshProUGUI leftHand;                    // 스냅(왼손) 버튼 텍스트
+    public TextMeshProUGUI rightHand;                   // 오른손 버튼 텍스트
+    public TextMeshProUGUI saveOption;                  // 옵션 저장하기 버튼
 
     #endregion
 
@@ -110,11 +131,35 @@ public class AllLanguage : MonoBehaviour
         matchFailed.Set(Translation.Get(Translation.Letter.MatchFailed), currentFont);
         noPlayersAvailable.Set(Translation.Get(Translation.Letter.NoPlayersAvailable), currentFont);
 
-        // ▼ 상점 텍스트 세팅 ( 상점 메인 )
+        // ▼ 상점 텍스트 세팅 ( MainShopPanel )
         buyTab.Set(Translation.Get(Translation.Letter.Buy), currentFont);
         achievementTab.Set(Translation.Get(Translation.Letter.Achievements), currentFont);
         buyButton.Set(Translation.Get(Translation.Letter.Buy), currentFont);
+        obtainButton.Set(Translation.Get(Translation.Letter.Obtain), currentFont);
+        save.Set(Translation.Get(Translation.Letter.Save), currentFont);
 
+        // ▼ 상점 텍스트 세팅 ( SavePopUpPanel )
+        applyContent.Set(Translation.Get(Translation.Letter.ApplyContent), currentFont);
+        applyContentYes.Set(Translation.Get(Translation.Letter.YES), currentFont);
+        applyContentNo.Set(Translation.Get(Translation.Letter.NO), currentFont);
+
+        // ▼ 상점 텍스트 세팅 ( ShoppingPurchasePanel )
+        purchaseItem.Set(Translation.Get(Translation.Letter.PurchaseItem), currentFont);
+        purchaseItemYes.Set(Translation.Get(Translation.Letter.YES), currentFont);
+        purchaseItemNo.Set(Translation.Get(Translation.Letter.NO), currentFont);
+
+        // ▼ 상점 텍스트 세팅 ( ShoppingAchievePanel )
+        obtainItemYes.Set(Translation.Get(Translation.Letter.YES), currentFont);
+        obtainItemNo.Set(Translation.Get(Translation.Letter.NO), currentFont);
+
+        // ▼ 상점 텍스트 세팅 ( ErrorPopUpPanel )
+        insufficientCurrency.Set(Translation.Get(Translation.Letter.InsufficientCurrency), currentFont);
+
+        // ▼ 옵션 텍스트 세팅
+        optionWindow.Set(Translation.Get(Translation.Letter.Option), currentFont);
+        leftHand.Set(Translation.Get(Translation.Letter.LeftHand), currentFont);
+        rightHand.Set(Translation.Get(Translation.Letter.RightHand), currentFont);
+        saveOption.Set(Translation.Get(Translation.Letter.Save), currentFont);
     }
     #endregion
 }

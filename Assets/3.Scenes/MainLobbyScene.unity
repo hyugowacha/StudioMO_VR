@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.004609619, g: 0.0029490995, b: 0.0056026164, a: 1}
+  m_IndirectSpecularColor: {r: 0.004599146, g: 0.002948768, b: 0.0055873934, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1408,6 +1408,11 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: OnClickBuySkin
       objectReference: {fileID: 0}
+    - target: {fileID: 1723540514443613198, guid: 39e8f707ba714b54f93213fcefc87c0e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2585679637133326420, guid: 39e8f707ba714b54f93213fcefc87c0e,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -1622,6 +1627,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_RaycastTarget
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6923297307544879610, guid: 39e8f707ba714b54f93213fcefc87c0e,
+        type: 3}
+      propertyPath: m_PresetInfoIsWorld
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7113556933874715920, guid: 39e8f707ba714b54f93213fcefc87c0e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7146149873281439695, guid: 39e8f707ba714b54f93213fcefc87c0e,
         type: 3}
@@ -1874,6 +1889,11 @@ PrefabInstance:
       propertyPath: achievementSkinButtons.Array.data[2]
       value: 
       objectReference: {fileID: 2095523736}
+    - target: {fileID: 8289418521662270228, guid: 39e8f707ba714b54f93213fcefc87c0e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8854763092440680725, guid: 39e8f707ba714b54f93213fcefc87c0e,
         type: 3}
       propertyPath: m_IsActive
@@ -2225,7 +2245,24 @@ MonoBehaviour:
   no: {fileID: 0}
   matchFailed: {fileID: 0}
   noPlayersAvailable: {fileID: 0}
-  buy: {fileID: 0}
+  buyTab: {fileID: 0}
+  achievementTab: {fileID: 0}
+  buyButton: {fileID: 0}
+  obtainButton: {fileID: 0}
+  save: {fileID: 0}
+  applyContent: {fileID: 0}
+  applyContentYes: {fileID: 0}
+  applyContentNo: {fileID: 0}
+  purchaseItem: {fileID: 0}
+  purchaseItemYes: {fileID: 0}
+  purchaseItemNo: {fileID: 0}
+  obtainItemYes: {fileID: 0}
+  obtainItemNo: {fileID: 0}
+  insufficientCurrency: {fileID: 0}
+  optionWindow: {fileID: 0}
+  leftHand: {fileID: 0}
+  rightHand: {fileID: 0}
+  saveOption: {fileID: 0}
 --- !u!4 &1282980241
 Transform:
   m_ObjectHideFlags: 0
