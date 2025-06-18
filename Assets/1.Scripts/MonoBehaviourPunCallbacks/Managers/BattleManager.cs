@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -6,6 +7,7 @@ using DG.Tweening;
 using Photon.Pun;
 using Photon.Realtime;
 using ExitGames.Client.Photon;
+using System;
 
 [RequireComponent(typeof(PhotonView))]
 public class BattleManager : Manager, IPunObservable
@@ -374,16 +376,16 @@ public class BattleManager : Manager, IPunObservable
     {
         if (dictionary != null)
         {
-            int index = 0;
-            foreach (Player player in dictionary.Values)
+            List<Player> list = dictionary.Values.OrderBy(keyValuePair => keyValuePair.ActorNumber).ToList();
+            for(int i = 0; i < list.Count; i++)
             {
-                if (player == PhotonNetwork.LocalPlayer)
+                if (list[i] == PhotonNetwork.LocalPlayer)
                 {
                     if (prefabCharacter != null && Resources.Load<GameObject>(prefabCharacter.name) != null)
                     {
-                        Quaternion rotation = Quaternion.LookRotation(Vector3.zero - CornerPoints[index % CornerCount]);
+                        Quaternion rotation = Quaternion.LookRotation(Vector3.zero - CornerPoints[i % CornerCount]);
                         SetRotation(rotation);
-                        GameObject gameObject = PhotonNetwork.Instantiate(prefabCharacter.name, CornerPoints[index % CornerCount], rotation);
+                        GameObject gameObject = PhotonNetwork.Instantiate(prefabCharacter.name, CornerPoints[i % CornerCount], rotation);
                         SetFixedPosition(gameObject.transform.position);
                         myCharacter = gameObject.GetComponent<Character>();
                         if (myCharacter != null)
@@ -391,10 +393,8 @@ public class BattleManager : Manager, IPunObservable
                             slowMotionPanel?.Set(myCharacter.GetPortraitMaterial());
                         }
                     }
-                    Debug.Log(index);
                     break;
                 }
-                index++;
             }
         }
         if (audioSource != null && audioSource.clip != null)
