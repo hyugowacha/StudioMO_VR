@@ -388,6 +388,7 @@ public class StageManager : Manager
             info.bestScore = totalScore;
             UserGameData.SaveMapHighScores(UserGameData.stageInfoDataSet);
         }
+        UserGameData.stageInfoDataSet.UpdateUnlockedStages();
     }
 
 }
