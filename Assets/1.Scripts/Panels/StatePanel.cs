@@ -30,6 +30,7 @@ public class StatePanel : Panel
         Next,
         Retry,
         Exit,
+        Disconnect,
         End
     }
 
@@ -82,6 +83,9 @@ public class StatePanel : Panel
             case State.Exit:
                 text.Set(Translation.Get(Translation.Letter.ReturnToMainMenu), tmpFontAsset);
                 break;
+            case State.Disconnect:
+                //서버와의 접속이 끊겼습니다.
+                break;
             case State.End:
                 text.Set(Translation.Get(Translation.Letter.RetryCanceled), tmpFontAsset);
                 break;
@@ -105,6 +109,7 @@ public class StatePanel : Panel
             case State.Exit:
                 getAnimator.SetTrigger(exitParameter);
                 break;
+            case State.Disconnect:
             case State.End:
                 getAnimator.SetTrigger(endParameter);
                 break;
@@ -152,9 +157,16 @@ public class StatePanel : Panel
     }
 
     //멀티 플레이에서만 존재하며 다시하기가 취소되었음을 알리는 메소드
-    public void Open()
+    public void Open(bool disconnect)
     {
         gameObject.SetActive(true);
-        Set(State.End);
+        if (disconnect == true)
+        {
+            Set(State.Disconnect);
+        }
+        else
+        {
+            Set(State.End);
+        }
     }
 }

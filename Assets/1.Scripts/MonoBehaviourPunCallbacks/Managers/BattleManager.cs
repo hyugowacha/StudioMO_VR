@@ -180,10 +180,6 @@ public class BattleManager : Manager, IPunObservable
             }
         }
         rankingPanel?.Sort(Character.list);
-        if(Input.GetKeyDown(KeyCode.Escape))
-        {
-            PhotonNetwork.LoadLevel(SceneName);
-        }
     }
 
     protected override void ChangeText()
@@ -321,12 +317,17 @@ public class BattleManager : Manager, IPunObservable
 
     public override void OnLeftRoom()
     {
-        SceneManager.LoadScene("MainLobbyScene");
+        if (rankingPanel != null)
+        {
+            //null은 다시하기가 취소되었습니다인데 선택 버튼이 없다 어떻게 할 것인가?
+            battleResultPanel?.Open(rankingPanel.GetValue(), null, () => { statePanel?.Open(() => SceneManager.LoadScene("MainLobbyScene"), null); });
+        }
     }
 
     public override void OnDisconnected(DisconnectCause cause)
     {
-
+        statePanel?.Open(true);
+        //표시를 띄우고 어떻게 나가게 해줄지 생각해보자
     }
 
     //입력 시스템과 관련된 바인딩을 연결 및 해제에 사용하는 메서드 
@@ -390,6 +391,7 @@ public class BattleManager : Manager, IPunObservable
                             slowMotionPanel?.Set(myCharacter.GetPortraitMaterial());
                         }
                     }
+                    Debug.Log(index);
                     break;
                 }
                 index++;
@@ -545,7 +547,7 @@ public class BattleManager : Manager, IPunObservable
         phasePanel?.Stop();
         if (rankingPanel != null)
         {
-            battleResultPanel?.Open(rankingPanel.GetValue(), null, null);
+            battleResultPanel?.Open(rankingPanel.GetValue(), null, () => { statePanel?.Open(() => SceneManager.LoadScene("MainLobbyScene"), null); });
         }
     }
 

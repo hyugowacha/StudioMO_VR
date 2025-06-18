@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
@@ -143,9 +144,26 @@ public class StageManager : Manager
                 phasePanel?.Stop();
                 UnityAction next = null;
                 //파이어베이스에서 받은 데이터 내용으로 next를 바인딩 할지 여부를 결정
-
-                TryUpdateHighScoreAndStar((int)totalScore, null);
-                // 최고기록 값
+                TryUpdateHighScoreAndStar((int)totalScore);
+                List<StageInfoData> list = UserGameData.stageInfoDataSet.stageInfoList;
+                for(int i = 0; i < list.Count; i++)
+                {
+                    if(StageData.current == list[i].linkedStageData)
+                    {
+                        if ((totalScore >= score.GetClearValue() || list[i].isUnlocked == true) && i < list.Count - 1)
+                        {
+                            next = () =>
+                            {
+                                statePanel?.Open(() =>
+                                {
+                                    StageData.SetCurrentStage(i + 1);
+                                    SceneManager.LoadScene(SceneName);
+                                }, true);
+                            };
+                        }
+                        break;
+                    }
+                }
                 stageResultPanel?.Open(totalScore, score.GetClearValue(), score.GetAddValue(), next, () => ChangeScene(false), () => ChangeScene(true));
             }
         }
@@ -334,7 +352,6 @@ public class StageManager : Manager
         {
             case true:
                 Authentication.isGamePlaying = true;
-                Debug.Log(Authentication.isGamePlaying);
                 statePanel?.Open(() => SceneManager.LoadScene("MainLobbyScene"), null);
                 break;
             case false:
@@ -344,50 +361,32 @@ public class StageManager : Manager
     }
 
     // 최고 기록 값을 저장 시도하는 함수
-    private void TryUpdateHighScoreAndStar(int totalScore, UnityAction onSaveComplete)
+    private void TryUpdateHighScoreAndStar(int totalScore)
     {
         // stageInfoDataSet이 null일 경우 Resources에서 수동 로드
         if (UserGameData.stageInfoDataSet == null)
         {
             UserGameData.stageInfoDataSet = Resources.Load<StageInfoDataSet>("StageInfo/StageInfoDataSet");
-
             if (UserGameData.stageInfoDataSet == null)
             {
-                onSaveComplete?.Invoke();
                 return;
             }
         }
-
         // stageInfoList 유효성 검사
         if (UserGameData.stageInfoDataSet.stageInfoList == null || UserGameData.stageInfoDataSet.stageInfoList.Count == 0)
         {
-            onSaveComplete?.Invoke();
             return;
         }
-
         int stageIndex = StageData.currentIndex;
-
         if (stageIndex < 0 || stageIndex >= UserGameData.stageInfoDataSet.stageInfoList.Count)
         {
-            onSaveComplete?.Invoke();
             return;
         }
-
         var info = UserGameData.stageInfoDataSet.stageInfoList[stageIndex];
-
         if (totalScore > info.bestScore)
         {
             info.bestScore = totalScore;
-
-
-            UserGameData.SaveMapHighScores(UserGameData.stageInfoDataSet, () =>
-            {
-                onSaveComplete?.Invoke();
-            });
-        }
-        else
-        {
-            onSaveComplete?.Invoke();
+            UserGameData.SaveMapHighScores(UserGameData.stageInfoDataSet);
         }
     }
 
