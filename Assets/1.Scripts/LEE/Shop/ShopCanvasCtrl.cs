@@ -79,16 +79,6 @@ public class ShopCanvasCtrl : MonoBehaviour
     // ▼ 상점 화면 활성화
     public void ShowShopCanvas()
     {
-        // 처음 한번만 로드
-        if (isInitialized)
-        {
-            Debug.Log("이미 로드 되었음");
-            return;
-        }
-
-        isInitialized = true;
-        Debug.Log($"처음 로드 되었음 : {isInitialized}");
-
         // ▼ 유저 데이터를 불러온 후 실행할 콜백
         UserGameData.Load(() =>
         {
@@ -138,9 +128,11 @@ public class ShopCanvasCtrl : MonoBehaviour
         });
     }
 
+    /*
     // ▼ !! 테스트용 상점 화면 활성화
     public void TestShowShopCanvas()
     {
+        Debug.Log("ShowShopCanvas1");
         // 처음 한번만 로드
         if (isInitialized)
         {
@@ -149,7 +141,6 @@ public class ShopCanvasCtrl : MonoBehaviour
         }
 
         isInitialized = true;
-        Debug.Log($"처음 로드 되었음 : {isInitialized}");
 
         // ▼ 유저 데이터를 불러온 후 실행할 콜백
         TestUserData.Load(() =>
@@ -203,9 +194,8 @@ public class ShopCanvasCtrl : MonoBehaviour
                 }
             }
         });
-
-        Debug.Log("[DEBUG] TestShowShopCanvas 종료. 선택된 스킨: " + (selectedSkin?.skinName ?? "없음"));
     }
+    */
 
     // ▼ 현재 적용중인 스킨 이미지 갱신
     public void ApplySkin(SkinData skin)
