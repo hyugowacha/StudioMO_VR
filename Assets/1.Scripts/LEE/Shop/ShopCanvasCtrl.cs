@@ -11,9 +11,6 @@ public class ShopCanvasCtrl : MonoBehaviour
     [SerializeField] GameObject lobbyCanvas;
     [SerializeField] LobbyCanvasCtrl lobbyCanvasCtrl;
 
-    [Header("기본 적용 스킨 아이템 데이터")]
-    [SerializeField] SkinData basicSkinData;
-
     [Header("각 탭에 해당하는 스킨 아이템 데이터")]
     [SerializeField] SkinData[] purchaseSkinData;
     [SerializeField] SkinData[] achievementSkinData;
@@ -200,6 +197,10 @@ public class ShopCanvasCtrl : MonoBehaviour
 
         savePopUpPanel.SetActive(false);
         saveSkinObject1.SetActive(false);
+
+        unLockB.interactable = true;
+        saveB.interactable = true;
+        buyB.interactable = true;
     }
 
     // ▼ 스킨 구입할지 말지 고르는 패널
