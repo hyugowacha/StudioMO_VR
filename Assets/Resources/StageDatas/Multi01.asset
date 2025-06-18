@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f69fa0640c6cf4c4382e026601022c03, type: 3}
+  m_Name: Multi01
+  m_EditorClassIdentifier: 
+  musicText:
+    english: Music
+    korean: "\uC74C\uC545"
+    chinese: "\u97F3\u4E50"
+    japanese: "\u304A\u3093\u304C\u304F"
+  storyText:
+    english: 
+    korean: 
+    chinese: 
+    japanese: 
+  audioClip: {fileID: 8300000, guid: 85585af6bde825744bfab3fed36c1b00, type: 3}
+  mapObject: {fileID: 1140133515938206463, guid: 014231147f889674893dcb5cbb93d92f,
+    type: 3}
+  patternBulletTextAsset: {fileID: 4900000, guid: 34dbc705fd4076d47a64d7def772e905,
+    type: 3}
+  nonPatternBulletTextAsset: {fileID: 4900000, guid: 4be681a640b7f9740817c0b2ff7cda0a,
+    type: 3}
+  skybox: {fileID: 0}
+  bestScore: 0
+  score:
+    clearValue: 150
+    addValue: 50
