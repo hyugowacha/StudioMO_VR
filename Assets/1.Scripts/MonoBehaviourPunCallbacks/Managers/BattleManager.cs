@@ -7,7 +7,6 @@ using DG.Tweening;
 using Photon.Pun;
 using Photon.Realtime;
 using ExitGames.Client.Photon;
-using System;
 
 [RequireComponent(typeof(PhotonView))]
 public class BattleManager : Manager, IPunObservable
@@ -51,6 +50,8 @@ public class BattleManager : Manager, IPunObservable
 
     [SerializeField]
     private BattleResultPanel battleResultPanel;                //대전 결과 패널
+    [SerializeField]
+    private RematchPanel rematchPanel;                          //대전 재시작 패널
     [SerializeField]
     private StatePanel statePanel;                              //진행 상태 표시 패널
 
@@ -189,6 +190,7 @@ public class BattleManager : Manager, IPunObservable
         phasePanel?.ChangeText();
         pausePanel?.ChangeText();
         battleResultPanel?.ChangeText();
+        rematchPanel?.ChangeText();
         statePanel?.ChangeText();
     }
 
