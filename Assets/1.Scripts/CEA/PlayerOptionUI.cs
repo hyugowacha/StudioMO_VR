@@ -29,6 +29,9 @@ public class PlayerOptionUI : MonoBehaviour
     [SerializeField] private Image sharkProfile;
     [SerializeField] private Button sharkSelect;
 
+    [Header("리비 스킨 부분")]
+    [SerializeField] GameObject realSkin;
+
     // 스킨 불값
     bool hasLibee;
     bool hasCat;
@@ -142,7 +145,7 @@ public class PlayerOptionUI : MonoBehaviour
                     hasBunny = true;
                     bunnyProfile.sprite = skin.profile;
                     break;
-                case "SkinData_Shark":
+                case "SkinData_Fish":
                     hasShark = true;
                     sharkProfile.sprite = skin.profile;
                     break;
@@ -156,7 +159,7 @@ public class PlayerOptionUI : MonoBehaviour
     public void SelectLibee() => SelectSkin("SkinData_Libee");
     public void SelectCat() => SelectSkin("SkinData_Cat");
     public void SelectBunny() => SelectSkin("SkinData_Bunny");
-    public void SelectShark() => SelectSkin("SkinData_Fish");
+    public void SelectFish() => SelectSkin("SkinData_Fish");
     #endregion
 
     /// <summary>
@@ -263,5 +266,6 @@ public class PlayerOptionUI : MonoBehaviour
     {
         optionUI.SetActive(false);
         lobbyUI.SetActive(true);
+        realSkin.GetComponent<Intro_Character_Ctrl>().ReturnBack();
     }
 }

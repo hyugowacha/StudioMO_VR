@@ -77,6 +77,7 @@ public class MatchingSystem : MonoBehaviourPunCallbacks
 
     [Header("리비 스킨 부분")]
     [SerializeField] GameObject realSkin;
+    [SerializeField] GameObject SaveSkinObject;
     #endregion
 
     #region 일반 필드
@@ -143,6 +144,7 @@ public class MatchingSystem : MonoBehaviourPunCallbacks
     {
         PVPModeUI.SetActive(false);
         LobbyUI.SetActive(true);
+        realSkin.GetComponent<Intro_Character_Ctrl>().ReturnBack();
     }
     #endregion
 
@@ -505,7 +507,9 @@ public class MatchingSystem : MonoBehaviourPunCallbacks
 
         loadingObject.gameObject.SetActive(false);
         realSkin.SetActive(true);
-        realSkin.GetComponent<Intro_Character_Ctrl>().SetBoolFromEquippedSkin();
+        realSkin.GetComponent<Intro_Character_Ctrl>().ReturnBack();
+        realSkin.GetComponent<Intro_Character_Ctrl>().SetBoolFromEquippedSkin(UserGameData.EquippedSkin);
+        SaveSkinObject.GetComponent<Intro_Character_Ctrl>().SetBoolFromEquippedSkin(UserGameData.EquippedSkin);
     }
 
     // 방 입장 실패 시
