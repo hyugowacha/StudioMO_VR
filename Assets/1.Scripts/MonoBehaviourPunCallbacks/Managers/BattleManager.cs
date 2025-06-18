@@ -180,6 +180,10 @@ public class BattleManager : Manager, IPunObservable
             }
         }
         rankingPanel?.Sort(Character.list);
+        if(Input.GetKeyDown(KeyCode.Escape))
+        {
+            PhotonNetwork.LoadLevel(SceneName);
+        }
     }
 
     protected override void ChangeText()
@@ -310,6 +314,7 @@ public class BattleManager : Manager, IPunObservable
         if(room != null && room.PlayerCount == 1 && remainingTime > 0)
         {
             remainingTime = 0;
+            bulletPatternExecutor?.StopPlaying();
             StopPlaying();
         }
     }
@@ -323,7 +328,6 @@ public class BattleManager : Manager, IPunObservable
     {
 
     }
-
 
     //입력 시스템과 관련된 바인딩을 연결 및 해제에 사용하는 메서드 
     private void SetBinding(bool value)
@@ -525,8 +529,11 @@ public class BattleManager : Manager, IPunObservable
             if (audioSource.clip != null)
             {
                 audioSource.timeSamples = (int)(value * audioSource.clip.frequency);
+                if(audioSource.timeSamples < audioSource.clip.samples)
+                {
+                    audioSource.Play();
+                }
             }
-            audioSource.Play();
         }
         bulletPatternExecutor?.InitiallizeBeatTiming();
     }
@@ -540,6 +547,12 @@ public class BattleManager : Manager, IPunObservable
         {
             battleResultPanel?.Open(rankingPanel.GetValue(), null, null);
         }
+    }
+
+    [PunRPC]
+    private void Replay(int actor)
+    {
+
     }
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)

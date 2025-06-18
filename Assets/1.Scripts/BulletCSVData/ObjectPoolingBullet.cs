@@ -11,6 +11,10 @@ public interface IBullet
 
     protected static List<IBullet> bullets = new List<IBullet>();
 
+    public GameObject gameObject {
+        get;
+    }
+
     public static IReadOnlyList<IBullet> list {
         get
         {
