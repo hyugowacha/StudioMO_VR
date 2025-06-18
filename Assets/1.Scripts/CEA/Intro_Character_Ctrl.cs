@@ -134,9 +134,9 @@ public class Intro_Character_Ctrl : MonoBehaviour
         } 
     }
 
-    public void SetBoolFromEquippedSkin()
+    public void SetBoolFromEquippedSkin(string equippedSkinID)
     {
-        string equipped = UserGameData.EquippedSkin;
+        string equipped = equippedSkinID;
 
         Debug.Log(equipped);
 

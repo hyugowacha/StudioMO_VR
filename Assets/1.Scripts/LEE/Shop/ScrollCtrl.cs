@@ -25,6 +25,7 @@ public class ScrollCtrl : MonoBehaviour
     // ▼ DOTween 중복 실행 방지 ( 버튼을 꾹 누르고 있을 때 )
     private Tween scrollTween;
 
+    /*
     private void Update()
     {
         if (holdingLeftClick)
@@ -103,5 +104,5 @@ public class ScrollCtrl : MonoBehaviour
     public void CancelHoldRightScrollBtn()
     {
         holdingRightClick = false;
-    }
+    }*/
 }

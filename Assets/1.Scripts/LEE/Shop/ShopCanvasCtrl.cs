@@ -57,12 +57,19 @@ public class ShopCanvasCtrl : MonoBehaviour
 
     private SkinData selectedSkin;                          // 현재 선택된 스킨 데이터
     private ShopButton selectedShopButton;                  // 현재 선택된 스킨 버튼
-    private bool isInitialized = false;
 
     private ShopTabType selectedShopType;
 
     [Header("적용 스킨 시각적")]
-    [SerializeField] private GameObject saveSkinObject;
+    [SerializeField] private GameObject saveSkinObject0;
+    [SerializeField] private GameObject saveSkinObject1;
+
+    [Header("상점에서 해당 내용을 적용 버튼")]
+    [SerializeField] private Button saveYesButton;
+    [SerializeField] private Button unLockB;
+    [SerializeField] private Button saveB;
+    [SerializeField] private Button buyB;
+
 
     public void Start()
     {
@@ -82,7 +89,7 @@ public class ShopCanvasCtrl : MonoBehaviour
         // ▼ 유저 데이터를 불러온 후 실행할 콜백
         UserGameData.Load(() =>
         {
-            // (1) 코인/별 UI 갱신
+            // 코인/별 UI 갱신
             currentCoin = UserGameData.Coins;
             coinValue.text = currentCoin.ToString();
             currentStars = UserGameData.totalStars;
@@ -95,16 +102,10 @@ public class ShopCanvasCtrl : MonoBehaviour
                 SkinData skinData = purchaseSkinData[i];
 
                 // ▼ 해당 스킨이 유저에게 해금이 되었는지 확인
-                bool isUnlocked = UserGameData.HasSkin(skinData.skinName);
+                bool isUnlocked = UserGameData.HasSkin(skinData.skinID);
 
                 // ▼ 구매 버튼(i번째)에 해당하는 스킨 데이터를 세팅 (이미지, 가격, 잠금상태)
                 purchaseSkinButtons[i].SetSkin(skinData, this, isUnlocked, ShopTabType.Purchase);
-
-                // ▼ 만약에 해당 스킨이 현재 장착된 상태라면 미리보기 이미지도 갱신
-                if (UserGameData.EquippedSkin == skinData.skinName)
-                {
-                    ApplySkin(skinData);
-                }
             }
 
             // ▼ 업적 탭에 있는 버튼들도 설정
@@ -114,105 +115,15 @@ public class ShopCanvasCtrl : MonoBehaviour
                 SkinData skinData = achievementSkinData[i];
 
                 // ▼ 해당 업적 스킨이 유저에게 해금이 되었는지 확인
-                bool isUnlocked = UserGameData.HasSkin(skinData.skinName);
+                bool isUnlocked = UserGameData.HasSkin(skinData.skinID);
 
                 // ▼ 구매 버튼(i번째)에 해당하는 업적 스킨 데이터를 세팅 (이미지, 가격, 잠금상태)
                 achievementSkinButtons[i].SetSkin(skinData, this, isUnlocked, ShopTabType.Achievement);
-
-                // ▼ 만약에 해당 업적 스킨이 현재 장착된 상태라면 미리보기 이미지도 갱신
-                if (UserGameData.EquippedSkin == skinData.skinName)
-                {
-                    ApplySkin(skinData);
-                }
             }
         });
     }
 
-    /*
-    // ▼ !! 테스트용 상점 화면 활성화
-    public void TestShowShopCanvas()
-    {
-        Debug.Log("ShowShopCanvas1");
-        // 처음 한번만 로드
-        if (isInitialized)
-        {
-            Debug.Log("이미 로드 되었음");
-            return;
-        }
-
-        isInitialized = true;
-
-        // ▼ 유저 데이터를 불러온 후 실행할 콜백
-        TestUserData.Load(() =>
-        {
-            // ▼ 현재 보유 코인을 유저 데이터에서 받아와 변수에 저장
-            currentCoin = TestUserData.Coins;
-            // ▼ 코인 텍스트 UI에 현재 코인 값을 표시
-            coinValue.text = currentCoin.ToString();
-
-            currentStars = TestUserData.StarAmount;
-            starValue.text = currentStars.ToString();
-
-            // ▼ 구매 탭에 있는 버튼들을 설정
-            for (int i = 0; i < purchaseSkinData.Length; i++)
-            {
-                // ▼ 현재 순서에 해당하는 스킨 데이터 가져오기
-                SkinData skinData = purchaseSkinData[i];
-
-                // ▼ 해당 스킨이 유저에게 해금이 되었는지 확인
-                bool isUnlocked = TestUserData.HasSkin(skinData.skinName);
-
-                // ▼ 테스트용 강제 잠금 상태 설정
-                //bool isUnlocked = false;
-
-                // ▼ 구매 버튼(i번째)에 해당하는 스킨 데이터를 세팅 (이미지, 가격, 잠금상태)
-                purchaseSkinButtons[i].SetSkin(skinData, this, isUnlocked, ShopTabType.Purchase);
-
-                // ▼ 만약에 해당 스킨이 현재 장착된 상태라면 미리보기 이미지도 갱신
-                if (TestUserData.EquippedSkin == skinData.skinName)
-                {
-                    TestApplySkin(skinData);
-                }
-            }
-
-            // ▼ 업적 탭에 있는 버튼들도 설정
-            for (int i = 0; i < achievementSkinData.Length; i++)
-            {
-                // ▼ 현재 순서에 해당하는 업적 스킨 데이터 가져오기
-                SkinData skinData = achievementSkinData[i];
-
-                // ▼ 해당 업적 스킨이 유저에게 해금이 되었는지 확인
-                bool isUnlocked = TestUserData.HasSkin(skinData.skinName);
-
-                // ▼ 구매 버튼(i번째)에 해당하는 업적 스킨 데이터를 세팅 (이미지, 가격, 잠금상태)
-                achievementSkinButtons[i].SetSkin(skinData, this, isUnlocked, ShopTabType.Achievement);
-
-                // ▼ 만약에 해당 업적 스킨이 현재 장착된 상태라면 미리보기 이미지도 갱신
-                if (TestUserData.EquippedSkin == skinData.skinName)
-                {
-                    TestApplySkin(skinData);
-                }
-            }
-        });
-    }
-    */
-
-    // ▼ 현재 적용중인 스킨 이미지 갱신
-    public void ApplySkin(SkinData skin)
-    {
-        previewImage.sprite = skin.profile;
-        UserGameData.SetEquippedSkin(skin.skinName); // 장착 정보 저장
-    }
-
-    // ▼ !! 테스트용 현재 적용중인 스킨 이미지 갱신
-    public void TestApplySkin(SkinData skin)
-    {
-        previewImage.sprite = skin.profile;
-        UserGameData.SetEquippedSkin(skin.skinName); // 장착 정보 저장
-    }
-
-    /*
-     ▼ 스킨 구매 패널에서 해당 스킨 구매 버튼 눌렀을 때, 구매 처리 담당
+    // ▼ !! 테스트용 스킨 구매 패널에서 해당 스킨 구매 버튼 눌렀을 때, 구매 처리 담당
     public void OnClickBuySkin()
     {
         if (currentCoin >= selectedSkin.price)
@@ -224,32 +135,10 @@ public class ShopCanvasCtrl : MonoBehaviour
 
             // 유저 게임 데이터 저장
             UserGameData.SetCoins(currentCoin);
-            UserGameData.UnlockSkin(selectedSkin.skinName);
-
-            buySkinPanel.SetActive(false);
-        }
-        else
-        {
-            Debug.Log("코인이 부족합니다");
-        }
-    } 
-    */
-
-    // ▼ !! 테스트용 스킨 구매 패널에서 해당 스킨 구매 버튼 눌렀을 때, 구매 처리 담당
-    public void TestOnClickBuySkin()
-    {
-        if (currentCoin >= selectedSkin.price)
-        {
-            currentCoin -= selectedSkin.price;
-            coinValue.text = currentCoin.ToString();
-
-            selectedShopButton.UnLock();
-
-            // 유저 게임 데이터 저장
-            TestUserData.SetCoins(currentCoin, currentStars);
-            TestUserData.UnlockSkin(selectedSkin.skinName);
+            UserGameData.UnlockSkin(selectedSkin.skinID);
 
             purchaseSkinPanel.SetActive(false);
+
             // ▼ 테스트용 획득용 함수 하나 만들어야 함.
             getSkinPanel.SetActive(false);
         }
@@ -260,6 +149,10 @@ public class ShopCanvasCtrl : MonoBehaviour
             autoPopUpPaenl.SetActive(true);
             Debug.Log("코인이 부족합니다");
         }
+
+        unLockB.interactable = true;
+        saveB.interactable = true;
+        buyB.interactable = true;
     }
 
     // ▼ 현재 선택된 스킨 데이터, 버튼 정보를 외부에서 입력받은 정보로 초기화
@@ -269,6 +162,9 @@ public class ShopCanvasCtrl : MonoBehaviour
         selectedShopButton = button;
         selectedShopType = tabType;
 
+        // 선택한 스킨으로 전환 됨
+        saveSkinObject0.GetComponent<Intro_Character_Ctrl>().SetBoolFromEquippedSkin(skin.skinID);
+        saveSkinObject1.GetComponent<Intro_Character_Ctrl>().SetBoolFromEquippedSkin(skin.skinID);
         Debug.Log($"[선택됨] selectedSkin: {skin.skinName}, Button: {button.name}");
     }
 
@@ -292,13 +188,18 @@ public class ShopCanvasCtrl : MonoBehaviour
         {
             ShowAchievementPanel(selectedSkin);
         }
+
+        unLockB.interactable = false;
+        saveB.interactable = false;
+        buyB.interactable = false;
     }
 
     public void SaveCurrentSkin()
     {
-        previewImage.sprite = selectedSkin.profile;
+        UserGameData.SetEquippedSkin(selectedSkin.skinID);
+
         savePopUpPanel.SetActive(false);
-        saveSkinObject.SetActive(false);
+        saveSkinObject1.SetActive(false);
     }
 
     // ▼ 스킨 구입할지 말지 고르는 패널
@@ -322,6 +223,9 @@ public class ShopCanvasCtrl : MonoBehaviour
     public void OnClickCloseBuySkin()
     {
         purchaseSkinPanel.SetActive(false);
+        unLockB.interactable = true;
+        saveB.interactable = true; 
+        buyB.interactable = true;
     }
 
     // ShoppingAchievePanel NoB
@@ -329,21 +233,31 @@ public class ShopCanvasCtrl : MonoBehaviour
     public void OnClickCloseGetSkin()
     {
         getSkinPanel.SetActive(false);
+        unLockB.interactable = true;
+        saveB.interactable = true;
+        buyB.interactable = true;
     }
 
     // ▼ 상점 캔버스 나가기 버튼
     public void OnClickCloseShop()
     {
+        // ▼ 유저가 선택한 스킨이 해금되어 있지 않으면 저장 불가
+        if (selectedSkin == null || !UserGameData.HasSkin(selectedSkin.skinID) || UserGameData.EquippedSkin != selectedSkin.skinID )
+        {
+            saveSkinObject0.GetComponent<Intro_Character_Ctrl>().SetBoolFromEquippedSkin(UserGameData.EquippedSkin);            
+            saveSkinObject1.GetComponent<Intro_Character_Ctrl>().SetBoolFromEquippedSkin(UserGameData.EquippedSkin);
+        }
+
         lobbyCanvasCtrl.isClickShopB = false;
         mainShopPanel.SetActive(false);
         lobbyCanvas.SetActive(true);
     }
 
-    // ▼ 기본 스킨으로 적용하는 버튼
-    public void OnClickBasicSkin()
-    {
-        ApplySkin(basicSkinData);
-    }
+    //// ▼ 기본 스킨으로 적용하는 버튼
+    //public void OnClickBasicSkin()
+    //{
+    //    ApplySkin(basicSkinData);
+    //}
 
     // ▼ 구매 탭 버튼 누를 시 실행
     public void OnClickPurchaseTAB()
@@ -364,15 +278,33 @@ public class ShopCanvasCtrl : MonoBehaviour
     // ▼ 저장하기 버튼 누를 시 저장 패널 활성화
     public void OnClickSavePanel()
     {
+        // ▼ 유저가 선택한 스킨이 해금되어 있지 않으면 저장 불가
+        if (selectedSkin == null || !UserGameData.HasSkin(selectedSkin.skinID))
+        {
+            saveYesButton.interactable = false;
+        }
+        else
+        {
+            saveYesButton.interactable = true;
+        }
+
         savePopUpPanel.SetActive(true);
-        saveSkinObject.SetActive(true);
+        saveSkinObject1.SetActive(true);
+
+        unLockB.interactable = false;
+        saveB.interactable = false;
+        buyB.interactable = false;
     }
 
     // ▼ 저장하기 패널 나가기 버튼 누를 시 실행
     public void OnClickExitSavePanel()
     {
         savePopUpPanel.SetActive(false);
-        saveSkinObject.SetActive(false);
+        saveSkinObject1.SetActive(false);
+
+        unLockB.interactable = true;
+        saveB.interactable = true;
+        buyB.interactable = false;
     }
 }
 

@@ -15,7 +15,7 @@ public static class UserGameData
     private static string UID => Authentication.GetCurrentUID();
 
     // 현재 유저의 보유 코인
-    public static int Coins { get; private set; }
+    public static int Coins = 0;
 
     // 유저의 총 스타 수
     public static int totalStars = 0;

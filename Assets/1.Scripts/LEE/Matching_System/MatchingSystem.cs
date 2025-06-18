@@ -508,8 +508,8 @@ public class MatchingSystem : MonoBehaviourPunCallbacks
         loadingObject.gameObject.SetActive(false);
         realSkin.SetActive(true);
         realSkin.GetComponent<Intro_Character_Ctrl>().ReturnBack();
-        realSkin.GetComponent<Intro_Character_Ctrl>().SetBoolFromEquippedSkin();
-        SaveSkinObject.GetComponent<Intro_Character_Ctrl>().SetBoolFromEquippedSkin();
+        realSkin.GetComponent<Intro_Character_Ctrl>().SetBoolFromEquippedSkin(UserGameData.EquippedSkin);
+        SaveSkinObject.GetComponent<Intro_Character_Ctrl>().SetBoolFromEquippedSkin(UserGameData.EquippedSkin);
     }
 
     // 방 입장 실패 시
