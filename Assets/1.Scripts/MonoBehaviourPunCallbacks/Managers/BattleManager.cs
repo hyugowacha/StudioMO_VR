@@ -63,7 +63,8 @@ public class BattleManager : Manager, IPunObservable
         new Vector3(-CornerDistance, 0, CornerDistance), 
         new Vector3(CornerDistance, 0, CornerDistance), 
         new Vector3(CornerDistance, 0, -CornerDistance), 
-        new Vector3(-CornerDistance, 0, -CornerDistance) };
+        new Vector3(-CornerDistance, 0, -CornerDistance) 
+    };
 
     protected override void Start()
     {
@@ -91,6 +92,7 @@ public class BattleManager : Manager, IPunObservable
                     SetDefaultSetting(room.CustomProperties);
                 }
                 StartCoroutine(Test());
+#else
                 SceneManager.LoadScene("MainLobbyScene");
 #endif
             }
@@ -314,8 +316,14 @@ public class BattleManager : Manager, IPunObservable
 
     public override void OnLeftRoom()
     {
+        SceneManager.LoadScene("MainLobbyScene");
+    }
+
+    public override void OnDisconnected(DisconnectCause cause)
+    {
 
     }
+
 
     //입력 시스템과 관련된 바인딩을 연결 및 해제에 사용하는 메서드 
     private void SetBinding(bool value)

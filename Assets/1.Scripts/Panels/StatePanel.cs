@@ -55,8 +55,6 @@ public class StatePanel : Panel
     private TMP_FontAsset[] tmpFontAssets = new TMP_FontAsset[Translation.count];
     private TMP_FontAsset tmpFontAsset = null;
 
-    [Header("별 이미지"), SerializeField]
-    private Image image;
     [Header("질문 텍스트"), SerializeField]
     private TMP_Text text;
     [Header("선택지 버튼들"), SerializeField]
@@ -79,7 +77,7 @@ public class StatePanel : Panel
                 text.Set(Translation.Get(Translation.Letter.MoveToNextStage), tmpFontAsset);
                 break;
             case State.Retry:
-                //스테이지를 다시하시겠습니까?
+                text.Set(Translation.Get(Translation.Letter.PlayAgain), tmpFontAsset);
                 break;
             case State.Exit:
                 text.Set(Translation.Get(Translation.Letter.ReturnToMainMenu), tmpFontAsset);

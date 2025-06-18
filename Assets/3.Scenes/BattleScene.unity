@@ -696,6 +696,11 @@ PrefabInstance:
       propertyPath: rangePatternBullet
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 6141992579673468801, guid: cee8148478902274787c968a9c796dce,
+        type: 3}
+      propertyPath: nonPatternCSVFile
+      value: 
+      objectReference: {fileID: 4900000, guid: 4be681a640b7f9740817c0b2ff7cda0a, type: 3}
     - target: {fileID: 6478293145296870914, guid: cee8148478902274787c968a9c796dce,
         type: 3}
       propertyPath: m_Name
@@ -1262,8 +1267,8 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: -4022551901987879407, guid: baafc245a153a8245a8b03f98b42938d,
     type: 2}
-  m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 1
+  m_audioClip: {fileID: 8300000, guid: 85585af6bde825744bfab3fed36c1b00, type: 3}
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
