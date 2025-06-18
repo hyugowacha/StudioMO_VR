@@ -3,7 +3,6 @@ using UnityEngine.UI;
 using UnityEngine.Audio;
 using UnityEngine.Events;
 using TMPro;
-//using UnityEditor.ShortcutManagement;
 
 /// <summary>
 /// 싱글 플레이에서 사용되는 일시정지 패널
@@ -181,7 +180,7 @@ public class PausePanel : Panel
     {
         gameObject.SetActive(true);
         ShowOption(snap, smooth, style);
-        buttons[(int)Index.Resume].SetListener(() => { gameObject.SetActive(false); });
+        buttons[(int)Index.Resume].SetListener(() => { Close(); });
     }
 
     //싱글 플레이에서 호출되는 메소드
@@ -189,7 +188,7 @@ public class PausePanel : Panel
     {
         gameObject.SetActive(true);
         getAnimator.SetTrigger(mainParameter);
-        buttons[(int)Index.Resume].SetListener(() => { resume?.Invoke(); gameObject.SetActive(false); });
+        buttons[(int)Index.Resume].SetListener(() => { resume?.Invoke(); Close(); });
         if(buttons[(int)Index.Retry] != null)
         {
             buttons[(int)Index.Retry].onClick.RemoveAllListeners();
@@ -211,6 +210,11 @@ public class PausePanel : Panel
         }
         state = true;
         Set();
+    }
+
+    public void Close()
+    {
+        gameObject.SetActive(false);
     }
 
     //언어를 변경하기 위한 메소드

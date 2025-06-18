@@ -1,5 +1,4 @@
-using Photon.Pun.Demo.Cockpit;
-using System.Collections;
+using Photon.Pun;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,13 +7,7 @@ public class RangePatternSpawner : MonoBehaviour
     #region 필드
     private Dictionary<int, Vector3[]> spawnPositions = new();
 
-    public ObjectPoolingBullet bulletPooling; //오브젝트풀
-
-    public EffectPoolManager effectPool;
-
     public RangePatternBullet rangePatternBullet; //패턴형 탄막(거리) 오브젝트
-
-    public Transform bulletParent;
 
     public BoxCollider wallCollider;
 
@@ -66,11 +59,6 @@ public class RangePatternSpawner : MonoBehaviour
     {
         int index = Mathf.Clamp(preset - 1, 0, 8);
         Vector3 spawnPos = spawnPositions[side][index];
-
-        RangePatternBullet bullet = bulletPooling.GetBullet<RangePatternBullet>();
-        bullet.transform.position = spawnPos;
-        bullet.transform.SetParent(bulletParent);
-
         Vector3 baseDir = Vector3.forward;
         switch (side)
         {
@@ -94,9 +82,19 @@ public class RangePatternSpawner : MonoBehaviour
 
         Vector3 offsetVector = spreadDir * offset;
 
-        bullet.transform.position += offsetVector;
-        bullet.Initialize(fireDir.normalized);
-
-        effectPool.SpawnEffect("PatternBullet_Enable", bullet.transform.position, Quaternion.identity);
+        if(rangePatternBullet != null)
+        {
+            fireDir = fireDir.normalized;
+            Quaternion quaternion = Quaternion.LookRotation(new Vector3(fireDir.x, 0, fireDir.z));
+            if (PhotonNetwork.InRoom == false)
+            {
+                Instantiate(rangePatternBullet, spawnPos + offsetVector, quaternion);
+            }
+            else if (PhotonNetwork.IsMasterClient == true && Resources.Load<GameObject>(rangePatternBullet.name) != null)
+            {
+                PhotonNetwork.InstantiateRoomObject(rangePatternBullet.name, spawnPos + offsetVector, quaternion);
+            }
+            EffectPoolManager.Instance.SpawnEffect("PatternBullet_Enable", spawnPos + offsetVector, Quaternion.identity);
+        }
     }
 }

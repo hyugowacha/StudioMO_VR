@@ -1,114 +1,127 @@
-using System;
 using UnityEngine;
-using UnityEngine.Pool;
+using Photon.Pun;
+using Photon.Realtime;
 
 /// <summary>
 /// 일반 탄막(Bullet) 클래스 → 비인식 탄
 /// </summary>
-public class NormalBullet : MonoBehaviour, IBullet
+[RequireComponent(typeof(Animator))]
+[RequireComponent(typeof(SphereCollider))]
+[RequireComponent(typeof(PhotonView))]
+[RequireComponent(typeof(PhotonTransformView))]
+public class NormalBullet : MonoBehaviourPunCallbacks, IBullet
 {
-    #region 탄막(비인식) 필드
-    // 탄막을 관리하는 오브젝트 풀
-    IObjectPool<NormalBullet> _normalBulletPool;
+    #region 탄막(인식) 필드
+    //탄막 이동 애니메이터
+    private bool hasMoveAnimator = false;
 
-    [Header("탄막 스폰 애니메이터")]
-    [SerializeField] private Animator spawnAnimator;
+    private Animator moveAnimator = null;
 
-    [Header("탄막 이동 애니메이터")]
-    [SerializeField] private Animator moveAnimator;
-
-    // 이동 방향
-    Vector3 moveDirection;
-
-    [Header("탄막 이동 속도")]
-    public float speed = 3f;
-
-    #endregion
-
-    #region 오브젝트 풀, 생성 시
-    // 오브젝트 풀에서 꺼낼 때 호출됨
-    public void SetPool<T>(IObjectPool<T> pool) where T : Component
-    {
-        _normalBulletPool = pool as IObjectPool<NormalBullet>;
-    }
-
-    // 풀에서 꺼내질 때 호출됨 (초기화)
-    public void OnSpawn()
-    {
-        SlowMotion.action += ChangeAnimationSpeed;
-        ChangeAnimationSpeed(SlowMotion.speed);
-    }
-
-    // 발사 시 방향 설정
-    public void Initialize(Vector3 direction)
-    {
-        moveDirection = direction.normalized;
-
-        // X축 기울어짐 방지: 수평 방향만 사용
-        Vector3 flatDir = new Vector3(direction.x, 0f, direction.z);
-
-        if (flatDir != Vector3.zero)
+    private Animator getMoveAnimator {
+        get
         {
-            transform.rotation = Quaternion.LookRotation(flatDir);
+            if(hasMoveAnimator == false)
+            {
+                hasMoveAnimator = TryGetComponent(out moveAnimator);
+            }
+            return moveAnimator;
         }
     }
+
+    [Header("탄막 스폰 애니메이터"), SerializeField]
+    private Animator spawnAnimator;
+
+    [Header("탄막 이동 속도"), SerializeField]
+    private float speed = 3f;
+
+    [Header("탄막 폭발 효과 이펙트 이름"), SerializeField]
+    private string explosionEffectName = "VFX_MON005_Explode";
+
     #endregion
 
-    #region Update & 충돌 처리
-    void Update()
+    private void Start()
     {
-        BulletUpdate();
+        IBullet.bullets.Add(this);
+        SlowMotion.action += SetAnimationSpeed;
     }
 
-    void OnTriggerEnter(Collider other)
+    private void Update()
     {
-        if (other.CompareTag("Player"))
+        if (photonView.IsMine == true || PhotonNetwork.InRoom == false)
         {
-            var player = other.GetComponentInParent<Character>();
-            if (player)
+            // Y 방향 제거 → 수평 방향(XZ)만 유지
+            Vector3 flatDir = transform.forward;
+            // Y값 고정
+            Vector3 currentPos = transform.position;
+            currentPos += flatDir * speed * Time.deltaTime * SlowMotion.speed;
+            currentPos.y = transform.position.y; // Y 위치 고정
+            transform.position = currentPos;
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (PhotonNetwork.InRoom == false)
+        {
+            switch (other.tag)
             {
-                player.Hit();
-                _normalBulletPool?.Release(this);
+                case IBullet.PlayerTag:
+                    Character character = other.GetComponentInParent<Character>();
+                    if (character != null)
+                    {
+                        character.Hit();
+                        EffectPoolManager.Instance.SpawnEffect(explosionEffectName, transform.position, Quaternion.identity);
+                        Destroy(gameObject);
+                    }
+                    break;
+                case IBullet.StructuresTag:
+                    EffectPoolManager.Instance.SpawnEffect(explosionEffectName, transform.position, Quaternion.identity);
+                    Destroy(gameObject);
+                    break;
             }
         }
-        else if (other.CompareTag("Structures"))
+        else if (photonView.IsMine == true)
         {
-            _normalBulletPool?.Release(this);
+            switch(other.tag)
+            {
+                case IBullet.PlayerTag:
+                    Character character = other.GetComponentInParent<Character>();
+                    if (character != null)
+                    {
+                        character.Hit();
+                        EffectPoolManager.Instance.SpawnEffect(explosionEffectName, transform.position, Quaternion.identity);
+                        PhotonNetwork.Destroy(gameObject);
+                    }
+                    break;
+                case IBullet.StructuresTag:
+                    EffectPoolManager.Instance.SpawnEffect(explosionEffectName, transform.position, Quaternion.identity);
+                    PhotonNetwork.Destroy(gameObject);
+                    break;
+            }
         }
     }
 
-    // 탄막 비활성화 시
-    void OnDisable()
+    private void OnDestroy()
     {
-        // 탄막 인스펙터 이름 추가 후 이름을 삽입해야 함. 추후 자동화 생각해보긴 하기.
-        // 사라짐 이펙트 출력
-        SlowMotion.action -= ChangeAnimationSpeed;
-
-        if (!Application.isPlaying || !gameObject.activeInHierarchy) return;
-        EffectPoolManager.Instance.SpawnEffect("VFX_MON005_Explode", transform.position, Quaternion.identity);
-    }
-    #endregion
-
-    #region 실시간 행동 함수들
-    // Bullet 실시간 업데이트 필요한 함수
-    void BulletUpdate()
-    {
-        // Y 방향 제거 → 수평 방향(XZ)만 유지
-        Vector3 flatDir = new Vector3(moveDirection.x, 0f, moveDirection.z).normalized;
-
-        // Y값 고정
-        Vector3 currentPos = transform.position;
-        currentPos += flatDir * speed * Time.deltaTime * SlowMotion.speed;
-        currentPos.y = transform.position.y; // Y 위치 고정
-
-        transform.position = currentPos;
+        IBullet.bullets.Remove(this);
+        SlowMotion.action -= SetAnimationSpeed;
     }
 
-
-    public void ChangeAnimationSpeed(float motionSpeed)
+    [PunRPC]
+    private void SetAnimationSpeed(float value)
     {
-        spawnAnimator.speed = motionSpeed;
-        moveAnimator.speed = motionSpeed;
+        getMoveAnimator.speed = value;
+        if(spawnAnimator != null)
+        {
+            spawnAnimator.speed = value;
+        }
     }
-    #endregion
+
+    public override void OnPlayerEnteredRoom(Player player)
+    {
+        if(photonView.IsMine == true)
+        {
+            photonView.RPC(nameof(SetAnimationSpeed), player, SlowMotion.speed);
+        }
+    }
 }

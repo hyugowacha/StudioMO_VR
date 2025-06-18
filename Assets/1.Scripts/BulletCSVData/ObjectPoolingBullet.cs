@@ -6,14 +6,17 @@ using UnityEngine.Pool;
 // 총알 종류가 공통으로 가져야 하는 기능 정의 (인터페이스)
 public interface IBullet
 {
-    // 오브젝트 풀에서 꺼낼 때 자기 풀이 뭔지 받아놓는 함수
-    void SetPool<T>(IObjectPool<T> pool) where T : Component;
+    protected const string PlayerTag = "Player";
+    protected const string StructuresTag = "Structures";
 
-    // 풀에서 꺼내졌을 때 초기화용 함수 (속도나 상태 초기화 같은 거)
-    void OnSpawn();
+    protected static List<IBullet> bullets = new List<IBullet>();
 
-    // 탄막 객체에 대한 속도 조절
-    void ChangeAnimationSpeed(float motionSpeed);
+    public static IReadOnlyList<IBullet> list {
+        get
+        {
+            return bullets.AsReadOnly();
+        }
+    }
 }
 
 public class ObjectPoolingBullet : MonoBehaviour
@@ -32,40 +35,6 @@ public class ObjectPoolingBullet : MonoBehaviour
     private Dictionary<Type, List<IBullet>> _allCreatedBullets = new();
     #endregion
 
-   
-
-    #region 슬로우모션 처리 (테스트용)
-    private float _currentPitch = 1f;
-
-    private void Update()
-    {
-        // 테스트용 키 입력
-        if (Input.GetKeyDown(KeyCode.L))
-        {
-            ChangePitch(0.1f);
-        }
-        if (Input.GetKeyDown(KeyCode.K))
-        {
-            ChangePitch(1.0f);
-        }
-    }
-
-    /// <summary>
-    /// 전체 생성된 탄막에 슬로우모션 배속 적용
-    /// </summary>
-    private void ChangePitch(float val)
-    {
-        _currentPitch = val;
-
-        foreach (var list in _allCreatedBullets.Values)
-        {
-            foreach (var bullet in list)
-            {
-                bullet.ChangeAnimationSpeed(val);
-            }
-        }
-    }
-    #endregion
 
     #region 풀 생성 및 등록
     /// <summary>
@@ -82,7 +51,7 @@ public class ObjectPoolingBullet : MonoBehaviour
                 T bullet = Instantiate(prefab, parent);
 
                 // 현재 Pitch 값 즉시 반영
-                bullet.ChangeAnimationSpeed(SlowMotion.speed);
+                //bullet.ChangeAnimationSpeed(SlowMotion.speed);
 
                 // 관리 리스트에 추가 (없으면 Type에 추가)
                 if (!_allCreatedBullets.ContainsKey(typeof(T)))
@@ -95,10 +64,10 @@ public class ObjectPoolingBullet : MonoBehaviour
             },
             actionOnGet: (bullet) =>
             {
-                bullet.SetPool(localPool);           // 풀 정보 전달
-                bullet.gameObject.SetActive(true);   // 활성화
-                bullet.OnSpawn();                    // 초기화
-                bullet.ChangeAnimationSpeed(SlowMotion.speed);   // Pitch 적용
+                //bullet.SetPool(localPool);           // 풀 정보 전달
+                //bullet.gameObject.SetActive(true);   // 활성화
+                //bullet.OnSpawn();                    // 초기화
+                //bullet.ChangeAnimationSpeed(SlowMotion.speed);   // Pitch 적용
             },
             actionOnRelease: (bullet) =>
             {

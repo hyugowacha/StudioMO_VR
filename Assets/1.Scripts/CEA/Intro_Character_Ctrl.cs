@@ -14,10 +14,15 @@ public class Intro_Character_Ctrl : MonoBehaviour
     [SerializeField] private bool isPenguin;
     [SerializeField] private bool isDirt;
 
-    [SerializeField, Header("애니메이션 발동 트리거")] private bool onClick = false;
+    [SerializeField, Header("애니메이션 발동 트리거")] public bool onClick = false;
 
     private int prevSelectedIndex = -1;
     private bool[] prevStates = new bool[7];
+
+    private Vector3 originalPosition;  // 원래 위치 저장용
+
+    // 상점용
+    [SerializeField] private bool canMoveCharacters = false;
 
     private void Start()
     {
@@ -25,6 +30,9 @@ public class Intro_Character_Ctrl : MonoBehaviour
 
         ApplySelection(index);
         UpdateBoolState(index);
+
+        // 현재 활성화된 캐릭터 위치 저장
+        originalPosition = characters[index].transform.position;
     }
 
     private void Update()
@@ -125,4 +133,78 @@ public class Intro_Character_Ctrl : MonoBehaviour
             anim.ChangeAnimTrue();
         } 
     }
+
+    public void SetBoolFromEquippedSkin(string equippedSkinID)
+    {
+        string equipped = equippedSkinID;
+
+        Debug.Log(equipped);
+
+        // 모든 값을 false로 초기화
+        isRibee = isCat = isBunny = isShark = isCactus = isPenguin = isDirt = false;
+
+        switch (equipped)
+        {
+            case "SkinData_Libee":
+                isRibee = true;
+                break;
+            case "SkinData_Cat":
+                isCat = true;
+                break;
+            case "SkinData_Bunny":
+                isBunny = true;
+                break;
+            case "SkinData_Fish":
+                isShark = true;
+                break;
+            case "SkinData_Cactus":
+                isCactus = true;
+                break;
+            case "SkinData_Penguin":
+                isPenguin = true;
+                break;
+            case "SkinData_Mole":
+                isDirt = true;
+                break;
+            default:
+                isRibee = true; // 기본값
+                break;
+        }
+    }
+
+    public void SendAway()
+    {
+        if (canMoveCharacters)
+        {
+            Debug.Log("SendAway 차단됨: 상점 모드에서는 위치 이동 금지");
+            return;
+        }
+
+        for (int i = 0; i < characters.Length; i++)
+        {
+            if (characters[i] != null)
+            {
+                characters[i].transform.localPosition = new Vector3(999f, 999f, 999f);
+            }
+        }
+    }
+
+
+    public void ReturnBack()
+    {
+        if (canMoveCharacters)
+        {
+            Debug.Log("ReturnBack 차단됨: 상점 모드에서는 위치 복귀 금지");
+            return;
+        }
+
+        for (int i = 0; i < characters.Length; i++)
+        {
+            if (characters[i] != null)
+            {
+                characters[i].transform.localPosition = Vector3.zero;
+            }
+        }
+    }
+
 }

@@ -22,7 +22,7 @@ public class SpawnerInitializer : MonoBehaviour
 
             spawner.useAutoFire = false;
             // 수동 풀 생성 보장
-            spawner.bulletPooling.CreatePool(spawner.normalBulletPrefab, spawner.bulletParent);
+            //spawner.bulletPooling.CreatePool(spawner.normalBulletPrefab, spawner.bulletParent);
         }
 
         foreach (var spawner in guidedSpawners)
@@ -38,7 +38,7 @@ public class SpawnerInitializer : MonoBehaviour
             spawner.useAutoFire = false;
 
             // 수동 풀 생성 보장
-            spawner.bulletPooling.CreatePool(spawner.guidedBulletPrefab, spawner.bulletParent);
+            //spawner.bulletPooling.CreatePool(spawner.guidedBulletPrefab, spawner.bulletParent);
         }
 
         foreach (var spawner in angleSpawners) 
@@ -52,7 +52,7 @@ public class SpawnerInitializer : MonoBehaviour
 
             manager.angleSpawners[tag.side] = spawner;
             
-            spawner.bulletPooling.CreatePool(spawner.anglePatternBullet, spawner.bulletParent);
+           // spawner.bulletPooling.CreatePool(spawner.anglePatternBullet, spawner.bulletParent);
         }
 
         foreach (var spawner in rangeSpawners)
@@ -66,7 +66,7 @@ public class SpawnerInitializer : MonoBehaviour
 
             manager.rangeSpawners[tag.side] = spawner;
 
-            spawner.bulletPooling.CreatePool(spawner.rangePatternBullet, spawner.bulletParent);
+            //spawner.bulletPooling.CreatePool(spawner.rangePatternBullet, spawner.bulletParent);
         }
     }
 }

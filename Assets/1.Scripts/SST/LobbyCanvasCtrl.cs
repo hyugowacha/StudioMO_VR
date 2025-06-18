@@ -24,7 +24,13 @@ public class LobbyCanvasCtrl : MonoBehaviour
     [Header("대전모드 UI 전체")]
     [SerializeField] private MatchingSystem matchingSystem;
 
-    [SerializeField] private ShopCanvasCtrl shopCanvasCtrl;
+    [Header("상점모드 부분")]
+    [SerializeField] private GameObject shopCanvasCtrl;
+
+    [Header("리비 스킨 부분")]
+    [SerializeField] GameObject realSkin;
+
+    public bool isClickShopB;
 
     private void Start()
     {
@@ -32,7 +38,7 @@ public class LobbyCanvasCtrl : MonoBehaviour
         lobbyCanvas.gameObject.SetActive(true);
         stageSelectPanel.SetActive(false);
         versusPanel.SetActive(false);
-        //shopPanel.SetActive(false);
+        shopPanel.SetActive(false);
         optionPanel.SetActive(false);
 
         // 버튼 클릭 이벤트 연결
@@ -45,12 +51,15 @@ public class LobbyCanvasCtrl : MonoBehaviour
 
     private void DeactivateAllPanels(GameObject nextPanelToActivate)
     {
-        StartCoroutine(FadeOutAndDeactivate(lobbyPanel, 1f, 0.5f, nextPanelToActivate));
+        if (!isClickShopB)
+            StartCoroutine(FadeOutAndDeactivate(lobbyPanel, 1f, 0.8f, nextPanelToActivate));
+        else
+            StartCoroutine(FadeOutAndDeactivate(lobbyPanel, 0f, 0.5f, nextPanelToActivate));
 
         // 나머지는 즉시 비활성화
         stageSelectPanel.SetActive(false);
         versusPanel.SetActive(false);
-        //shopPanel.SetActive(false);
+        shopPanel.SetActive(false);
         optionPanel.SetActive(false);
     }
 
@@ -62,22 +71,28 @@ public class LobbyCanvasCtrl : MonoBehaviour
         }
         else
         {
+            SkinAnimation();
             DeactivateAllPanels(stageSelectPanel);
         }
     }
 
     private void OnClickVersusMode()
     {
+        SkinAnimation();
+
         DeactivateAllPanels(versusPanel);
     }
 
     private void OnClickShop()
     {
+        isClickShopB = true;
         DeactivateAllPanels(shopPanel);
     }
 
     private void OnClickOption()
     {
+        SkinAnimation();
+
         DeactivateAllPanels(optionPanel);
     }
 
@@ -123,5 +138,15 @@ public class LobbyCanvasCtrl : MonoBehaviour
 
         // 자기 자신 원복
         canvasGroup.alpha = 1f;
+
+        if (!isClickShopB)
+            realSkin.GetComponent<Intro_Character_Ctrl>().SendAway();
     }
+
+    private void SkinAnimation()
+    {
+        // 애니메이션 트리거
+        realSkin.GetComponent<Intro_Character_Ctrl>().onClick = true;
+    }
+
 }

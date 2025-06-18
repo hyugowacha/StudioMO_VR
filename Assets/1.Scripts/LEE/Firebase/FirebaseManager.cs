@@ -203,6 +203,9 @@ public class FirebaseManager : MonoBehaviourPunCallbacks
                         Debug.Log("[MainLobby] 스테이지 점수 데이터 로드 완료");
                     });
 
+                    // 스킨 정보 가져오기
+                    UserGameData.LoadEquippedSkin();
+
                     // 스타 가져오기
                     UserGameData.LoadTotalStars();
 

@@ -16,7 +16,6 @@ public enum StagePanelType
 
 public class SelectStagePanel : MonoBehaviour
 {
-
     [Header("ScrollRect")]
     [SerializeField] private ScrollRect scrollRect;
 
@@ -33,6 +32,9 @@ public class SelectStagePanel : MonoBehaviour
 
     [Header("스테이지 패널들")]
     [SerializeField] GameObject[] stagePanels;
+
+    [Header("스킨 캐릭터")]
+    [SerializeField] GameObject realSkin;
 
     private bool holdingLeftClick = false;
     private bool holdingRightClick = false;
@@ -117,6 +119,7 @@ public class SelectStagePanel : MonoBehaviour
     {
         lobbyPanel.gameObject.SetActive(true);
         this.gameObject.SetActive(false);
+        realSkin.GetComponent<Intro_Character_Ctrl>().ReturnBack();
     }
 
     public void OnClickStageButton(StagePanelType panelType)

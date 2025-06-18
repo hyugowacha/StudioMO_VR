@@ -1,19 +1,12 @@
+using Photon.Pun;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class GuidedBulletSpawner : MonoBehaviour
 {
     #region 탄막(인식) 생성의 필드
-    [Header("Bullet 풀 매니저")]
-    public ObjectPoolingBullet bulletPooling;
-
     [Header("발사할 Bullet 프리팹")]
     public GuidedBullet guidedBulletPrefab;
-
-    [Header("총알 생성시 부모로 사용할 오브젝트")]
-    public Transform bulletParent;
-
-    [Header("플레이어 위치 참조")]
-    public GameObject player;
 
     [Header("이 벽의 콜라이더")]
     public BoxCollider wallCollider;
@@ -46,17 +39,50 @@ public class GuidedBulletSpawner : MonoBehaviour
             float randZ = Random.Range(bounds.min.z, bounds.max.z);
             spawnPos = new Vector3(transform.position.x, transform.position.y, randZ);
         }
-
-        // 탄막 풀에서 탄막(인식) 가져오기
-        GuidedBullet bullet = bulletPooling.GetBullet<GuidedBullet>();
-
-        // 탄막의 위치를 스폰 지점으로 설정
-        bullet.transform.position = spawnPos;
-
-        // 플레이어를 향한 방향 벡터 계산 후 정규화
-        Vector3 fireDir = (player.transform.position - spawnPos).normalized;
-
-        // 방향 전달 및 탄막 초기화 (회전 포함)
-        bullet.Initialize(fireDir);
+        Vector3? point = null;
+        IReadOnlyList<Character> characters = Character.list;
+        if(characters != null)
+        {
+            foreach (Character character in characters)
+            {
+                if (character != null)
+                {
+                    Vector3 position = character.transform.position;
+                    if (point == null || Vector3.Distance(point.Value, spawnPos) > Vector3.Distance(position, spawnPos))
+                    {
+                        point = position;
+                    }
+                }
+            }
+        }
+        if(guidedBulletPrefab != null)
+        {
+            if(point != null)
+            {
+                Vector3 fireDir = (point.Value - spawnPos).normalized;
+                Quaternion quaternion = Quaternion.LookRotation(new Vector3(fireDir.x, 0f, fireDir.z));
+                if (PhotonNetwork.InRoom == false)
+                {
+                    Instantiate(guidedBulletPrefab, spawnPos, quaternion);
+                }
+                else if (PhotonNetwork.IsMasterClient == true && Resources.Load<GameObject>(guidedBulletPrefab.name) != null)
+                {
+                    PhotonNetwork.InstantiateRoomObject(guidedBulletPrefab.name, spawnPos, quaternion);
+                }
+            }
+            else
+            {
+                Vector3 fireDir = (Vector3.zero - transform.position).normalized;
+                Quaternion quaternion = Quaternion.LookRotation(new Vector3(fireDir.x, 0f, fireDir.z));
+                if (PhotonNetwork.InRoom == false)
+                {
+                    Instantiate(guidedBulletPrefab, spawnPos, quaternion);
+                }
+                else if (PhotonNetwork.IsMasterClient == true && Resources.Load<GameObject>(guidedBulletPrefab.name) != null)
+                {
+                    PhotonNetwork.InstantiateRoomObject(guidedBulletPrefab.name, spawnPos, quaternion);
+                }
+            }
+        }
     }
 }

@@ -1,10 +1,10 @@
-using UnityEngine;
-using System.Collections;
 using System.Linq;
 using System.Collections.Generic;
-using UnityEngine.Rendering;
+using UnityEngine;
+using Photon.Pun;
 
-public class BulletPatternExecutor : MonoBehaviour
+[RequireComponent(typeof(PhotonView))]
+public class BulletPatternExecutor : MonoBehaviour, IPunObservable
 {
     [Header("CSV에서 탄막 패턴 불러오는 로더")]
     public BulletPatternLoader loader;
@@ -12,35 +12,32 @@ public class BulletPatternExecutor : MonoBehaviour
     [Header("실제 탄막을 발사시켜줄 매니저")]
     public BulletSpawnerManager spawnerManager;
 
-    public StageManager stageManager;
-
     [Header("분당 BPM")] 
     public float bpm = 110f;
 
     float _beatInterval;         // 비트 하나당 시간 (초 단위)
     float _timer;                // 시간 누적용
     int _currentBeatIndex = 1;   // 현재 몇번째 beat인지 (1부터 시작)
+    bool initialized = false;
 
     private float patternElapsedTime; //slowmotion speed 영향을 받는 시간 누적값
 
     List<BulletSpawnData> timePatterns; //패턴형 탄막 정보 리스트
-    float startTime; 
 
-    bool initialized = false;
-    
-     #region Start, Update문
-    void Start()
-    {
-        InitiallizeBeatTiming();
-    }
+    #region Update문
 
     void Update()
     {
-        float delta = Time.deltaTime * SlowMotion.speed;
-        patternElapsedTime += delta;
-
-        ProcessBeatTiming(delta);
-        ProcessPatternTiming();
+        if (initialized == true)
+        {
+            if (PhotonNetwork.InRoom == false || PhotonNetwork.IsMasterClient == true)
+            {
+                float delta = Time.deltaTime * SlowMotion.speed;
+                patternElapsedTime += delta;
+                ProcessBeatTiming(delta);
+            }
+            ProcessPatternTiming();
+        }
     }
     #endregion
 
@@ -49,8 +46,7 @@ public class BulletPatternExecutor : MonoBehaviour
         patternElapsedTime = 0;
         _timer = 0;
 
-        timePatterns = new List<BulletSpawnData>(loader.patternBulletData);
-
+        timePatterns = loader != null ? loader.getPatternData : null;
         // BPM 기준으로 beat 간격 계산. 예: 60 / 120 -> 0.5초마다 한 beat
         _beatInterval = 60f / bpm;
         initialized = true;
@@ -61,22 +57,24 @@ public class BulletPatternExecutor : MonoBehaviour
     /// </summary>
     void ProcessBeatTiming(float delta)
     {
-        if (!initialized) { return; }
-
         _timer += delta;
-
-
         if (_timer >= _beatInterval)
         {
             _timer -= _beatInterval;
-
-            // 지금 beatIndex에 해당하는 데이터만 필터링
-            var matches = loader.patternData .Where(d => d.beatIndex == _currentBeatIndex).ToList();
-
-            // 해당 beat에서 실행할 탄막이 있으면 모두 실행
-            foreach (var data in matches)
+            if (loader != null)
             {
-                ExecuteBeat(data, _currentBeatIndex);
+                List<BulletSpawnData> bulletSpawnDatas = loader.getNonPatternData;
+                if (bulletSpawnDatas != null)
+                {
+                    // 지금 beatIndex에 해당하는 데이터만 필터링
+                    var matches = bulletSpawnDatas.Where(d => d.beatIndex == _currentBeatIndex).ToList();
+
+                    // 해당 beat에서 실행할 탄막이 있으면 모두 실행
+                    foreach (var data in matches)
+                    {
+                        ExecuteBeat(data, _currentBeatIndex);
+                    }
+                }
             }
 
             // 다음 beat로 진행
@@ -89,14 +87,18 @@ public class BulletPatternExecutor : MonoBehaviour
     ///</summary>
     void ProcessPatternTiming()
     {
-        if (!initialized) { return; }
-
-        var duePatterns = timePatterns.Where(p => p.beatTiming / 1000f <= patternElapsedTime).ToList();
-
-        foreach(var data in duePatterns)
+        if(timePatterns != null)
         {
-            ExecutePattern(data);
-            timePatterns.Remove(data);
+            var duePatterns = timePatterns.Where(p => p.beatTiming / 1000f <= patternElapsedTime).ToList();
+            bool production = PhotonNetwork.InRoom == false || PhotonNetwork.IsMasterClient == true;
+            foreach (var data in duePatterns)
+            {
+                if (production == true)
+                {
+                    ExecutePattern(data);
+                }
+                timePatterns.Remove(data);
+            }
         }
     }
 
@@ -209,5 +211,21 @@ public class BulletPatternExecutor : MonoBehaviour
         #endregion
 
         return presetResult.ToArray();
+    }
+
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        if(PhotonNetwork.IsMasterClient == true)
+        {
+            stream.SendNext(_timer);
+            stream.SendNext(_currentBeatIndex);
+            stream.SendNext(patternElapsedTime);
+        }
+        else
+        {
+            _timer = (float)stream.ReceiveNext();
+            _currentBeatIndex = (int)stream.ReceiveNext();
+            patternElapsedTime = (float)stream.ReceiveNext();
+        }
     }
 }

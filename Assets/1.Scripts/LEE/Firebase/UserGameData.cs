@@ -15,7 +15,7 @@ public static class UserGameData
     private static string UID => Authentication.GetCurrentUID();
 
     // 현재 유저의 보유 코인
-    public static int Coins { get; private set; }
+    public static int Coins = 0;
 
     // 유저의 총 스타 수
     public static int totalStars = 0;
@@ -184,6 +184,9 @@ public static class UserGameData
             // 코인 값 파싱
             Coins = int.Parse(snapshot.Child("Coins").Value?.ToString() ?? "0");
 
+            // 별 개수
+            totalStars = int.TryParse(snapshot.Child("Stars").Value?.ToString(), out int stars) ? stars : 0;
+
             // 해금된 스킨 목록 초기화 및 로드
             UnlockedSkins.Clear();
             foreach (var skin in snapshot.Child("UnlockedSkins").Children)
@@ -191,14 +194,14 @@ public static class UserGameData
                 UnlockedSkins.Add(skin.Value.ToString());
             }
 
-            // 장착 중인 프로필 불러오기
-            EquippedProfile = snapshot.Child("EquippedProfile").Value?.ToString() ?? "";
-            Debug.Log($"[UserGameData] 로드 완료 - 코인: {Coins}, 장착: {EquippedProfile}");
+            // 장착 중인 스킨
+            EquippedSkin = snapshot.Child("EquippedSkin").Value?.ToString() ?? "SkinData_Libee";
+
+            // 장착 중인 프로필
+            EquippedProfile = snapshot.Child("EquippedProfile").Value?.ToString() ?? "SkinData_Libee";
 
             // 테스트 아이디인지 값 가져오기
             IsTester = bool.TryParse(snapshot.Child("IsTester").Value?.ToString(), out bool result) && result;
-
-            Debug.Log($"{IsTester}");
 
             // 콜백 실행
             onComplete?.Invoke();
@@ -385,6 +388,40 @@ public static class UserGameData
                 {
                     totalStars = 0;
                     Debug.Log("별 수가 존재하지 않아 기본값 0으로 설정");
+                }
+
+                onComplete?.Invoke();
+            });
+    }
+
+    /// <summary>
+    /// Firebase에서 유저의 스킨 가져오는 함수
+    /// </summary>
+    /// <param name="onComplete"></param>
+    public static void LoadEquippedSkin(Action onComplete = null)
+    {
+        if (string.IsNullOrEmpty(UID))
+        {
+            Debug.LogWarning("UID가 없습니다. 장착 스킨 로드 실패");
+            return;
+        }
+
+        FirebaseDatabase.DefaultInstance
+            .GetReference("Users")
+            .Child(UID)
+            .Child("EquippedSkin")
+            .GetValueAsync()
+            .ContinueWithOnMainThread(task =>
+            {
+                if (task.IsCompletedSuccessfully && task.Result.Exists)
+                {
+                    EquippedSkin = task.Result.Value.ToString();
+                    Debug.Log($"장착 스킨 로드 성공: {EquippedSkin}");
+                }
+                else
+                {
+                    EquippedSkin = "DefaultSkin"; // 기본값 설정
+                    Debug.LogWarning("장착 스킨 정보 없음, 기본값 사용");
                 }
 
                 onComplete?.Invoke();
