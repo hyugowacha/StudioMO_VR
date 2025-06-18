@@ -1209,6 +1209,7 @@ GameObject:
   - component: {fileID: 1697022158957833793}
   - component: {fileID: 2998206692444415913}
   - component: {fileID: 6538331087419072085}
+  - component: {fileID: 7760799887273035611}
   m_Layer: 0
   m_Name: Character
   m_TagString: Player
@@ -1344,6 +1345,27 @@ MonoBehaviour:
   bulletStunDuration: 3
   bulletImmuneDuration: 2
   invincibleMode: 0
+--- !u!65 &7760799887273035611
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5540131540651068354}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 1, z: 0}
 --- !u!1 &5578653984774411108
 GameObject:
   m_ObjectHideFlags: 0
