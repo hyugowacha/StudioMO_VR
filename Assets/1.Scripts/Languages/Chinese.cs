@@ -274,7 +274,10 @@
                     break;
 
                 case Translation.Letter.Select:
-                    letters[i] = "";
+                    letters[i] = "确认";
+                    break;
+                case Translation.Letter.UnlockItem:
+                    letters[i] = "要解锁该道具吗？";
                     break;
             }
         }

@@ -272,9 +272,11 @@
                 case Translation.Letter.Common:
                     letters[i] = "一般";
                     break;
-
                 case Translation.Letter.Select:
-                    letters[i] = "";
+                    letters[i] = "選択";
+                    break;
+                case Translation.Letter.UnlockItem:
+                    letters[i] = "このアイテムをアンロックしますか？";
                     break;
             }
         }
