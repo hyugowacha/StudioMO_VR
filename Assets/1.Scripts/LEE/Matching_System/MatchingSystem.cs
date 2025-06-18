@@ -561,7 +561,9 @@ public class MatchingSystem : MonoBehaviourPunCallbacks
         if (!isRoomPrivate && PhotonNetwork.CurrentRoom.PlayerCount == PhotonNetwork.CurrentRoom.MaxPlayers)
         {
             isMatching = false;
+#if UNITY_EDITOR
             Debug.Log("인게임 씬으로 전환");
+#endif
             //PhotonNetwork.LoadLevel("InGameScene");
         }
     }
@@ -569,17 +571,26 @@ public class MatchingSystem : MonoBehaviourPunCallbacks
     // 플레이어가 방에 입장 시
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
+#if UNITY_EDITOR
         Debug.Log($"플레이어 입장: {newPlayer.NickName}");
-
+#endif
         // UI 업데이트
         UpdatePlayerList();
 
         // 공개방에서만 자동 시작
         if (!isRoomPrivate && PhotonNetwork.CurrentRoom.PlayerCount == PhotonNetwork.CurrentRoom.MaxPlayers)
         {
+            if(PhotonNetwork.IsMasterClient == true)
+            {
+                PhotonNetwork.CurrentRoom.IsOpen = false;   // 방 입장을 차단
+                PhotonNetwork.CurrentRoom.IsVisible = false; // 로비에서 방 숨김 (선택사항)
+            }
             isMatching = false;
+#if UNITY_EDITOR
             Debug.Log("공용방 게임 시작");
-            //PhotonNetwork.LoadLevel("InGameScene");
+#endif
+            PhotonNetwork.AutomaticallySyncScene = true;
+            PhotonNetwork.LoadLevel(BattleManager.SceneName);
         }
     }
 

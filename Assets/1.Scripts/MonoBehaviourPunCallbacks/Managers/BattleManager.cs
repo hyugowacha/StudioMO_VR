@@ -5,7 +5,8 @@ using DG.Tweening;
 using Photon.Pun;
 using Photon.Realtime;
 using ExitGames.Client.Photon;
-using Unity.VisualScripting;
+using System.Linq;
+using TMPro;
 
 [RequireComponent(typeof(PhotonView))]
 public class BattleManager : Manager, IPunObservable
@@ -55,6 +56,15 @@ public class BattleManager : Manager, IPunObservable
     private const string First = "first";
     private const string Second = "second";
     private const string Third = "third";
+
+    private const int CornerCount = 4;
+    private static readonly float CornerDistance = 18;
+    private static readonly Vector3[] CornerPoints = new Vector3[CornerCount] 
+    { 
+        new Vector3(-CornerDistance, 0, CornerDistance), 
+        new Vector3(CornerDistance, 0, CornerDistance), 
+        new Vector3(CornerDistance, 0, -CornerDistance), 
+        new Vector3(-CornerDistance, 0, -CornerDistance) };
 
     System.Collections.IEnumerator Test()
     {
@@ -126,7 +136,30 @@ public class BattleManager : Manager, IPunObservable
         if (instance == this)
         {
             SetMoveSpeed(0);
-            StartCoroutine(Test());
+            Room room = PhotonNetwork.CurrentRoom;
+            if(room == null)
+            {
+#if UNITY_EDITOR
+                System.Collections.IEnumerator Test()
+                {
+                    if (PhotonNetwork.IsConnectedAndReady == false)
+                    {
+                        PhotonNetwork.ConnectUsingSettings();
+                        yield return new WaitUntil(() => PhotonNetwork.NetworkClientState == ClientState.ConnectedToMasterserver);
+                        PhotonNetwork.JoinLobby();
+                        yield return new WaitUntil(() => PhotonNetwork.InLobby);
+                    }
+                    PhotonNetwork.JoinRandomOrCreateRoom();
+                    yield return new WaitUntil(() => PhotonNetwork.InRoom);
+                    CreatePlayer(PhotonNetwork.CurrentRoom.Players);
+                }
+                StartCoroutine(Test());
+#endif
+            }
+            else
+            {
+                CreatePlayer(room.Players);
+            }
         }
     }
 
@@ -386,6 +419,32 @@ public class BattleManager : Manager, IPunObservable
         else if (callbackContext.canceled == true)
         {
             moveInput = Vector2.zero;
+        }
+    }
+
+    private void CreatePlayer(Dictionary<int, Player> dictionary)
+    {
+        if(dictionary != null)
+        {
+            int index = 0;
+            foreach(Player player in dictionary.Values)
+            {
+                if (player == PhotonNetwork.LocalPlayer)
+                {
+                    if (prefabCharacter != null && Resources.Load<GameObject>(prefabCharacter.name) != null)
+                    {
+                        GameObject gameObject = PhotonNetwork.Instantiate(prefabCharacter.name, CornerPoints[index % CornerCount], Quaternion.Euler((Vector3.zero - CornerPoints[index % CornerCount]).normalized));
+                        SetFixedPosition(gameObject.transform.position);
+                        myCharacter = gameObject.GetComponent<Character>();
+                        if (myCharacter != null)
+                        {
+                            slowMotionPanel?.Set(myCharacter.GetPortraitMaterial());
+                        }
+                    }
+                    break;
+                }
+                index++;
+            }
         }
     }
 
