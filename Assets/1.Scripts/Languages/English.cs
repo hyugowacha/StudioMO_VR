@@ -275,6 +275,9 @@ public static class English
                 case Translation.Letter.Select:
                     letters[i] = "SELECT";
                     break;
+                case Translation.Letter.UnlockItem:
+                    letters[i] = "Would you like to unlock this item?";
+                    break;
             }
         }
     }
