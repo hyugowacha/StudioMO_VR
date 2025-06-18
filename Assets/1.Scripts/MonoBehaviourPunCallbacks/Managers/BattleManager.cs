@@ -6,7 +6,6 @@ using Photon.Pun;
 using Photon.Realtime;
 using ExitGames.Client.Photon;
 
-[RequireComponent(typeof(BulletPatternLoader))]
 [RequireComponent(typeof(PhotonView))]
 public class BattleManager : Manager, IPunObservable
 {
@@ -23,22 +22,10 @@ public class BattleManager : Manager, IPunObservable
     private Vector2 moveInput = Vector2.zero;                   //이동 입력 값
     [SerializeField]
     private Pickaxe pickaxe;                                    //곡괭이
-
-    private bool hasBulletPatternLoader = false;
-
-    private BulletPatternLoader bulletPatternLoader = null;     //탄막 생성기
-
-    private BulletPatternLoader getBulletPatternLoader {
-        get
-        {
-            if (hasBulletPatternLoader == false)
-            {
-                bulletPatternLoader = GetComponent<BulletPatternLoader>();
-                hasBulletPatternLoader = true;
-            }
-            return bulletPatternLoader;
-        }
-    }
+    [SerializeField]
+    private BulletPatternLoader bulletPatternLoader;            //탄막 생성기
+    [SerializeField]
+    private BulletPatternExecutor bulletPatternExecutor;        //탄막 실행기
 
     [Header("캔버스 내용들"), SerializeField]
     private AudioSource audioSource;                            //배경음악 오디오 소스
@@ -50,6 +37,7 @@ public class BattleManager : Manager, IPunObservable
     private TimerPanel timerPanel;                              //남은 시간 표시 패널
     private double remainingTime = 0.0f;                        //남은 시간
     private double limitTime = 0;                               //제한 시간
+    private bool connected = false;                             //연결 여부
 
     [SerializeField]
     private SlowMotionPanel slowMotionPanel;                    //슬로우 모션 표시 패널
@@ -105,9 +93,7 @@ public class BattleManager : Manager, IPunObservable
                 RenderSettings.skybox = skyboxMaterial;
                 DynamicGI.UpdateEnvironment(); // 라이트 프로브 및 반사 업데이트
             }
-            (TextAsset pattern, TextAsset nonPattern) = stageData.GetBulletTextAsset();
-            getBulletPatternLoader.SetnonPatternCSVData(nonPattern);
-            getBulletPatternLoader.SetPatternCSVData(pattern);
+            bulletPatternLoader?.SetCSVFile(stageData.GetBulletTextAsset());
             if (audioSource != null)
             {
                 AudioClip audioClip = stageData.GetAudioClip();
@@ -119,6 +105,7 @@ public class BattleManager : Manager, IPunObservable
             }
         }
         limitTime = 60; //테스트용
+        bulletPatternLoader?.RefineData();
         Room room = PhotonNetwork.CurrentRoom;
         if (PhotonNetwork.IsMasterClient == false)
         {
@@ -126,8 +113,9 @@ public class BattleManager : Manager, IPunObservable
         }
         else
         {
-            phasePanel?.Play(PhasePanel.ReadyDelay, PhasePanel.StartDelay, PhasePanel.EndDelay);
             remainingTime = limitTime + PhasePanel.ReadyDelay + PhasePanel.StartDelay;
+            connected = true;
+            DelayCall(PhasePanel.ReadyDelay, PhasePanel.StartDelay, PhasePanel.EndDelay);
         }
     }
 
@@ -484,6 +472,15 @@ public class BattleManager : Manager, IPunObservable
         }
     }
 
+    private void DelayCall(float ready, float start, float end)
+    {
+        phasePanel?.Play(ready, start, end);
+        DOVirtual.DelayedCall(ready + start, () => {
+            audioSource?.Play();
+            bulletPatternExecutor?.InitiallizeBeatTiming();
+        });
+    }
+
     private void StopPlaying()
     {
         myCharacter?.SetSlowMotion(false); //시간이 끝나면 슬로우 모션 해제
@@ -504,24 +501,37 @@ public class BattleManager : Manager, IPunObservable
         else
         {
             double value = (double)stream.ReceiveNext();
-            if (phasePanel != null && phasePanel.IsActive() == false)
+            if (connected == false)
             {
                 if (value > limitTime)
                 {
                     double startDelay = value - limitTime;
-                    if(startDelay > PhasePanel.StartDelay)
+                    if (startDelay > PhasePanel.StartDelay)
                     {
-                        phasePanel.Play(PhasePanel.ReadyDelay - (float)startDelay, PhasePanel.StartDelay, PhasePanel.EndDelay);
+                        DelayCall(PhasePanel.ReadyDelay - (float)startDelay, PhasePanel.StartDelay, PhasePanel.EndDelay);
                     }
                     else
                     {
-                        phasePanel.Play(0, PhasePanel.StartDelay - (float)startDelay, PhasePanel.EndDelay);
+                        DelayCall(0, PhasePanel.StartDelay - (float)startDelay, PhasePanel.EndDelay);
                     }
                 }
-                else if(value > limitTime - PhasePanel.EndDelay)
+                else if (value > limitTime - PhasePanel.EndDelay)
                 {
-                    phasePanel.Play(0, 0, PhasePanel.EndDelay - (float)(limitTime - value));
+                    DelayCall(0, 0, PhasePanel.EndDelay - (float)(limitTime - value));
                 }
+                else
+                {
+                    if(audioSource != null)
+                    {
+                        if(audioSource.clip != null)
+                        {
+                            audioSource.timeSamples = (int)((limitTime - value) * audioSource.clip.frequency);
+                        }
+                        audioSource.Play();
+                    }
+                    bulletPatternExecutor?.InitiallizeBeatTiming();
+                }
+                connected = true;
             }
             if(remainingTime != value && value == 0)
             {

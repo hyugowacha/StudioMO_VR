@@ -5,7 +5,6 @@ using UnityEngine.SceneManagement;
 using DG.Tweening;
 using Photon.Pun;
 
-[RequireComponent(typeof(BulletPatternLoader))]
 public class StageManager : Manager
 {
 #if UNITY_EDITOR
@@ -24,22 +23,10 @@ public class StageManager : Manager
     private Vector2 moveInput = Vector2.zero;                   //이동 입력 값
     [SerializeField]
     private Pickaxe pickaxe;                                    //곡괭이
-
-    private bool hasBulletPatternLoader = false;
-
-    private BulletPatternLoader bulletPatternLoader = null;     //탄막 생성기
-
-    private BulletPatternLoader getBulletPatternLoader {
-        get
-        {
-            if (hasBulletPatternLoader == false)
-            {
-                bulletPatternLoader = GetComponent<BulletPatternLoader>();
-                hasBulletPatternLoader = true;
-            }
-            return bulletPatternLoader;
-        }
-    }
+    [SerializeField]
+    private BulletPatternLoader bulletPatternLoader;            //탄막 정보 갱신기
+    [SerializeField]
+    private BulletPatternExecutor bulletPatternExecutor;        //탄막 실행기
 
     [Header("캔버스 내용들"), SerializeField]
     private AudioSource audioSource;                            //배경음악 오디오 소스
@@ -100,11 +87,8 @@ public class StageManager : Manager
                     RenderSettings.skybox = skyboxMaterial;
                     DynamicGI.UpdateEnvironment(); // 라이트 프로브 및 반사 업데이트
                 }
-
                 score = stageData.GetScore();
-                (TextAsset pattern, TextAsset nonPattern) = stageData.GetBulletTextAsset();
-                getBulletPatternLoader.SetnonPatternCSVData(nonPattern);
-                getBulletPatternLoader.SetPatternCSVData(pattern);
+                bulletPatternLoader?.SetCSVFile(stageData.GetBulletTextAsset());
                 if (audioSource != null)
                 {
                     AudioClip audioClip = stageData.GetAudioClip();
@@ -115,9 +99,14 @@ public class StageManager : Manager
                     }
                 }
             }
+            bulletPatternLoader?.RefineData();
             remainingTime = limitTime;
             phasePanel?.Play(PhasePanel.ReadyDelay, PhasePanel.StartDelay, PhasePanel.EndDelay);
-            DOVirtual.DelayedCall(PhasePanel.ReadyDelay + PhasePanel.StartDelay, () => { stop = false; audioSource?.Play(); });
+            DOVirtual.DelayedCall(PhasePanel.ReadyDelay + PhasePanel.StartDelay, () => { 
+                stop = false; 
+                audioSource?.Play();
+                bulletPatternExecutor?.InitiallizeBeatTiming();
+            });
         }
     }
 
@@ -157,9 +146,6 @@ public class StageManager : Manager
 
                 // 최고기록 값
                 TryUpdateHighScoreAndStar((int)totalScore, null);
-
-                Debug.Log("토탈 스코어"+totalScore);
-
                 //파이어베이스에서 받은 데이터 내용으로 next를 바인딩 할지 여부를 결정
                 stageResultPanel?.Open(totalScore, score.GetClearValue(), score.GetAddValue(), next, () => ChangeScene(false), () => ChangeScene(true));
             }

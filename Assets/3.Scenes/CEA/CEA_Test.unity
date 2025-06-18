@@ -181,6 +181,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3745560400425855138, guid: cee8148478902274787c968a9c796dce,
+        type: 3}
+      propertyPath: sceneViewId
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 6478293145296870914, guid: cee8148478902274787c968a9c796dce,
         type: 3}
       propertyPath: m_Name
@@ -201,54 +206,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cee8148478902274787c968a9c796dce, type: 3}
---- !u!4 &150340655 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 2166552862952356285, guid: cee8148478902274787c968a9c796dce,
-    type: 3}
-  m_PrefabInstance: {fileID: 150340654}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &150340656 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 1359283471417940586, guid: cee8148478902274787c968a9c796dce,
-    type: 3}
-  m_PrefabInstance: {fileID: 150340654}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &150340657 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 2919043267028672090, guid: cee8148478902274787c968a9c796dce,
-    type: 3}
-  m_PrefabInstance: {fileID: 150340654}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &150340658 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 8700159607488267589, guid: cee8148478902274787c968a9c796dce,
-    type: 3}
-  m_PrefabInstance: {fileID: 150340654}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &150340659 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 210626297532153865, guid: cee8148478902274787c968a9c796dce,
-    type: 3}
-  m_PrefabInstance: {fileID: 150340654}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6e650ca6a096dde41812c2f672a7510f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &150340660 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2683349994792768806, guid: cee8148478902274787c968a9c796dce,
-    type: 3}
-  m_PrefabInstance: {fileID: 150340654}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9af33fef91ebf9c4f8df26061a06e289, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &178391205
 GameObject:
   m_ObjectHideFlags: 0
@@ -620,11 +577,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbfcc97cfe14b0b4991c1aba145ff6ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bulletPooling: {fileID: 150340660}
-  effectPool: {fileID: 150340659}
   anglePatternBullet: {fileID: -5814235743389041899, guid: 5704d5e047b21014b83a73011ad895cb,
     type: 3}
-  bulletParent: {fileID: 150340655}
   wallCollider: {fileID: 671686742}
   fireAngle: 0
 --- !u!114 &671686738
@@ -639,10 +593,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c41f3a39f7a0934cb9374bcf6c0a620, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bulletPooling: {fileID: 150340660}
-  effectPool: {fileID: 150340659}
   rangePatternBullet: {fileID: 0}
-  bulletParent: {fileID: 150340656}
   wallCollider: {fileID: 671686742}
   fireAngle: 0
 --- !u!114 &671686739
@@ -670,11 +621,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 89835217c60fad349bffcf6b7ebf3913, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bulletPooling: {fileID: 150340660}
   guidedBulletPrefab: {fileID: 3514438348378433874, guid: f5c642e1e1a7fd5448a948c1b823ce08,
     type: 3}
-  bulletParent: {fileID: 150340657}
-  player: {fileID: 178391205}
   wallCollider: {fileID: 671686742}
   useAutoFire: 1
 --- !u!114 &671686741
@@ -689,10 +637,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4941c90d564986644aaf4294098570de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bulletPooling: {fileID: 150340660}
   normalBulletPrefab: {fileID: 3506624416693514196, guid: 25e49bb6edf45f2448bc57beabb37c24,
     type: 3}
-  bulletParent: {fileID: 150340658}
   mapCenter: {fileID: 178391205}
   wallCollider: {fileID: 671686742}
   plusAngle: 70
@@ -820,10 +766,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c41f3a39f7a0934cb9374bcf6c0a620, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bulletPooling: {fileID: 150340660}
-  effectPool: {fileID: 150340659}
   rangePatternBullet: {fileID: 0}
-  bulletParent: {fileID: 150340656}
   wallCollider: {fileID: 842363044}
   fireAngle: 0
 --- !u!114 &842363040
@@ -838,11 +781,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbfcc97cfe14b0b4991c1aba145ff6ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bulletPooling: {fileID: 150340660}
-  effectPool: {fileID: 150340659}
   anglePatternBullet: {fileID: -5814235743389041899, guid: 5704d5e047b21014b83a73011ad895cb,
     type: 3}
-  bulletParent: {fileID: 150340655}
   wallCollider: {fileID: 842363044}
   fireAngle: 0
 --- !u!114 &842363041
@@ -870,11 +810,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 89835217c60fad349bffcf6b7ebf3913, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bulletPooling: {fileID: 150340660}
   guidedBulletPrefab: {fileID: 3514438348378433874, guid: f5c642e1e1a7fd5448a948c1b823ce08,
     type: 3}
-  bulletParent: {fileID: 150340657}
-  player: {fileID: 178391205}
   wallCollider: {fileID: 842363044}
   useAutoFire: 1
 --- !u!114 &842363043
@@ -889,10 +826,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4941c90d564986644aaf4294098570de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bulletPooling: {fileID: 150340660}
   normalBulletPrefab: {fileID: 3506624416693514196, guid: 25e49bb6edf45f2448bc57beabb37c24,
     type: 3}
-  bulletParent: {fileID: 150340658}
   mapCenter: {fileID: 178391205}
   wallCollider: {fileID: 842363044}
   plusAngle: 70
@@ -1203,11 +1138,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c41f3a39f7a0934cb9374bcf6c0a620, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bulletPooling: {fileID: 150340660}
-  effectPool: {fileID: 150340659}
   rangePatternBullet: {fileID: 3465485197423747118, guid: ddc39f84bef9b1546bc44179601ce6f6,
     type: 3}
-  bulletParent: {fileID: 150340656}
   wallCollider: {fileID: 1398744531}
   fireAngle: 0
 --- !u!114 &1398744527
@@ -1222,11 +1154,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbfcc97cfe14b0b4991c1aba145ff6ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bulletPooling: {fileID: 150340660}
-  effectPool: {fileID: 150340659}
   anglePatternBullet: {fileID: -5814235743389041899, guid: 5704d5e047b21014b83a73011ad895cb,
     type: 3}
-  bulletParent: {fileID: 150340655}
   wallCollider: {fileID: 1398744531}
   fireAngle: 0
 --- !u!114 &1398744528
@@ -1254,11 +1183,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 89835217c60fad349bffcf6b7ebf3913, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bulletPooling: {fileID: 150340660}
   guidedBulletPrefab: {fileID: 3514438348378433874, guid: f5c642e1e1a7fd5448a948c1b823ce08,
     type: 3}
-  bulletParent: {fileID: 150340657}
-  player: {fileID: 178391205}
   wallCollider: {fileID: 1398744531}
   useAutoFire: 1
 --- !u!114 &1398744530
@@ -1273,10 +1199,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4941c90d564986644aaf4294098570de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bulletPooling: {fileID: 150340660}
   normalBulletPrefab: {fileID: 3506624416693514196, guid: 25e49bb6edf45f2448bc57beabb37c24,
     type: 3}
-  bulletParent: {fileID: 150340658}
   mapCenter: {fileID: 178391205}
   wallCollider: {fileID: 1398744531}
   plusAngle: 70
@@ -1484,11 +1408,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbfcc97cfe14b0b4991c1aba145ff6ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bulletPooling: {fileID: 150340660}
-  effectPool: {fileID: 150340659}
   anglePatternBullet: {fileID: -5814235743389041899, guid: 5704d5e047b21014b83a73011ad895cb,
     type: 3}
-  bulletParent: {fileID: 150340655}
   wallCollider: {fileID: 1759633285}
   fireAngle: 0
 --- !u!114 &1759633281
@@ -1503,10 +1424,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c41f3a39f7a0934cb9374bcf6c0a620, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bulletPooling: {fileID: 150340660}
-  effectPool: {fileID: 150340659}
   rangePatternBullet: {fileID: 0}
-  bulletParent: {fileID: 671686736}
   wallCollider: {fileID: 1759633285}
   fireAngle: 0
 --- !u!114 &1759633282
@@ -1534,11 +1452,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 89835217c60fad349bffcf6b7ebf3913, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bulletPooling: {fileID: 150340660}
   guidedBulletPrefab: {fileID: 3514438348378433874, guid: f5c642e1e1a7fd5448a948c1b823ce08,
     type: 3}
-  bulletParent: {fileID: 150340657}
-  player: {fileID: 178391205}
   wallCollider: {fileID: 1759633285}
   useAutoFire: 1
 --- !u!114 &1759633284
@@ -1553,10 +1468,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4941c90d564986644aaf4294098570de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bulletPooling: {fileID: 150340660}
   normalBulletPrefab: {fileID: 3506624416693514196, guid: 25e49bb6edf45f2448bc57beabb37c24,
     type: 3}
-  bulletParent: {fileID: 150340658}
   mapCenter: {fileID: 178391205}
   wallCollider: {fileID: 1759633285}
   plusAngle: 70

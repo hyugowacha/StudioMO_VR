@@ -215,7 +215,7 @@ SphereCollider:
   m_Enabled: 1
   serializedVersion: 3
   m_Radius: 0.5
-  m_Center: {x: 0, y: 1, z: 0}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &7344063508533180132
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -270,6 +270,7 @@ MonoBehaviour:
   spawnAnimator: {fileID: 7366591221137688216}
   moveAnimator: {fileID: 8938968048706179255}
   speed: 3
+  explosionEffectName: VFX_MON001_Explode
 --- !u!1 &2770477920229300657
 GameObject:
   m_ObjectHideFlags: 0
@@ -296,7 +297,7 @@ Transform:
   m_GameObject: {fileID: 2770477920229300657}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -625,7 +626,7 @@ PrefabInstance:
     - target: {fileID: 4411616956781530421, guid: c705a49b6eafb5249a6d204dc267de2c,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.1
+      value: -0.9
       objectReference: {fileID: 0}
     - target: {fileID: 4411616956781530421, guid: c705a49b6eafb5249a6d204dc267de2c,
         type: 3}
@@ -694,7 +695,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: abef7f7b59f6026478fa45d0aeff064a,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.4
+      value: -0.6
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: abef7f7b59f6026478fa45d0aeff064a,
         type: 3}

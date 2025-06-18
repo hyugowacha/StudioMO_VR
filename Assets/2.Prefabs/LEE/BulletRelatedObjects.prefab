@@ -142,11 +142,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 89835217c60fad349bffcf6b7ebf3913, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bulletPooling: {fileID: 2683349994792768806}
   guidedBulletPrefab: {fileID: 3514438348378433874, guid: f5c642e1e1a7fd5448a948c1b823ce08,
     type: 3}
   bulletParent: {fileID: 2919043267028672090}
-  player: {fileID: 3378599634796905273}
   wallCollider: {fileID: 373154182424033467}
   useAutoFire: 1
 --- !u!114 &8595449043710101410
@@ -539,11 +537,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 89835217c60fad349bffcf6b7ebf3913, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bulletPooling: {fileID: 2683349994792768806}
   guidedBulletPrefab: {fileID: 3514438348378433874, guid: f5c642e1e1a7fd5448a948c1b823ce08,
     type: 3}
   bulletParent: {fileID: 2919043267028672090}
-  player: {fileID: 3378599634796905273}
   wallCollider: {fileID: 33885078876045380}
   useAutoFire: 1
 --- !u!114 &4360913265431846909
@@ -956,11 +952,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 89835217c60fad349bffcf6b7ebf3913, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bulletPooling: {fileID: 2683349994792768806}
   guidedBulletPrefab: {fileID: 3514438348378433874, guid: f5c642e1e1a7fd5448a948c1b823ce08,
     type: 3}
   bulletParent: {fileID: 2919043267028672090}
-  player: {fileID: 3378599634796905273}
   wallCollider: {fileID: 5357988804628771163}
   useAutoFire: 1
 --- !u!114 &2037978067026455746
@@ -1190,11 +1184,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 89835217c60fad349bffcf6b7ebf3913, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bulletPooling: {fileID: 2683349994792768806}
   guidedBulletPrefab: {fileID: 3514438348378433874, guid: f5c642e1e1a7fd5448a948c1b823ce08,
     type: 3}
   bulletParent: {fileID: 2919043267028672090}
-  player: {fileID: 3378599634796905273}
   wallCollider: {fileID: 2926523189867158994}
   useAutoFire: 1
 --- !u!114 &8533692819106360156
@@ -1471,8 +1463,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 77b2863f88d238f4da75391ff5c99a81, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  csvFile: {fileID: 0}
-  patternCSVFile: {fileID: 0}
+  csvFile: {fileID: 4900000, guid: c79c8b4ffafa1534d87d89a837476c3f, type: 3}
+  patternCSVFile: {fileID: 4900000, guid: 34dbc705fd4076d47a64d7def772e905, type: 3}
   patternData: []
   patternBulletData: []
 --- !u!1 &6654719288181944040
@@ -1520,7 +1512,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3ab890c403d1584aa17f7f4d3111bf8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  loader: {fileID: 0}
+  loader: {fileID: 6141992579673468801}
   spawnerManager: {fileID: 7646841160314410175}
   bpm: 110
 --- !u!114 &6593900868514758988

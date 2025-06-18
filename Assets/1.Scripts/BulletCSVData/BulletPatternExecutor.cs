@@ -24,21 +24,18 @@ public class BulletPatternExecutor : MonoBehaviour, IPunObservable
 
     List<BulletSpawnData> timePatterns; //패턴형 탄막 정보 리스트
 
-    
-     #region Start, Update문
-    void Start()
-    {
-        InitiallizeBeatTiming();
-    }
+    #region Update문
 
     void Update()
     {
-        if (PhotonNetwork.InRoom == false || PhotonNetwork.IsMasterClient == true)
+        if (initialized == true)
         {
-            float delta = Time.deltaTime * SlowMotion.speed;
-            patternElapsedTime += delta;
-
-            ProcessBeatTiming(delta);
+            if (PhotonNetwork.InRoom == false || PhotonNetwork.IsMasterClient == true)
+            {
+                float delta = Time.deltaTime * SlowMotion.speed;
+                patternElapsedTime += delta;
+                ProcessBeatTiming(delta);
+            }
             ProcessPatternTiming();
         }
     }
@@ -49,8 +46,7 @@ public class BulletPatternExecutor : MonoBehaviour, IPunObservable
         patternElapsedTime = 0;
         _timer = 0;
 
-        timePatterns = new List<BulletSpawnData>(loader.patternBulletData);
-
+        timePatterns = loader != null ? loader.getPatternData : null;
         // BPM 기준으로 beat 간격 계산. 예: 60 / 120 -> 0.5초마다 한 beat
         _beatInterval = 60f / bpm;
         initialized = true;
@@ -61,22 +57,24 @@ public class BulletPatternExecutor : MonoBehaviour, IPunObservable
     /// </summary>
     void ProcessBeatTiming(float delta)
     {
-        if (!initialized) { return; }
-
         _timer += delta;
-
-
         if (_timer >= _beatInterval)
         {
             _timer -= _beatInterval;
-
-            // 지금 beatIndex에 해당하는 데이터만 필터링
-            var matches = loader.patternData .Where(d => d.beatIndex == _currentBeatIndex).ToList();
-
-            // 해당 beat에서 실행할 탄막이 있으면 모두 실행
-            foreach (var data in matches)
+            if (loader != null)
             {
-                ExecuteBeat(data, _currentBeatIndex);
+                List<BulletSpawnData> bulletSpawnDatas = loader.getNonPatternData;
+                if (bulletSpawnDatas != null)
+                {
+                    // 지금 beatIndex에 해당하는 데이터만 필터링
+                    var matches = bulletSpawnDatas.Where(d => d.beatIndex == _currentBeatIndex).ToList();
+
+                    // 해당 beat에서 실행할 탄막이 있으면 모두 실행
+                    foreach (var data in matches)
+                    {
+                        ExecuteBeat(data, _currentBeatIndex);
+                    }
+                }
             }
 
             // 다음 beat로 진행
@@ -89,14 +87,18 @@ public class BulletPatternExecutor : MonoBehaviour, IPunObservable
     ///</summary>
     void ProcessPatternTiming()
     {
-        if (!initialized) { return; }
-
-        var duePatterns = timePatterns.Where(p => p.beatTiming / 1000f <= patternElapsedTime).ToList();
-
-        foreach(var data in duePatterns)
+        if(timePatterns != null)
         {
-            ExecutePattern(data);
-            timePatterns.Remove(data);
+            var duePatterns = timePatterns.Where(p => p.beatTiming / 1000f <= patternElapsedTime).ToList();
+            bool production = PhotonNetwork.InRoom == false || PhotonNetwork.IsMasterClient == true;
+            foreach (var data in duePatterns)
+            {
+                if (production == true)
+                {
+                    ExecutePattern(data);
+                }
+                timePatterns.Remove(data);
+            }
         }
     }
 

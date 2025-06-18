@@ -8,9 +8,6 @@ public class GuidedBulletSpawner : MonoBehaviour
     [Header("발사할 Bullet 프리팹")]
     public GuidedBullet guidedBulletPrefab;
 
-    [Header("총알 생성시 부모로 사용할 오브젝트")]
-    public Transform bulletParent;
-
     [Header("이 벽의 콜라이더")]
     public BoxCollider wallCollider;
 
@@ -46,7 +43,7 @@ public class GuidedBulletSpawner : MonoBehaviour
         IReadOnlyList<Character> characters = Character.list;
         if(characters != null)
         {
-            foreach(Character character in characters)
+            foreach (Character character in characters)
             {
                 if (character != null)
                 {
@@ -75,7 +72,16 @@ public class GuidedBulletSpawner : MonoBehaviour
             }
             else
             {
-                //여기 할 차례 자신의 트랜스폼을 통하여 중심축 (0, 0, 0) 벡터를 향해 직각으로 날아가는 방향으로 만들기
+                Vector3 fireDir = (Vector3.zero - transform.position).normalized;
+                Quaternion quaternion = Quaternion.LookRotation(new Vector3(fireDir.x, 0f, fireDir.z));
+                if (PhotonNetwork.InRoom == false)
+                {
+                    Instantiate(guidedBulletPrefab, spawnPos, quaternion);
+                }
+                else if (PhotonNetwork.IsMasterClient == true && Resources.Load<GameObject>(guidedBulletPrefab.name) != null)
+                {
+                    PhotonNetwork.InstantiateRoomObject(guidedBulletPrefab.name, spawnPos, quaternion);
+                }
             }
         }
     }

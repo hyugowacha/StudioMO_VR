@@ -7,9 +7,6 @@ public class NormalBulletSpawner : MonoBehaviour
     [Header("발사할 Bullet 프리팹")]
     public NormalBullet normalBulletPrefab;
 
-    [Header("총알 생성시 부모로 사용할 오브젝트")]
-    public Transform bulletParent;
-
     [Header("맵 중앙 기준점")]
     public GameObject mapCenter;
 
