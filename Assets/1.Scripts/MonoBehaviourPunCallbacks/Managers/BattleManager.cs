@@ -1,11 +1,12 @@
+using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 using DG.Tweening;
 using Photon.Pun;
 using Photon.Realtime;
 using ExitGames.Client.Photon;
-using Unity.VisualScripting;
 
 [RequireComponent(typeof(PhotonView))]
 public class BattleManager : Manager, IPunObservable
@@ -50,75 +51,23 @@ public class BattleManager : Manager, IPunObservable
     [SerializeField]
     private BattleResultPanel battleResultPanel;                //대전 결과 패널
     [SerializeField]
+    private RematchPanel rematchPanel;                          //대전 재시작 패널
+    [SerializeField]
     private StatePanel statePanel;                              //진행 상태 표시 패널
 
     private const string First = "first";
     private const string Second = "second";
     private const string Third = "third";
 
-    System.Collections.IEnumerator Test()
-    {
-        if (PhotonNetwork.IsConnectedAndReady == false)
-        {
-            PhotonNetwork.ConnectUsingSettings();
-            yield return new WaitUntil(() => PhotonNetwork.NetworkClientState == ClientState.ConnectedToMasterserver);
-            PhotonNetwork.JoinLobby();
-            yield return new WaitUntil(() => PhotonNetwork.InLobby);
-        }
-        if (PhotonNetwork.InRoom == false)
-        {
-            PhotonNetwork.JoinRandomOrCreateRoom();
-            yield return new WaitUntil(() => PhotonNetwork.InRoom);
-        }
-        if (prefabCharacter != null && Resources.Load<GameObject>(prefabCharacter.name) != null)
-        {
-            GameObject gameObject = PhotonNetwork.Instantiate(prefabCharacter.name, Vector3.zero, Quaternion.identity, 0, null);
-            SetFixedPosition(gameObject.transform.position);
-            myCharacter = gameObject.GetComponent<Character>();
-            if(myCharacter != null)
-            {
-                slowMotionPanel?.Set(myCharacter.GetPortraitMaterial());
-            }
-        }
-        StageData stageData = StageData.current;
-        if (stageData != null)
-        {
-            GameObject gameObject = stageData.GetMapObject();
-            if (gameObject != null)
-            {
-                Instantiate(gameObject, Vector3.zero, Quaternion.identity);
-            }
-            Material skyboxMaterial = stageData.GetSkybox();
-            if (skyboxMaterial != null)
-            {
-                RenderSettings.skybox = skyboxMaterial;
-                DynamicGI.UpdateEnvironment(); // 라이트 프로브 및 반사 업데이트
-            }
-            bulletPatternLoader?.SetCSVFile(stageData.GetBulletTextAsset());
-            if (audioSource != null)
-            {
-                AudioClip audioClip = stageData.GetAudioClip();
-                if (audioClip != null)
-                {
-                    audioSource.clip = audioClip;
-                    limitTime = audioClip.length;
-                }
-            }
-        }
-        limitTime = 60; //테스트용
-        bulletPatternLoader?.RefineData();
-        Room room = PhotonNetwork.CurrentRoom;
-        if (PhotonNetwork.IsMasterClient == false)
-        {
-            OnRoomPropertiesUpdate(room.CustomProperties);
-        }
-        else
-        {
-            remainingTime = limitTime + PhasePanel.ReadyDelay + PhasePanel.StartDelay;
-            connected = true;
-            DelayCall(PhasePanel.ReadyDelay, PhasePanel.StartDelay, PhasePanel.EndDelay);
-        }
-    }
+    private const int CornerCount = 4;
+    private static readonly float CornerDistance = 18;
+    private static readonly Vector3[] CornerPoints = new Vector3[CornerCount] 
+    { 
+        new Vector3(-CornerDistance, 0, CornerDistance), 
+        new Vector3(CornerDistance, 0, CornerDistance), 
+        new Vector3(CornerDistance, 0, -CornerDistance), 
+        new Vector3(-CornerDistance, 0, -CornerDistance) 
+    };
 
     protected override void Start()
     {
@@ -126,7 +75,35 @@ public class BattleManager : Manager, IPunObservable
         if (instance == this)
         {
             SetMoveSpeed(0);
-            StartCoroutine(Test());
+            Room room = PhotonNetwork.CurrentRoom;
+            if(room == null)
+            {
+#if UNITY_EDITOR
+                System.Collections.IEnumerator Test()
+                {
+                    if (PhotonNetwork.IsConnectedAndReady == false)
+                    {
+                        PhotonNetwork.ConnectUsingSettings();
+                        yield return new WaitUntil(() => PhotonNetwork.NetworkClientState == ClientState.ConnectedToMasterserver);
+                        PhotonNetwork.JoinLobby();
+                        yield return new WaitUntil(() => PhotonNetwork.InLobby);
+                    }
+                    PhotonNetwork.JoinRandomOrCreateRoom();
+                    yield return new WaitUntil(() => PhotonNetwork.InRoom);
+                    room = PhotonNetwork.CurrentRoom;
+                    Initialize(room.Players);
+                    SetDefaultSetting(room.CustomProperties);
+                }
+                StartCoroutine(Test());
+#else
+                SceneManager.LoadScene("MainLobbyScene");
+#endif
+            }
+            else
+            {
+                Initialize(room.Players);
+                SetDefaultSetting(room.CustomProperties);
+            }
         }
     }
 
@@ -213,6 +190,7 @@ public class BattleManager : Manager, IPunObservable
         phasePanel?.ChangeText();
         pausePanel?.ChangeText();
         battleResultPanel?.ChangeText();
+        rematchPanel?.ChangeText();
         statePanel?.ChangeText();
     }
 
@@ -286,9 +264,9 @@ public class BattleManager : Manager, IPunObservable
 
     public override void OnPlayerLeftRoom(Player player)
     {
+        Room room = PhotonNetwork.CurrentRoom;
         if (PhotonNetwork.IsMasterClient == true && player != null)
         {
-            Room room = PhotonNetwork.CurrentRoom;
             Hashtable hashtable = room != null ? room.CustomProperties : null;
             if (hashtable != null)
             {
@@ -332,8 +310,28 @@ public class BattleManager : Manager, IPunObservable
                     }
                 }
             }
-            //혼자 남으면 이김
         }
+        if(room != null && room.PlayerCount == 1 && remainingTime > 0)
+        {
+            remainingTime = 0;
+            bulletPatternExecutor?.StopPlaying();
+            StopPlaying();
+        }
+    }
+
+    public override void OnLeftRoom()
+    {
+        if (rankingPanel != null)
+        {
+            //null은 다시하기가 취소되었습니다인데 선택 버튼이 없다 어떻게 할 것인가?
+            battleResultPanel?.Open(rankingPanel.GetValue(), null, () => { statePanel?.Open(() => SceneManager.LoadScene("MainLobbyScene"), null); });
+        }
+    }
+
+    public override void OnDisconnected(DisconnectCause cause)
+    {
+        statePanel?.Open(true);
+        //표시를 띄우고 어떻게 나가게 해줄지 생각해보자
     }
 
     //입력 시스템과 관련된 바인딩을 연결 및 해제에 사용하는 메서드 
@@ -373,6 +371,52 @@ public class BattleManager : Manager, IPunObservable
                     pickaxe.vibrationAction -= (amplitude, duration) => { SendHapticImpulse(amplitude, duration, true); };
                 }
                 break;
+        }
+    }
+
+    private void Initialize(Dictionary<int, Player> dictionary)
+    {
+        if (dictionary != null)
+        {
+            List<Player> list = dictionary.Values.OrderBy(keyValuePair => keyValuePair.ActorNumber).ToList();
+            for(int i = 0; i < list.Count; i++)
+            {
+                if (list[i] == PhotonNetwork.LocalPlayer)
+                {
+                    if (prefabCharacter != null && Resources.Load<GameObject>(prefabCharacter.name) != null)
+                    {
+                        Quaternion rotation = Quaternion.LookRotation(Vector3.zero - CornerPoints[i % CornerCount]);
+                        SetRotation(rotation);
+                        GameObject gameObject = PhotonNetwork.Instantiate(prefabCharacter.name, CornerPoints[i % CornerCount], rotation);
+                        SetFixedPosition(gameObject.transform.position);
+                        myCharacter = gameObject.GetComponent<Character>();
+                        if (myCharacter != null)
+                        {
+                            slowMotionPanel?.Set(myCharacter.GetPortraitMaterial());
+                        }
+                    }
+                    break;
+                }
+            }
+        }
+        if (audioSource != null && audioSource.clip != null)
+        {
+            limitTime = audioSource.clip.length;
+        }
+        bulletPatternLoader?.RefineData();
+    }
+
+    private void SetDefaultSetting(Hashtable hashtable)
+    {
+        if (PhotonNetwork.IsMasterClient == false)
+        {
+            OnRoomPropertiesUpdate(hashtable);
+        }
+        else
+        {
+            remainingTime = limitTime + PhasePanel.ReadyDelay + PhasePanel.StartDelay;
+            connected = true;
+            DelayCall(PhasePanel.ReadyDelay, PhasePanel.StartDelay, PhasePanel.EndDelay);
         }
     }
 
@@ -489,8 +533,11 @@ public class BattleManager : Manager, IPunObservable
             if (audioSource.clip != null)
             {
                 audioSource.timeSamples = (int)(value * audioSource.clip.frequency);
+                if(audioSource.timeSamples < audioSource.clip.samples)
+                {
+                    audioSource.Play();
+                }
             }
-            audioSource.Play();
         }
         bulletPatternExecutor?.InitiallizeBeatTiming();
     }
@@ -502,8 +549,14 @@ public class BattleManager : Manager, IPunObservable
         phasePanel?.Stop();
         if (rankingPanel != null)
         {
-            battleResultPanel?.Open(rankingPanel.GetValue());
+            battleResultPanel?.Open(rankingPanel.GetValue(), null, () => { statePanel?.Open(() => SceneManager.LoadScene("MainLobbyScene"), null); });
         }
+    }
+
+    [PunRPC]
+    private void Replay(int actor)
+    {
+
     }
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)

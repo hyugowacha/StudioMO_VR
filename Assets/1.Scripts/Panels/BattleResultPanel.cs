@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.Events;
 
 /// <summary>
 /// 대전 결과에 관련된 내용을 표시해주는 패널
@@ -46,7 +47,7 @@ public class BattleResultPanel : Panel
     }
 #endif
 
-    public void Open((uint, (Character, Color)[]) value)
+    public void Open((uint, (Character, Color)[]) value, UnityAction retry, UnityAction exit)
     {
         gameObject.SetActive(true);
         (Character, Color)[] array = value.Item2;

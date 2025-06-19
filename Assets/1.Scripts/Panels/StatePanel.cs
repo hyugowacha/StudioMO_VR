@@ -30,6 +30,7 @@ public class StatePanel : Panel
         Next,
         Retry,
         Exit,
+        Disconnect,
         End
     }
 
@@ -55,8 +56,6 @@ public class StatePanel : Panel
     private TMP_FontAsset[] tmpFontAssets = new TMP_FontAsset[Translation.count];
     private TMP_FontAsset tmpFontAsset = null;
 
-    [Header("별 이미지"), SerializeField]
-    private Image image;
     [Header("질문 텍스트"), SerializeField]
     private TMP_Text text;
     [Header("선택지 버튼들"), SerializeField]
@@ -79,10 +78,13 @@ public class StatePanel : Panel
                 text.Set(Translation.Get(Translation.Letter.MoveToNextStage), tmpFontAsset);
                 break;
             case State.Retry:
-                //스테이지를 다시하시겠습니까?
+                text.Set(Translation.Get(Translation.Letter.PlayAgain), tmpFontAsset);
                 break;
             case State.Exit:
                 text.Set(Translation.Get(Translation.Letter.ReturnToMainMenu), tmpFontAsset);
+                break;
+            case State.Disconnect:
+                //서버와의 접속이 끊겼습니다.
                 break;
             case State.End:
                 text.Set(Translation.Get(Translation.Letter.RetryCanceled), tmpFontAsset);
@@ -107,6 +109,7 @@ public class StatePanel : Panel
             case State.Exit:
                 getAnimator.SetTrigger(exitParameter);
                 break;
+            case State.Disconnect:
             case State.End:
                 getAnimator.SetTrigger(endParameter);
                 break;
@@ -154,9 +157,16 @@ public class StatePanel : Panel
     }
 
     //멀티 플레이에서만 존재하며 다시하기가 취소되었음을 알리는 메소드
-    public void Open()
+    public void Open(bool disconnect)
     {
         gameObject.SetActive(true);
-        Set(State.End);
+        if (disconnect == true)
+        {
+            Set(State.Disconnect);
+        }
+        else
+        {
+            Set(State.End);
+        }
     }
 }

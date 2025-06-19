@@ -52,6 +52,37 @@ public class BulletPatternExecutor : MonoBehaviour, IPunObservable
         initialized = true;
     }
 
+    public void StopPlaying()
+    {
+        initialized = false;
+        IReadOnlyList<IBullet> list = IBullet.list;
+        if (list != null)
+        {
+            if (PhotonNetwork.InRoom == false)
+            {
+                for (int i = 0; i < list.Count; i++)
+                {
+                    IBullet bullet = list[i];
+                    if (bullet != null)
+                    {
+                        Destroy(bullet.gameObject);
+                    }
+                }
+            }
+            else
+            {
+                for (int i = 0; i < list.Count; i++)
+                {
+                    IBullet bullet = list[i];
+                    if (bullet != null)
+                    {
+                        PhotonNetwork.Destroy(bullet.gameObject);
+                    }
+                }
+            }
+        }
+    }
+
     /// <summary>
     /// 시간 누적해서 BPM에 맞춰 탄막 실행함. 해당 beatIndex에 맞는 패턴만 찾아서 실행함.
     /// </summary>
@@ -217,14 +248,16 @@ public class BulletPatternExecutor : MonoBehaviour, IPunObservable
     {
         if(PhotonNetwork.IsMasterClient == true)
         {
-            stream.SendNext(_timer);
+            stream.SendNext(initialized);
             stream.SendNext(_currentBeatIndex);
+            stream.SendNext(_timer);
             stream.SendNext(patternElapsedTime);
         }
         else
         {
-            _timer = (float)stream.ReceiveNext();
+            initialized = (bool)stream.ReceiveNext();
             _currentBeatIndex = (int)stream.ReceiveNext();
+            _timer = (float)stream.ReceiveNext();
             patternElapsedTime = (float)stream.ReceiveNext();
         }
     }

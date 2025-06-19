@@ -23,16 +23,8 @@ public class PhasePanel : Panel
         }
     }
 
-    [Header("준비"), SerializeField]
-    private Translation.Text readyText;
-    [Header("시작"), SerializeField]
-    private Translation.Text startText;
-    [Header("종료"), SerializeField]
-    private Translation.Text endText;
-
     [Header("언어별 대응 폰트들"), SerializeField]
     private TMP_FontAsset[] tmpFontAssets = new TMP_FontAsset[Translation.count];
-
     //현재 언어 설정에 의해 변경된 폰트
     private TMP_FontAsset tmpFontAsset = null;
 
@@ -75,33 +67,33 @@ public class PhasePanel : Panel
                 getText.enabled = true;
                 if (tmpFontAsset != null)
                 {
-                    getText.Set(readyText.Get(Translation.language), tmpFontAsset);
+                    getText.Set(Translation.Get(Translation.Letter.Ready), tmpFontAsset);
                 }
                 else
                 {
-                    getText.Set(readyText.Get(Translation.language));
+                    getText.Set(Translation.Get(Translation.Letter.Ready));
                 }
                 break;
             case State.Start:
                 getText.enabled = true;
                 if (tmpFontAsset != null)
                 {
-                    getText.Set(startText.Get(Translation.language), tmpFontAsset);
+                    getText.Set(Translation.Get(Translation.Letter.Start), tmpFontAsset);
                 }
                 else
                 {
-                    getText.Set(startText.Get(Translation.language));
+                    getText.Set(Translation.Get(Translation.Letter.Start));
                 }
                 break;
             case State.End:
                 getText.enabled = true;
                 if (tmpFontAsset != null)
                 {
-                    getText.Set(endText.Get(Translation.language), tmpFontAsset);
+                    getText.Set(Translation.Get(Translation.Letter.TimesUp), tmpFontAsset);
                 }
                 else
                 {
-                    getText.Set(endText.Get(Translation.language));
+                    getText.Set(Translation.Get(Translation.Letter.TimesUp));
                 }
                 break;
         }

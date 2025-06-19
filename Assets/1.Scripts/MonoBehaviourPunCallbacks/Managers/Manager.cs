@@ -159,6 +159,14 @@ public abstract class Manager : MonoBehaviourPunCallbacks
         xrOrigin?.MoveCameraToWorldLocation(position + CameraOffsetPosition);
     }
 
+    //카메라 위치를 회전시켜주는 메서드
+    protected void SetRotation(Quaternion quaternion)
+    {
+        Vector3 up = quaternion * Vector3.up;
+        Vector3 forward = quaternion * Vector3.forward;
+        xrOrigin?.MatchOriginUpCameraForward(up, forward);
+    }
+
     //카메라 이동 속도를 변경해주는 메서드
     protected void SetMoveSpeed(float value)
     {

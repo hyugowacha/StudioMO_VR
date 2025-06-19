@@ -649,7 +649,7 @@ MonoBehaviour:
     type: 3}
   lookInputRatio: {x: 1, y: 1}
   language: 1
-  stageData: {fileID: 0}
+  stageData: {fileID: 11400000, guid: d714bdb3eb7b0674c954718b9caf7dfd, type: 2}
   character: {fileID: 7609372094796106672}
   leftHandOffset: {x: 0, y: 0, z: 0}
   rightHandOffset: {x: 0, y: 0, z: 0}
@@ -961,10 +961,20 @@ PrefabInstance:
       propertyPath: sceneViewId
       value: 5
       objectReference: {fileID: 0}
+    - target: {fileID: 6141992579673468801, guid: cee8148478902274787c968a9c796dce,
+        type: 3}
+      propertyPath: patternCSVFile
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 6478293145296870914, guid: cee8148478902274787c968a9c796dce,
         type: 3}
       propertyPath: m_Name
       value: BulletRelatedObjects
+      objectReference: {fileID: 0}
+    - target: {fileID: 6478293145296870914, guid: cee8148478902274787c968a9c796dce,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6593900868514758988, guid: cee8148478902274787c968a9c796dce,
         type: 3}
@@ -1472,7 +1482,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: -4022551901987879407, guid: baafc245a153a8245a8b03f98b42938d,
     type: 2}
   m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
