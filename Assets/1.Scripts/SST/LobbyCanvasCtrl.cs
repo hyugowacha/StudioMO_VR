@@ -32,7 +32,6 @@ public class LobbyCanvasCtrl : MonoBehaviour
     private void Start()
     {
         // √ ±‚»≠
-        realSkin.SetActive(true);
         stageSelectPanel.SetActive(false);
         versusPanel.SetActive(false);
         shopPanel.SetActive(false);
