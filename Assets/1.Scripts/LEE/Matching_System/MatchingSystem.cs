@@ -591,7 +591,7 @@ public class MatchingSystem : MonoBehaviourPunCallbacks
 #if UNITY_EDITOR
             Debug.Log("인게임 씬으로 전환");
 #endif
-            //PhotonNetwork.LoadLevel("InGameScene");
+            PhotonNetwork.LoadLevel(BattleManager.SceneName);
         }
     }
 
@@ -616,7 +616,7 @@ public class MatchingSystem : MonoBehaviourPunCallbacks
 #if UNITY_EDITOR
             Debug.Log("공용방 게임 시작");
 #endif
-            PhotonNetwork.AutomaticallySyncScene = true;
+            //PhotonNetwork.AutomaticallySyncScene = true;
             PhotonNetwork.LoadLevel(BattleManager.SceneName);
         }
     }
