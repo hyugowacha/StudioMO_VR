@@ -84,7 +84,7 @@ public class StatePanel : Panel
                 text.Set(Translation.Get(Translation.Letter.ReturnToMainMenu), tmpFontAsset);
                 break;
             case State.Disconnect:
-                //서버와의 접속이 끊겼습니다.
+                text.Set(Translation.Get(Translation.Letter.ServerDisconnected), tmpFontAsset);
                 break;
             case State.End:
                 text.Set(Translation.Get(Translation.Letter.RetryCanceled), tmpFontAsset);
@@ -153,20 +153,27 @@ public class StatePanel : Panel
                 break;
         }
         buttons[(int)Select.Yes].SetListener(unityAction);
-        buttons[(int)Select.No].SetListener(() => gameObject.SetActive(false));
+        buttons[(int)Select.No].SetListener(Close);
     }
 
-    //멀티 플레이에서만 존재하며 다시하기가 취소되었음을 알리는 메소드
-    public void Open(bool disconnect)
+    //멀티 플레이에서만 존재하며 다시하기가 취소되었거나 서버와 연결이 끊겼을 때 나올 메서드
+    public void Open(UnityAction unityAction)
     {
         gameObject.SetActive(true);
-        if (disconnect == true)
+        if(unityAction != null)
         {
+            buttons[(int)Select.Yes].SetListener(unityAction);
             Set(State.Disconnect);
         }
         else
         {
+            buttons[(int)Select.Yes].SetListener(Close);
             Set(State.End);
         }
+    }
+
+    public void Close()
+    {
+        gameObject.SetActive(false);
     }
 }

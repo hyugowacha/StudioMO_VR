@@ -55,30 +55,13 @@ public class BulletPatternExecutor : MonoBehaviour, IPunObservable
     public void StopPlaying()
     {
         initialized = false;
+        timePatterns = null;
         IReadOnlyList<IBullet> list = IBullet.list;
         if (list != null)
         {
-            if (PhotonNetwork.InRoom == false)
+            foreach(IBullet bullet in list)
             {
-                for (int i = 0; i < list.Count; i++)
-                {
-                    IBullet bullet = list[i];
-                    if (bullet != null)
-                    {
-                        Destroy(bullet.gameObject);
-                    }
-                }
-            }
-            else
-            {
-                for (int i = 0; i < list.Count; i++)
-                {
-                    IBullet bullet = list[i];
-                    if (bullet != null)
-                    {
-                        PhotonNetwork.Destroy(bullet.gameObject);
-                    }
-                }
+                bullet?.Explode();
             }
         }
     }
@@ -248,14 +231,12 @@ public class BulletPatternExecutor : MonoBehaviour, IPunObservable
     {
         if(PhotonNetwork.IsMasterClient == true)
         {
-            stream.SendNext(initialized);
             stream.SendNext(_currentBeatIndex);
             stream.SendNext(_timer);
             stream.SendNext(patternElapsedTime);
         }
         else
         {
-            initialized = (bool)stream.ReceiveNext();
             _currentBeatIndex = (int)stream.ReceiveNext();
             _timer = (float)stream.ReceiveNext();
             patternElapsedTime = (float)stream.ReceiveNext();

@@ -39,7 +39,7 @@ public abstract class Manager : MonoBehaviourPunCallbacks
     private TunnelingVignetteController vignetteController;     //비네트 (상태이상 표시)
     private LocomotionVignetteProvider locomotionVignetteProvider = null;
 
-    protected enum Skin
+    protected enum Skin: byte
     {
         Ribee,      //꿀벌
         Sofo,       //고양이
@@ -64,6 +64,7 @@ public abstract class Manager : MonoBehaviourPunCallbacks
     private Vector2 lookInputRatio = Vector2.one;
     private Vector2 lookInputValue = Vector2.zero; //현재 상하요동각과 편주각의 값을 저장해주는 변수
 
+    private static readonly string MainLobbySceneName = "MainLobbyScene";
     private static readonly string EquippedSkin = "EquippedSkin ";
     private static readonly string[] SkinNames = new string[(int)Skin.End] { "SkinData_Libee", "SkinData_Cat", "SkinData_Bunny", "SkinData_Fish", "SkinData_Cactus", "SkinData_Penguin", "SkinData_Mole" };
     private static readonly Vector2 LookPitchAngle = new Vector2(-40, 60);
@@ -279,6 +280,11 @@ public abstract class Manager : MonoBehaviourPunCallbacks
                 leftActionBasedController.SendHapticImpulse(amplitude, duration);
             }
         }
+    }
+
+    protected void LoadMainLobbyScene()
+    {
+        SceneManager.LoadScene(MainLobbySceneName);
     }
 
     //회전 모드가 스냅 모드인지 확인하는 메서드

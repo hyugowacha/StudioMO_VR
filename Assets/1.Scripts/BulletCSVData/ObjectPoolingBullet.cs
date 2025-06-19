@@ -11,6 +11,8 @@ public interface IBullet
 
     protected static List<IBullet> bullets = new List<IBullet>();
 
+    public void Explode();
+
     public GameObject gameObject {
         get;
     }

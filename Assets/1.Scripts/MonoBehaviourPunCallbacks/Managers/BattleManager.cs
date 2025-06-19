@@ -1,8 +1,8 @@
 using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
-using UnityEngine.SceneManagement;
 using DG.Tweening;
 using Photon.Pun;
 using Photon.Realtime;
@@ -93,7 +93,7 @@ public class BattleManager : Manager, IPunObservable
                 }
                 StartCoroutine(Test());
 #else
-                SceneManager.LoadScene("MainLobbyScene");
+                StopPlaying(false);
 #endif
             }
             else
@@ -127,8 +127,7 @@ public class BattleManager : Manager, IPunObservable
             remainingTime -= Time.deltaTime * SlowMotion.speed;
             if(remainingTime <= 0)
             {
-                remainingTime = 0;
-                StopPlaying();
+                StopPlaying(true);
             }
         }
         timerPanel?.Fill((float)remainingTime, (float)limitTime);
@@ -310,25 +309,19 @@ public class BattleManager : Manager, IPunObservable
         }
         if(room != null && room.PlayerCount == 1 && remainingTime > 0)
         {
-            //remainingTime = 0;
-            //bulletPatternExecutor?.StopPlaying();
-            //StopPlaying();
+            StopPlaying(true);
         }
+        rematchPanel?.Remove(player);
     }
 
     public override void OnLeftRoom()
     {
-        if (rankingPanel != null)
-        {
-            //null은 다시하기가 취소되었습니다인데 선택 버튼이 없다 어떻게 할 것인가?
-            battleResultPanel?.Open(rankingPanel.GetValue(), null, () => { statePanel?.Open(() => SceneManager.LoadScene("MainLobbyScene"), null); });
-        }
+        battleResultPanel?.SetRetryButton(() => { statePanel?.Open(null); });
     }
 
     public override void OnDisconnected(DisconnectCause cause)
     {
-        statePanel?.Open(true);
-        //표시를 띄우고 어떻게 나가게 해줄지 생각해보자
+        StopPlaying(false);
     }
 
     //입력 시스템과 관련된 바인딩을 연결 및 해제에 사용하는 메서드 
@@ -393,8 +386,8 @@ public class BattleManager : Manager, IPunObservable
                             slowMotionPanel?.Set(myCharacter.GetPortraitMaterial());
                         }
                     }
-                    break;
                 }
+                rematchPanel?.Add(list[i]);
             }
         }
         if (audioSource != null && audioSource.clip != null)
@@ -540,21 +533,50 @@ public class BattleManager : Manager, IPunObservable
         bulletPatternExecutor?.InitiallizeBeatTiming();
     }
 
-    private void StopPlaying()
+    private void StopPlaying(bool done)
     {
-        myCharacter?.SetSlowMotion(false); //시간이 끝나면 슬로우 모션 해제
+        remainingTime = 0;
+        myCharacter?.SetSlowMotion(false);
+        bulletPatternExecutor?.StopPlaying();
         pausePanel?.Close();
-        phasePanel?.Stop();
-        if (rankingPanel != null)
+        if(done == true)
         {
-            battleResultPanel?.Open(rankingPanel.GetValue(), null, () => { statePanel?.Open(() => SceneManager.LoadScene("MainLobbyScene"), null); });
+            phasePanel?.Stop();
+            if (rankingPanel != null)
+            {
+                (uint maxScore, (Character, Color)[] array) = rankingPanel.GetValue();
+                UnityAction<bool> unityAction = (value) => { photonView.RPC(nameof(Replay), RpcTarget.All, PhotonNetwork.LocalPlayer.ActorNumber, value); };
+                battleResultPanel?.Open(maxScore, array, () => { statePanel?.Open(() => { unityAction.Invoke(false); statePanel?.Close(); battleResultPanel?.Close(); rematchPanel?.Open(unityAction); }, false); }, () => { statePanel?.Open(() => LoadMainLobbyScene(), null); });
+            }
+        }
+        else
+        {
+            statePanel?.Open(() => LoadMainLobbyScene());
         }
     }
 
     [PunRPC]
-    private void Replay(int actor)
+    private void Replay(int actorNumber, bool participation)
     {
-
+        if(rematchPanel != null)
+        {
+            switch(rematchPanel.GetResult(actorNumber, participation))
+            {
+                case false:
+                    statePanel?.Open(() => { statePanel?.Close(); battleResultPanel?.Close(); rematchPanel?.Open((value) => { photonView.RPC(nameof(Replay), RpcTarget.All, PhotonNetwork.LocalPlayer.ActorNumber, value); }); }, false);
+                    break;
+                case true:
+                    if (rematchPanel.gameObject.activeSelf == true)
+                    {
+                        PhotonNetwork.LoadLevel(SceneName);
+                    }
+                    else
+                    {
+                        PhotonNetwork.LeaveRoom();
+                    }
+                    break;
+            }
+        }
     }
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
@@ -580,22 +602,24 @@ public class BattleManager : Manager, IPunObservable
                         DelayCall(0, PhasePanel.StartDelay - (float)startDelay, PhasePanel.EndDelay);
                     }
                 }
-                else if (value > limitTime - PhasePanel.EndDelay)
-                {
-                    phasePanel?.Play(0, 0, PhasePanel.EndDelay - (float)(limitTime - value));
-                    DelayPlay(limitTime - value);
-                }
                 else
                 {
+                    if (value > limitTime - PhasePanel.EndDelay)
+                    {
+                        phasePanel?.Play(0, 0, PhasePanel.EndDelay - (float)(limitTime - value));
+                    }
                     DelayPlay(limitTime - value);
                 }
                 connected = true;
             }
-            if(remainingTime != value && value == 0)
+            if (remainingTime != value && value == 0)
             {
-                StopPlaying();
+                StopPlaying(true);
             }
-            remainingTime = value;
+            else
+            {
+                remainingTime = value;
+            }
         }
     }
 }

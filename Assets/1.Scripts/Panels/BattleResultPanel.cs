@@ -28,13 +28,25 @@ public class BattleResultPanel : Panel
 
     [SerializeField]
     private Sprite emptySprite;
-    [SerializeField]
-    private SkinData[] skinDatas = new SkinData[SkinDataCount];
 
     [Header("언어별 대응 폰트들"), SerializeField]
     private TMP_FontAsset[] tmpFontAssets = new TMP_FontAsset[Translation.count];
     //현재 언어 설정에 의해 변경된 폰트
     private TMP_FontAsset tmpFontAsset = null;
+    private enum Skin : byte
+    {
+        Ribee,      //꿀벌
+        Sofo,       //고양이
+        JeomBoon,   //토끼
+        HighFish,   //물고기
+        Al,         //선인장
+        Primo,      //펭귄
+        Matilda,    //두더지
+        End
+    }
+
+    [SerializeField]
+    private SkinData[] skinDatas = new SkinData[(int)Skin.End];
 
     private enum Index : byte
     {
@@ -62,7 +74,6 @@ public class BattleResultPanel : Panel
     [SerializeField]
     private string parameter = "crown";
 
-    private readonly static int SkinDataCount = 7;
     private readonly static string WinnerWord = "Winner";
     private readonly static string FailWord = "Fail";
 
@@ -71,7 +82,8 @@ public class BattleResultPanel : Panel
 #if UNITY_EDITOR
     private void OnValidate()
     {
-        ExtensionMethod.Sort(ref skinDatas, SkinDataCount);
+        ExtensionMethod.Sort(ref tmpFontAssets, Translation.count, true);
+        ExtensionMethod.Sort(ref skinDatas, (int)Skin.End);
         ExtensionMethod.Sort(ref nameTexts, (int)Index.End);
         ExtensionMethod.Sort(ref resultTexts, (int)Index.End);
         ExtensionMethod.Sort(ref portraitImages, (int)Index.End);
@@ -83,12 +95,16 @@ public class BattleResultPanel : Panel
     }
 #endif
 
+    public void SetRetryButton(UnityAction retry)
+    {
+        retryButton.SetListener(retry);
+    }
+
     //대전 결과창을 보여주는 메소드
-    public void Open((uint, (Character, Color)[]) value, UnityAction retry, UnityAction exit)
+    public void Open(uint maxScore, (Character, Color)[] array, UnityAction retry, UnityAction exit)
     {
         gameObject.SetActive(true);
-        getAnimator.SetBool(parameter, value.Item1 > 0);
-        (Character, Color)[] array = value.Item2;
+        getAnimator.SetBool(parameter, maxScore > 0);
         int length = array != null ? array.Length : 0;
         for(int i = 0; i < (int)Index.End; i++)
         {
@@ -129,7 +145,7 @@ public class BattleResultPanel : Panel
                         portraitImages[i].Set(emptySprite);
                         nameTexts[i].Set("");
                     }
-                    if(value.Item1 > 0)
+                    if(maxScore > 0)
                     {
                         if (i == 0)
                         {
@@ -145,7 +161,7 @@ public class BattleResultPanel : Panel
                                     image.color = array[i].Item2;
                                 }
                             }
-                            sliders[i].value = (float)character.mineralCount / value.Item1;
+                            sliders[i].value = (float)character.mineralCount / maxScore;
                             sliders[i].gameObject.SetActive(true);
                         }
                     }
@@ -172,8 +188,18 @@ public class BattleResultPanel : Panel
                 sliders[i].SetActive(false);
             }
         }
-        retryButton.SetListener(retry);
+        SetRetryButton(retry);
         exitButton.SetListener(exit);
+    }
+
+    public void Open()
+    {
+        gameObject.SetActive(true);
+    }
+
+    public void Close()
+    {
+        gameObject.SetActive(false);
     }
 
     //언어를 변경하기 위한 메소드

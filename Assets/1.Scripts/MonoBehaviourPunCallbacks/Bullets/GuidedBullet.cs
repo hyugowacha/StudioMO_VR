@@ -100,6 +100,21 @@ public class GuidedBullet : MonoBehaviourPunCallbacks, IBullet
             moveAnimator.speed = value;
         }
     }
+
+    public void Explode()
+    {
+        if (PhotonNetwork.InRoom == false)
+        {
+            EffectPoolManager.Instance.SpawnEffect(explosionEffectName, transform.position, Quaternion.identity);
+            PhotonNetwork.Destroy(gameObject);
+        }
+        else if (photonView.IsMine == true)
+        {
+            EffectPoolManager.Instance.SpawnEffect(explosionEffectName, transform.position, Quaternion.identity);
+            PhotonNetwork.Destroy(gameObject);
+        }
+    }
+
     public override void OnPlayerEnteredRoom(Player player)
     {
         if (photonView.IsMine == true)
