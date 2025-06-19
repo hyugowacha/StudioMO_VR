@@ -278,6 +278,9 @@ public static class Korean
                 case Translation.Letter.UnlockItem:
                     letters[i] = "해당 아이템을 해금하시겠습니까?";
                     break;
+                case Translation.Letter.ServerDisconnected:
+                    letters[i] = "서버와의 연결이 끊겼습니다.";
+                    break;
             }
         }
     }

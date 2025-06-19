@@ -278,6 +278,9 @@ public static class English
                 case Translation.Letter.UnlockItem:
                     letters[i] = "Would you like to unlock this item?";
                     break;
+                case Translation.Letter.ServerDisconnected:
+                    letters[i] = "Disconnected from the server.";
+                    break;
             }
         }
     }
