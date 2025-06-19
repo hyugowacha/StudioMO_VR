@@ -1,13 +1,41 @@
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 using UnityEngine.Events;
+using TMPro;
+using Photon.Realtime;
+using ExitGames.Client.Photon;
 
 /// <summary>
 /// 대전 결과에 관련된 내용을 표시해주는 패널
 /// </summary>
+[RequireComponent(typeof(Animator))]
 public class BattleResultPanel : Panel
 {
+    private bool hasAnimator = false;
+
+    private Animator animator = null;
+
+    private Animator getAnimator {
+        get
+        {
+            if(hasAnimator == false)
+            {
+                hasAnimator = TryGetComponent(out animator);
+            }
+            return animator;
+        }
+    }
+
+    [SerializeField]
+    private Sprite emptySprite;
+    [SerializeField]
+    private SkinData[] skinDatas = new SkinData[SkinDataCount];
+
+    [Header("언어별 대응 폰트들"), SerializeField]
+    private TMP_FontAsset[] tmpFontAssets = new TMP_FontAsset[Translation.count];
+    //현재 언어 설정에 의해 변경된 폰트
+    private TMP_FontAsset tmpFontAsset = null;
+
     private enum Index : byte
     {
         Purple,
@@ -17,6 +45,8 @@ public class BattleResultPanel : Panel
         End
     }
 
+    [SerializeField]
+    private TMP_Text resultText;
     [SerializeField]
     private TMP_Text[] nameTexts = new TMP_Text[(int)Index.End];
     [SerializeField]
@@ -29,13 +59,19 @@ public class BattleResultPanel : Panel
     private Button retryButton;
     [SerializeField]
     private Button exitButton;
+    [SerializeField]
+    private string parameter = "crown";
 
+    private readonly static int SkinDataCount = 7;
     private readonly static string WinnerWord = "Winner";
     private readonly static string FailWord = "Fail";
+
+    private readonly static string EquippedProfile = "EquippedProfile";
 
 #if UNITY_EDITOR
     private void OnValidate()
     {
+        ExtensionMethod.Sort(ref skinDatas, SkinDataCount);
         ExtensionMethod.Sort(ref nameTexts, (int)Index.End);
         ExtensionMethod.Sort(ref resultTexts, (int)Index.End);
         ExtensionMethod.Sort(ref portraitImages, (int)Index.End);
@@ -47,9 +83,11 @@ public class BattleResultPanel : Panel
     }
 #endif
 
+    //대전 결과창을 보여주는 메소드
     public void Open((uint, (Character, Color)[]) value, UnityAction retry, UnityAction exit)
     {
         gameObject.SetActive(true);
+        getAnimator.SetBool(parameter, value.Item1 > 0);
         (Character, Color)[] array = value.Item2;
         int length = array != null ? array.Length : 0;
         for(int i = 0; i < (int)Index.End; i++)
@@ -59,8 +97,38 @@ public class BattleResultPanel : Panel
                 Character character = array[i].Item1;
                 if (character != null)
                 {
-                    nameTexts[i].Set(character.photonView.Owner.NickName);
-                    portraitImages[i].Set(character.GetPortraitMaterial());
+                    Player player = character.photonView.Owner;
+                    if(player != null)
+                    {
+                        nameTexts[i].Set(player.NickName);
+                        Hashtable hashtable = player.CustomProperties;
+                        if(hashtable != null && hashtable.ContainsKey(EquippedProfile) == true && hashtable[EquippedProfile] != null)
+                        {
+                            string profile = hashtable[EquippedProfile].ToString();
+                            bool find = false;
+                            for(int j = 0; j < skinDatas.Length; j++)
+                            {
+                                if (skinDatas[j] != null && skinDatas[j].name == profile)
+                                {
+                                    portraitImages[i].Set(skinDatas[j].profile);
+                                    find = true;
+                                }
+                            }
+                            if(find == false)
+                            {
+                                portraitImages[i].Set(emptySprite);
+                            }
+                        }
+                        else
+                        {
+                            portraitImages[i].Set(emptySprite);
+                        }
+                    }
+                    else
+                    {
+                        portraitImages[i].Set(emptySprite);
+                        nameTexts[i].Set("");
+                    }
                     if(value.Item1 > 0)
                     {
                         if (i == 0)
@@ -69,6 +137,14 @@ public class BattleResultPanel : Panel
                         }
                         if (sliders[i] != null)
                         {
+                            if (sliders[i].fillRect != null)
+                            {
+                                Image image = sliders[i].fillRect.GetComponent<Image>();
+                                if(image != null)
+                                {
+                                    image.color = array[i].Item2;
+                                }
+                            }
                             sliders[i].value = (float)character.mineralCount / value.Item1;
                             sliders[i].gameObject.SetActive(true);
                         }
@@ -96,10 +172,24 @@ public class BattleResultPanel : Panel
                 sliders[i].SetActive(false);
             }
         }
+        retryButton.SetListener(retry);
+        exitButton.SetListener(exit);
     }
 
+    //언어를 변경하기 위한 메소드
     public void ChangeText()
     {
-
+        switch (Translation.language)
+        {
+            case Translation.Language.English:
+            case Translation.Language.Korean:
+            case Translation.Language.Chinese:
+            case Translation.Language.Japanese:
+                tmpFontAsset = tmpFontAssets[(int)Translation.language];
+                break;
+        }
+        resultText.Set(Translation.Get(Translation.Letter.Result), tmpFontAsset);
+        retryButton.SetText(Translation.Get(Translation.Letter.Restart), tmpFontAsset);
+        exitButton.SetText(Translation.Get(Translation.Letter.ExitGame), tmpFontAsset);
     }
 }
