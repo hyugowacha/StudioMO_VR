@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class AllLanguage : MonoBehaviour
 {
-    [Header("언어별 폰트 (순서: Korean, English, Chinese, Japanese)")]
+    [Header("언어별 폰트 (순서: English, Korean,Chinese, Japanese)")]
     public TMP_FontAsset[] fontAssets = new TMP_FontAsset[4];
     private TMP_FontAsset currentFont;
 

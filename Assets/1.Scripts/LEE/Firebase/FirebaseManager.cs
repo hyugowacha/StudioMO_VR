@@ -67,6 +67,9 @@ public class FirebaseManager : MonoBehaviourPunCallbacks
     [Header("로딩 화면, 로비화면")]
     [SerializeField] GameObject loadingObject;
     [SerializeField] GameObject lobbyObject;
+
+    [Header("아웃게임 스킨 오브젝트")]
+    [SerializeField] GameObject Character_Intro;
     #endregion
 
     #region 시작 시 초기화 및 버튼 등록
@@ -77,13 +80,6 @@ public class FirebaseManager : MonoBehaviourPunCallbacks
     {
         // Firebase 초기화 함수 호출
         Authentication.Initialize(OnFirebaseInitComplete);
-    }
-
-    //TODO: 임시 아이디용
-    public void MasterTest()
-    {
-        loginInputID.text = "dhkdskrwl123@naver.com";
-        loginInputPW.text = "123456";
     }
 
     /// <summary>
@@ -107,11 +103,10 @@ public class FirebaseManager : MonoBehaviourPunCallbacks
         {
             loginCanvas.gameObject.SetActive(false);
             lobbyObject.SetActive(true);
+            Character_Intro.SetActive(true);
         }
         else
         {
-            MasterTest();
-
             // 로그인 관련 버튼 이벤트 등록
             signUpCanvasButton.onClick.AddListener(OnClickGoToSignUp);      // 회원가입 창 열기
             signInButton.onClick.AddListener(OnClickSignIn);                // 로그인
