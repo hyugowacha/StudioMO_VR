@@ -25,9 +25,21 @@ public class PlayerOptionUI : MonoBehaviour
     [SerializeField] private Image bunnyProfile;
     [SerializeField] private Button bunnySelect;
 
-    [Header("상어 스킨 관련")]
-    [SerializeField] private Image sharkProfile;
-    [SerializeField] private Button sharkSelect;
+    [Header("물고기 스킨 관련")]
+    [SerializeField] private Image fishProfile;
+    [SerializeField] private Button fishSelect;
+
+    [Header("펭귄 스킨 관련")]
+    [SerializeField] private Image penguinProfile;
+    [SerializeField] private Button penguinSelect;
+
+    [Header("선인장 스킨 관련")]
+    [SerializeField] private Image cactusProfile;
+    [SerializeField] private Button cactusSelect;
+
+    [Header("두더지 스킨 관련")]
+    [SerializeField] private Image moleProfile;
+    [SerializeField] private Button moleSelect;
 
     [Header("리비 스킨 부분")]
     [SerializeField] GameObject realSkin;
@@ -36,7 +48,10 @@ public class PlayerOptionUI : MonoBehaviour
     bool hasLibee;
     bool hasCat;
     bool hasBunny;
-    bool hasShark;
+    bool hasFish;
+    bool hasPenguin;
+    bool hasCactus;
+    bool hasMole;
 
     [Header("스냅/스무스 전환 버튼")]
     [SerializeField] private Button snapButton;
@@ -64,7 +79,7 @@ public class PlayerOptionUI : MonoBehaviour
     void Awake()
     {
         //프로필 전환에 쓰는 배열
-        profileImages = new Image[] { libeeProfile, catProfile, bunnyProfile, sharkProfile };
+        profileImages = new Image[] { libeeProfile, catProfile, bunnyProfile, fishProfile, penguinProfile, cactusProfile, moleProfile };
 
         closeOptionUI.onClick.AddListener(CloseOptionUI);
     }
@@ -111,8 +126,20 @@ public class PlayerOptionUI : MonoBehaviour
                 bunnyProfile.gameObject.SetActive(true);
                 break;
             case "SkinData_Fish":
-                if (!hasShark) return;
-                sharkProfile.gameObject.SetActive(true);
+                if (!hasFish) return;
+                fishProfile.gameObject.SetActive(true);
+                break;
+            case "SkinData_Penguin":
+                if (!hasPenguin) return;
+                penguinProfile.gameObject.SetActive(true);
+                break;
+            case "SkinData_Cactus":
+                if(!hasCactus) return;
+                cactusProfile.gameObject.SetActive(true);
+                break;
+            case "SkinData_Mole":
+                if (!hasCactus) return;
+                moleProfile.gameObject.SetActive(true);
                 break;
             default:
                 return;
@@ -146,8 +173,20 @@ public class PlayerOptionUI : MonoBehaviour
                     bunnyProfile.sprite = skin.profile;
                     break;
                 case "SkinData_Fish":
-                    hasShark = true;
-                    sharkProfile.sprite = skin.profile;
+                    hasFish = true;
+                    fishProfile.sprite = skin.profile;
+                    break;
+                case "SkinData_Penguin":
+                    hasPenguin = true;
+                    penguinProfile.sprite = skin.profile;
+                    break;
+                case "SkinData_Cactus":
+                    hasCactus = true;
+                    cactusProfile.sprite = skin.profile;
+                    break;
+                case "SkinData_Mole":
+                    hasMole = true;
+                    moleProfile.sprite = skin.profile;
                     break;
             }
         }
@@ -160,6 +199,9 @@ public class PlayerOptionUI : MonoBehaviour
     public void SelectCat() => SelectSkin("SkinData_Cat");
     public void SelectBunny() => SelectSkin("SkinData_Bunny");
     public void SelectFish() => SelectSkin("SkinData_Fish");
+    public void SelectPenguin() => SelectSkin("SkinData_Penguin");
+    public void SelectCactus() => SelectSkin("SkinData_Cactus");
+    public void SelectMole() => SelectSkin("SkinData_Mole");
     #endregion
 
     /// <summary>
@@ -170,7 +212,9 @@ public class PlayerOptionUI : MonoBehaviour
         libeeSelect.gameObject.SetActive(hasLibee);
         catSelect.gameObject.SetActive(hasCat);
         bunnySelect.gameObject.SetActive(hasBunny);
-        sharkSelect.gameObject.SetActive(hasShark);
+        fishSelect.gameObject.SetActive(hasFish);
+        penguinSelect.gameObject.SetActive(hasPenguin);
+        cactusSelect.gameObject.SetActive(hasCactus);
     }
 
     #region 손목 관련 함수들
