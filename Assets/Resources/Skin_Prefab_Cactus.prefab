@@ -478,7 +478,7 @@ MonoBehaviour:
   observableSearch: 2
   ObservedComponents:
   - {fileID: 6672467334822833307}
-  sceneViewId: 0
+  sceneViewId: 5
   InstantiationId: 0
   isRuntimeInstantiated: 0
 --- !u!114 &6672467334822833307
@@ -608,7 +608,7 @@ Animator:
   m_GameObject: {fileID: 3789394579061551260}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 945303e176a547f4ebd9ec003741b4be, type: 3}
-  m_Controller: {fileID: 9100000, guid: d9189135f30594e4f946ad64c0d3e476, type: 2}
+  m_Controller: {fileID: 9100000, guid: ad40b97c5b0ac3e45aef4abb05b9bc8f, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -1135,7 +1135,7 @@ Animator:
   m_GameObject: {fileID: 5393161883231179815}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: baba769c5f09693418bce20d7fe0bb0b, type: 3}
-  m_Controller: {fileID: 9100000, guid: 087447493fef2054b9332026bcbb6335, type: 2}
+  m_Controller: {fileID: 0}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -1270,7 +1270,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8244509717677443294}
-  - component: {fileID: 6208287195951346853}
   - component: {fileID: 8290399198391640546}
   - component: {fileID: 1607512229395621291}
   - component: {fileID: 1584416509057926919}
@@ -1293,7 +1292,7 @@ Transform:
   m_GameObject: {fileID: 5761961880156905392}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.65, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1301,23 +1300,6 @@ Transform:
   - {fileID: 4604911738069960519}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6208287195951346853
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5761961880156905392}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b1187935ba3cc414fb5f8d06f00091b9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  controller:
-  - {fileID: 4438881902557160170}
-  - {fileID: 8947221424053969074}
-  - {fileID: 0}
-  onDisappear: 0
 --- !u!135 &8290399198391640546
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -1387,7 +1369,7 @@ MonoBehaviour:
   ObservedComponents:
   - {fileID: 8085714874923588806}
   - {fileID: 5238819216248222204}
-  sceneViewId: 0
+  sceneViewId: 6
   InstantiationId: 0
   isRuntimeInstantiated: 0
 --- !u!114 &8085714874923588806
@@ -1418,7 +1400,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e38d0f5fd561c84582e602c970bb156, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animator: {fileID: 0}
+  animator: {fileID: 8947221424053969074}
   portraitCamera: {fileID: 8173250851246445302}
   headTransform: {fileID: 4604911738069960519}
   leftHandTransform: {fileID: 2596294492825069908}

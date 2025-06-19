@@ -227,7 +227,7 @@ Animator:
   m_GameObject: {fileID: 2087680815856857467}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 82f37b459051a3c40ad76798f849d5df, type: 3}
-  m_Controller: {fileID: 9100000, guid: 087447493fef2054b9332026bcbb6335, type: 2}
+  m_Controller: {fileID: 9100000, guid: a464ed202347a1f46bc8ae09faea8bdf, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -405,7 +405,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 427179749403819680}
-  - component: {fileID: 1508583483513922757}
   - component: {fileID: 1186362067114144723}
   - component: {fileID: 6436954203283195933}
   - component: {fileID: 8396911533091696484}
@@ -427,8 +426,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3824808574853794652}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 5.55, y: 0, z: 0}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -436,23 +435,6 @@ Transform:
   - {fileID: 5438674206811737284}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1508583483513922757
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3824808574853794652}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b1187935ba3cc414fb5f8d06f00091b9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  controller:
-  - {fileID: 5696575739471211911}
-  - {fileID: 1475498485319329783}
-  - {fileID: 0}
-  onDisappear: 0
 --- !u!135 &1186362067114144723
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -522,7 +504,7 @@ MonoBehaviour:
   ObservedComponents:
   - {fileID: 601950751347382770}
   - {fileID: 2922454106347084412}
-  sceneViewId: 0
+  sceneViewId: 14
   InstantiationId: 0
   isRuntimeInstantiated: 0
 --- !u!114 &601950751347382770
@@ -553,7 +535,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e38d0f5fd561c84582e602c970bb156, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animator: {fileID: 0}
+  animator: {fileID: 1475498485319329783}
   portraitCamera: {fileID: 4228830905183070970}
   headTransform: {fileID: 5438674206811737284}
   leftHandTransform: {fileID: 771754207613191722}
@@ -755,7 +737,7 @@ MonoBehaviour:
   observableSearch: 2
   ObservedComponents:
   - {fileID: 539613197271866015}
-  sceneViewId: 0
+  sceneViewId: 13
   InstantiationId: 0
   isRuntimeInstantiated: 0
 --- !u!114 &539613197271866015
@@ -1113,7 +1095,7 @@ Animator:
   m_GameObject: {fileID: 5874719303031358690}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 4c8545ad0ef236342986bd800ba1d1c1, type: 3}
-  m_Controller: {fileID: 9100000, guid: d9189135f30594e4f946ad64c0d3e476, type: 2}
+  m_Controller: {fileID: 9100000, guid: ad40b97c5b0ac3e45aef4abb05b9bc8f, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
