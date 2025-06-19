@@ -304,7 +304,7 @@ public class Character : MonoBehaviourPunCallbacks, IPunObservable
     //플레이어의 고개를 돌리는 메서드
     public void UpdateHead(Quaternion rotation)
     {
-        if (photonView.IsMine == true && headTransform != null)
+        if (headTransform != null && (PhotonNetwork.InRoom == false || photonView.IsMine == true))
         {
             headTransform.rotation = rotation;
         }
@@ -313,7 +313,7 @@ public class Character : MonoBehaviourPunCallbacks, IPunObservable
     //플레이어의 왼손을 움직이는 메서드
     public void UpdateLeftHand(Vector3 position, Quaternion rotation)
     {
-        if (photonView.IsMine == true && leftHandTransform)
+        if (leftHandTransform && (PhotonNetwork.InRoom == false || photonView.IsMine == true))
         {
             leftHandTransform.SetPositionAndRotation(position, rotation);
         }
@@ -322,7 +322,7 @@ public class Character : MonoBehaviourPunCallbacks, IPunObservable
     //플레이어의 오른손을 움직이는 메서드
     public void UpdateRightHand(Vector3 position, Quaternion rotation)
     {
-        if (photonView.IsMine == true && rightHandTransform != null)
+        if (rightHandTransform != null && (PhotonNetwork.InRoom == false || photonView.IsMine == true))
         {
             rightHandTransform.SetPositionAndRotation(position, rotation);
         }
@@ -331,7 +331,7 @@ public class Character : MonoBehaviourPunCallbacks, IPunObservable
     //플레이어의 이동을 담당하는 메서드
     public void UpdateMove(Vector2 input)
     {
-        if (photonView.IsMine == true && headTransform != null && unmovable == false)
+        if (headTransform != null && unmovable == false && (PhotonNetwork.InRoom == false || photonView.IsMine == true))
         {
             Vector3 direction = headTransform.right * input.x + headTransform.forward * input.y;
             direction.y = 0;

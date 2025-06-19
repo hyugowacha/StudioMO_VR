@@ -5,6 +5,8 @@ using UnityEngine.SceneManagement;
 using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR.Interaction.Toolkit.Samples.StarterAssets;
 using Photon.Pun;
+using Photon.Realtime;
+using ExitGames.Client.Photon;
 
 /// <summary>
 /// 각각의 씬 안에 유일한 객체로 존재하며 씬 안에 포함되는 모든 객체들을 하향식으로 통제함
@@ -37,6 +39,22 @@ public abstract class Manager : MonoBehaviourPunCallbacks
     private TunnelingVignetteController vignetteController;     //비네트 (상태이상 표시)
     private LocomotionVignetteProvider locomotionVignetteProvider = null;
 
+    protected enum Skin
+    {
+        Ribee,      //꿀벌
+        Sofo,       //고양이
+        JeomBoon,   //토끼
+        HighFish,   //물고기
+        Al,         //선인장
+        Primo,      //펭귄
+        Matilda,    //두더지
+        End
+    }
+
+    [SerializeField]
+    private Character[] characters = new Character[(int)Skin.End];
+    protected Character myCharacter = null;
+
 #if UNITY_EDITOR
     [Header("유니티 에디터 전용")]
     [SerializeField]
@@ -46,6 +64,8 @@ public abstract class Manager : MonoBehaviourPunCallbacks
     private Vector2 lookInputRatio = Vector2.one;
     private Vector2 lookInputValue = Vector2.zero; //현재 상하요동각과 편주각의 값을 저장해주는 변수
 
+    private static readonly string EquippedSkin = "EquippedSkin ";
+    private static readonly string[] SkinNames = new string[(int)Skin.End] { "SkinData_Libee", "SkinData_Cat", "SkinData_Bunny", "SkinData_Fish", "SkinData_Cactus", "SkinData_Penguin", "SkinData_Mole" };
     private static readonly Vector2 LookPitchAngle = new Vector2(-40, 60);
     private static readonly Vector3 LeftControllerLocalPosition = new Vector3(-0.1f, -0.05f, 0.3f);
     private static readonly Vector3 RightControllerLocalPosition = new Vector3(+0.1f, -0.05f, 0.3f);
@@ -66,6 +86,7 @@ public abstract class Manager : MonoBehaviourPunCallbacks
                 name = GetType().Name;
                 ExtensionMethod.Sort(ref primaryInputActionReferences);
                 ExtensionMethod.Sort(ref secondaryInputActionReferences);
+                ExtensionMethod.Sort(ref characters, (int)Skin.End);
                 ChangeText(language);
             }
             UnityEditor.EditorApplication.delayCall += () =>
@@ -264,6 +285,27 @@ public abstract class Manager : MonoBehaviourPunCallbacks
     protected bool CheckTurnMode()
     {
         return snapTurnProvider != null && snapTurnProvider.turnAmount == snapMode.x && snapTurnProvider.debounceTime == snapMode.y;
+    }
+
+    //선택한 스킨 프리팹을 반환하는 메소드
+    protected Character GetPrefab(Player player)
+    {
+        if (player != null)
+        {
+            Hashtable hashtable = player.CustomProperties;
+            if (hashtable != null && hashtable.ContainsKey(EquippedSkin) == true && hashtable[EquippedSkin] != null)
+            {
+                string value = hashtable[EquippedSkin].ToString();
+                for (int i = 0; i < (int)Skin.Ribee; i++)
+                {
+                    if (SkinNames[i] == value)
+                    {
+                        return characters[i];
+                    }
+                }
+            }
+        }
+        return characters[(int)Skin.Ribee];
     }
 
 

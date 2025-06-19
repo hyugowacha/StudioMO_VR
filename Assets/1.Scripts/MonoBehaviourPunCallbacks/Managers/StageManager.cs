@@ -15,8 +15,7 @@ public class StageManager : Manager
 
     public static readonly string SceneName = "StageScene";
 
-    [Header("스테이지 매니저 구간"), SerializeField]
-    private Character character;                                //조종할 캐릭터
+    [Header("스테이지 매니저 구간")]
     [SerializeField]
     private Vector3 leftHandOffset;                             //왼쪽 손잡이 간격
     [SerializeField]
@@ -62,10 +61,12 @@ public class StageManager : Manager
         if (instance == this)
         {
             SetMoveSpeed(0);
+            Character character = GetPrefab(PhotonNetwork.LocalPlayer);
             if (character != null)
             {
-                SetFixedPosition(character.transform.position);
-                slowMotionPanel?.Set(character.GetPortraitMaterial());
+                myCharacter = Instantiate(character, Vector3.zero, Quaternion.identity);
+                SetFixedPosition(myCharacter.transform.position);
+                slowMotionPanel?.Set(myCharacter.GetPortraitMaterial());
             }
             StageData stageData = StageData.current;
 #if UNITY_EDITOR
@@ -124,9 +125,9 @@ public class StageManager : Manager
 
     private void Update()
     {
-        if (character != null)
+        if (myCharacter != null)
         {
-            SetFixedPosition(character.transform.position);
+            SetFixedPosition(myCharacter.transform.position);
         }
         if (remainingTime > 0 && stop == false)
         {
@@ -136,10 +137,10 @@ public class StageManager : Manager
                 remainingTime = 0;   //게임 종료
                 stop = true;
                 uint totalScore = 0;
-                if (character != null)
+                if (myCharacter != null)
                 {
-                    character.SetSlowMotion(false); //시간이 끝나면 슬로우 모션 해제
-                    totalScore = character.mineralCount;
+                    myCharacter.SetSlowMotion(false); //시간이 끝나면 슬로우 모션 해제
+                    totalScore = myCharacter.mineralCount;
                 }
                 phasePanel?.Stop();
                 UnityAction next = null;
@@ -174,35 +175,35 @@ public class StageManager : Manager
     {
         if (stop == false)
         {
-            character?.UpdateMove(moveInput);
+            myCharacter?.UpdateMove(moveInput);
         }
     }
 
     private void LateUpdate()
     {
         uint mineralCount = 0;
-        if (character != null)
+        if (myCharacter != null)
         {
             if (Camera.main != null)
             {
-                character.UpdateHead(Camera.main.transform.rotation);
+                myCharacter.UpdateHead(Camera.main.transform.rotation);
             }
             if (leftActionBasedController != null)
             {
-                character.UpdateLeftHand(leftActionBasedController.transform.position + leftHandOffset, leftActionBasedController.transform.rotation);
+                myCharacter.UpdateLeftHand(leftActionBasedController.transform.position + leftHandOffset, leftActionBasedController.transform.rotation);
             }
             if (rightActionBasedController != null)
             {
-                character.UpdateRightHand(rightActionBasedController.transform.position + rightHandOffset, rightActionBasedController.transform.rotation);
+                myCharacter.UpdateRightHand(rightActionBasedController.transform.position + rightHandOffset, rightActionBasedController.transform.rotation);
             }
-            bool unmovable = character.unmovable;
+            bool unmovable = myCharacter.unmovable;
             SetTunnelingVignette(unmovable);
             if (unmovable == true && pickaxe != null && pickaxe.grip == true)
             {
                 pickaxe.grip = false;
             }
             float full = SlowMotion.MaximumFillValue;
-            float current = character.slowMotionTime;
+            float current = myCharacter.slowMotionTime;
             if (SlowMotion.IsOwner(PhotonNetwork.LocalPlayer) == true)
             {
                 slowMotionPanel?.Fill(current, full, false);
@@ -215,7 +216,7 @@ public class StageManager : Manager
             {
                 slowMotionPanel?.Fill(current, full, null);
             }
-            mineralCount = character.mineralCount;
+            mineralCount = myCharacter.mineralCount;
         }
         scorePanel?.Fill(mineralCount, score.GetClearValue(), score.GetAddValue());
     }
@@ -234,19 +235,19 @@ public class StageManager : Manager
         {
             if (callbackContext.performed == true)
             {
-                if (character != null && (character.unmovable == true || character.unbeatable == true || character.slowMotionTime < SlowMotion.MinimumUseValue))
+                if (myCharacter != null && (myCharacter.unmovable == true || myCharacter.unbeatable == true || myCharacter.slowMotionTime < SlowMotion.MinimumUseValue))
                 {
                     slowMotionPanel?.Blink();
                 }
                 else
                 {
-                    slowMotionTween = DOVirtual.DelayedCall(SlowMotion.ActiveDelay, () => { character?.SetSlowMotion(true); });
+                    slowMotionTween = DOVirtual.DelayedCall(SlowMotion.ActiveDelay, () => { myCharacter?.SetSlowMotion(true); });
                 }
             }
             else if (callbackContext.canceled)
             {
                 slowMotionTween.Kill();
-                character?.SetSlowMotion(false);
+                myCharacter?.SetSlowMotion(false);
             }
         }
     }
@@ -255,7 +256,7 @@ public class StageManager : Manager
     {
         if (stop == false && pickaxe != null)
         {
-            if (callbackContext.performed == true && character != null && character.unmovable == false && character.unbeatable == false)
+            if (callbackContext.performed == true && myCharacter != null && myCharacter.unmovable == false && myCharacter.unbeatable == false)
             {
                 pickaxe.grip = true;
             }
@@ -284,7 +285,7 @@ public class StageManager : Manager
         switch (value)
         {
             case true:
-                Mineral.miningAction += (actor, value) => { character?.AddMineral(value); };
+                Mineral.miningAction += (actor, value) => { myCharacter?.AddMineral(value); };
                 SlowMotion.action += (speed) => 
                 {
                     if(audioSource != null)
@@ -298,7 +299,7 @@ public class StageManager : Manager
                 }
                 break;
             case false:
-                Mineral.miningAction -= (actor, value) => { character?.AddMineral(value); };
+                Mineral.miningAction -= (actor, value) => { myCharacter?.AddMineral(value); };
                 SlowMotion.action -= (speed) =>
                 {
                     if (audioSource != null)

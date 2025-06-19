@@ -5,6 +5,7 @@ using TMPro;
 using UnityEngine.UI;
 using UnityEngine.Profiling;
 using System.Collections;
+using System.Collections.Generic;
 
 public class MatchingSystem : MonoBehaviourPunCallbacks
 {
@@ -89,6 +90,9 @@ public class MatchingSystem : MonoBehaviourPunCallbacks
 
     // 로비를 처음만 입장했는가
     private static bool hasEnteredLobbyOnce = false;
+
+    // 로비 방 목록 캐싱용
+    private List<RoomInfo> cachedRoomList = new();
     #endregion
 
     #region Start, Update 초기화 및 버튼 연결
@@ -257,21 +261,24 @@ public class MatchingSystem : MonoBehaviourPunCallbacks
     // 사설방 만들기 함수
     private void OnClickMakeRoom()
     {
-        string code = GenerateRoomCode(7);
+        string uniqueCode = GenerateUniqueRoomCode(7);
+        if (string.IsNullOrEmpty(uniqueCode))
+        {
+            ShowError("방 코드 생성에 실패했습니다. 다시 시도해주세요.");
+            return;
+        }
 
         UserGameData.Load(() =>
         {
-            // 커스텀 프로퍼티 다시 설정
             ExitGames.Client.Photon.Hashtable props = new();
             props["EquippedProfile"] = UserGameData.EquippedProfile;
             props["Nickname"] = PhotonNetwork.NickName;
             PhotonNetwork.LocalPlayer.SetCustomProperties(props);
 
-            StartCoroutine(DelayedCreateRoom(code));
+            StartCoroutine(DelayedCreateRoom(uniqueCode));
         });
 
         isRoomPrivate = true;
-
         PVP_CodePopUp.SetActive(false);
     }
 
@@ -423,10 +430,17 @@ public class MatchingSystem : MonoBehaviourPunCallbacks
     #endregion
 
     #region Photon 콜백
+    // 룸 정보 가져오기
+    public override void OnRoomListUpdate(List<RoomInfo> roomList)
+    {
+        cachedRoomList.Clear();
+        cachedRoomList.AddRange(roomList);
+    }
+
     // 방장이 바뀔때 호출
     public override void OnMasterClientSwitched(Player newMasterClient)
     {
-        Debug.Log($"방장이 변경됨: 새로운 방장 → {newMasterClient.NickName}");
+        Debug.Log($"방장이 변경됨: 새로운 방장 -> {newMasterClient.NickName}");
 
         // 내가 방장이 되었을 때 처리
         if (newMasterClient == PhotonNetwork.LocalPlayer)
@@ -473,13 +487,32 @@ public class MatchingSystem : MonoBehaviourPunCallbacks
 
         if (hasEnteredLobbyOnce)
         {
-            Debug.Log("로비 최초 진입 이후 → UI 처리 생략");
+            Debug.Log("로비 최초 진입 이후 -> UI 처리 생략");
             return;
         }
 
         hasEnteredLobbyOnce = true;
 
-        // Photon 커스텀 프로퍼티 설정
+        CustomPhotonPlayer();
+
+        // 유저 데이터 로드
+        UserGameData.Load(() =>
+        {
+            LobbyUI.gameObject.SetActive(true);
+        });
+
+        loadingObject.gameObject.SetActive(false);
+        realSkin.SetActive(true);
+        realSkin.GetComponent<Intro_Character_Ctrl>().ReturnBack();
+        realSkin.GetComponent<Intro_Character_Ctrl>().SetBoolFromEquippedSkin(UserGameData.EquippedSkin);
+        SaveSkinObject.GetComponent<Intro_Character_Ctrl>().SetBoolFromEquippedSkin(UserGameData.EquippedSkin);
+    }
+
+    /// <summary>
+    /// Photon커스텀 프로퍼티 설정 (장착 스킨, 프로필, 닉네임)
+    /// </summary>
+    public void CustomPhotonPlayer()
+    {
         ExitGames.Client.Photon.Hashtable playerProps = new();
 
         if (!string.IsNullOrEmpty(UserGameData.EquippedSkin))
@@ -498,18 +531,6 @@ public class MatchingSystem : MonoBehaviourPunCallbacks
         }
 
         PhotonNetwork.LocalPlayer.SetCustomProperties(playerProps);
-
-        // 유저 데이터 로드
-        UserGameData.Load(() =>
-        {
-            LobbyUI.gameObject.SetActive(true);
-        });
-
-        loadingObject.gameObject.SetActive(false);
-        realSkin.SetActive(true);
-        realSkin.GetComponent<Intro_Character_Ctrl>().ReturnBack();
-        realSkin.GetComponent<Intro_Character_Ctrl>().SetBoolFromEquippedSkin(UserGameData.EquippedSkin);
-        SaveSkinObject.GetComponent<Intro_Character_Ctrl>().SetBoolFromEquippedSkin(UserGameData.EquippedSkin);
     }
 
     // 방 입장 실패 시
@@ -523,10 +544,17 @@ public class MatchingSystem : MonoBehaviourPunCallbacks
     // 방 입장 시
     public override void OnJoinedRoom()
     {
+        CustomPhotonPlayer();
+
+        // 기본 Ready 상태 false로 초기화
+        ExitGames.Client.Photon.Hashtable props = new();
+        props[READY_KEY] = false;
+        PhotonNetwork.LocalPlayer.SetCustomProperties(props);
+
         PVP_CodePopUp.SetActive(false);
-
+#if UNITY_EDITOR
         Debug.Log($"방 입장 완료 - 방 이름: {PhotonNetwork.CurrentRoom.Name}");
-
+#endif
         // 플레이어 목록 UI 업데이트
         UpdatePlayerList();
 
@@ -535,7 +563,6 @@ public class MatchingSystem : MonoBehaviourPunCallbacks
         {
             if (PhotonNetwork.IsMasterClient)
             {
-                ExitGames.Client.Photon.Hashtable props = new();
                 props[READY_KEY] = true; // 방장은 고정 Ready
                 PhotonNetwork.LocalPlayer.SetCustomProperties(props);
             }
@@ -564,7 +591,7 @@ public class MatchingSystem : MonoBehaviourPunCallbacks
 #if UNITY_EDITOR
             Debug.Log("인게임 씬으로 전환");
 #endif
-            //PhotonNetwork.LoadLevel("InGameScene");
+            PhotonNetwork.LoadLevel(BattleManager.SceneName);
         }
     }
 
@@ -589,7 +616,7 @@ public class MatchingSystem : MonoBehaviourPunCallbacks
 #if UNITY_EDITOR
             Debug.Log("공용방 게임 시작");
 #endif
-            PhotonNetwork.AutomaticallySyncScene = true;
+            //PhotonNetwork.AutomaticallySyncScene = true;
             PhotonNetwork.LoadLevel(BattleManager.SceneName);
         }
     }
@@ -597,8 +624,9 @@ public class MatchingSystem : MonoBehaviourPunCallbacks
     // 방을 나갈 시
     public override void OnLeftRoom()
     {
+#if UNITY_EDITOR
         Debug.Log("방에서 나감");
-
+#endif
         // UI 전환
         PVP_HostPopUp.SetActive(false);         // 호스트 팝업 끄기
         RandomMatchUI.SetActive(false);         // 혹시 랜덤 매칭 UI 켜졌다면 끄기
@@ -609,17 +637,49 @@ public class MatchingSystem : MonoBehaviourPunCallbacks
     }
     #endregion
 
-    #region 유틸 함수
+    #region 사설방 생성시 초대 코드
+    // 중복되지 않는 코드 생성기
+    private string GenerateUniqueRoomCode(int length)
+    {
+        const int MAX_ATTEMPTS = 10;
+        HashSet<string> existingCodes = new();
+
+        // 현재 로비의 모든 방 정보에서 RoomCode 추출
+        foreach (RoomInfo room in cachedRoomList)
+        {
+            if (room.CustomProperties.TryGetValue("RoomCode", out object codeObj))
+            {
+                existingCodes.Add(codeObj.ToString());
+            }
+        }
+
+        // 최대 10회까지 시도
+        for (int i = 0; i < MAX_ATTEMPTS; i++)
+        {
+            string newCode = GenerateRoomCode(length);
+            if (!existingCodes.Contains(newCode))
+            {
+                return newCode;
+            }
+        }
+
+        return null;
+    }
+
     // 사설방 생성시 코드 부여
     private string GenerateRoomCode(int length)
     {
         const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-        System.Text.StringBuilder sb = new System.Text.StringBuilder(length);
+        System.Text.StringBuilder sb = new(length);
         for (int i = 0; i < length; i++)
+        {
             sb.Append(chars[Random.Range(0, chars.Length)]);
+        }
         return sb.ToString();
     }
+    #endregion
 
+    #region 유틸 함수
     // 오류 출력
     private void ShowError(string msg)
     {

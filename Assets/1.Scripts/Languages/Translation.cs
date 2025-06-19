@@ -152,6 +152,7 @@ public static class Translation
         Obtain,                  // Obtain (획득)
         Common,                  // Common (일반)
         UnlockItem,              // 해당 아이템을 해금하시겠습니까?
+        ServerDisconnected,      //서버와의 연결이 끊겼습니다
 
         End
     }

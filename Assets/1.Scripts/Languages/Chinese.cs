@@ -279,6 +279,9 @@
                 case Translation.Letter.UnlockItem:
                     letters[i] = "要解锁该道具吗？";
                     break;
+                case Translation.Letter.ServerDisconnected:
+                    letters[i] = "与服务器的连接已断开。";
+                    break;
             }
         }
     }
