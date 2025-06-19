@@ -426,7 +426,7 @@ public class MatchingSystem : MonoBehaviourPunCallbacks
     // 방장이 바뀔때 호출
     public override void OnMasterClientSwitched(Player newMasterClient)
     {
-        Debug.Log($"방장이 변경됨: 새로운 방장 → {newMasterClient.NickName}");
+        Debug.Log($"방장이 변경됨: 새로운 방장 -> {newMasterClient.NickName}");
 
         // 내가 방장이 되었을 때 처리
         if (newMasterClient == PhotonNetwork.LocalPlayer)
@@ -473,13 +473,32 @@ public class MatchingSystem : MonoBehaviourPunCallbacks
 
         if (hasEnteredLobbyOnce)
         {
-            Debug.Log("로비 최초 진입 이후 → UI 처리 생략");
+            Debug.Log("로비 최초 진입 이후 -> UI 처리 생략");
             return;
         }
 
         hasEnteredLobbyOnce = true;
 
-        // Photon 커스텀 프로퍼티 설정
+        CustomPhotonPlayer();
+
+        // 유저 데이터 로드
+        UserGameData.Load(() =>
+        {
+            LobbyUI.gameObject.SetActive(true);
+        });
+
+        loadingObject.gameObject.SetActive(false);
+        realSkin.SetActive(true);
+        realSkin.GetComponent<Intro_Character_Ctrl>().ReturnBack();
+        realSkin.GetComponent<Intro_Character_Ctrl>().SetBoolFromEquippedSkin(UserGameData.EquippedSkin);
+        SaveSkinObject.GetComponent<Intro_Character_Ctrl>().SetBoolFromEquippedSkin(UserGameData.EquippedSkin);
+    }
+
+    /// <summary>
+    /// Photon커스텀 프로퍼티 설정 (장착 스킨, 프로필, 닉네임)
+    /// </summary>
+    public void CustomPhotonPlayer()
+    {
         ExitGames.Client.Photon.Hashtable playerProps = new();
 
         if (!string.IsNullOrEmpty(UserGameData.EquippedSkin))
@@ -498,18 +517,6 @@ public class MatchingSystem : MonoBehaviourPunCallbacks
         }
 
         PhotonNetwork.LocalPlayer.SetCustomProperties(playerProps);
-
-        // 유저 데이터 로드
-        UserGameData.Load(() =>
-        {
-            LobbyUI.gameObject.SetActive(true);
-        });
-
-        loadingObject.gameObject.SetActive(false);
-        realSkin.SetActive(true);
-        realSkin.GetComponent<Intro_Character_Ctrl>().ReturnBack();
-        realSkin.GetComponent<Intro_Character_Ctrl>().SetBoolFromEquippedSkin(UserGameData.EquippedSkin);
-        SaveSkinObject.GetComponent<Intro_Character_Ctrl>().SetBoolFromEquippedSkin(UserGameData.EquippedSkin);
     }
 
     // 방 입장 실패 시
@@ -523,10 +530,17 @@ public class MatchingSystem : MonoBehaviourPunCallbacks
     // 방 입장 시
     public override void OnJoinedRoom()
     {
+        CustomPhotonPlayer();
+
+        // 기본 Ready 상태 false로 초기화
+        ExitGames.Client.Photon.Hashtable props = new();
+        props[READY_KEY] = false;
+        PhotonNetwork.LocalPlayer.SetCustomProperties(props);
+
         PVP_CodePopUp.SetActive(false);
-
+#if UNITY_EDITOR
         Debug.Log($"방 입장 완료 - 방 이름: {PhotonNetwork.CurrentRoom.Name}");
-
+#endif
         // 플레이어 목록 UI 업데이트
         UpdatePlayerList();
 
@@ -535,7 +549,6 @@ public class MatchingSystem : MonoBehaviourPunCallbacks
         {
             if (PhotonNetwork.IsMasterClient)
             {
-                ExitGames.Client.Photon.Hashtable props = new();
                 props[READY_KEY] = true; // 방장은 고정 Ready
                 PhotonNetwork.LocalPlayer.SetCustomProperties(props);
             }
@@ -597,8 +610,9 @@ public class MatchingSystem : MonoBehaviourPunCallbacks
     // 방을 나갈 시
     public override void OnLeftRoom()
     {
+#if UNITY_EDITOR
         Debug.Log("방에서 나감");
-
+#endif
         // UI 전환
         PVP_HostPopUp.SetActive(false);         // 호스트 팝업 끄기
         RandomMatchUI.SetActive(false);         // 혹시 랜덤 매칭 UI 켜졌다면 끄기
