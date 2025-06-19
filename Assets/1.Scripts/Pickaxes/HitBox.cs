@@ -82,7 +82,7 @@ public class HitBox : MonoBehaviour
 
     private void Hit(Character character)
     {
-        if(character != null && character.photonView.Owner != PhotonNetwork.LocalPlayer)
+        if(character != null && PhotonNetwork.InRoom == true && character.photonView.Owner != PhotonNetwork.LocalPlayer)
         {
             Vector3 hitPoint = transform.position;
             Vector3 targetPoint = character.transform.position;

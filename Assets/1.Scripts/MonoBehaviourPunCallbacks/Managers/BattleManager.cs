@@ -13,10 +13,7 @@ public class BattleManager : Manager, IPunObservable
 {
     public static readonly string SceneName = "BattleScene";
 
-    [Header("배틀 매니저 구간"), SerializeField]
-    private Character prefabCharacter;                          //생성할 캐릭터
-    private Character myCharacter = null;                       //내 캐릭터\
-
+    [Header("배틀 매니저 구간")]
     [SerializeField]
     private Vector3 leftHandOffset;                             //왼쪽 손잡이 간격
     [SerializeField]
@@ -383,11 +380,12 @@ public class BattleManager : Manager, IPunObservable
             {
                 if (list[i] == PhotonNetwork.LocalPlayer)
                 {
-                    if (prefabCharacter != null && Resources.Load<GameObject>(prefabCharacter.name) != null)
+                    Character character = GetPrefab(list[i]);
+                    if (character != null && Resources.Load<GameObject>(character.name) != null)
                     {
                         Quaternion rotation = Quaternion.LookRotation(Vector3.zero - CornerPoints[i % CornerCount]);
                         SetRotation(rotation);
-                        GameObject gameObject = PhotonNetwork.Instantiate(prefabCharacter.name, CornerPoints[i % CornerCount], rotation);
+                        GameObject gameObject = PhotonNetwork.Instantiate(character.name, CornerPoints[i % CornerCount], rotation);
                         SetFixedPosition(gameObject.transform.position);
                         myCharacter = gameObject.GetComponent<Character>();
                         if (myCharacter != null)
