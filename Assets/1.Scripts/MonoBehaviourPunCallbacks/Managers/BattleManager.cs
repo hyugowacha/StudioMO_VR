@@ -310,9 +310,9 @@ public class BattleManager : Manager, IPunObservable
         }
         if(room != null && room.PlayerCount == 1 && remainingTime > 0)
         {
-            remainingTime = 0;
-            bulletPatternExecutor?.StopPlaying();
-            StopPlaying();
+            //remainingTime = 0;
+            //bulletPatternExecutor?.StopPlaying();
+            //StopPlaying();
         }
     }
 
