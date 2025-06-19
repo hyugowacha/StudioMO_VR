@@ -215,6 +215,7 @@ public class PlayerOptionUI : MonoBehaviour
         fishSelect.gameObject.SetActive(hasFish);
         penguinSelect.gameObject.SetActive(hasPenguin);
         cactusSelect.gameObject.SetActive(hasCactus);
+        moleSelect.gameObject.SetActive(hasMole);
     }
 
     #region 손목 관련 함수들
