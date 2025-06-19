@@ -151,7 +151,7 @@ public static class Translation
         InsufficientCurrency,     // 유료재화가 부족합니다.
         Obtain,                  // Obtain (획득)
         Common,                  // Common (일반)
-
+        UnlockItem,              // 해당 아이템을 해금하시겠습니까?
 
         End
     }

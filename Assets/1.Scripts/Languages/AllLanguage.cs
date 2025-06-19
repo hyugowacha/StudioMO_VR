@@ -57,6 +57,7 @@ public class AllLanguage : MonoBehaviour
     public TextMeshProUGUI purchaseItemYes;             // 해당 아이템 구매 확인 예 버튼
     public TextMeshProUGUI purchaseItemNo;              // 해당 아이템 구매 확인 아니오 버튼
 
+    public TextMeshProUGUI unlockItem;                  // 해당 아이템 해금 확인 텍스트
     public TextMeshProUGUI obtainItemYes;               // 해당 아이템 해금 확인 예 버튼
     public TextMeshProUGUI obtainItemNo;                // 해당 아이템 해금 확인 아니오 버튼
 
@@ -149,6 +150,7 @@ public class AllLanguage : MonoBehaviour
         purchaseItemNo.Set(Translation.Get(Translation.Letter.NO), currentFont);
 
         // ▼ 상점 텍스트 세팅 ( ShoppingAchievePanel )
+        unlockItem.Set(Translation.Get(Translation.Letter.UnlockItem), currentFont);
         obtainItemYes.Set(Translation.Get(Translation.Letter.YES), currentFont);
         obtainItemNo.Set(Translation.Get(Translation.Letter.NO), currentFont);
 

@@ -275,6 +275,9 @@ public static class Korean
                 case Translation.Letter.Select:
                     letters[i] = "선택";
                     break;
+                case Translation.Letter.UnlockItem:
+                    letters[i] = "해당 아이템을 해금하시겠습니까?";
+                    break;
             }
         }
     }
