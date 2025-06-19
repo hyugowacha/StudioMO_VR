@@ -24,9 +24,6 @@ public class LobbyCanvasCtrl : MonoBehaviour
     [Header("대전모드 UI 전체")]
     [SerializeField] private MatchingSystem matchingSystem;
 
-    [Header("상점모드 부분")]
-    [SerializeField] private GameObject shopCanvasCtrl;
-
     [Header("리비 스킨 부분")]
     [SerializeField] GameObject realSkin;
 
@@ -36,6 +33,7 @@ public class LobbyCanvasCtrl : MonoBehaviour
     {
         // 초기화
         lobbyCanvas.gameObject.SetActive(true);
+        realSkin.SetActive(true);
         stageSelectPanel.SetActive(false);
         versusPanel.SetActive(false);
         shopPanel.SetActive(false);
