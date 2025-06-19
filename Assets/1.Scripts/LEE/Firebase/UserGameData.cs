@@ -136,7 +136,7 @@ public static class UserGameData
     /// <param name="starCount"></param>
     public static void UpdateStars(int starCount)
     {
-        if (string.IsNullOrEmpty(UID)) return;
+        if ( string.IsNullOrEmpty(UID) || IsTester == true ) return;
 
         FirebaseDatabase.DefaultInstance
             .GetReference("Users")
@@ -340,9 +340,6 @@ public static class UserGameData
                     MapHighScores.Add(pair.Value);
                 }
 
-                Debug.Log($"[Debug] stageInfoDataSet count: {stageDataSet.stageInfoList.Count}");
-                Debug.Log($"[Debug] MapHighScores count: {MapHighScores.Count}");
-
                 // 스크립터블 오브젝트에도 반영
                 for (int i = 0; i < stageDataSet.stageInfoList.Count; i++)
                 {
@@ -350,7 +347,6 @@ public static class UserGameData
                     stageDataSet.stageInfoList[i].bestScore = score;
                 }
 
-                Debug.Log("맵 최고 점수 로드 완료");
                 onComplete?.Invoke();
             });
     }

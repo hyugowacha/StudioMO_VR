@@ -92,7 +92,6 @@ public class StagePanelCtrl : MonoBehaviour
         }
 
         UserGameData.totalStars = total;
-
         UserGameData.UpdateStars(total);
     }
 
