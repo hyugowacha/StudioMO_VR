@@ -278,6 +278,9 @@
                 case Translation.Letter.UnlockItem:
                     letters[i] = "このアイテムをアンロックしますか？";
                     break;
+                case Translation.Letter.ServerDisconnected:
+                    letters[i] = "サーバーとの接続が切断されました。";
+                    break;
             }
         }
     }
