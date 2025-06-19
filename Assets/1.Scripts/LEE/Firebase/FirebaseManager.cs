@@ -67,6 +67,9 @@ public class FirebaseManager : MonoBehaviourPunCallbacks
     [Header("로딩 화면, 로비화면")]
     [SerializeField] GameObject loadingObject;
     [SerializeField] GameObject lobbyObject;
+
+    [Header("아웃게임 스킨 오브젝트")]
+    [SerializeField] GameObject Character_Intro;
     #endregion
 
     #region 시작 시 초기화 및 버튼 등록
@@ -100,6 +103,7 @@ public class FirebaseManager : MonoBehaviourPunCallbacks
         {
             loginCanvas.gameObject.SetActive(false);
             lobbyObject.SetActive(true);
+            Character_Intro.SetActive(true);
         }
         else
         {
