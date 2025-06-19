@@ -491,6 +491,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7344063508533180132, guid: f5c642e1e1a7fd5448a948c1b823ce08,
+        type: 3}
+      propertyPath: sceneViewId
+      value: 5
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1425,6 +1430,7 @@ MonoBehaviour:
   - {fileID: 951652398}
   - {fileID: 1304324962}
   playButton: {fileID: 0}
+  loadingAnimation: {fileID: 0}
 --- !u!224 &150224238
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5057,6 +5063,7 @@ MonoBehaviour:
   stageInfoDataSet: {fileID: 11400000, guid: c0c5a507158cb3545b5490258901b795, type: 2}
   infoImage: {fileID: 942347050}
   infoPanel: {fileID: 942347048}
+  starText: {fileID: 0}
 --- !u!114 &452058209
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5790,6 +5797,7 @@ MonoBehaviour:
   stageInfoDataSet: {fileID: 11400000, guid: c0c5a507158cb3545b5490258901b795, type: 2}
   infoImage: {fileID: 854501356}
   infoPanel: {fileID: 854501353}
+  starText: {fileID: 0}
 --- !u!114 &524906027
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6819,8 +6827,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 45938ae446fac0b4198fc82c629c834d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  shopCanvas: {fileID: 2884980957214253843}
-  basicSkinData: {fileID: 11400000, guid: 4dd483c6a9fc5714887346d3d6a1503a, type: 2}
+  mainShopPanel: {fileID: 0}
+  lobbyCanvas: {fileID: 0}
+  lobbyCanvasCtrl: {fileID: 0}
   purchaseSkinData: []
   achievementSkinData: []
   purchaseSkinButtons: []
@@ -6838,6 +6847,12 @@ MonoBehaviour:
   starValue: {fileID: 0}
   autoPopUpPaenl: {fileID: 0}
   savePopUpPanel: {fileID: 0}
+  saveSkinObject0: {fileID: 0}
+  saveSkinObject1: {fileID: 0}
+  saveYesButton: {fileID: 0}
+  unLockB: {fileID: 0}
+  saveB: {fileID: 0}
+  buyB: {fileID: 0}
 --- !u!4 &625500467
 Transform:
   m_ObjectHideFlags: 0
@@ -7230,6 +7245,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 711327993722591604, guid: 5704d5e047b21014b83a73011ad895cb,
+        type: 3}
+      propertyPath: sceneViewId
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 8470377270446183419, guid: 5704d5e047b21014b83a73011ad895cb,
         type: 3}
       propertyPath: m_Name
@@ -8638,6 +8658,11 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5154887603989703317, guid: 25e49bb6edf45f2448bc57beabb37c24,
+        type: 3}
+      propertyPath: sceneViewId
+      value: 6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -9336,6 +9361,8 @@ MonoBehaviour:
   optionPanel: {fileID: 6666644196315548729}
   matchingSystem: {fileID: 1221010875216317023}
   shopCanvasCtrl: {fileID: 0}
+  realSkin: {fileID: 0}
+  isClickShopB: 0
 --- !u!4 &822815805
 Transform:
   m_ObjectHideFlags: 0
@@ -9363,8 +9390,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 45938ae446fac0b4198fc82c629c834d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  shopCanvas: {fileID: 8984852520987829860}
-  basicSkinData: {fileID: 11400000, guid: ffbb563ac03737343a8d52446d44a733, type: 2}
+  mainShopPanel: {fileID: 0}
+  lobbyCanvas: {fileID: 0}
+  lobbyCanvasCtrl: {fileID: 0}
   purchaseSkinData:
   - {fileID: 11400000, guid: 604d5019bd2f806469481262ff897d9a, type: 2}
   - {fileID: 11400000, guid: 62350643b577ba444be9b5297307fd6b, type: 2}
@@ -9394,6 +9422,12 @@ MonoBehaviour:
   starValue: {fileID: 0}
   autoPopUpPaenl: {fileID: 0}
   savePopUpPanel: {fileID: 0}
+  saveSkinObject0: {fileID: 0}
+  saveSkinObject1: {fileID: 0}
+  saveYesButton: {fileID: 0}
+  unLockB: {fileID: 0}
+  saveB: {fileID: 0}
+  buyB: {fileID: 0}
 --- !u!1 &854501352
 GameObject:
   m_ObjectHideFlags: 0
@@ -9437,6 +9471,7 @@ MonoBehaviour:
   - {fileID: 1517449963}
   - {fileID: 92226395}
   playButton: {fileID: 0}
+  loadingAnimation: {fileID: 0}
 --- !u!224 &854501354
 RectTransform:
   m_ObjectHideFlags: 0
@@ -9810,6 +9845,7 @@ MonoBehaviour:
   - {fileID: 2139074853}
   - {fileID: 1666363903}
   playButton: {fileID: 0}
+  loadingAnimation: {fileID: 0}
 --- !u!222 &942347049
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -10384,6 +10420,7 @@ MonoBehaviour:
   - {fileID: 596717076}
   - {fileID: 642933548}
   playButton: {fileID: 0}
+  loadingAnimation: {fileID: 0}
 --- !u!224 &1013374856
 RectTransform:
   m_ObjectHideFlags: 0
@@ -11543,6 +11580,74 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1185375096}
   m_CullTransparentMesh: 1
+--- !u!1001 &1190696316
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1420991651292356026, guid: d83b690b2209f344a9efd38363f3cbbc,
+        type: 3}
+      propertyPath: m_Name
+      value: Skin_Prefab_Sofo_Cat
+      objectReference: {fileID: 0}
+    - target: {fileID: 2606575596808995310, guid: d83b690b2209f344a9efd38363f3cbbc,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2606575596808995310, guid: d83b690b2209f344a9efd38363f3cbbc,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2606575596808995310, guid: d83b690b2209f344a9efd38363f3cbbc,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2606575596808995310, guid: d83b690b2209f344a9efd38363f3cbbc,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2606575596808995310, guid: d83b690b2209f344a9efd38363f3cbbc,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2606575596808995310, guid: d83b690b2209f344a9efd38363f3cbbc,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2606575596808995310, guid: d83b690b2209f344a9efd38363f3cbbc,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2606575596808995310, guid: d83b690b2209f344a9efd38363f3cbbc,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2606575596808995310, guid: d83b690b2209f344a9efd38363f3cbbc,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2606575596808995310, guid: d83b690b2209f344a9efd38363f3cbbc,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: d83b690b2209f344a9efd38363f3cbbc, type: 3}
 --- !u!1 &1207995280
 GameObject:
   m_ObjectHideFlags: 0
@@ -12806,6 +12911,7 @@ MonoBehaviour:
   stageInfoDataSet: {fileID: 11400000, guid: c0c5a507158cb3545b5490258901b795, type: 2}
   infoImage: {fileID: 1013374858}
   infoPanel: {fileID: 1013374855}
+  starText: {fileID: 0}
 --- !u!114 &1308786064
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13703,6 +13809,7 @@ MonoBehaviour:
   stageInfoDataSet: {fileID: 11400000, guid: c0c5a507158cb3545b5490258901b795, type: 2}
   infoImage: {fileID: 150224240}
   infoPanel: {fileID: 150224237}
+  starText: {fileID: 0}
 --- !u!114 &1402824524
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13808,6 +13915,7 @@ MonoBehaviour:
   - {fileID: 1017656320}
   - {fileID: 21417674}
   playButton: {fileID: 0}
+  loadingAnimation: {fileID: 0}
 --- !u!224 &1408793697
 RectTransform:
   m_ObjectHideFlags: 0
@@ -14619,6 +14727,7 @@ MonoBehaviour:
   - {fileID: 524906025}
   - {fileID: 1402824522}
   - {fileID: 452058206}
+  realSkin: {fileID: 0}
 --- !u!114 &1513817517
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20579,6 +20688,7 @@ MonoBehaviour:
   stageInfoDataSet: {fileID: 11400000, guid: c0c5a507158cb3545b5490258901b795, type: 2}
   infoImage: {fileID: 1408793699}
   infoPanel: {fileID: 1408793696}
+  starText: {fileID: 0}
 --- !u!114 &2068222449
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -26318,6 +26428,7 @@ MonoBehaviour:
   stageInfoDataSet: {fileID: 11400000, guid: c0c5a507158cb3545b5490258901b795, type: 2}
   infoImage: {fileID: 2151589056938343479}
   infoPanel: {fileID: 4446606959767970383}
+  starText: {fileID: 0}
 --- !u!224 &969019277459227473
 RectTransform:
   m_ObjectHideFlags: 0
@@ -27847,6 +27958,8 @@ MonoBehaviour:
   RandomMatchError_No: {fileID: 8555569607015521382}
   MatchingFail: {fileID: 722785916368951680}
   loadingObject: {fileID: 0}
+  realSkin: {fileID: 0}
+  SaveSkinObject: {fileID: 0}
 --- !u!223 &1223586239002719450
 Canvas:
   m_ObjectHideFlags: 0
@@ -33199,7 +33312,9 @@ MonoBehaviour:
   shopPanel: {fileID: 1620662965}
   optionPanel: {fileID: 6666644196315548729}
   matchingSystem: {fileID: 1221010875216317023}
-  shopCanvasCtrl: {fileID: 5269272679711806480}
+  shopCanvasCtrl: {fileID: 0}
+  realSkin: {fileID: 0}
+  isClickShopB: 0
 --- !u!224 &2263506980253163817
 RectTransform:
   m_ObjectHideFlags: 0
@@ -33521,6 +33636,7 @@ MonoBehaviour:
   stageInfoDataSet: {fileID: 11400000, guid: c0c5a507158cb3545b5490258901b795, type: 2}
   infoImage: {fileID: 7586108035171157872}
   infoPanel: {fileID: 5439963419712170153}
+  starText: {fileID: 0}
 --- !u!114 &2341716373844963322
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -34249,7 +34365,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &2448860153653617120
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -34416,15 +34532,20 @@ PrefabInstance:
       propertyPath: m_Name
       value: Mineral_Pastel
       objectReference: {fileID: 0}
-    - target: {fileID: 8651573497852460792, guid: 568dddcc7cc6b6844adf59996e89acc1,
+    - target: {fileID: 6846366279194441028, guid: 568dddcc7cc6b6844adf59996e89acc1,
         type: 3}
-      propertyPath: m_AnchorMax.x
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8651573497852460792, guid: 568dddcc7cc6b6844adf59996e89acc1,
         type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8651573497852460792, guid: 568dddcc7cc6b6844adf59996e89acc1,
+        type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -36900,12 +37021,6 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
---- !u!223 &2884980957214253843 stripped
-Canvas:
-  m_CorrespondingSourceObject: {fileID: 4885424003796209872, guid: edf4cc86d6f0877468cb5ce3b409ed30,
-    type: 3}
-  m_PrefabInstance: {fileID: 8458355344656168071}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &2909106801364223558
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -36929,6 +37044,7 @@ MonoBehaviour:
   bunnySelect: {fileID: 2545758625768912813}
   sharkProfile: {fileID: 7184882418214090045}
   sharkSelect: {fileID: 9062065420858870634}
+  realSkin: {fileID: 0}
   snapButton: {fileID: 2728950459317905926}
   smoothButton: {fileID: 2747394126028767936}
   rightButton: {fileID: 2794842962615098955}
@@ -38616,6 +38732,7 @@ MonoBehaviour:
   - {fileID: 6279908695655766589}
   - {fileID: 7030485600780285151}
   playButton: {fileID: 0}
+  loadingAnimation: {fileID: 0}
 --- !u!224 &3281144666227513059
 RectTransform:
   m_ObjectHideFlags: 0
@@ -44361,6 +44478,7 @@ MonoBehaviour:
   - {fileID: 7669193475628982635}
   - {fileID: 5752893013674137393}
   playButton: {fileID: 0}
+  loadingAnimation: {fileID: 0}
 --- !u!1 &4456689301669458142
 GameObject:
   m_ObjectHideFlags: 0
@@ -45797,6 +45915,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 685fbc56fd737e64285f0d75592b35b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  stageInfoDataSet: {fileID: 0}
+  allLanguage: {fileID: 0}
 --- !u!224 &4753338092117712786
 RectTransform:
   m_ObjectHideFlags: 0
@@ -46274,6 +46394,7 @@ MonoBehaviour:
   stageInfoDataSet: {fileID: 11400000, guid: c0c5a507158cb3545b5490258901b795, type: 2}
   infoImage: {fileID: 6568613071433958760}
   infoPanel: {fileID: 5633243033730508002}
+  starText: {fileID: 0}
 --- !u!222 &4902012400584702988
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -47896,8 +48017,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 45938ae446fac0b4198fc82c629c834d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  shopCanvas: {fileID: 8984852520987829860}
-  basicSkinData: {fileID: 11400000, guid: ffbb563ac03737343a8d52446d44a733, type: 2}
+  mainShopPanel: {fileID: 0}
+  lobbyCanvas: {fileID: 0}
+  lobbyCanvasCtrl: {fileID: 0}
   purchaseSkinData:
   - {fileID: 11400000, guid: 604d5019bd2f806469481262ff897d9a, type: 2}
   - {fileID: 11400000, guid: 62350643b577ba444be9b5297307fd6b, type: 2}
@@ -47927,6 +48049,12 @@ MonoBehaviour:
   starValue: {fileID: 8444996228876039282}
   autoPopUpPaenl: {fileID: 1725203723}
   savePopUpPanel: {fileID: 1868652604}
+  saveSkinObject0: {fileID: 0}
+  saveSkinObject1: {fileID: 0}
+  saveYesButton: {fileID: 0}
+  unLockB: {fileID: 0}
+  saveB: {fileID: 0}
+  buyB: {fileID: 0}
 --- !u!114 &5272448256150084066
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -48869,6 +48997,7 @@ MonoBehaviour:
   - {fileID: 8278929756069779397}
   - {fileID: 5558204642786434602}
   playButton: {fileID: 0}
+  loadingAnimation: {fileID: 0}
 --- !u!222 &5447336238223923253
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -49896,6 +50025,7 @@ MonoBehaviour:
   - {fileID: 6657278908073619245}
   - {fileID: 3299872677188761427}
   playButton: {fileID: 0}
+  loadingAnimation: {fileID: 0}
 --- !u!114 &5634962240845240142
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -57918,6 +58048,7 @@ MonoBehaviour:
   - {fileID: 5634962240845240142}
   - {fileID: 630427432957487313}
   playButton: {fileID: 0}
+  loadingAnimation: {fileID: 0}
 --- !u!114 &7294211590054851752
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -58162,6 +58293,7 @@ MonoBehaviour:
   stageInfoDataSet: {fileID: 11400000, guid: c0c5a507158cb3545b5490258901b795, type: 2}
   infoImage: {fileID: 4782102898567158603}
   infoPanel: {fileID: 7289211099686136110}
+  starText: {fileID: 0}
 --- !u!222 &7326455382648101894
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -59889,6 +60021,7 @@ MonoBehaviour:
   - {fileID: 8670766898594770956}
   - {fileID: 5955485332793733161}
   - {fileID: 3241678604544371591}
+  realSkin: {fileID: 0}
 --- !u!1 &7720344780143598899
 GameObject:
   m_ObjectHideFlags: 0
@@ -61138,6 +61271,7 @@ MonoBehaviour:
   stageInfoDataSet: {fileID: 11400000, guid: c0c5a507158cb3545b5490258901b795, type: 2}
   infoImage: {fileID: 151919394307171635}
   infoPanel: {fileID: 3277988523368284496}
+  starText: {fileID: 0}
 --- !u!1 &8015239397290539281
 GameObject:
   m_ObjectHideFlags: 0
@@ -66588,7 +66722,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &9009925389756456912
 GameObject:
   m_ObjectHideFlags: 0
@@ -67334,3 +67468,4 @@ SceneRoots:
   - {fileID: 822815805}
   - {fileID: 8168529349571199211}
   - {fileID: 6546706625428617219}
+  - {fileID: 1190696316}
