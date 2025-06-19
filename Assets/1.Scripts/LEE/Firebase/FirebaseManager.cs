@@ -79,13 +79,6 @@ public class FirebaseManager : MonoBehaviourPunCallbacks
         Authentication.Initialize(OnFirebaseInitComplete);
     }
 
-    //TODO: 임시 아이디용
-    public void MasterTest()
-    {
-        loginInputID.text = "dhkdskrwl123@naver.com";
-        loginInputPW.text = "123456";
-    }
-
     /// <summary>
     /// Firebase 초기화 완료 후 콜백
     /// </summary>
@@ -110,8 +103,6 @@ public class FirebaseManager : MonoBehaviourPunCallbacks
         }
         else
         {
-            MasterTest();
-
             // 로그인 관련 버튼 이벤트 등록
             signUpCanvasButton.onClick.AddListener(OnClickGoToSignUp);      // 회원가입 창 열기
             signInButton.onClick.AddListener(OnClickSignIn);                // 로그인
