@@ -95,11 +95,6 @@ public class BattleResultPanel : Panel
     }
 #endif
 
-    public void SetRetryButton(UnityAction retry)
-    {
-        retryButton.SetListener(retry);
-    }
-
     //대전 결과창을 보여주는 메소드
     public void Open(uint maxScore, (Character, Color)[] array, UnityAction retry, UnityAction exit)
     {
@@ -188,7 +183,7 @@ public class BattleResultPanel : Panel
                 sliders[i].SetActive(false);
             }
         }
-        SetRetryButton(retry);
+        retryButton.SetListener(retry);
         exitButton.SetListener(exit);
     }
 

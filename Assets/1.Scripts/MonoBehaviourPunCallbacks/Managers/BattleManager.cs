@@ -1,7 +1,6 @@
 using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.InputSystem;
 using DG.Tweening;
 using Photon.Pun;
@@ -52,10 +51,10 @@ public class BattleManager : Manager, IPunObservable
     [SerializeField]
     private StatePanel statePanel;                              //진행 상태 표시 패널
 
+    private const string Ready = "IsReady";
     private const string First = "first";
     private const string Second = "second";
     private const string Third = "third";
-
     private const int CornerCount = 4;
     private static readonly float CornerDistance = 18;
     private static readonly Vector3[] CornerPoints = new Vector3[CornerCount] 
@@ -236,6 +235,108 @@ public class BattleManager : Manager, IPunObservable
         }
     }
 
+    public override void OnPlayerPropertiesUpdate(Player player, Hashtable hashtable)
+    {
+        if (hashtable != null && hashtable.ContainsKey(Ready) == true)
+        {
+            Player[] players = PhotonNetwork.PlayerList;
+            bool? start = null;
+            if (hashtable[Ready] != null && bool.TryParse(hashtable[Ready].ToString(), out bool result) == true)
+            {
+                start = result;
+            }
+            rematchPanel?.OnPlayerPropertiesUpdate(player, start == true);
+            if (start == null || start == true)
+            {
+                bool exit = true;
+                int length = players != null ? players.Length : 0;
+                for (int i = 0; i < length; i++)
+                {
+                    if (players[i] != null)
+                    {
+                        Hashtable customProperties = players[i].CustomProperties;
+                        if (customProperties != null && customProperties.ContainsKey(Ready) == true && customProperties[Ready] != null && bool.TryParse(hashtable[Ready].ToString(), out result) == true)
+                        {
+                            if (result == false)
+                            {
+                                return;
+                            }
+                            else if (players[i] == PhotonNetwork.LocalPlayer)
+                            {
+                                exit = false;
+                            }
+                        }
+                    }
+                }
+                if (length > 1)
+                {
+                    if (exit == false)
+                    {
+                        PhotonNetwork.LoadLevel(SceneName);
+                    }
+                    else
+                    {
+                        PhotonNetwork.LeaveRoom();
+                    }
+                }
+            }
+            else if (player == PhotonNetwork.LocalPlayer)
+            {
+                statePanel?.Open(() =>
+                {
+                    statePanel.Close();
+                    battleResultPanel?.Close();
+                    List<Player> list = new List<Player>();
+                    int length = players != null ? players.Length : 0;
+                    for (int i = 0; i < length; i++)
+                    {
+                        if (players[i] != PhotonNetwork.LocalPlayer && players[i] != null)
+                        {
+                            Hashtable hashtable = players[i].CustomProperties;
+                            if (hashtable == null || hashtable.ContainsKey(Ready) == false || hashtable[Ready] == null || bool.TryParse(hashtable[Ready].ToString(), out bool result) == false)
+                            {
+                                list.Add(players[i]);
+                            }
+                            else
+                            {
+                                list.Clear();
+                                break;
+                            }
+                        }
+                    }
+                    for (int i = 0; i < list.Count; i++)
+                    {
+                        list[i].SetCustomProperties(new Hashtable() { { Ready, false } });
+                    }
+                    rematchPanel?.Open((value) =>
+                    {
+                        if (value == false)
+                        {
+                            int length = players != null ? players.Length : 0;
+                            for (int i = 0; i < length; i++)
+                            {
+                                if (players[i] != null && players[i] != PhotonNetwork.LocalPlayer)
+                                {
+                                    Hashtable hashtable = players[i].CustomProperties;
+                                    if (hashtable != null && hashtable.ContainsKey(Ready) == true && hashtable[Ready] != null && bool.TryParse(hashtable[Ready].ToString(), out bool result) == true)
+                                    {
+                                        PhotonNetwork.LocalPlayer.SetCustomProperties(new Hashtable() { { Ready, null } });
+                                        break;
+                                    }
+                                }
+                            }
+                            CloseRematchPanel();
+                        }
+                        else
+                        {
+                            PhotonNetwork.LocalPlayer.SetCustomProperties(new Hashtable() { { Ready, true } });
+                        }
+                    });
+                }, false);
+            }
+        }
+    }
+
     public override void OnRoomPropertiesUpdate(Hashtable hashtable)
     {
         if (hashtable != null)
@@ -307,16 +408,18 @@ public class BattleManager : Manager, IPunObservable
                 }
             }
         }
-        if(room != null && room.PlayerCount == 1 && remainingTime > 0)
-        {
-            StopPlaying(true);
-        }
         rematchPanel?.Remove(player);
-    }
-
-    public override void OnLeftRoom()
-    {
-        battleResultPanel?.SetRetryButton(() => { statePanel?.Open(null); });
+        if (room != null && room.PlayerCount <= 1)
+        {
+            if (remainingTime > 0)
+            {
+                StopPlaying(true);
+            }
+            else
+            {
+                CloseRematchPanel();
+            }
+        }
     }
 
     public override void OnDisconnected(DisconnectCause cause)
@@ -386,6 +489,7 @@ public class BattleManager : Manager, IPunObservable
                             slowMotionPanel?.Set(myCharacter.GetPortraitMaterial());
                         }
                     }
+                    list[i].SetCustomProperties(new Hashtable() { {Ready, null} });
                 }
                 rematchPanel?.Add(list[i]);
             }
@@ -533,49 +637,42 @@ public class BattleManager : Manager, IPunObservable
         bulletPatternExecutor?.InitiallizeBeatTiming();
     }
 
+    private void CloseRematchPanel()
+    {
+        rematchPanel?.Close();
+        battleResultPanel?.Open();
+    }
+
     private void StopPlaying(bool done)
     {
         remainingTime = 0;
         myCharacter?.SetSlowMotion(false);
         bulletPatternExecutor?.StopPlaying();
         pausePanel?.Close();
-        if(done == true)
+        if (done == true)
         {
             phasePanel?.Stop();
             if (rankingPanel != null)
             {
                 (uint maxScore, (Character, Color)[] array) = rankingPanel.GetValue();
-                UnityAction<bool> unityAction = (value) => { photonView.RPC(nameof(Replay), RpcTarget.All, PhotonNetwork.LocalPlayer.ActorNumber, value); };
-                battleResultPanel?.Open(maxScore, array, () => { statePanel?.Open(() => { unityAction.Invoke(false); statePanel?.Close(); battleResultPanel?.Close(); rematchPanel?.Open(unityAction); }, false); }, () => { statePanel?.Open(() => LoadMainLobbyScene(), null); });
+                battleResultPanel?.Open(maxScore, array, () => {
+
+                    Room room = PhotonNetwork.CurrentRoom;
+                    if (room != null && room.PlayerCount > 1)
+                    {
+                        PhotonNetwork.LocalPlayer.SetCustomProperties(new Hashtable() { { Ready, false } });
+                    }
+                    else
+                    {
+                        statePanel?.Open(null);
+                    }
+                },
+                () => { statePanel?.Open(() => LoadMainLobbyScene(), null); });
             }
         }
         else
         {
             statePanel?.Open(() => LoadMainLobbyScene());
-        }
-    }
-
-    [PunRPC]
-    private void Replay(int actorNumber, bool participation)
-    {
-        if(rematchPanel != null)
-        {
-            switch(rematchPanel.GetResult(actorNumber, participation))
-            {
-                case false:
-                    statePanel?.Open(() => { statePanel?.Close(); battleResultPanel?.Close(); rematchPanel?.Open((value) => { photonView.RPC(nameof(Replay), RpcTarget.All, PhotonNetwork.LocalPlayer.ActorNumber, value); }); }, false);
-                    break;
-                case true:
-                    if (rematchPanel.gameObject.activeSelf == true)
-                    {
-                        PhotonNetwork.LoadLevel(SceneName);
-                    }
-                    else
-                    {
-                        PhotonNetwork.LeaveRoom();
-                    }
-                    break;
-            }
         }
     }
 

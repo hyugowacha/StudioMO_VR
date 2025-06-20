@@ -4,8 +4,6 @@ using UnityEngine.Events;
 using TMPro;
 using Photon.Realtime;
 using ExitGames.Client.Photon;
-using static UnityEngine.InputManagerEntry;
-using Photon.Pun;
 
 /// <summary>
 /// 게임 재시합 여부에 대해 결정하는 패널
@@ -81,27 +79,11 @@ public class RematchPanel : Panel
     [SerializeField]
     private Image[] images = new Image[(int)PlayerIndex.End * (int)ImageIndex.End];
 
-    private class Member
-    {
-        public int actorNumber {
-            private set;
-            get;
-        }
-
-        public bool? participation;
-
-        public Member(int actorNumber, bool? participation)
-        {
-            this.actorNumber = actorNumber;
-            this.participation = participation;
-        }
-    }
-
-    private Member[] members = new Member[(int)PlayerIndex.End];
+    private int?[] members = new int?[(int)PlayerIndex.End];
 
     private readonly static string EquippedProfile = "EquippedProfile";
-    private readonly static Color RedColor = Color.red;
-    private readonly static Color GreenColor = Color.green;
+    private readonly static Color CloseColor = new Color(1f, 88f/ 255f, 88f/ 255f, 1f);
+    private readonly static Color CheckColor = Color.white;
     private readonly static Color ClearColor = Color.clear;
     private readonly static Vector2 CheckLocalPoint = new Vector2(6, 71);
     private readonly static Vector2 CloseLocalPoint = new Vector2(2.280899f, 70.99563f);
@@ -126,7 +108,7 @@ public class RematchPanel : Panel
             {
                 if (members[i] == null)
                 {
-                    members[i] = new Member(player.ActorNumber, null);
+                    members[i] = player.ActorNumber;
                     tmpTexts[i + (int)TextIndex.Player1].Set(player.NickName);
                     int index = (i * (int)ImageIndex.End);
                     images[index + (int)ImageIndex.State].Set(ClearColor);
@@ -155,10 +137,10 @@ public class RematchPanel : Panel
         {
             for (int i = 0; i < members.Length; i++)
             {
-                if (members[i] != null && members[i].actorNumber == player.ActorNumber)
+                if (members[i] != null && members[i].Value == player.ActorNumber)
                 {
                     members[i] = null;
-                    images[(i * (int)ImageIndex.End) + (int)ImageIndex.State].Set(closeSprite, RedColor, CloseLocalPoint);
+                    images[(i * (int)ImageIndex.End) + (int)ImageIndex.State].Set(closeSprite, CloseColor, CloseLocalPoint);
                 }
             }
         }
@@ -188,63 +170,29 @@ public class RematchPanel : Panel
         buttons[(int)ButtonIndex.No].SetListener(() => { unityAction?.Invoke(false); gameObject.SetActive(false); });
     }
 
-    public bool? GetResult(int actorNumber, bool participation)
+    public void Close()
     {
-        bool start = true;
-        if (participation == false)
-        {
-            int count = 0;
-            for(int i = 0; i < members.Length; i++)
-            {
-                if (members[i] != null && members[i].participation != null)
-                {
-                    count++;
-                }
-            }
-            if (count > 1)
-            {
+        gameObject.SetActive(false);
+    }
 
-            }
-
-                //members[i].participations이 다 null일 때면 모두를 false로 만든다.
-                //본인의 값을 발견했는데 혼자만 members[i].participations false라면 null을 하지 않는다. 만약 혼자가 아니면 null을 해도 좋다.
-                for (int i = 0; i < members.Length; i++)
-                {
-                    if (members[i] != null && members[i].participation != null)
-                    {
-
-                    }
-                }
-            if(start == true)
-            {
-                for(int i = 0; i < members.Length; i++)
-                {
-                    if (members[i] != null && members[i].actorNumber != actorNumber)
-                    {
-                        members[i].participation = false;
-                    }
-                }
-                return false;
-            }
-        }
-        //게임 시작
-        else
+    public void OnPlayerPropertiesUpdate(Player player, bool join)
+    {
+        if (player != null)
         {
             for (int i = 0; i < members.Length; i++)
             {
-                if (members[i] != null)
+                if (members[i] != null && members[i].Value == player.ActorNumber)
                 {
-                    if (members[i].actorNumber == actorNumber)
+                    if (join == true)
                     {
-                        members[i].participation = true;
+                        images[(i * (int)ImageIndex.End) + (int)ImageIndex.State].Set(checkSprite, CheckColor, CheckLocalPoint);
                     }
-                    else if (members[i].participation == false)
+                    else
                     {
-                        start = false;
+                        images[(i * (int)ImageIndex.End) + (int)ImageIndex.State].Set(ClearColor);
                     }
                 }
             }
         }
-        return null;
     }
 }

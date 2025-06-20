@@ -55,6 +55,10 @@ public abstract class Manager : MonoBehaviourPunCallbacks
     private Character[] characters = new Character[(int)Skin.End];
     protected Character myCharacter = null;
 
+    private static readonly string MainLobbySceneName = "MainLobbyScene";
+    private static readonly string EquippedSkin = "EquippedSkin ";
+    private static readonly string[] SkinNames = new string[(int)Skin.End] { "SkinData_Libee", "SkinData_Cat", "SkinData_Bunny", "SkinData_Fish", "SkinData_Cactus", "SkinData_Penguin", "SkinData_Mole" };
+
 #if UNITY_EDITOR
     [Header("유니티 에디터 전용")]
     [SerializeField]
@@ -63,10 +67,7 @@ public abstract class Manager : MonoBehaviourPunCallbacks
     [SerializeField]
     private Vector2 lookInputRatio = Vector2.one;
     private Vector2 lookInputValue = Vector2.zero; //현재 상하요동각과 편주각의 값을 저장해주는 변수
-
-    private static readonly string MainLobbySceneName = "MainLobbyScene";
-    private static readonly string EquippedSkin = "EquippedSkin ";
-    private static readonly string[] SkinNames = new string[(int)Skin.End] { "SkinData_Libee", "SkinData_Cat", "SkinData_Bunny", "SkinData_Fish", "SkinData_Cactus", "SkinData_Penguin", "SkinData_Mole" };
+  
     private static readonly Vector2 LookPitchAngle = new Vector2(-40, 60);
     private static readonly Vector3 LeftControllerLocalPosition = new Vector3(-0.1f, -0.05f, 0.3f);
     private static readonly Vector3 RightControllerLocalPosition = new Vector3(+0.1f, -0.05f, 0.3f);
