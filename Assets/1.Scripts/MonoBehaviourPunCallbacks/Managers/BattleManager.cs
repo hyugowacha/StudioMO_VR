@@ -246,7 +246,7 @@ public class BattleManager : Manager, IPunObservable
                 start = result;
             }
             rematchPanel?.OnPlayerPropertiesUpdate(player, start == true);
-            if (start == null || start == true)
+            if (start == true)
             {
                 bool exit = true;
                 int length = players != null ? players.Length : 0;
@@ -269,6 +269,45 @@ public class BattleManager : Manager, IPunObservable
                     }
                 }
                 if (length > 1)
+                {
+                    if (exit == false)
+                    {
+                        PhotonNetwork.LoadLevel(SceneName);
+                    }
+                    else
+                    {
+                        PhotonNetwork.LeaveRoom();
+                    }
+                }
+            }
+            else if(start == null)
+            {
+                bool exit = true;
+                int count = 0;
+                int length = players != null ? players.Length : 0;
+                for (int i = 0; i < length; i++)
+                {
+                    if (players[i] != null)
+                    {
+                        Hashtable customProperties = players[i].CustomProperties;
+                        if (customProperties != null && customProperties.ContainsKey(Ready) == true && customProperties[Ready] != null && bool.TryParse(hashtable[Ready].ToString(), out result) == true)
+                        {
+                            if (result == false)
+                            {
+                                return;
+                            }
+                            else
+                            {
+                                count++;
+                                if (players[i] == PhotonNetwork.LocalPlayer)
+                                {
+                                    exit = false;
+                                }
+                            }
+                        }
+                    }
+                }
+                if (count > 1)
                 {
                     if (exit == false)
                     {
