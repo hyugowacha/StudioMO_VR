@@ -74,8 +74,12 @@ public class BattleManager : Manager, IPunObservable
         if (instance == this)
         {
             SetMoveSpeed(0);
+            if (PhotonNetwork.AutomaticallySyncScene == false)
+            {
+                PhotonNetwork.AutomaticallySyncScene = true;
+            }
             Room room = PhotonNetwork.CurrentRoom;
-            if(room == null)
+            if (room == null)
             {
 #if UNITY_EDITOR
                 System.Collections.IEnumerator Test()
@@ -726,7 +730,7 @@ public class BattleManager : Manager, IPunObservable
                     double startDelay = value - limitTime;
                     if (startDelay > PhasePanel.StartDelay)
                     {
-                        DelayCall(PhasePanel.ReadyDelay - (float)startDelay, PhasePanel.StartDelay, PhasePanel.EndDelay);
+                        DelayCall((float)startDelay - PhasePanel.StartDelay, PhasePanel.StartDelay, PhasePanel.EndDelay);
                     }
                     else
                     {
