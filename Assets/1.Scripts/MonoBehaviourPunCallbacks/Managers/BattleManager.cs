@@ -231,7 +231,8 @@ public class BattleManager : Manager, IPunObservable
     {
         if (callbackContext.performed == true && pausePanel != null && pausePanel.gameObject.activeSelf == false && remainingTime > 0 && remainingTime <= limitTime)
         {
-            pausePanel.Open(() => SetTurnMode(true), () => SetTurnMode(false), CheckTurnMode());
+            SetRayInteractor(true);
+            pausePanel.Open(() => SetRayInteractor(false), () => SetTurnMode(true), () => SetTurnMode(false), CheckTurnMode());
         }
     }
 
@@ -537,6 +538,9 @@ public class BattleManager : Manager, IPunObservable
         {
             limitTime = audioSource.clip.length;
         }
+#if UNITY_EDITOR
+        limitTime = 10;
+#endif
         bulletPatternLoader?.RefineData();
     }
 
@@ -688,6 +692,11 @@ public class BattleManager : Manager, IPunObservable
         myCharacter?.SetSlowMotion(false);
         bulletPatternExecutor?.StopPlaying();
         pausePanel?.Close();
+        if(audioSource != null && audioSource.isPlaying == true)
+        {
+            audioSource.Stop();
+        }
+        SetRayInteractor(true);
         if (done == true)
         {
             phasePanel?.Stop();

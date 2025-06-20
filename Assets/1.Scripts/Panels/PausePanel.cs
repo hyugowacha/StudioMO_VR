@@ -176,11 +176,11 @@ public class PausePanel : Panel
     }
 
     //멀티 플레이에서 호출되는 메소드
-    public void Open(UnityAction snap, UnityAction smooth, bool style)
+    public void Open(UnityAction resume, UnityAction snap, UnityAction smooth, bool style)
     {
         gameObject.SetActive(true);
         ShowOption(snap, smooth, style);
-        buttons[(int)Index.Resume].SetListener(() => { Close(); });
+        buttons[(int)Index.Resume].SetListener(() => {resume?.Invoke(); Close(); });
     }
 
     //싱글 플레이에서 호출되는 메소드
