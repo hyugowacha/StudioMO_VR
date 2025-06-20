@@ -2,6 +2,7 @@ using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 using DG.Tweening;
 using Photon.Pun;
 using Photon.Realtime;
@@ -74,10 +75,6 @@ public class BattleManager : Manager, IPunObservable
         if (instance == this)
         {
             SetMoveSpeed(0);
-            if (PhotonNetwork.AutomaticallySyncScene == false)
-            {
-                PhotonNetwork.AutomaticallySyncScene = true;
-            }
             Room room = PhotonNetwork.CurrentRoom;
             if (room == null)
             {
@@ -285,10 +282,20 @@ public class BattleManager : Manager, IPunObservable
                 {
                     if (exit == false)
                     {
-                        PhotonNetwork.LoadLevel(SceneName);
+#if UNITY_EDITOR
+                        Debug.Log("재시작");
+#endif
+                        if (myCharacter != null)
+                        {
+                            PhotonNetwork.Destroy(myCharacter.gameObject);
+                        }
+                        SceneManager.LoadScene(SceneName);
                     }
                     else
                     {
+#if UNITY_EDITOR
+                        Debug.Log("강제 퇴장");
+#endif
                         PhotonNetwork.LeaveRoom();
                     }
                 }
