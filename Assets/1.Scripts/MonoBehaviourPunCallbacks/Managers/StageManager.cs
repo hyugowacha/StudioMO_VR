@@ -142,7 +142,7 @@ public class StageManager : Manager
                     myCharacter.SetSlowMotion(false); //시간이 끝나면 슬로우 모션 해제
                     totalScore = myCharacter.mineralCount;
                 }
-                phasePanel?.Stop();
+                phasePanel?.Stop(PhasePanel.EndDelay);
                 UnityAction next = null;
                 //파이어베이스에서 받은 데이터 내용으로 next를 바인딩 할지 여부를 결정
                 TryUpdateHighScoreAndStar((int)totalScore);
@@ -165,7 +165,9 @@ public class StageManager : Manager
                         break;
                     }
                 }
-                stageResultPanel?.Open(totalScore, score.GetClearValue(), score.GetAddValue(), next, () => ChangeScene(false), () => ChangeScene(true));
+                DOVirtual.DelayedCall(PhasePanel.EndDelay, () => {
+                    stageResultPanel?.Open(totalScore, score.GetClearValue(), score.GetAddValue(), next, () => ChangeScene(false), () => ChangeScene(true));
+                });
             }
         }
         timerPanel?.Fill(remainingTime, limitTime);

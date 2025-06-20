@@ -302,7 +302,7 @@ public class BattleManager : Manager, IPunObservable
                         if (players[i] != PhotonNetwork.LocalPlayer && players[i] != null)
                         {
                             Hashtable customProperties = players[i].CustomProperties;
-                            if (customProperties != null && customProperties.ContainsKey(Ready) == true && customProperties[Ready] == null)
+                            if(customProperties == null || customProperties.ContainsKey(Ready) == false || customProperties[Ready] == null || bool.TryParse(customProperties[Ready].ToString(), out bool result) == false)
                             {
                                 list.Add(players[i]);
                             }
@@ -366,6 +366,11 @@ public class BattleManager : Manager, IPunObservable
                 }
             }
         }
+    }
+
+    public override void OnPlayerEnteredRoom(Player player)
+    {
+        rematchPanel?.Add(player);
     }
 
     public override void OnPlayerLeftRoom(Player player)
@@ -651,8 +656,11 @@ public class BattleManager : Manager, IPunObservable
 
     private void CloseRematchPanel()
     {
-        rematchPanel?.Close();
-        battleResultPanel?.Open();
+        if (rematchPanel != null && rematchPanel.gameObject.activeSelf == true)
+        {
+            rematchPanel.Close();
+            battleResultPanel?.Open();
+        }
     }
 
     private void StopPlaying(bool done)
@@ -672,23 +680,25 @@ public class BattleManager : Manager, IPunObservable
         SetRayInteractor(true);
         if (done == true)
         {
-            phasePanel?.Stop();
+            phasePanel?.Stop(PhasePanel.EndDelay);
             if (rankingPanel != null)
             {
                 (uint maxScore, (Character, Color)[] array) = rankingPanel.GetValue();
-                battleResultPanel?.Open(maxScore, array, () => {
+                DOVirtual.DelayedCall(PhasePanel.EndDelay, () => {
+                    battleResultPanel?.Open(maxScore, array, () => {
 
-                    Room room = PhotonNetwork.CurrentRoom;
-                    if (room != null && room.PlayerCount > 1)
-                    {
-                        PhotonNetwork.LocalPlayer.SetCustomProperties(new Hashtable() { { Ready, false } });
-                    }
-                    else
-                    {
-                        statePanel?.Open(null);
-                    }
-                },
-                () => { statePanel?.Open(() => LoadMainLobbyScene(), null); });
+                        Room room = PhotonNetwork.CurrentRoom;
+                        if (room != null && room.PlayerCount > 1)
+                        {
+                            PhotonNetwork.LocalPlayer.SetCustomProperties(new Hashtable() { { Ready, false } });
+                        }
+                        else
+                        {
+                            statePanel?.Open(null);
+                        }
+                    },
+                    () => { statePanel?.Open(() => LoadMainLobbyScene(), null); });
+                });
             }
         }
         else

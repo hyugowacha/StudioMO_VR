@@ -102,6 +102,11 @@ public class PhasePanel : Panel
     //게임이 시작되었음을 표시하는 메서드
     public void Play(float ready, float start, float end)
     {
+#if UNITY_EDITOR
+        Debug.Log("대기 시간:" + ready);
+        Debug.Log("시작 시간:" + start);
+        Debug.Log("마무리 시간:" + end);
+#endif
         Set(State.None);
         tween.Kill();
         tween = DOVirtual.DelayedCall(ready, () =>
@@ -116,10 +121,14 @@ public class PhasePanel : Panel
     }
 
     //게임이 끝났음을 표시하는 메서드
-    public void Stop()
+    public void Stop(float end)
     {
         tween.Kill();
         Set(State.End);
+        tween = DOVirtual.DelayedCall(end, () =>
+        {
+            Set(State.None);
+        });
     }
 
     //언어를 변경하기 위한 메소드
