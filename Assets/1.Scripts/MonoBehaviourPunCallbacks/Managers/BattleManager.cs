@@ -505,7 +505,7 @@ public class BattleManager : Manager, IPunObservable
             limitTime = audioSource.clip.length;
         }
 #if UNITY_EDITOR
-        limitTime = 7;
+        limitTime = 30;
 #endif
         bulletPatternLoader?.RefineData();
     }
@@ -654,6 +654,10 @@ public class BattleManager : Manager, IPunObservable
 
     private void StopPlaying(bool done)
     {
+        if (pickaxe != null && pickaxe.grip == true)
+        {
+            pickaxe.grip = false;
+        }
         remainingTime = 0;
         myCharacter?.SetSlowMotion(false);
         bulletPatternExecutor?.StopPlaying();

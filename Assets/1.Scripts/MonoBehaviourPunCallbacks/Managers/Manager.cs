@@ -55,6 +55,7 @@ public abstract class Manager : MonoBehaviourPunCallbacks
     private Character[] characters = new Character[(int)Skin.End];
     protected Character myCharacter = null;
 
+    private static readonly string TurnMode = "TurnMode";
     private static readonly string MainLobbySceneName = "MainLobbyScene";
     private static readonly string EquippedSkin = "EquippedSkin ";
     private static readonly string[] SkinNames = new string[(int)Skin.End] { "SkinData_Libee", "SkinData_Cat", "SkinData_Bunny", "SkinData_Fish", "SkinData_Cactus", "SkinData_Penguin", "SkinData_Mole" };
@@ -112,6 +113,20 @@ public abstract class Manager : MonoBehaviourPunCallbacks
         {
             leftActionBasedController.SetActive(true);
             rightActionBasedController.SetActive(true);
+            if (snapTurnProvider != null)
+            {
+                bool smooth = PlayerPrefs.GetString(TurnMode) == TurnMode;
+                if (smooth == false)
+                {
+                    snapTurnProvider.turnAmount = snapMode.x;
+                    snapTurnProvider.debounceTime = snapMode.y;
+                }
+                else
+                {
+                    snapTurnProvider.turnAmount = smoothMode.x;
+                    snapTurnProvider.debounceTime = smoothMode.y;
+                }
+            }
             ChangeText((Translation.Language)PlayerPrefs.GetInt(Translation.Preferences));
         }
     }
@@ -202,14 +217,19 @@ public abstract class Manager : MonoBehaviourPunCallbacks
     //카메라 회전 속도를 변경해주는 메서드
     protected void SetTurnMode(bool snap)
     {
-        if (snapTurnProvider != null)
+        if(snap == true)
         {
-            if (snap == true)
+            PlayerPrefs.SetString(TurnMode, null);
+            if (snapTurnProvider != null)
             {
                 snapTurnProvider.turnAmount = snapMode.x;
                 snapTurnProvider.debounceTime = snapMode.y;
             }
-            else
+        }
+        else
+        {
+            PlayerPrefs.SetString(TurnMode, TurnMode);
+            if (snapTurnProvider != null)
             {
                 snapTurnProvider.turnAmount = smoothMode.x;
                 snapTurnProvider.debounceTime = smoothMode.y;
@@ -291,7 +311,7 @@ public abstract class Manager : MonoBehaviourPunCallbacks
     //회전 모드가 스냅 모드인지 확인하는 메서드
     protected bool CheckTurnMode()
     {
-        return snapTurnProvider != null && snapTurnProvider.turnAmount == snapMode.x && snapTurnProvider.debounceTime == snapMode.y;
+        return !(PlayerPrefs.GetString(TurnMode) == TurnMode);
     }
 
     //선택한 스킨 프리팹을 반환하는 메소드
