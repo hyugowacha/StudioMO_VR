@@ -75,6 +75,7 @@ public class BattleManager : Manager, IPunObservable
         if (instance == this)
         {
             SetMoveSpeed(0);
+            PhotonNetwork.IsMessageQueueRunning = true;
             Room room = PhotonNetwork.CurrentRoom;
             if (room == null)
             {
@@ -282,14 +283,11 @@ public class BattleManager : Manager, IPunObservable
                 {
                     if (exit == false)
                     {
+                        PhotonNetwork.IsMessageQueueRunning = false;
 #if UNITY_EDITOR
                         Debug.Log("¿ÁΩ√¿€");
 #endif
-                        if (myCharacter != null)
-                        {
-                            PhotonNetwork.Destroy(myCharacter.gameObject);
-                        }
-                        SceneManager.LoadScene(SceneName);
+                        PhotonNetwork.LoadLevel(SceneName);
                     }
                     else
                     {
