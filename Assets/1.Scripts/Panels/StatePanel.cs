@@ -137,7 +137,7 @@ public class StatePanel : Panel
     }
 
     //화면에 등장하여 선택한 내용의 진행을 결정하게 만드는 메소드
-    public void Open(UnityAction unityAction, bool? state)
+    public void Open(UnityAction yes, UnityAction no, bool? state)
     {
         gameObject.SetActive(true);
         switch (state)
@@ -152,8 +152,8 @@ public class StatePanel : Panel
                 Set(State.Exit);
                 break;
         }
-        buttons[(int)Select.Yes].SetListener(unityAction);
-        buttons[(int)Select.No].SetListener(Close);
+        buttons[(int)Select.Yes].SetListener(yes);
+        buttons[(int)Select.No].SetListener(no);
     }
 
     //멀티 플레이에서만 존재하며 다시하기가 취소되었거나 서버와 연결이 끊겼을 때 나올 메서드

@@ -122,7 +122,7 @@ public class NormalBullet : MonoBehaviourPunCallbacks, IBullet
         if (PhotonNetwork.InRoom == false)
         {
             EffectPoolManager.Instance.SpawnEffect(explosionEffectName, transform.position, Quaternion.identity);
-            PhotonNetwork.Destroy(gameObject);
+            Destroy(gameObject);
         }
         else if(photonView.IsMine == true)
         {

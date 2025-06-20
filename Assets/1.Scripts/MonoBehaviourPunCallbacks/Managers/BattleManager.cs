@@ -2,7 +2,6 @@ using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.SceneManagement;
 using DG.Tweening;
 using Photon.Pun;
 using Photon.Realtime;
@@ -78,7 +77,7 @@ public class BattleManager : Manager, IPunObservable
             Room room = PhotonNetwork.CurrentRoom;
             if (room == null)
             {
-#if UNITY_EDITOR
+#if UNITY_EDITOR || UNITY_STANDALONE
                 System.Collections.IEnumerator Test()
                 {
                     if (PhotonNetwork.IsConnectedAndReady == false)
@@ -242,7 +241,7 @@ public class BattleManager : Manager, IPunObservable
 
     public override void OnPlayerPropertiesUpdate(Player player, Hashtable hashtable)
     {
-        if (hashtable != null && hashtable.ContainsKey(Ready) == true)
+        if (connected == true && remainingTime == 0 && hashtable != null && hashtable.ContainsKey(Ready) == true)
         {
             Player[] players = PhotonNetwork.PlayerList;
             bool? start = null;
@@ -285,11 +284,7 @@ public class BattleManager : Manager, IPunObservable
 #if UNITY_EDITOR
                         Debug.Log("Àç½ÃÀÛ");
 #endif
-                        if (myCharacter != null)
-                        {
-                            PhotonNetwork.Destroy(myCharacter.gameObject);
-                        }
-                        SceneManager.LoadScene(SceneName);
+                        PhotonNetwork.LoadLevel(SceneName);
                     }
                     else
                     {
@@ -352,7 +347,24 @@ public class BattleManager : Manager, IPunObservable
                             PhotonNetwork.LocalPlayer.SetCustomProperties(new Hashtable() { { Ready, true } });
                         }
                     });
-                }, false);
+                }, 
+                () =>
+                {
+                    int length = players != null ? players.Length : 0;
+                    for (int i = 0; i < length; i++)
+                    {
+                        if (players[i] != null && players[i] != PhotonNetwork.LocalPlayer)
+                        {
+                            Hashtable hashtable = players[i].CustomProperties;
+                            if (hashtable != null && hashtable.ContainsKey(Ready) == true && hashtable[Ready] != null && bool.TryParse(hashtable[Ready].ToString(), out bool result) == true)
+                            {
+                                PhotonNetwork.LocalPlayer.SetCustomProperties(new Hashtable() { { Ready, null } });
+                                break;
+                            }
+                        }
+                    }
+                    statePanel.Close();
+                    }, false);
             }
         }
     }
@@ -526,9 +538,9 @@ public class BattleManager : Manager, IPunObservable
         {
             limitTime = audioSource.clip.length;
         }
-#if UNITY_EDITOR
-        limitTime = 30;
-#endif
+//#if UNITY_EDITOR
+        limitTime = 10;
+//#endif
         bulletPatternLoader?.RefineData();
     }
 
@@ -691,7 +703,6 @@ public class BattleManager : Manager, IPunObservable
         {
             audioSource.Stop();
         }
-        SetRayInteractor(true);
         if (done == true)
         {
             phasePanel?.Stop(PhasePanel.EndDelay);
@@ -699,6 +710,7 @@ public class BattleManager : Manager, IPunObservable
             {
                 (uint maxScore, (Character, Color)[] array) = rankingPanel.GetValue();
                 DOVirtual.DelayedCall(PhasePanel.EndDelay, () => {
+                    SetRayInteractor(true);
                     battleResultPanel?.Open(maxScore, array, () => {
 
                         Room room = PhotonNetwork.CurrentRoom;
@@ -711,12 +723,13 @@ public class BattleManager : Manager, IPunObservable
                             statePanel?.Open(null);
                         }
                     },
-                    () => { statePanel?.Open(() => LoadMainLobbyScene(), null); });
+                    () => { statePanel?.Open(() => LoadMainLobbyScene(), () => statePanel.Close(), null); });
                 });
             }
         }
         else
         {
+            SetRayInteractor(true);
             statePanel?.Open(() => LoadMainLobbyScene());
         }
     }

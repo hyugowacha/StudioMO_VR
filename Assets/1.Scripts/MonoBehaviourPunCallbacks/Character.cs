@@ -106,7 +106,7 @@ public class Character : MonoBehaviourPunCallbacks, IPunObservable
 
     private void Update()
     {
-        if(photonView.IsMine == true)
+        if(PhotonNetwork.InRoom == false || photonView.IsMine == true)
         {
             float deltaTime = Time.deltaTime;
             if (immuneTime > 0)
