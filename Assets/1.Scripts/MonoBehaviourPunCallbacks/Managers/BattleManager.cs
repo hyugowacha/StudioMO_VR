@@ -486,6 +486,9 @@ public class BattleManager : Manager, IPunObservable
         if (dictionary != null)
         {
             List<Player> list = dictionary.Values.OrderBy(keyValuePair => keyValuePair.ActorNumber).ToList();
+#if UNITY_EDITOR
+            Debug.Log("현재 참여 인원:" + list.Count);
+#endif
             for(int i = 0; i < list.Count; i++)
             {
                 if (list[i] == PhotonNetwork.LocalPlayer)
