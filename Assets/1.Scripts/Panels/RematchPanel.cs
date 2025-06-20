@@ -189,7 +189,7 @@ public class RematchPanel : Panel
                     }
                     else
                     {
-                        images[(i * (int)ImageIndex.End) + (int)ImageIndex.State].Set(ClearColor);
+                        images[(i * (int)ImageIndex.End) + (int)ImageIndex.State].Set(null, ClearColor);
                     }
                 }
             }

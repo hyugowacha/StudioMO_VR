@@ -239,6 +239,15 @@ public static class ExtensionMethod
         }
     }
 
+    public static void Set(this Image image, Sprite sprite, Color color)
+    {
+        if (image != null)
+        {
+            image.color = color;
+            image.sprite = sprite;
+        }
+    }
+
     public static void Set(this Image image, Sprite sprite, Color color, Vector2 position, bool local = true)
     {
         if (image != null)

@@ -257,7 +257,7 @@ public class BattleManager : Manager, IPunObservable
                     if (players[i] != null)
                     {
                         Hashtable customProperties = players[i].CustomProperties;
-                        if (customProperties != null && customProperties.ContainsKey(Ready) == true && customProperties[Ready] != null && bool.TryParse(hashtable[Ready].ToString(), out result) == true)
+                        if (customProperties != null && customProperties.ContainsKey(Ready) == true && customProperties[Ready] != null && bool.TryParse(customProperties[Ready].ToString(), out result) == true)
                         {
                             if (result == false)
                             {
@@ -505,7 +505,7 @@ public class BattleManager : Manager, IPunObservable
             limitTime = audioSource.clip.length;
         }
 #if UNITY_EDITOR
-        limitTime = 10;
+        limitTime = 7;
 #endif
         bulletPatternLoader?.RefineData();
     }
