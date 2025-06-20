@@ -33,8 +33,11 @@ public class BattleManager : Manager, IPunObservable
     private PausePanel pausePanel;                              //일시정지 패널
     [SerializeField]
     private TimerPanel timerPanel;                              //남은 시간 표시 패널
+    [SerializeField]
     private double remainingTime = 0.0f;                        //남은 시간
+    [SerializeField]
     private double limitTime = 0;                               //제한 시간
+    [SerializeField]
     private bool connected = false;                             //연결 여부
 
     [SerializeField]
@@ -298,8 +301,8 @@ public class BattleManager : Manager, IPunObservable
                     {
                         if (players[i] != PhotonNetwork.LocalPlayer && players[i] != null)
                         {
-                            Hashtable hashtable = players[i].CustomProperties;
-                            if (hashtable == null || hashtable.ContainsKey(Ready) == false || hashtable[Ready] == null || bool.TryParse(hashtable[Ready].ToString(), out bool result) == false)
+                            Hashtable customProperties = players[i].CustomProperties;
+                            if (customProperties != null && customProperties.ContainsKey(Ready) == true && customProperties[Ready] == null)
                             {
                                 list.Add(players[i]);
                             }
