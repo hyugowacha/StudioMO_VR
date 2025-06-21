@@ -10,11 +10,6 @@ using ExitGames.Client.Photon;
 /// </summary>
 public class RematchPanel : Panel
 {
-    [SerializeField]
-    private Sprite checkSprite;
-    [SerializeField]
-    private Sprite closeSprite;
-
     [Header("언어별 대응 폰트들"), SerializeField]
     private TMP_FontAsset[] tmpFontAssets = new TMP_FontAsset[Translation.count];
     //현재 언어 설정에 의해 변경된 폰트
@@ -82,11 +77,8 @@ public class RematchPanel : Panel
     private int?[] members = new int?[(int)PlayerIndex.End];
 
     private readonly static string EquippedProfile = "EquippedProfile";
-    private readonly static Color CloseColor = new Color(1f, 88f/ 255f, 88f/ 255f, 1f);
     private readonly static Color CheckColor = Color.white;
     private readonly static Color ClearColor = Color.clear;
-    private readonly static Vector2 CheckLocalPoint = new Vector2(6, 71);
-    private readonly static Vector2 CloseLocalPoint = new Vector2(2.280899f, 70.99563f);
 
 #if UNITY_EDITOR
     private void OnValidate()
@@ -111,7 +103,6 @@ public class RematchPanel : Panel
                     members[i] = player.ActorNumber;
                     tmpTexts[i + (int)TextIndex.Player1].Set(player.NickName);
                     int index = (i * (int)ImageIndex.End);
-                    images[index + (int)ImageIndex.State].Set(ClearColor);
                     Hashtable hashtable = player.CustomProperties;
                     if(hashtable != null && hashtable.ContainsKey(EquippedProfile) == true && hashtable[EquippedProfile] != null)
                     {
@@ -140,7 +131,9 @@ public class RematchPanel : Panel
                 if (members[i] != null && members[i].Value == player.ActorNumber)
                 {
                     members[i] = null;
-                    images[(i * (int)ImageIndex.End) + (int)ImageIndex.State].Set(closeSprite, CloseColor, CloseLocalPoint);
+                    tmpTexts[i + (int)TextIndex.Player1].Set("");
+                    images[(i * (int)ImageIndex.End) + (int)ImageIndex.State].Set(ClearColor);
+                    images[(i * (int)ImageIndex.End) + (int)ImageIndex.Portrait].Set((Sprite)null);
                 }
             }
         }
@@ -160,7 +153,7 @@ public class RematchPanel : Panel
         }
         tmpTexts[(int)TextIndex.Vote].Set(Translation.Get(Translation.Letter.Rematch), tmpFontAsset);
         tmpTexts[(int)TextIndex.Replay].Set(Translation.Get(Translation.Letter.PlayAgainWithPlayer), tmpFontAsset);
-        tmpTexts[(int)TextIndex.Start].SetText(Translation.Get(Translation.Letter.Start), tmpFontAsset);
+        tmpTexts[(int)TextIndex.Start].Set(Translation.Get(Translation.Letter.Start), tmpFontAsset);
     }
 
     public void Open(UnityAction<bool> unityAction)
@@ -185,11 +178,11 @@ public class RematchPanel : Panel
                 {
                     if (join == true)
                     {
-                        images[(i * (int)ImageIndex.End) + (int)ImageIndex.State].Set(checkSprite, CheckColor, CheckLocalPoint);
+                        images[(i * (int)ImageIndex.End) + (int)ImageIndex.State].Set(CheckColor);
                     }
                     else
                     {
-                        images[(i * (int)ImageIndex.End) + (int)ImageIndex.State].Set(null, ClearColor);
+                        images[(i * (int)ImageIndex.End) + (int)ImageIndex.State].Set(ClearColor);
                     }
                 }
             }

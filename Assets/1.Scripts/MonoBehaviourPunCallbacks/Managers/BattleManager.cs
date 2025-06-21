@@ -77,7 +77,7 @@ public class BattleManager : Manager, IPunObservable
             Room room = PhotonNetwork.CurrentRoom;
             if (room == null)
             {
-#if UNITY_EDITOR || UNITY_STANDALONE
+#if UNITY_EDITOR //|| UNITY_STANDALONE
                 System.Collections.IEnumerator Test()
                 {
                     if (PhotonNetwork.IsConnectedAndReady == false)
@@ -129,6 +129,7 @@ public class BattleManager : Manager, IPunObservable
             remainingTime -= Time.deltaTime * SlowMotion.speed;
             if(remainingTime <= 0)
             {
+                remainingTime = 0;
                 StopPlaying(true);
             }
         }
@@ -450,6 +451,7 @@ public class BattleManager : Manager, IPunObservable
         {
             if (remainingTime > 0)
             {
+                remainingTime = 0;
                 StopPlaying(true);
             }
             else
@@ -538,9 +540,6 @@ public class BattleManager : Manager, IPunObservable
         {
             limitTime = audioSource.clip.length;
         }
-//#if UNITY_EDITOR
-        limitTime = 10;
-//#endif
         bulletPatternLoader?.RefineData();
     }
 
@@ -695,7 +694,6 @@ public class BattleManager : Manager, IPunObservable
         {
             pickaxe.grip = false;
         }
-        remainingTime = 0;
         myCharacter?.SetSlowMotion(false);
         bulletPatternExecutor?.StopPlaying();
         pausePanel?.Close();
@@ -757,7 +755,7 @@ public class BattleManager : Manager, IPunObservable
                         DelayCall(0, PhasePanel.StartDelay - (float)startDelay, PhasePanel.EndDelay);
                     }
                 }
-                else
+                else if(value > 0)
                 {
                     if (value > limitTime - PhasePanel.EndDelay)
                     {
@@ -765,10 +763,16 @@ public class BattleManager : Manager, IPunObservable
                     }
                     DelayPlay(limitTime - value);
                 }
+                else
+                {
+                    remainingTime = 0;
+                    StopPlaying(true);
+                }
                 connected = true;
             }
             if (remainingTime != value && value == 0)
             {
+                remainingTime = 0;
                 StopPlaying(true);
             }
             else
