@@ -143,6 +143,7 @@ public class StageManager : Manager
                     totalScore = myCharacter.mineralCount;
                 }
                 phasePanel?.Stop(PhasePanel.EndDelay);
+                bulletPatternExecutor?.StopPlaying();
                 UnityAction next = null;
                 //파이어베이스에서 받은 데이터 내용으로 next를 바인딩 할지 여부를 결정
                 TryUpdateHighScoreAndStar((int)totalScore);
@@ -159,13 +160,14 @@ public class StageManager : Manager
                                 {
                                     StageData.SetCurrentStage(i + 1);
                                     SceneManager.LoadScene(SceneName);
-                                }, true);
+                                }, () => statePanel.Close(), true);
                             };
                         }
                         break;
                     }
                 }
                 DOVirtual.DelayedCall(PhasePanel.EndDelay, () => {
+                    SetRayInteractor(true);
                     stageResultPanel?.Open(totalScore, score.GetClearValue(), score.GetAddValue(), next, () => ChangeScene(false), () => ChangeScene(true));
                 });
             }
@@ -323,7 +325,7 @@ public class StageManager : Manager
         stop = true;
         SlowMotion.Pause();
         SetRayInteractor(true);
-        pausePanel.Open(Resume, () => { SlowMotion.Stop(); SceneManager.LoadScene(SceneName);}, () => statePanel?.Open(() => SceneManager.LoadScene("MainLobbyScene"), null), 
+        pausePanel.Open(Resume, () => { SlowMotion.Stop(); SceneManager.LoadScene(SceneName);}, () => statePanel?.Open(() => SceneManager.LoadScene("MainLobbyScene"), () => statePanel.Close(), null), 
             () => SetTurnMode(true), () => SetTurnMode(false), CheckTurnMode());
     }
 
@@ -355,10 +357,10 @@ public class StageManager : Manager
         {
             case true:
                 Authentication.isGamePlaying = true;
-                statePanel?.Open(() => SceneManager.LoadScene("MainLobbyScene"), null);
+                statePanel?.Open(() => SceneManager.LoadScene("MainLobbyScene"), () => statePanel.Close(), null);
                 break;
             case false:
-                statePanel?.Open(() => SceneManager.LoadScene(SceneName), false);
+                statePanel?.Open(() => SceneManager.LoadScene(SceneName), () => statePanel.Close(), false);
                 break;
         }
     }

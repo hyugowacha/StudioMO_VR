@@ -517,6 +517,9 @@ MonoBehaviour:
   phasePanel: {fileID: 1714604170}
   pausePanel: {fileID: 6209471219954817833}
   timerPanel: {fileID: 9101277440106356572}
+  remainingTime: 0
+  limitTime: 0
+  connected: 0
   slowMotionPanel: {fileID: 2007260914}
   rankingPanel: {fileID: 1855387529895970024}
   battleResultPanel: {fileID: 1982368748}
@@ -1629,18 +1632,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 9077602966564168498}
     m_Modifications:
-    - target: {fileID: 3033267052503190770, guid: e61ad5faf233baf4a94f56a42a8d2d44,
-        type: 3}
-      propertyPath: m_fontAsset
-      value: 
-      objectReference: {fileID: 11400000, guid: 4b8aa5f6588df0c47803a2a6bb4b6761,
-        type: 2}
-    - target: {fileID: 3033267052503190770, guid: e61ad5faf233baf4a94f56a42a8d2d44,
-        type: 3}
-      propertyPath: m_sharedMaterial
-      value: 
-      objectReference: {fileID: -7853904899199214455, guid: 4b8aa5f6588df0c47803a2a6bb4b6761,
-        type: 2}
     - target: {fileID: 3105777271439565051, guid: e61ad5faf233baf4a94f56a42a8d2d44,
         type: 3}
       propertyPath: m_Name
@@ -1651,12 +1642,6 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3527655574893563157, guid: e61ad5faf233baf4a94f56a42a8d2d44,
-        type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 21300000, guid: 60eb2b7de950eaf4b83d70fbadf3c305,
-        type: 3}
     - target: {fileID: 8108287460341242783, guid: e61ad5faf233baf4a94f56a42a8d2d44,
         type: 3}
       propertyPath: m_Pivot.x

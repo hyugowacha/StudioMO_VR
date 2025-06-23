@@ -2,7 +2,6 @@ using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.SceneManagement;
 using DG.Tweening;
 using Photon.Pun;
 using Photon.Realtime;
@@ -79,7 +78,7 @@ public class BattleManager : Manager, IPunObservable
             Room room = PhotonNetwork.CurrentRoom;
             if (room == null)
             {
-#if UNITY_EDITOR
+#if UNITY_EDITOR //|| UNITY_STANDALONE
                 System.Collections.IEnumerator Test()
                 {
                     if (PhotonNetwork.IsConnectedAndReady == false)
@@ -131,6 +130,7 @@ public class BattleManager : Manager, IPunObservable
             remainingTime -= Time.deltaTime * SlowMotion.speed;
             if(remainingTime <= 0)
             {
+                remainingTime = 0;
                 StopPlaying(true);
             }
         }
@@ -243,7 +243,7 @@ public class BattleManager : Manager, IPunObservable
 
     public override void OnPlayerPropertiesUpdate(Player player, Hashtable hashtable)
     {
-        if (hashtable != null && hashtable.ContainsKey(Ready) == true)
+        if (connected == true && remainingTime == 0 && hashtable != null && hashtable.ContainsKey(Ready) == true)
         {
             Player[] players = PhotonNetwork.PlayerList;
             bool? start = null;
@@ -350,7 +350,24 @@ public class BattleManager : Manager, IPunObservable
                             PhotonNetwork.LocalPlayer.SetCustomProperties(new Hashtable() { { Ready, true } });
                         }
                     });
-                }, false);
+                }, 
+                () =>
+                {
+                    int length = players != null ? players.Length : 0;
+                    for (int i = 0; i < length; i++)
+                    {
+                        if (players[i] != null && players[i] != PhotonNetwork.LocalPlayer)
+                        {
+                            Hashtable hashtable = players[i].CustomProperties;
+                            if (hashtable != null && hashtable.ContainsKey(Ready) == true && hashtable[Ready] != null && bool.TryParse(hashtable[Ready].ToString(), out bool result) == true)
+                            {
+                                PhotonNetwork.LocalPlayer.SetCustomProperties(new Hashtable() { { Ready, null } });
+                                break;
+                            }
+                        }
+                    }
+                    statePanel.Close();
+                    }, false);
             }
         }
     }
@@ -436,6 +453,7 @@ public class BattleManager : Manager, IPunObservable
         {
             if (remainingTime > 0)
             {
+                remainingTime = 0;
                 StopPlaying(true);
             }
             else
@@ -524,9 +542,6 @@ public class BattleManager : Manager, IPunObservable
         {
             limitTime = audioSource.clip.length;
         }
-#if UNITY_EDITOR
-        limitTime = 30;
-#endif
         bulletPatternLoader?.RefineData();
     }
 
@@ -681,7 +696,6 @@ public class BattleManager : Manager, IPunObservable
         {
             pickaxe.grip = false;
         }
-        remainingTime = 0;
         myCharacter?.SetSlowMotion(false);
         bulletPatternExecutor?.StopPlaying();
         pausePanel?.Close();
@@ -689,7 +703,6 @@ public class BattleManager : Manager, IPunObservable
         {
             audioSource.Stop();
         }
-        SetRayInteractor(true);
         if (done == true)
         {
             phasePanel?.Stop(PhasePanel.EndDelay);
@@ -697,6 +710,7 @@ public class BattleManager : Manager, IPunObservable
             {
                 (uint maxScore, (Character, Color)[] array) = rankingPanel.GetValue();
                 DOVirtual.DelayedCall(PhasePanel.EndDelay, () => {
+                    SetRayInteractor(true);
                     battleResultPanel?.Open(maxScore, array, () => {
 
                         Room room = PhotonNetwork.CurrentRoom;
@@ -709,12 +723,13 @@ public class BattleManager : Manager, IPunObservable
                             statePanel?.Open(null);
                         }
                     },
-                    () => { statePanel?.Open(() => LoadMainLobbyScene(), null); });
+                    () => { statePanel?.Open(() => LoadMainLobbyScene(), () => statePanel.Close(), null); });
                 });
             }
         }
         else
         {
+            SetRayInteractor(true);
             statePanel?.Open(() => LoadMainLobbyScene());
         }
     }
@@ -742,7 +757,7 @@ public class BattleManager : Manager, IPunObservable
                         DelayCall(0, PhasePanel.StartDelay - (float)startDelay, PhasePanel.EndDelay);
                     }
                 }
-                else
+                else if(value > 0)
                 {
                     if (value > limitTime - PhasePanel.EndDelay)
                     {
@@ -750,10 +765,16 @@ public class BattleManager : Manager, IPunObservable
                     }
                     DelayPlay(limitTime - value);
                 }
+                else
+                {
+                    remainingTime = 0;
+                    StopPlaying(true);
+                }
                 connected = true;
             }
             if (remainingTime != value && value == 0)
             {
+                remainingTime = 0;
                 StopPlaying(true);
             }
             else
