@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
@@ -11,6 +12,9 @@ using ExitGames.Client.Photon;
 /// </summary>
 public class RematchPanel : Panel
 {
+    [Header("기본 플레이어 프로필 스프라이트"), SerializeField]
+    private Sprite profileSprite;
+
     [Header("언어별 대응 폰트들"), SerializeField]
     private TMP_FontAsset[] tmpFontAssets = new TMP_FontAsset[Translation.count];
     //현재 언어 설정에 의해 변경된 폰트
@@ -28,7 +32,7 @@ public class RematchPanel : Panel
         End
     }
 
-    [SerializeField]
+    [Header("스킨 정보들"), SerializeField]
     private SkinData[] skinDatas = new SkinData[(int)Skin.End];
 
     private enum TextIndex : byte
@@ -77,6 +81,7 @@ public class RematchPanel : Panel
 
     private int?[] members = new int?[(int)PlayerIndex.End];
 
+    private readonly static string Ready = "IsReady";
     private readonly static string EquippedProfile = "EquippedProfile";
     private readonly static Color CheckColor = Color.white;
     private readonly static Color ClearColor = Color.clear;
@@ -92,9 +97,47 @@ public class RematchPanel : Panel
     }
 #endif
 
-    //멤버를 추가하거나  위한 메서드
+    public void SetPlayers(Player[] players)
+    {
+        if(players != null)
+        {
+            List<Player> list = players.Where(player => player != null).OrderBy(player => player.ActorNumber).ToList();
+            for (int i = 0; i < members.Length; i++)
+            {
+                if (i < list.Count)
+                {
+                    members[i] = list[i].ActorNumber;
+                    tmpTexts[i + (int)TextIndex.Player1].Set(list[i].NickName);
+                    int index = (i * (int)ImageIndex.End);
+                    Hashtable hashtable = list[i].CustomProperties;
+                    if (hashtable != null)
+                    {
+                        if (hashtable.ContainsKey(EquippedProfile) == true && hashtable[EquippedProfile] != null)
+                        {
+                            string profile = hashtable[EquippedProfile].ToString();
+                            for (int j = 0; j < skinDatas.Length; j++)
+                            {
+                                if (skinDatas[j] != null && skinDatas[j].name == profile)
+                                {
+                                    images[index + (int)ImageIndex.Portrait].Set(skinDatas[j].profile);
+                                }
+                            }
+                        }
+                        if(hashtable.ContainsKey(Ready) == true && hashtable[Ready] != null && bool.TryParse(hashtable[Ready].ToString(), out bool ready) == true && ready == true)
+                        {
+                            images[index + (int)ImageIndex.State].Set(CheckColor);
+                        }
+                        else
+                        {
+                            images[index + (int)ImageIndex.State].Set(ClearColor);
+                        }
+                    }
+                }
+            }
+        }
+    }
 
-    public void OnPlayerPropertiesUpdate(Player player, bool? value)
+    public void OnPlayerPropertiesUpdate(Player player, bool value)
     {
         if (player != null)
         {
@@ -108,38 +151,13 @@ public class RematchPanel : Panel
                     }
                 }
             }
-            else if(value == false || members.Contains(player.ActorNumber) == true)
+            else
             {
                 for (int i = 0; i < members.Length; i++)
                 {
                     if (members[i] != null && members[i].Value == player.ActorNumber)
                     {
                         images[(i * (int)ImageIndex.End) + (int)ImageIndex.State].Set(ClearColor);
-                    }
-                }
-            }
-            else if(value == null)
-            {
-                for (int i = 0; i < members.Length; i++)
-                {
-                    if (members[i] == null)
-                    {
-                        members[i] = player.ActorNumber;
-                        tmpTexts[i + (int)TextIndex.Player1].Set(player.NickName);
-                        int index = (i * (int)ImageIndex.End);
-                        Hashtable hashtable = player.CustomProperties;
-                        if (hashtable != null && hashtable.ContainsKey(EquippedProfile) == true && hashtable[EquippedProfile] != null)
-                        {
-                            string profile = hashtable[EquippedProfile].ToString();
-                            for (int j = 0; j < skinDatas.Length; j++)
-                            {
-                                if (skinDatas[j] != null && skinDatas[j].name == profile)
-                                {
-                                    images[index + (int)ImageIndex.Portrait].Set(skinDatas[j].profile);
-                                }
-                            }
-                        }
-                        break;
                     }
                 }
             }
@@ -155,11 +173,26 @@ public class RematchPanel : Panel
             {
                 if (members[i] != null && members[i].Value == player.ActorNumber)
                 {
-                    members[i] = null;
-                    tmpTexts[i + (int)TextIndex.Player1].Set("");
-                    int index = (i * (int)ImageIndex.End);
-                    images[index + (int)ImageIndex.State].Set(ClearColor);
-                    images[index + (int)ImageIndex.Portrait].Set((Sprite)null);
+                    for (int j = i; j < members.Length; j++)
+                    {
+                        if (j < members.Length - 1)
+                        {
+                            members[j] = members[j + 1];
+                            tmpTexts[j + (int)TextIndex.Player1].Set(tmpTexts[j + 1 + (int)TextIndex.Player1] != null ? tmpTexts[j + 1 + (int)TextIndex.Player1].text: "");
+                            int front = (j * (int)ImageIndex.End);
+                            int back = ((j + 1) * (int)ImageIndex.End);
+                            images[front + (int)ImageIndex.State].Set(images[back + (int)ImageIndex.State] != null ? images[back + (int)ImageIndex.State].color : ClearColor);
+                            images[front + (int)ImageIndex.Portrait].Set(images[back + (int)ImageIndex.Portrait] != null ? images[back + (int)ImageIndex.Portrait].sprite : profileSprite);
+                        }
+                        else
+                        {
+                            members[j] = null;
+                            tmpTexts[j + (int)TextIndex.Player1].Set("");
+                            int index = (j * (int)ImageIndex.End);
+                            images[index + (int)ImageIndex.State].Set(ClearColor);
+                            images[index + (int)ImageIndex.Portrait].Set(profileSprite);
+                        }
+                    }
                 }
             }
         }

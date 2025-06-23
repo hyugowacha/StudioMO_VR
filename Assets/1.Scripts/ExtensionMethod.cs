@@ -189,16 +189,6 @@ public static class ExtensionMethod
         }
     }
 
-    public static void Set(this TMP_Text tmpText, string value, TMP_FontAsset fontAsset, Color color)
-    {
-        if (tmpText != null)
-        {
-            tmpText.font = fontAsset;
-            tmpText.color = color;
-            tmpText.text = value;
-        }
-    }
-
     public static void SetActive(this Slider slider, bool value)
     {
         if(slider != null)

@@ -77,7 +77,7 @@ public class BattleManager : Manager, IPunObservable
             Room room = PhotonNetwork.CurrentRoom;
             if (room == null)
             {
-#if UNITY_EDITOR //|| UNITY_STANDALONE
+#if UNITY_EDITOR// || UNITY_STANDALONE
                 System.Collections.IEnumerator Test()
                 {
                     if (PhotonNetwork.IsConnectedAndReady == false)
@@ -240,6 +240,11 @@ public class BattleManager : Manager, IPunObservable
         }
     }
 
+    public override void OnPlayerEnteredRoom(Player player)
+    {
+        rematchPanel?.SetPlayers(PhotonNetwork.PlayerList);
+    }
+
     public override void OnPlayerPropertiesUpdate(Player player, Hashtable hashtable)
     {
         if (connected == true && remainingTime == 0 && hashtable != null && hashtable.ContainsKey(Ready) == true)
@@ -250,7 +255,7 @@ public class BattleManager : Manager, IPunObservable
             {
                 start = result;
             }
-            rematchPanel?.OnPlayerPropertiesUpdate(player, start);
+            rematchPanel?.OnPlayerPropertiesUpdate(player, start == true);
             if(start == null || start == true)
             {
                 bool exit = true;
@@ -534,6 +539,9 @@ public class BattleManager : Manager, IPunObservable
         {
             limitTime = audioSource.clip.length;
         }
+//#if UNITY_EDITOR || UNITY_STANDALONE
+//        limitTime = 15;
+//#endif
         bulletPatternLoader?.RefineData();
     }
 
@@ -548,6 +556,7 @@ public class BattleManager : Manager, IPunObservable
             remainingTime = limitTime + PhasePanel.ReadyDelay + PhasePanel.StartDelay;
             connected = true;
             DelayCall(PhasePanel.ReadyDelay, PhasePanel.StartDelay, PhasePanel.EndDelay);
+            rematchPanel?.SetPlayers(PhotonNetwork.PlayerList);
         }
     }
 
@@ -737,6 +746,7 @@ public class BattleManager : Manager, IPunObservable
             double value = (double)stream.ReceiveNext();
             if (connected == false)
             {
+                rematchPanel?.SetPlayers(PhotonNetwork.PlayerList);
                 if (value > limitTime)
                 {
                     double startDelay = value - limitTime;
