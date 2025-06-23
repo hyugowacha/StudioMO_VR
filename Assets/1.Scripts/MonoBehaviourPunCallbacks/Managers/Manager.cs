@@ -115,8 +115,7 @@ public abstract class Manager : MonoBehaviourPunCallbacks
             rightActionBasedController.SetActive(true);
             if (snapTurnProvider != null)
             {
-                bool smooth = PlayerPrefs.GetString(TurnMode) == TurnMode;
-                if (smooth == false)
+                if (CheckTurnMode() == true)
                 {
                     snapTurnProvider.turnAmount = snapMode.x;
                     snapTurnProvider.debounceTime = snapMode.y;

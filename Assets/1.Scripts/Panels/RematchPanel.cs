@@ -1,3 +1,4 @@
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
@@ -91,38 +92,62 @@ public class RematchPanel : Panel
     }
 #endif
 
-    //멤버를 추가하기 위한 메서드
-    public void Add(Player player)
+    //멤버를 추가하거나  위한 메서드
+
+    public void OnPlayerPropertiesUpdate(Player player, bool? value)
     {
         if (player != null)
         {
-            for (int i = 0; i < members.Length; i++)
+            if(value == true)
             {
-                if (members[i] == null)
+                for (int i = 0; i < members.Length; i++)
                 {
-                    members[i] = player.ActorNumber;
-                    tmpTexts[i + (int)TextIndex.Player1].Set(player.NickName);
-                    int index = (i * (int)ImageIndex.End);
-                    Hashtable hashtable = player.CustomProperties;
-                    if(hashtable != null && hashtable.ContainsKey(EquippedProfile) == true && hashtable[EquippedProfile] != null)
+                    if (members[i] != null && members[i].Value == player.ActorNumber)
                     {
-                        string profile = hashtable[EquippedProfile].ToString();
-                        for (int j = 0; j < skinDatas.Length; j++)
+                        images[(i * (int)ImageIndex.End) + (int)ImageIndex.State].Set(CheckColor);
+                    }
+                }
+            }
+            else if(value == false || members.Contains(player.ActorNumber) == true)
+            {
+                for (int i = 0; i < members.Length; i++)
+                {
+                    if (members[i] != null && members[i].Value == player.ActorNumber)
+                    {
+                        images[(i * (int)ImageIndex.End) + (int)ImageIndex.State].Set(ClearColor);
+                    }
+                }
+            }
+            else if(value == null)
+            {
+                for (int i = 0; i < members.Length; i++)
+                {
+                    if (members[i] == null)
+                    {
+                        members[i] = player.ActorNumber;
+                        tmpTexts[i + (int)TextIndex.Player1].Set(player.NickName);
+                        int index = (i * (int)ImageIndex.End);
+                        Hashtable hashtable = player.CustomProperties;
+                        if (hashtable != null && hashtable.ContainsKey(EquippedProfile) == true && hashtable[EquippedProfile] != null)
                         {
-                            if (skinDatas[j] != null && skinDatas[j].name == profile)
+                            string profile = hashtable[EquippedProfile].ToString();
+                            for (int j = 0; j < skinDatas.Length; j++)
                             {
-                                images[index + (int)ImageIndex.Portrait].Set(skinDatas[j].profile);
+                                if (skinDatas[j] != null && skinDatas[j].name == profile)
+                                {
+                                    images[index + (int)ImageIndex.Portrait].Set(skinDatas[j].profile);
+                                }
                             }
                         }
+                        break;
                     }
-                    break;
                 }
             }
         }
     }
 
     //멤버를 삭제하기 위한 메서드
-    public void Remove(Player player)
+    public void OnPlayerLeftRoom(Player player)
     {
         if(player != null)
         {
@@ -132,8 +157,9 @@ public class RematchPanel : Panel
                 {
                     members[i] = null;
                     tmpTexts[i + (int)TextIndex.Player1].Set("");
-                    images[(i * (int)ImageIndex.End) + (int)ImageIndex.State].Set(ClearColor);
-                    images[(i * (int)ImageIndex.End) + (int)ImageIndex.Portrait].Set((Sprite)null);
+                    int index = (i * (int)ImageIndex.End);
+                    images[index + (int)ImageIndex.State].Set(ClearColor);
+                    images[index + (int)ImageIndex.Portrait].Set((Sprite)null);
                 }
             }
         }
@@ -156,6 +182,7 @@ public class RematchPanel : Panel
         tmpTexts[(int)TextIndex.Start].Set(Translation.Get(Translation.Letter.Start), tmpFontAsset);
     }
 
+    //게임 
     public void Open(UnityAction<bool> unityAction)
     {
         gameObject.SetActive(true);
@@ -166,26 +193,5 @@ public class RematchPanel : Panel
     public void Close()
     {
         gameObject.SetActive(false);
-    }
-
-    public void OnPlayerPropertiesUpdate(Player player, bool join)
-    {
-        if (player != null)
-        {
-            for (int i = 0; i < members.Length; i++)
-            {
-                if (members[i] != null && members[i].Value == player.ActorNumber)
-                {
-                    if (join == true)
-                    {
-                        images[(i * (int)ImageIndex.End) + (int)ImageIndex.State].Set(CheckColor);
-                    }
-                    else
-                    {
-                        images[(i * (int)ImageIndex.End) + (int)ImageIndex.State].Set(ClearColor);
-                    }
-                }
-            }
-        }
     }
 }

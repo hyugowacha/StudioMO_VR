@@ -250,7 +250,7 @@ public class BattleManager : Manager, IPunObservable
             {
                 start = result;
             }
-            rematchPanel?.OnPlayerPropertiesUpdate(player, start == true);
+            rematchPanel?.OnPlayerPropertiesUpdate(player, start);
             if(start == null || start == true)
             {
                 bool exit = true;
@@ -392,11 +392,6 @@ public class BattleManager : Manager, IPunObservable
         }
     }
 
-    public override void OnPlayerEnteredRoom(Player player)
-    {
-        rematchPanel?.Add(player);
-    }
-
     public override void OnPlayerLeftRoom(Player player)
     {
         Room room = PhotonNetwork.CurrentRoom;
@@ -446,7 +441,7 @@ public class BattleManager : Manager, IPunObservable
                 }
             }
         }
-        rematchPanel?.Remove(player);
+        rematchPanel?.OnPlayerLeftRoom(player);
         if (room != null && room.PlayerCount <= 1)
         {
             if (remainingTime > 0)
@@ -533,7 +528,6 @@ public class BattleManager : Manager, IPunObservable
                     }
                     list[i].SetCustomProperties(new Hashtable() { {Ready, null} });
                 }
-                rematchPanel?.Add(list[i]);
             }
         }
         if (audioSource != null && audioSource.clip != null)
