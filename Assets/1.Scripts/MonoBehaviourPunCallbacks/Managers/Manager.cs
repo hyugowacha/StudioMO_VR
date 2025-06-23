@@ -334,7 +334,6 @@ public abstract class Manager : MonoBehaviourPunCallbacks
         return characters[(int)Skin.Ribee];
     }
 
-
     //언어를 바꿔주는 메서드
     public void SetLanguage(int index)
     {

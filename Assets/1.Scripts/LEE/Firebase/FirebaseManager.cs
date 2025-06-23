@@ -174,7 +174,7 @@ public class FirebaseManager : MonoBehaviourPunCallbacks
     {
         string ID = loginInputID.text;
         string PW = loginInputPW.text;
-
+        signInButton.interactable = false;
         Authentication.SignIn(ID, PW, result =>
         {
             switch (result)
@@ -216,7 +216,6 @@ public class FirebaseManager : MonoBehaviourPunCallbacks
 
                     // AuthValues 설정
                     PhotonNetwork.AuthValues = new Photon.Realtime.AuthenticationValues(Authentication.UserId);
-
                     loadingObject.gameObject.SetActive(true);
                     loginCanvas.gameObject.SetActive(false);
                     break;
@@ -224,16 +223,19 @@ public class FirebaseManager : MonoBehaviourPunCallbacks
                 case Authentication.State.SignInAlready:
                     Debug.LogWarning("[FirebaseManager] 로그인 거부 - 이미 로그인된 계정");
                     WarningLogSetActiveTrue("이미 로그인 된 계정입니다.");
+                    signInButton.interactable = true;
                     break;
 
                 case Authentication.State.SignInInvalidEmail:
                     Debug.LogWarning("[FirebaseManager] 로그인 거부 - 이메일 형식 오류");
                     WarningLogSetActiveTrue("ID의 이메일 형식이 올바르지 않습니다.");
+                    signInButton.interactable = true;
                     break;
 
                 default:
                     Debug.LogError("[FirebaseManager] 로그인 실패 - ID/PW 불일치 또는 기타 오류");
                     WarningLogSetActiveTrue("ID 혹은 PW가 일치 하지 않습니다.");
+                    signInButton.interactable = true;
                     break;
             }
         });

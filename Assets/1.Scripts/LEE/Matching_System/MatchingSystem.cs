@@ -500,11 +500,9 @@ public class MatchingSystem : MonoBehaviourPunCallbacks
         CustomPhotonPlayer();
 
         // 유저 데이터 로드
-        UserGameData.Load(() =>
-        {
-            LobbyUI.gameObject.SetActive(true);
-        });
+        UserGameData.Load();
 
+        LobbyUI.gameObject.SetActive(true);
         loadingObject.gameObject.SetActive(false);
         realSkin.SetActive(true);
         realSkin.GetComponent<Intro_Character_Ctrl>().ReturnBack();
