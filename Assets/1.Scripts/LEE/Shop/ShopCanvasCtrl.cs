@@ -33,9 +33,6 @@ public class ShopCanvasCtrl : MonoBehaviour
     [SerializeField] Image getSkinImage;
     [SerializeField] TextMeshProUGUI getSkinPrice;
 
-    [Header("적용된 스킨 프리뷰"), SerializeField]
-    Image previewImage;
-
     [Header("보유 중인 코인")]
     [SerializeField] TextMeshProUGUI coinValue;
 
@@ -253,12 +250,6 @@ public class ShopCanvasCtrl : MonoBehaviour
         mainShopPanel.SetActive(false);
         lobbyCanvas.SetActive(true);
     }
-
-    //// ▼ 기본 스킨으로 적용하는 버튼
-    //public void OnClickBasicSkin()
-    //{
-    //    ApplySkin(basicSkinData);
-    //}
 
     // ▼ 구매 탭 버튼 누를 시 실행
     public void OnClickPurchaseTAB()
