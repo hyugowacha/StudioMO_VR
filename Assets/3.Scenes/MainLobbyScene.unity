@@ -165,6 +165,18 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 1478428687}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &314861275 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2825731951297660759, guid: 39e8f707ba714b54f93213fcefc87c0e,
+    type: 3}
+  m_PrefabInstance: {fileID: 904900833}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &333566819 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2794945673035721431, guid: 39e8f707ba714b54f93213fcefc87c0e,
@@ -2001,7 +2013,7 @@ PrefabInstance:
     - target: {fileID: 1553952499188408668, guid: 39e8f707ba714b54f93213fcefc87c0e,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: OnClickBuySkin
+      value: OnClickBuySkinCoin
       objectReference: {fileID: 0}
     - target: {fileID: 1567158810992620837, guid: 39e8f707ba714b54f93213fcefc87c0e,
         type: 3}
@@ -2376,7 +2388,7 @@ PrefabInstance:
     - target: {fileID: 7146149873281439695, guid: 39e8f707ba714b54f93213fcefc87c0e,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: OnClickBuySkin
+      value: OnClickGetSkinStar
       objectReference: {fileID: 0}
     - target: {fileID: 7340848283381397817, guid: 39e8f707ba714b54f93213fcefc87c0e,
         type: 3}
@@ -2428,6 +2440,11 @@ PrefabInstance:
       propertyPath: buyB
       value: 
       objectReference: {fileID: 1252077477}
+    - target: {fileID: 7739870909402943896, guid: 39e8f707ba714b54f93213fcefc87c0e,
+        type: 3}
+      propertyPath: ExitB
+      value: 
+      objectReference: {fileID: 314861275}
     - target: {fileID: 7739870909402943896, guid: 39e8f707ba714b54f93213fcefc87c0e,
         type: 3}
       propertyPath: saveB

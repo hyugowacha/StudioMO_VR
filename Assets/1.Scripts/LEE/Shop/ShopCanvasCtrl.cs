@@ -64,6 +64,9 @@ public class ShopCanvasCtrl : MonoBehaviour
     [SerializeField] private Button saveB;
     [SerializeField] private Button buyB;
 
+    [Header("상점 부분 나가기 버튼")]
+    [SerializeField] private Button ExitB;
+
 
     public void Start()
     {
@@ -75,6 +78,7 @@ public class ShopCanvasCtrl : MonoBehaviour
         getSkinPanel.SetActive(false);                      // 획득 물어보는 패널
         autoPopUpPaenl.SetActive(false);                    // 코인 부족 알림 패널
         savePopUpPanel.SetActive(false);                    // 저장 패널
+        ExitB.interactable = true;
     }
 
     // ▼ 상점 화면 활성화
@@ -117,12 +121,12 @@ public class ShopCanvasCtrl : MonoBehaviour
         });
     }
 
-    // ▼ !! 테스트용 스킨 구매 패널에서 해당 스킨 구매 버튼 눌렀을 때, 구매 처리 담당
-    public void OnClickBuySkin()
+    // ▼ 스킨 구매 패널에서 해당 스킨 구매 버튼 눌렀을 때, 구매 처리 담당
+    public void OnClickBuySkinCoin()
     {
-        if (currentCoin >= selectedSkin.price)
+        if (currentCoin >= selectedSkin.coinPrice)
         {
-            currentCoin -= selectedSkin.price;
+            currentCoin -= selectedSkin.coinPrice;
             coinValue.text = currentCoin.ToString();
 
             selectedShopButton.UnLock();
@@ -131,22 +135,47 @@ public class ShopCanvasCtrl : MonoBehaviour
             UserGameData.SetCoins(currentCoin);
             UserGameData.UnlockSkin(selectedSkin.skinID);
 
-            purchaseSkinPanel.SetActive(false);
-
-            // ▼ 테스트용 획득용 함수 하나 만들어야 함.
-            getSkinPanel.SetActive(false);
+            buyB.interactable = false;
         }
         else
         {
-            purchaseSkinPanel.SetActive(false);
-            getSkinPanel.SetActive(false);
             autoPopUpPaenl.SetActive(true);
             Debug.Log("코인이 부족합니다");
         }
 
+        getSkinPanel.SetActive(false);
+        purchaseSkinPanel.SetActive(false);
+
+        ExitB.interactable = true;
+
         unLockB.interactable = true;
         saveB.interactable = true;
+    }
+
+    public void OnClickGetSkinStar()
+    {
+        if (currentStars >= selectedSkin.starPrice)
+        {
+            selectedShopButton.UnLock();
+
+            // 유저 게임 데이터 저장
+            UserGameData.UnlockSkin(selectedSkin.skinID);
+
+            unLockB.interactable = false;
+        }
+        else
+        {
+            autoPopUpPaenl.SetActive(true);
+            Debug.Log("스타가 부족합니다");
+        }
+
+        getSkinPanel.SetActive(false);
+        purchaseSkinPanel.SetActive(false);
+
+        saveB.interactable = true;
         buyB.interactable = true;
+
+        ExitB.interactable = true;
     }
 
     // ▼ 현재 선택된 스킨 데이터, 버튼 정보를 외부에서 입력받은 정보로 초기화
@@ -159,7 +188,6 @@ public class ShopCanvasCtrl : MonoBehaviour
         // 선택한 스킨으로 전환 됨
         saveSkinObject0.GetComponent<Intro_Character_Ctrl>().SetBoolFromEquippedSkin(skin.skinID);
         saveSkinObject1.GetComponent<Intro_Character_Ctrl>().SetBoolFromEquippedSkin(skin.skinID);
-        Debug.Log($"[선택됨] selectedSkin: {skin.skinName}, Button: {button.name}");
     }
 
     // ▼ 스킨 아이템 버튼을 클릭한 후 , 구매 버튼을 클릭하면 해당 스킨 아이템 정보를 토대로 구매 패널 염
@@ -198,6 +226,8 @@ public class ShopCanvasCtrl : MonoBehaviour
         unLockB.interactable = true;
         saveB.interactable = true;
         buyB.interactable = true;
+
+        ExitB.interactable = true;
     }
 
     // ▼ 스킨 구입할지 말지 고르는 패널
@@ -205,7 +235,8 @@ public class ShopCanvasCtrl : MonoBehaviour
     {
         purchaseSkinPanel.SetActive(true);
         purchaseSkinImage.sprite = skin.profile;
-        purchaseSkinPrice.text = skin.price.ToString();
+        purchaseSkinPrice.text = skin.coinPrice.ToString();
+        ExitB.interactable = false;
     }
 
     // ▼ 스킨 획득할지 말지 고르는 패널
@@ -213,7 +244,8 @@ public class ShopCanvasCtrl : MonoBehaviour
     {
         getSkinPanel.SetActive(true);
         getSkinImage.sprite = skin.profile;
-        getSkinPrice.text = skin.price.ToString();
+        getSkinPrice.text = skin.starPrice.ToString();
+        ExitB.interactable = false;
     }
 
     // ShoppingPurchasePanel NoB
@@ -224,6 +256,8 @@ public class ShopCanvasCtrl : MonoBehaviour
         unLockB.interactable = true;
         saveB.interactable = true; 
         buyB.interactable = true;
+
+        ExitB.interactable = true;
     }
 
     // ShoppingAchievePanel NoB
@@ -234,6 +268,8 @@ public class ShopCanvasCtrl : MonoBehaviour
         unLockB.interactable = true;
         saveB.interactable = true;
         buyB.interactable = true;
+
+        ExitB.interactable = true;
     }
 
     // ▼ 상점 캔버스 나가기 버튼
@@ -286,6 +322,8 @@ public class ShopCanvasCtrl : MonoBehaviour
         unLockB.interactable = false;
         saveB.interactable = false;
         buyB.interactable = false;
+
+        ExitB.interactable = false;
     }
 
     // ▼ 저장하기 패널 나가기 버튼 누를 시 실행
@@ -297,6 +335,8 @@ public class ShopCanvasCtrl : MonoBehaviour
         unLockB.interactable = true;
         saveB.interactable = true;
         buyB.interactable = false;
+
+        ExitB.interactable = true;
     }
 }
 

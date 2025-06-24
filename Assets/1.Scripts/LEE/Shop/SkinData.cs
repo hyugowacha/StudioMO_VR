@@ -9,5 +9,6 @@ public class SkinData : ScriptableObject
     public string skinName;
     public string description;
     public Sprite profile;        // 프로필 이미지 (UI에서 사용)
-    public int price;
+    public int coinPrice;
+    public int starPrice;
 }
