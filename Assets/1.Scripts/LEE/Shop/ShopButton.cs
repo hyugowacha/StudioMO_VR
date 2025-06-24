@@ -57,7 +57,7 @@ public class ShopButton : MonoBehaviour
             achievementButton.interactable = true;
             //Debug.Log("잠금 걸려있으므로, 아이템 정보 기억합니다");
             // ▼ 클릭한 스킨 아이템 정보 저장 (기억하기)
-            //shopCanvasCtrl.OnClickSkinButton(this, mySkinData, checkUnlocked, myTabType);
+            shopCanvasCtrl.OnClickSkinButton(this, mySkinData, checkUnlocked, myTabType);
 
         }
     }
