@@ -329,7 +329,7 @@ public class MatchingSystem : MonoBehaviourPunCallbacks
 
         if (PhotonNetwork.IsMasterClient)
         {
-            // 방장: 전체 레디 체크
+            // 모든 플레이어 레디 확인
             foreach (Player p in PhotonNetwork.PlayerList)
             {
                 if (!p.CustomProperties.ContainsKey(READY_KEY) || !(bool)p.CustomProperties[READY_KEY])
@@ -338,6 +338,10 @@ public class MatchingSystem : MonoBehaviourPunCallbacks
                     return;
                 }
             }
+
+            // 다른 사람들 못들어오게 방을 닫기.
+            PhotonNetwork.CurrentRoom.IsOpen = false;
+            PhotonNetwork.CurrentRoom.IsVisible = false;
 
             PhotonNetwork.LoadLevel("InGameScene");
         }
@@ -496,11 +500,9 @@ public class MatchingSystem : MonoBehaviourPunCallbacks
         CustomPhotonPlayer();
 
         // 유저 데이터 로드
-        UserGameData.Load(() =>
-        {
-            LobbyUI.gameObject.SetActive(true);
-        });
+        UserGameData.Load();
 
+        LobbyUI.gameObject.SetActive(true);
         loadingObject.gameObject.SetActive(false);
         realSkin.SetActive(true);
         realSkin.GetComponent<Intro_Character_Ctrl>().ReturnBack();

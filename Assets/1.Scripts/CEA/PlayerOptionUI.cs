@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.XR.Interaction.Toolkit.Samples.StarterAssets;
 
 public class PlayerOptionUI : MonoBehaviour
 {
@@ -74,6 +75,8 @@ public class PlayerOptionUI : MonoBehaviour
     private const string HAND_PREFS_KEY = "UsedHand"; //사용 손 저장용 키
 
     private Image[] profileImages;
+
+    [SerializeField] private GameObject rightController;
     #endregion
 
     void Awake()
@@ -95,10 +98,12 @@ public class PlayerOptionUI : MonoBehaviour
             SelectSkin(UserGameData.EquippedProfile);  // 장착된 프로필 자동 선택
         });
 
-        // 회전 및 손잡이 관련 정보는 로컬에 저장되므로 그대로 적용
-        bool isSnap = PlayerPrefs.GetString(TURN_PREFS_KEY, "Snap") == "Snap";
-        ChangeTurnMethod(isSnap);
+        // 회전 방식 적용
+        string actualMode = PlayerPrefs.GetString("TurnMode", ""); // null도 가능하니 빈 문자열 대비
+        bool isSnap = string.IsNullOrEmpty(actualMode); // TurnMode가 비어있으면 Snap 모드로 간주
+        ChangeTurnMethod(isSnap); // UI 버튼 상태 반영
 
+        // 손잡이 설정
         bool isRight = PlayerPrefs.GetString(HAND_PREFS_KEY, "Right") == "Right";
         ChangeHand(isRight);
     }
@@ -224,21 +229,34 @@ public class PlayerOptionUI : MonoBehaviour
     /// </summary>
     public void ChangeTurnMethod(bool useSnap)
     {
-        snapButton.gameObject.SetActive(useSnap); //usesnap 참일 시
-        smoothButton.gameObject.SetActive(!useSnap); //거짓일 시
+        snapButton.gameObject.SetActive(useSnap);
+        smoothButton.gameObject.SetActive(!useSnap);
 
         turnMethod = useSnap ? "Snap" : "Smooth";
 
-        if (useSnap)
-        {
-            //TODO: 스냅 방식으로 바꾸는 매서드 필요함
-        }
+        PlayerPrefs.SetString(TURN_PREFS_KEY, turnMethod);
+        PlayerPrefs.SetString("TurnMode", useSnap ? "" : "TurnMode"); // "" 이면 Snap, 값 있으면 Smooth
+        PlayerPrefs.Save();
 
+        // ActionBasedControllerManager의 스무스 회전 설정
+        if (rightController != null)
+        {
+            var controllerManager = rightController.GetComponent<ActionBasedControllerManager>();
+            if (controllerManager != null)
+            {
+                controllerManager.smoothTurnEnabled = !useSnap; // Snap일 때 false, Smooth일 때 true
+            }
+            else
+            {
+                Debug.LogWarning("ActionBasedControllerManager를 찾을 수 없습니다.");
+            }
+        }
         else
         {
-            //TODO: 스무스 방식으로 바꾸는 메서드 필요함
+            Debug.LogWarning("Right Controller가 할당되지 않았습니다.");
         }
-    } 
+    }
+
 
     public void ChangeSnap()
     {

@@ -33,6 +33,9 @@ public class Intro_Character_Ctrl : MonoBehaviour
 
         // 현재 활성화된 캐릭터 위치 저장
         originalPosition = characters[index].transform.position;
+
+        if(!canMoveCharacters)
+        SetBoolFromEquippedSkin(UserGameData.EquippedSkin);
     }
 
     private void Update()

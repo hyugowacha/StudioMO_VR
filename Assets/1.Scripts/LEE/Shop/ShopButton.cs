@@ -30,7 +30,12 @@ public class ShopButton : MonoBehaviour
         myTabType = tabType;
 
         skinImage.sprite = skinData.profile;
-        skinPrice.text = skinData.price.ToString();
+        
+        if(skinData.coinPrice != 0)
+            skinPrice.text = skinData.coinPrice.ToString();
+        else
+            skinPrice.text = skinData.starPrice.ToString();
+
         lockImage.enabled = !isUnlocked;
     }
 
@@ -55,10 +60,7 @@ public class ShopButton : MonoBehaviour
         {
             purchaseButton.interactable = true;
             achievementButton.interactable = true;
-            //Debug.Log("잠금 걸려있으므로, 아이템 정보 기억합니다");
-            // ▼ 클릭한 스킨 아이템 정보 저장 (기억하기)
-            //shopCanvasCtrl.OnClickSkinButton(this, mySkinData, checkUnlocked, myTabType);
-
+            shopCanvasCtrl.OnClickSkinButton(this, mySkinData, checkUnlocked, myTabType);
         }
     }
 
@@ -67,5 +69,7 @@ public class ShopButton : MonoBehaviour
     {
         checkUnlocked = true;
         lockImage.enabled = false;
+        purchaseButton.interactable = false;
+        achievementButton.interactable = false;
     }
 }

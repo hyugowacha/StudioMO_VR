@@ -78,7 +78,7 @@ public class BattleManager : Manager, IPunObservable
             Room room = PhotonNetwork.CurrentRoom;
             if (room == null)
             {
-#if UNITY_EDITOR //|| UNITY_STANDALONE
+#if UNITY_EDITOR// || UNITY_STANDALONE
                 System.Collections.IEnumerator Test()
                 {
                     if (PhotonNetwork.IsConnectedAndReady == false)
@@ -241,6 +241,11 @@ public class BattleManager : Manager, IPunObservable
         }
     }
 
+    public override void OnPlayerEnteredRoom(Player player)
+    {
+        rematchPanel?.SetPlayers(PhotonNetwork.PlayerList);
+    }
+
     public override void OnPlayerPropertiesUpdate(Player player, Hashtable hashtable)
     {
         if (connected == true && remainingTime == 0 && hashtable != null && hashtable.ContainsKey(Ready) == true)
@@ -394,11 +399,6 @@ public class BattleManager : Manager, IPunObservable
         }
     }
 
-    public override void OnPlayerEnteredRoom(Player player)
-    {
-        rematchPanel?.Add(player);
-    }
-
     public override void OnPlayerLeftRoom(Player player)
     {
         Room room = PhotonNetwork.CurrentRoom;
@@ -448,7 +448,7 @@ public class BattleManager : Manager, IPunObservable
                 }
             }
         }
-        rematchPanel?.Remove(player);
+        rematchPanel?.OnPlayerLeftRoom(player);
         if (room != null && room.PlayerCount <= 1)
         {
             if (remainingTime > 0)
@@ -535,13 +535,15 @@ public class BattleManager : Manager, IPunObservable
                     }
                     list[i].SetCustomProperties(new Hashtable() { {Ready, null} });
                 }
-                rematchPanel?.Add(list[i]);
             }
         }
         if (audioSource != null && audioSource.clip != null)
         {
             limitTime = audioSource.clip.length;
         }
+//#if UNITY_EDITOR || UNITY_STANDALONE
+//        limitTime = 15;
+//#endif
         bulletPatternLoader?.RefineData();
     }
 
@@ -556,6 +558,7 @@ public class BattleManager : Manager, IPunObservable
             remainingTime = limitTime + PhasePanel.ReadyDelay + PhasePanel.StartDelay;
             connected = true;
             DelayCall(PhasePanel.ReadyDelay, PhasePanel.StartDelay, PhasePanel.EndDelay);
+            rematchPanel?.SetPlayers(PhotonNetwork.PlayerList);
         }
     }
 
@@ -745,6 +748,7 @@ public class BattleManager : Manager, IPunObservable
             double value = (double)stream.ReceiveNext();
             if (connected == false)
             {
+                rematchPanel?.SetPlayers(PhotonNetwork.PlayerList);
                 if (value > limitTime)
                 {
                     double startDelay = value - limitTime;
