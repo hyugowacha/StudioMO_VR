@@ -45,8 +45,6 @@ public class StageResultPanel : Panel
         End
     }
 
-    [Header("결과창을 열어주는 시간 딜레이"), SerializeField, Range(0, int.MaxValue)]
-    private float openDelay = 0.5f;
     [Header("실패 트리거 파라미터"),SerializeField]
     private string failParameter = "fail";
     [Header("클리어 트리거 파라미터"), SerializeField]
@@ -114,22 +112,19 @@ public class StageResultPanel : Panel
         buttons[(int)ButtonIndex.Retry].SetInteractable(retry);
         buttons[(int)ButtonIndex.Exit].SetInteractable(exit);
         Set();
-        DOVirtual.DelayedCall(openDelay, () =>
+        gameObject.SetActive(true);
+        switch (result)
         {
-            gameObject.SetActive(true);
-            switch (result)
-            {
-                case true:
-                    getAnimator.SetTrigger(perfectParameter);
-                    break;
-                case false:
-                    getAnimator.SetTrigger(clearParameter);
-                    break;
-                case null:
-                    getAnimator.SetTrigger(failParameter);
-                    break;
-            }
-        });
+            case true:
+                getAnimator.SetTrigger(perfectParameter);
+                break;
+            case false:
+                getAnimator.SetTrigger(clearParameter);
+                break;
+            case null:
+                getAnimator.SetTrigger(failParameter);
+                break;
+        }
     }
 
     //언어를 변경하기 위한 메소드
