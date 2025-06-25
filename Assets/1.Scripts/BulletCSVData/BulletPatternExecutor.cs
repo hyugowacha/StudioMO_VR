@@ -12,8 +12,8 @@ public class BulletPatternExecutor : MonoBehaviour, IPunObservable
     [Header("실제 탄막을 발사시켜줄 매니저")]
     public BulletSpawnerManager spawnerManager;
 
-    [Header("분당 BPM")] 
-    public float bpm = 110f;
+    [Header("분당 BPM"), SerializeField] 
+    private float bpm;
 
     float _beatInterval;         // 비트 하나당 시간 (초 단위)
     float _timer;                // 시간 누적용
@@ -47,6 +47,8 @@ public class BulletPatternExecutor : MonoBehaviour, IPunObservable
         _timer = 0;
 
         timePatterns = loader != null ? loader.getPatternData : null;
+        bpm = loader.BPM;
+
         // BPM 기준으로 beat 간격 계산. 예: 60 / 120 -> 0.5초마다 한 beat
         _beatInterval = 60f / bpm;
         initialized = true;
