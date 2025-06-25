@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.004609619, g: 0.0029490995, b: 0.0056026164, a: 1}
+  m_IndirectSpecularColor: {r: 0.004599146, g: 0.002948768, b: 0.0055873934, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -441,12 +441,6 @@ CanvasRenderer:
 --- !u!224 &223539642 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 7824296171709384360, guid: 4c4eaf457744d98419a094a6cdb13ae5,
-    type: 3}
-  m_PrefabInstance: {fileID: 635768265}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &223539643 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5269272680212176613, guid: 4c4eaf457744d98419a094a6cdb13ae5,
     type: 3}
   m_PrefabInstance: {fileID: 635768265}
   m_PrefabAsset: {fileID: 0}
@@ -1752,10 +1746,6 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 1977684272}
     m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 5269272680212176613, guid: 4c4eaf457744d98419a094a6cdb13ae5,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1145129889}
     - targetCorrespondingSourceObject: {fileID: 974594996702691364, guid: 4c4eaf457744d98419a094a6cdb13ae5,
         type: 3}
       insertIndex: -1
@@ -3755,27 +3745,12 @@ MonoBehaviour:
     type: 3}
   m_PrefabInstance: {fileID: 635768265}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 223539643}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a153d59a348199a4a8ce7d7e5acc2620, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &1145129889
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 223539643}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cb8b03ba39afb25408c6c6c7dae50831, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  contorllKeyPanel: {fileID: 538401697}
-  openCKPanel: {fileID: 1977684269}
-  closeCKPanel: {fileID: 1658543532}
 --- !u!1 &1164713179
 GameObject:
   m_ObjectHideFlags: 0

@@ -11,24 +11,37 @@ public class ControllKeyPanel : MonoBehaviour
     [SerializeField] private Button openCKPanel;
     [SerializeField] private Button closeCKPanel;
 
+    private bool isFirstLogin = true;
+
     private void Start()
     {
-        int isFirstLogin = PlayerPrefs.GetInt("IsFirstLogin", 0);
+        //int isFirstLogin = PlayerPrefs.GetInt("IsFirstLogin", 0);
 
-        if (isFirstLogin == 0)
+        //if (isFirstLogin == 0)
+        //{
+        //    // ▼ 처음 로그인 시에는 조작키 설명 패널 자동으로 띄움
+        //    contorllKeyPanel.SetActive(true);
+
+        //    // ▼ 첫 로그인 기록을 저장 ( 다음부터는 자동으로 안 뜨도록 )
+        //    PlayerPrefs.SetInt("IsFirstLogin", 1);
+
+        //    // ▼ PlayerPrefs 값 즉시 저장
+        //    PlayerPrefs.Save();
+        //}
+        //else
+        //{
+        //    // 첫 로그인이 아니라면, 조작키 설명 패널 끈 상태로 시작
+        //    contorllKeyPanel.SetActive(false);
+        //}
+
+        if (isFirstLogin)
         {
-            // ▼ 처음 로그인 시에는 조작키 설명 패널 자동으로 띄움
             contorllKeyPanel.SetActive(true);
 
-            // ▼ 첫 로그인 기록을 저장 ( 다음부터는 자동으로 안 뜨도록 )
-            PlayerPrefs.SetInt("IsFirstLogin", 1);
-
-            // ▼ PlayerPrefs 값 즉시 저장
-            PlayerPrefs.Save();
+            isFirstLogin = false;
         }
         else
         {
-            // 첫 로그인이 아니라면, 조작키 설명 패널 끈 상태로 시작
             contorllKeyPanel.SetActive(false);
         }
 
