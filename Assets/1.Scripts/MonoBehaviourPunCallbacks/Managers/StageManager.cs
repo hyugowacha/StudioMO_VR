@@ -89,7 +89,7 @@ public class StageManager : Manager
                     DynamicGI.UpdateEnvironment(); // 라이트 프로브 및 반사 업데이트
                 }
                 score = stageData.GetScore();
-                bulletPatternLoader?.SetCSVFile(stageData.GetBulletTextAsset());
+                bulletPatternLoader?.SetCSVFile(stageData.GetBulletTextAsset(), stageData.BPM);
                 if (audioSource != null)
                 {
                     AudioClip audioClip = stageData.GetAudioClip();

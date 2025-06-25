@@ -42,10 +42,13 @@ public class BulletPatternLoader : MonoBehaviour
         }
     }
 
-    public void SetCSVFile((TextAsset, TextAsset) csvFiles)
+    public int BPM;
+
+    public void SetCSVFile((TextAsset, TextAsset) csvFiles, int bpm)
     {
         patternCSVFile = csvFiles.Item1;
         nonPatternCSVFile = csvFiles.Item2;
+        BPM = bpm;
     }
 
     public void RefineData()

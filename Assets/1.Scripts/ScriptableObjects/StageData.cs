@@ -62,6 +62,9 @@ public class StageData : ScriptableObject
     [Header("Á¡¼ö"), SerializeField]
     private Score score;
 
+    [Header("BPM"), SerializeField]
+    public int BPM;
+
     private static StageData[] stageDatas = null;
 
 #if UNITY_EDITOR
