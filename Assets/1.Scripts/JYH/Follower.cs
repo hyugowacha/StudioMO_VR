@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 
 [DisallowMultipleComponent]
-public class Tracker : MonoBehaviour
+public class Follower : MonoBehaviour
 {
     [Header("추적할 대상"), SerializeField]
     private Transform target;
@@ -32,40 +32,29 @@ public class Tracker : MonoBehaviour
             while(true)
             {
                 yield return new WaitUntil(() => target != null);
-                Vector3 lastPosition = target.position;
-                Quaternion lastRotation = target.rotation;
+                Vector3 targetPosition = target.position;
                 do
                 {
-                    if(lastPosition != target.position || (lastRotation * Vector3.forward != target.rotation * Vector3.forward))
+                    if(distance < Vector3.Distance(targetPosition, target.position))
                     {
-                        if(transform.parent == target)
+                        targetPosition = target.position;
+                        transform.parent = null;
+                        Quaternion targetRotation = target.rotation;
+                        Vector3 goalPosition = targetPosition + targetRotation * position;
+                        Quaternion goalRotation = targetRotation * rotation;
+                        do
                         {
-                            transform.parent = target.parent;
-                        }
+                            float speed = Time.deltaTime * this.speed;
+                            transform.SetPositionAndRotation(Vector3.Lerp(transform.position, goalPosition, speed), Quaternion.Slerp(transform.rotation, goalRotation, speed));
+                            Debug.Log("transform:" + transform.position + " goal:" + goalPosition);
+                            yield return null;
+                        } while (goalPosition != transform.position);
+                        Debug.Log("종료");
+                        transform.parent = target;
                     }
                     yield return null;
-                } while (target != null);
-
-
-                    Vector3 goalPosition = target.position + lastRotation * position;
-                Quaternion goalRotation = lastRotation * rotation;
-
-
-
-                //float speed = Time.deltaTime * this.speed;
-                //if (distance < Vector3.Distance(transform.position, position))
-                //{
-                //    transform.SetPositionAndRotation(Vector3.Lerp(transform.position, position, speed), Quaternion.Slerp(transform.rotation, rotation, speed));
-                //    transform.parent = null;
-                //    Debug.Log("이동");
-                //}
-                //else
-                //{
-                //    transform.SetPositionAndRotation(position, rotation);
-                //    transform.parent = target;
-                //    Debug.Log("부착");
-                //}
-                //transform.SetPositionAndRotation(goalPosition, goalRotation);
+                }
+                while (target != null);
             }
         }
     }
