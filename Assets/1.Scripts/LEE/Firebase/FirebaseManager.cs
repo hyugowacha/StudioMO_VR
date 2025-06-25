@@ -70,6 +70,11 @@ public class FirebaseManager : MonoBehaviourPunCallbacks
 
     [Header("아웃게임 스킨 오브젝트")]
     [SerializeField] GameObject Character_Intro;
+
+    [Header("조작키 설명 화면")]
+    [SerializeField] GameObject controllKeyPanel;
+    [SerializeField] Button controllKeyPanelCloseButton;
+    [SerializeField] Button controllKeyPanelOpenButton;
     #endregion
 
     #region 시작 시 초기화 및 버튼 등록
@@ -136,6 +141,10 @@ public class FirebaseManager : MonoBehaviourPunCallbacks
 
             // 닉네임 확인 버튼 이벤트 등록
             nickname_okButton.onClick.AddListener(OnClickSetNickname);
+
+            // 조작키 설명 버튼 이벤트 등록
+            controllKeyPanelCloseButton.onClick.AddListener(CloseControllKeyPanel);
+            controllKeyPanelOpenButton.onClick.AddListener(OpenControllKeyPanel);
         }
 
         UserGameData.LoadMapHighScores(UserGameData.stageInfoDataSet, () =>
@@ -214,6 +223,8 @@ public class FirebaseManager : MonoBehaviourPunCallbacks
                         PhotonNetwork.JoinLobby();
                     }
 
+                    OpenControllKeyPanel();
+
                     // AuthValues 설정
                     PhotonNetwork.AuthValues = new Photon.Realtime.AuthenticationValues(Authentication.UserId);
                     loadingObject.gameObject.SetActive(true);
@@ -243,7 +254,7 @@ public class FirebaseManager : MonoBehaviourPunCallbacks
 
     #endregion
 
-    #region 팝업창 관련 함수
+    #region 팝업창 관련 함수 + 조작키 관련 함수
     private void CancelWarningIMG()
     {
         warningText.text = "";
@@ -255,6 +266,16 @@ public class FirebaseManager : MonoBehaviourPunCallbacks
         loginWarning.SetActive(true);
         warningText.text = text;
         return warningText.text;
+    }
+
+    private void OpenControllKeyPanel()
+    {
+        controllKeyPanel.SetActive(true);
+    }
+
+    private void CloseControllKeyPanel()
+    {
+        controllKeyPanel.SetActive(false);
     }
     #endregion
 
