@@ -343,7 +343,7 @@ public class MatchingSystem : MonoBehaviourPunCallbacks
             PhotonNetwork.CurrentRoom.IsOpen = false;
             PhotonNetwork.CurrentRoom.IsVisible = false;
 
-            PhotonNetwork.LoadLevel("InGameScene");
+            PhotonNetwork.LoadLevel("BattleScene");
         }
         else
         {
