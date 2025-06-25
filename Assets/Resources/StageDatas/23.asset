@@ -13,23 +13,28 @@ MonoBehaviour:
   m_Name: 23
   m_EditorClassIdentifier: 
   musicText:
-    english: Music
-    korean: "\uC74C\uC545"
-    chinese: "\u97F3\u4E50"
-    japanese: "\u304A\u3093\u304C\u304F"
+    english: 'Dune Labyrinth '
+    korean: 'Dune Labyrinth '
+    chinese: 'Dune Labyrinth '
+    japanese: 'Dune Labyrinth '
   storyText:
-    english: 
-    korean: 
-    chinese: 
-    japanese: 
+    english: 'The baby cactus say we need desert specific gems to find the power
+      of baby cactuses. Shall we go find desert-specific gems with Libby? '
+    korean: "\uC544\uAE30 \uC120\uC778\uC7A5\uC758 \uAC15\uD55C \uD798\uC744 \uCC3E\uC544\uC8FC\uAE30
+      \uC704\uD574\uC11C\uB294 \uC0AC\uB9C9\uBCC4\uC758 \uBCF4\uC11D\uC774 \uD544\uC694\uD558\uB2E4\uACE0
+      \uD574\uC694. \uB9AC\uBE44\uC640 \uD568\uAED8 \uC0AC\uB9C9\uBCC4 \uBCF4\uC11D\uC744
+      \uCC3E\uC544 \uB5A0\uB098\uBCFC\uAE4C\uC694? "
+    chinese: "\u4E3A\u4E86\u8D4B\u4E88\u5C0F\u4ED9\u4EBA\u638C\u5F3A\u5927\u7684\u529B\u91CF\uFF0C\u9700\u8981\u5BFB\u627E\u6C99\u6F20\u661F\u7684\u5B9D\u77F3\u3002\u548C\u8389\u6BD4\u4E00\u8D77\u51FA\u53D1\u53BB\u5BFB\u627E\u6C99\u6F20\u5B9D\u77F3\u5427\uFF01 "
+    japanese: "\u30B5\u30DC\u30C6\u30F3\u306E\u8D64\u3061\u3083\u3093\u306B\u5F37\u3044\u529B\u3092\u6388\u3051\u308B\u306B\u306F\u3001\u7802\u6F20\u661F\u306E\u5B9D\u77F3\u304C\u5FC5\u8981\u3060\u305D\u3046\u3067\u3059\u3002\u30EA\u30D3\u3068\u4E00\u7DD2\u306B\u5B9D\u77F3\u63A2\u3057\u306E\u65C5\u306B\u51FA\u304B\u3051\u307E\u3057\u3087\u3046\uFF01 "
   audioClip: {fileID: 8300000, guid: 317bdb688ca42c940819b748a6412381, type: 3}
   mapObject: {fileID: 2220969143210329853, guid: 7e3cba3598eaf384bb51675cf6cbb035,
     type: 3}
   patternBulletTextAsset: {fileID: 0}
   nonPatternBulletTextAsset: {fileID: 4900000, guid: b6906f45c97b1a44499bb0231999cb32,
     type: 3}
-  skybox: {fileID: 0}
+  skybox: {fileID: 2100000, guid: f2b5f3f20933f434e850db1b710542fd, type: 2}
   bestScore: 0
   score:
     clearValue: 200
     addValue: 50
+  BPM: 0

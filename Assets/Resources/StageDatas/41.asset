@@ -13,21 +13,27 @@ MonoBehaviour:
   m_Name: 41
   m_EditorClassIdentifier: 
   musicText:
-    english: Music
-    korean: "\uC74C\uC545"
-    chinese: "\u97F3\u4E50"
-    japanese: "\u304A\u3093\u304C\u304F"
+    english: 'Chains and Shadows '
+    korean: 'Chains and Shadows '
+    chinese: 'Chains and Shadows '
+    japanese: 'Chains and Shadows '
   storyText:
-    english: 
-    korean: 
-    chinese: 
-    japanese: 
+    english: "The space bugs are hiding in the starlight tree\u2019s sap, and Libby
+      quietly sneaks into the dark and sticky sap to track them down. "
+    korean: "\uC6B0\uC8FC\uBC8C\uB808\uB4E4\uC774 \uC228\uACA8\uB454 \uBCC4\uB098\uBB34
+      \uC218\uC561\uC744 \uCC3E\uC544 \uB9AC\uBE44\uAC00 \uC5B4\uB450\uCEF4\uCEF4\uD55C
+      \uBBF8\uAD81 \uC18D\uC744 \uC529\uC529\uD558\uAC8C \uBAA8\uD5D8\uD569\uB2C8\uB2E4. "
+    chinese: "\u8389\u6BD4\u4E3A\u4E86\u5BFB\u627E\u5B87\u5B99\u866B\u9690\u85CF\u7684\u661F\u4E4B\u6811\u6811\u6DB2\uFF0C\u52C7\u6562\u5730\u8FDB\u5165\u9ED1\u6697\u5E7D\u6DF1\u7684\u8FF7\u5BAB\u63A2\u9669\u3002 "
+    japanese: "\u5B87\u5B99\u30E0\u30B7\u305F\u3061\u304C\u96A0\u3057\u305F\u661F\u306E\u6728\u306E\u6A39\u6DB2\u3092\u63A2\u3057\u3066\u3001\u30EA\u30D3\u306F\u771F\u3063\u6697\u306A\u8FF7\u5BAE\u306E\u4E2D\u3092\u5143\u6C17\u306B\u5192\u967A\u3057\u307E\u3059\u3002 "
   audioClip: {fileID: 8300000, guid: ef7daf987bed7694484b7c9b2f93d2ab, type: 3}
   mapObject: {fileID: 5351051613412773461, guid: 7457ddadca693e44ab6128a6b99937c2,
     type: 3}
   patternBulletTextAsset: {fileID: 0}
   nonPatternBulletTextAsset: {fileID: 4900000, guid: 00a7029a6d32a174d867038eb24f4356,
     type: 3}
+  skybox: {fileID: 2100000, guid: c494c335823f54b52b2e87e1b7a63a23, type: 2}
+  bestScore: 0
   score:
     clearValue: 80
     addValue: 20
+  BPM: 0

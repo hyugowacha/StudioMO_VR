@@ -13,23 +13,28 @@ MonoBehaviour:
   m_Name: 29
   m_EditorClassIdentifier: 
   musicText:
-    english: Music
-    korean: "\uC74C\uC545"
-    chinese: "\u97F3\u4E50"
-    japanese: "\u304A\u3093\u304C\u304F"
+    english: 'Duststorm Pursuit '
+    korean: 'Duststorm Pursuit '
+    chinese: 'Duststorm Pursuit '
+    japanese: 'Duststorm Pursuit '
   storyText:
-    english: 
-    korean: 
-    chinese: 
-    japanese: 
+    english: "The more the space bugs swarmed, the stronger the sandstorm became.
+      But our Libby isn\u2019t someone who gets swept away by a little sand and wind! "
+    korean: "\uC6B0\uC8FC\uBC8C\uB808\uB4E4\uC774 \uBAB0\uB824\uB4E4\uC218\uB85D
+      \uBAA8\uB798\uD3ED\uD48D\uC740 \uB354\uC6B1 \uAC70\uC138\uC5B4\uC84C\uC5B4\uC694.
+      \uD558\uC9C0\uB9CC \uC6B0\uB9AC\uC758 \uB9AC\uBE44\uAC00 \uACE0\uC791 \uBAA8\uB798\uBC14\uB78C\uC5D0
+      \uD729\uC4F8\uB9B4 \uB140\uC11D\uC774 \uC544\uB2C8\uB78D\uB2C8\uB2E4. "
+    chinese: "\u968F\u7740\u5B87\u5B99\u866B\u4E0D\u65AD\u903C\u8FD1\uFF0C\u6C99\u5C18\u66B4\u4E5F\u6108\u53D1\u731B\u70C8\u3002\u4F46\u6211\u4EEC\u7684\u8389\u6BD4\u53EF\u4E0D\u662F\u4F1A\u88AB\u5C0F\u5C0F\u98CE\u6C99\u6253\u5012\u7684\u4EBA\uFF01 "
+    japanese: "\u5B87\u5B99\u30E0\u30B7\u304C\u62BC\u3057\u5BC4\u305B\u308B\u307B\u3069\u306B\u3001\u7802\u5D50\u306F\u307E\u3059\u307E\u3059\u6FC0\u3057\u304F\u306A\u3063\u3066\u3044\u307E\u3059\u3002\u3067\u3082\u3001\u79C1\u305F\u3061\u306E\u30EA\u30D3\u304C\u305D\u3093\u306A\u7802\u5D50\u306B\u8CA0\u3051\u308B\u306F\u305A\u304C\u3042\u308A\u307E\u305B\u3093\uFF01 "
   audioClip: {fileID: 8300000, guid: b3aabd365f579924c8a452b75bec462d, type: 3}
   mapObject: {fileID: 8010263679103584021, guid: c57cfe08f81aac646a9c17abdffcbcf4,
     type: 3}
   patternBulletTextAsset: {fileID: 0}
   nonPatternBulletTextAsset: {fileID: 4900000, guid: 08a4b3e65e4a35649aa6aa312ccf5b29,
     type: 3}
-  skybox: {fileID: 0}
+  skybox: {fileID: 2100000, guid: f2b5f3f20933f434e850db1b710542fd, type: 2}
   bestScore: 0
   score:
     clearValue: 150
     addValue: 50
+  BPM: 0
