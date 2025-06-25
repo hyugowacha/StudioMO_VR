@@ -69,6 +69,8 @@ public class AllLanguage : MonoBehaviour
     public TextMeshProUGUI rightHand;                   // 오른손 버튼 텍스트
     public TextMeshProUGUI saveOption;                  // 옵션 저장하기 버튼
 
+    [Header("스테이지")]
+    public TextMeshProUGUI storyInfoText;               // 스토리부분
     #endregion
 
     #region 추후 진행 예정
@@ -162,6 +164,9 @@ public class AllLanguage : MonoBehaviour
         leftHand.Set(Translation.Get(Translation.Letter.LeftHand), currentFont);
         rightHand.Set(Translation.Get(Translation.Letter.RightHand), currentFont);
         saveOption.Set(Translation.Get(Translation.Letter.Save), currentFont);
+
+        // ▼ 스테이지 부분 언어
+        storyInfoText.Set(null, currentFont);
     }
     #endregion
 }
