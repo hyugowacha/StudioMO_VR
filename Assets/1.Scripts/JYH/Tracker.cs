@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 [DisallowMultipleComponent]
@@ -6,15 +7,18 @@ public class Tracker : MonoBehaviour
     [Header("추적할 대상"), SerializeField]
     private Transform target;
     [Header("보간 속도"), SerializeField, Range(MinValue, MaxValue)]
-    private float speed = 1;
-
+    private float speed = 10;
+    [Header("최소 보간 거리"), SerializeField, Range(MinValue, MaxValue)]
+    private float distance = 0.01f;
+    [SerializeField]
     private Vector3 position;       // 로컬 위치 오프셋
+    [SerializeField]
     private Quaternion rotation;    // 로컬 회전 오프셋
 
     private const int MinValue = 0;
     private const int MaxValue = int.MaxValue;
 
-    private void Start()
+    private void OnEnable()
     {
         if (target != null)
         {
@@ -22,19 +26,56 @@ public class Tracker : MonoBehaviour
             position = inverse * (transform.position - target.position); // 타겟 로컬 공간에서 상대 위치
             rotation = inverse * transform.rotation; // 타겟 회전 대비 현재 회전의 차이
         }
-    }
-
-    private void Update()
-    {
-        if (target != null)
+        StartCoroutine(MoveToTarget());
+        IEnumerator MoveToTarget()
         {
-            float speed = Time.deltaTime * this.speed;
-            Quaternion quaternion = target.rotation;
-            transform.SetPositionAndRotation(Vector3.Lerp(transform.position, (target.position + quaternion * position), speed), Quaternion.Slerp(transform.rotation, (quaternion * rotation), speed));
+            while(true)
+            {
+                yield return new WaitUntil(() => target != null);
+                Vector3 lastPosition = target.position;
+                Quaternion lastRotation = target.rotation;
+                do
+                {
+                    if(lastPosition != target.position || (lastRotation * Vector3.forward != target.rotation * Vector3.forward))
+                    {
+                        if(transform.parent == target)
+                        {
+                            transform.parent = target.parent;
+                        }
+                    }
+                    yield return null;
+                } while (target != null);
+
+
+                    Vector3 goalPosition = target.position + lastRotation * position;
+                Quaternion goalRotation = lastRotation * rotation;
+
+
+
+                //float speed = Time.deltaTime * this.speed;
+                //if (distance < Vector3.Distance(transform.position, position))
+                //{
+                //    transform.SetPositionAndRotation(Vector3.Lerp(transform.position, position, speed), Quaternion.Slerp(transform.rotation, rotation, speed));
+                //    transform.parent = null;
+                //    Debug.Log("이동");
+                //}
+                //else
+                //{
+                //    transform.SetPositionAndRotation(position, rotation);
+                //    transform.parent = target;
+                //    Debug.Log("부착");
+                //}
+                //transform.SetPositionAndRotation(goalPosition, goalRotation);
+            }
         }
     }
 
-    public void Set(Transform target, Vector3? position = null, Quaternion? rotation = null)
+    private void OnDisable()
+    {
+        StopAllCoroutines();
+    }
+
+    public void SetTarget(Transform target, Vector3? position = null, Quaternion? rotation = null)
     {
         if (position != null)
         {
@@ -59,13 +100,7 @@ public class Tracker : MonoBehaviour
         }
     }
 
-    public void Set(Transform target, float speed, Vector3? position = null, Quaternion? rotation = null)
-    {
-        this.speed = Mathf.Clamp(speed, MinValue, MaxValue);
-        Set(target, position, rotation);
-    }
-
-    public Transform Get()
+    public Transform GetTarget()
     {
         return target;
     }
