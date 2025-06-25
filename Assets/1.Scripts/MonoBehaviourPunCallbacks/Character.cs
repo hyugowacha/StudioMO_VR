@@ -97,7 +97,7 @@ public class Character : MonoBehaviourPunCallbacks, IPunObservable
     private static readonly string HitParameter = "hit";
     private static readonly string SlowMotionParameter = "slowmotion";
     private static readonly string GatheringParameter = "gathering";
-    private static readonly string ShaderPath = "UI/UnlitMaskShader";
+    private static readonly string ShaderPath = "UnlitMaskShader";
 
     private void Start()
     {
@@ -418,7 +418,7 @@ public class Character : MonoBehaviourPunCallbacks, IPunObservable
     {
         if (hasMaterial == false)
         {
-            Shader shader = Shader.Find(ShaderPath);
+            Shader shader = Resources.Load<Shader>(ShaderPath);
             if (shader != null)
             {
                 material = new Material(shader);

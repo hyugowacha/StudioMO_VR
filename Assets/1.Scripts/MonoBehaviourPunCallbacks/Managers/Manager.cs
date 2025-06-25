@@ -17,7 +17,7 @@ public abstract class Manager : MonoBehaviourPunCallbacks
     protected static Manager instance = null;                   //각 씬 안에 단독으로 존재하기 위한 싱글톤 변수
 
     private static readonly Vector2 snapMode = new Vector2(45f, 0.5f);
-    private static readonly Vector2 smoothMode = new Vector2(1f, 0.05f);
+    private static readonly Vector2 smoothMode = new Vector2(3f, 0.05f);
     private static readonly Vector3 CameraOffsetPosition = new Vector3(0, 1.36144f, 0);
 
     [Header("매니저 구간")]

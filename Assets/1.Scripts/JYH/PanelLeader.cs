@@ -28,7 +28,7 @@ public class PanelLeader : MonoBehaviour
                 do
                 {
                     position = Vector3.Lerp(position, transform.position, Time.deltaTime * speed);
-                    Vector2 offset = transform.position - position;
+                    Vector2 offset = position - transform.position;
                     if (offset == Vector2.zero)
                     {
                         foreach (KeyValuePair<Panel, Vector2> keyValuePair in this.panels)
