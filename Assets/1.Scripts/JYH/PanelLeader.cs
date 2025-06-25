@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
 [DisallowMultipleComponent]
 [RequireComponent(typeof(Canvas))]
 public class PanelLeader : MonoBehaviour
@@ -22,26 +21,40 @@ public class PanelLeader : MonoBehaviour
         StartCoroutine(MoveToTarget());
         IEnumerator MoveToTarget()
         {
-            Vector3 forward = transform.forward;
+            Vector3 position = transform.position;
             while (true)
             {
-                yield return new WaitWhile(() => forward == transform.forward);
+                yield return new WaitWhile(() => position == transform.position);
                 do
                 {
-                    forward = Vector3.Lerp(forward, transform.forward, Time.deltaTime * speed);
-                    Debug.DrawRay(transform.position, forward, Color.green);
-                    Debug.DrawRay(transform.position, transform.forward, Color.white);
-                    Vector3 normal = Vector3.Cross(forward, transform.forward).normalized;
-                    Debug.DrawRay((transform.position + forward) - (transform.position + transform.forward), normal, Color.blue);
-
-                    
-
-                    yield return null;
-                } while (forward == transform.forward);
-
-
-
-               
+                    position = Vector3.Lerp(position, transform.position, Time.deltaTime * speed);
+                    Vector2 offset = transform.position - position;
+                    if (offset == Vector2.zero)
+                    {
+                        foreach (KeyValuePair<Panel, Vector2> keyValuePair in this.panels)
+                        {
+                            Panel panel = keyValuePair.Key;
+                            if (panel != null)
+                            {
+                                panel.localPosition = keyValuePair.Value;
+                            }
+                        }
+                        position = transform.position;
+                        break;
+                    }
+                    else
+                    {
+                        foreach (KeyValuePair<Panel, Vector2> keyValuePair in this.panels)
+                        {
+                            Panel panel = keyValuePair.Key;
+                            if (panel != null)
+                            {
+                                panel.localPosition = offset + keyValuePair.Value;
+                            }
+                        }
+                        yield return null;
+                    }
+                } while (position == transform.position);
             }
         }
     }
