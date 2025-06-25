@@ -128,6 +128,8 @@ public static class Authentication
                     return;
                 }
 
+                isGamePlaying = true;
+
                 // 유저 고유 ID
                 userId = user.UserId;
 

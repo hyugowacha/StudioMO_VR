@@ -356,7 +356,6 @@ public class StageManager : Manager
         switch(exit)
         {
             case true:
-                Authentication.isGamePlaying = true;
                 statePanel?.Open(() => SceneManager.LoadScene("MainLobbyScene"), () => statePanel.Close(), null);
                 break;
             case false:
