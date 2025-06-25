@@ -7,8 +7,8 @@ using DG.Tweening;
 public enum StagePanelType
 {
     Beach,
-    Desert,
     NorthPole,
+    Desert,
     Volcano,
     Dungeon,
     End,
