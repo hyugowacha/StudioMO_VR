@@ -142,6 +142,7 @@ public class StageManager : Manager
                     myCharacter.SetSlowMotion(false); //시간이 끝나면 슬로우 모션 해제
                     totalScore = myCharacter.mineralCount;
                 }
+                SetFixedCanvas();
                 phasePanel?.Stop(PhasePanel.EndDelay);
                 bulletPatternExecutor?.StopPlaying();
                 UnityAction next = null;
@@ -325,6 +326,7 @@ public class StageManager : Manager
         stop = true;
         SlowMotion.Pause();
         SetRayInteractor(true);
+        SetFixedCanvas();
         pausePanel.Open(Resume, () => { SlowMotion.Stop(); SceneManager.LoadScene(SceneName);}, () => statePanel?.Open(() => SceneManager.LoadScene("MainLobbyScene"), () => statePanel.Close(), null), 
             () => SetTurnMode(true), () => SetTurnMode(false), CheckTurnMode());
     }
