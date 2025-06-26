@@ -26,7 +26,7 @@ namespace MirzaBeig.LightningVFX
 
         void Start()
         {
-            materialInstance = new Material(material);
+            //materialInstance = new Material(material);
         }
 
         void OnEnable()
