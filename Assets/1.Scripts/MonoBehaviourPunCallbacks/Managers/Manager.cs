@@ -38,6 +38,8 @@ public abstract class Manager : MonoBehaviourPunCallbacks
     [SerializeField]
     private TunnelingVignetteController vignetteController;     //비네트 (상태이상 표시)
     private LocomotionVignetteProvider locomotionVignetteProvider = null;
+    [SerializeField]
+    private Transform canvasTransform;
 
     protected enum Skin: byte
     {
@@ -202,6 +204,21 @@ public abstract class Manager : MonoBehaviourPunCallbacks
         Vector3 up = quaternion * Vector3.up;
         Vector3 forward = quaternion * Vector3.forward;
         xrOrigin?.MatchOriginUpCameraForward(up, forward);
+    }
+
+    protected void SetFixedCanvas()
+    {
+        if (canvasTransform != null)
+        {
+            Camera camera = Camera.main;
+            if (camera != null)
+            {
+                Vector3 position = camera.transform.position;
+                Vector3 forward = camera.transform.forward;
+                forward.y = 0;
+                canvasTransform.SetPositionAndRotation(position + forward, Quaternion.LookRotation(forward));
+            }
+        }
     }
 
     //카메라 이동 속도를 변경해주는 메서드

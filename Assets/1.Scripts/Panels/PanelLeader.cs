@@ -6,7 +6,7 @@ using UnityEngine;
 [RequireComponent(typeof(Canvas))]
 public class PanelLeader : MonoBehaviour
 {
-    private Dictionary<Panel, Vector2> panels = new Dictionary<Panel, Vector2>();
+    private Dictionary<Panel, Vector3> panels = new Dictionary<Panel, Vector3>();
 
     [SerializeField, Range(0, int.MaxValue)]
     private float speed = 1.0f;
@@ -28,10 +28,10 @@ public class PanelLeader : MonoBehaviour
                 do
                 {
                     position = Vector3.Lerp(position, transform.position, Time.deltaTime * speed);
-                    Vector2 offset = position - transform.position;
-                    if (offset == Vector2.zero)
+                    Vector3 offset = position - transform.position;
+                    if (offset == Vector3.zero)
                     {
-                        foreach (KeyValuePair<Panel, Vector2> keyValuePair in this.panels)
+                        foreach (KeyValuePair<Panel, Vector3> keyValuePair in this.panels)
                         {
                             Panel panel = keyValuePair.Key;
                             if (panel != null)
@@ -44,7 +44,7 @@ public class PanelLeader : MonoBehaviour
                     }
                     else
                     {
-                        foreach (KeyValuePair<Panel, Vector2> keyValuePair in this.panels)
+                        foreach (KeyValuePair<Panel, Vector3> keyValuePair in this.panels)
                         {
                             Panel panel = keyValuePair.Key;
                             if (panel != null)
