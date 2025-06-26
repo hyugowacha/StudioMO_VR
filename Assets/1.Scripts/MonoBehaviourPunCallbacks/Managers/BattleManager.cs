@@ -59,13 +59,14 @@ public class BattleManager : Manager, IPunObservable
     private const string Second = "second";
     private const string Third = "third";
     private const int CornerCount = 4;
-    private static readonly float CornerDistance = 18;
+    private static readonly float CornerDistanceX = 18;
+    private static readonly float CornerDistanceZ = 9;
     private static readonly Vector3[] CornerPoints = new Vector3[CornerCount] 
     { 
-        new Vector3(-CornerDistance, 0, CornerDistance), 
-        new Vector3(CornerDistance, 0, CornerDistance), 
-        new Vector3(CornerDistance, 0, -CornerDistance), 
-        new Vector3(-CornerDistance, 0, -CornerDistance) 
+        new Vector3(-CornerDistanceX, 0, CornerDistanceZ), 
+        new Vector3(CornerDistanceX, 0, CornerDistanceZ), 
+        new Vector3(CornerDistanceX, 0, -CornerDistanceX), 
+        new Vector3(-CornerDistanceX, 0, -CornerDistanceX) 
     };
 
     protected override void Start()
