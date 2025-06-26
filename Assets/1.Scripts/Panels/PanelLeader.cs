@@ -36,7 +36,7 @@ public class PanelLeader : MonoBehaviour
                             Panel panel = keyValuePair.Key;
                             if (panel != null)
                             {
-                                panel.localPosition = keyValuePair.Value;
+                                panel.transform.localPosition = keyValuePair.Value;
                             }
                         }
                         position = transform.position;
@@ -49,7 +49,7 @@ public class PanelLeader : MonoBehaviour
                             Panel panel = keyValuePair.Key;
                             if (panel != null)
                             {
-                                panel.localPosition = offset + keyValuePair.Value;
+                                panel.transform.localPosition = offset + keyValuePair.Value;
                             }
                         }
                         yield return null;

@@ -7,17 +7,6 @@ using UnityEngine;
 [RequireComponent(typeof(RectTransform))]
 public abstract class Panel : MonoBehaviour
 {
-    public Vector2 localPosition {
-        get
-        {
-            return transform.localPosition;
-        }
-        set
-        {
-            transform.localPosition = value;
-        }
-    }
-
     private static readonly char ZeroPlaceholder = '0';
     private static readonly string DecimalPlaceLetter = "F";
     protected static readonly float HalfValue = 0.5f;
