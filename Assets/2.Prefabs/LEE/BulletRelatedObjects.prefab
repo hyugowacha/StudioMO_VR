@@ -54,7 +54,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 656519584863844933}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -104,7 +104,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -124,7 +124,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   normalBulletPrefab: {fileID: 3506624416693514196, guid: 25e49bb6edf45f2448bc57beabb37c24,
     type: 3}
-  bulletParent: {fileID: 8700159607488267589}
   mapCenter: {fileID: 3378599634796905273}
   wallCollider: {fileID: 373154182424033467}
   plusAngle: 70
@@ -144,7 +143,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   guidedBulletPrefab: {fileID: 3514438348378433874, guid: f5c642e1e1a7fd5448a948c1b823ce08,
     type: 3}
-  bulletParent: {fileID: 2919043267028672090}
   wallCollider: {fileID: 373154182424033467}
   useAutoFire: 1
 --- !u!114 &8595449043710101410
@@ -172,10 +170,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c41f3a39f7a0934cb9374bcf6c0a620, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bulletPooling: {fileID: 2683349994792768806}
-  effectPool: {fileID: 210626297532153865}
   rangePatternBullet: {fileID: 0}
-  bulletParent: {fileID: 1359283471417940586}
   wallCollider: {fileID: 373154182424033467}
   fireAngle: 0
 --- !u!114 &9096813360349131111
@@ -190,11 +185,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbfcc97cfe14b0b4991c1aba145ff6ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bulletPooling: {fileID: 2683349994792768806}
-  effectPool: {fileID: 210626297532153865}
   anglePatternBullet: {fileID: -5814235743389041899, guid: 5704d5e047b21014b83a73011ad895cb,
     type: 3}
-  bulletParent: {fileID: 2166552862952356285}
   wallCollider: {fileID: 373154182424033467}
   fireAngle: 0
 --- !u!1 &695480578148426380
@@ -449,7 +441,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2832618059774130309}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -499,7 +491,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -519,7 +511,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   normalBulletPrefab: {fileID: 3506624416693514196, guid: 25e49bb6edf45f2448bc57beabb37c24,
     type: 3}
-  bulletParent: {fileID: 8700159607488267589}
   mapCenter: {fileID: 3378599634796905273}
   wallCollider: {fileID: 33885078876045380}
   plusAngle: 70
@@ -539,7 +530,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   guidedBulletPrefab: {fileID: 3514438348378433874, guid: f5c642e1e1a7fd5448a948c1b823ce08,
     type: 3}
-  bulletParent: {fileID: 2919043267028672090}
   wallCollider: {fileID: 33885078876045380}
   useAutoFire: 1
 --- !u!114 &4360913265431846909
@@ -567,11 +557,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbfcc97cfe14b0b4991c1aba145ff6ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bulletPooling: {fileID: 2683349994792768806}
-  effectPool: {fileID: 210626297532153865}
   anglePatternBullet: {fileID: -5814235743389041899, guid: 5704d5e047b21014b83a73011ad895cb,
     type: 3}
-  bulletParent: {fileID: 2166552862952356285}
   wallCollider: {fileID: 33885078876045380}
   fireAngle: 0
 --- !u!114 &6390920240962302767
@@ -586,11 +573,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c41f3a39f7a0934cb9374bcf6c0a620, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bulletPooling: {fileID: 2683349994792768806}
-  effectPool: {fileID: 210626297532153865}
   rangePatternBullet: {fileID: 3465485197423747118, guid: ddc39f84bef9b1546bc44179601ce6f6,
     type: 3}
-  bulletParent: {fileID: 1359283471417940586}
   wallCollider: {fileID: 33885078876045380}
   fireAngle: 0
 --- !u!1 &3041577200029044450
@@ -864,7 +848,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3807425660016838240}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -914,7 +898,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -934,7 +918,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   normalBulletPrefab: {fileID: 3506624416693514196, guid: 25e49bb6edf45f2448bc57beabb37c24,
     type: 3}
-  bulletParent: {fileID: 8700159607488267589}
   mapCenter: {fileID: 3378599634796905273}
   wallCollider: {fileID: 5357988804628771163}
   plusAngle: 70
@@ -954,7 +937,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   guidedBulletPrefab: {fileID: 3514438348378433874, guid: f5c642e1e1a7fd5448a948c1b823ce08,
     type: 3}
-  bulletParent: {fileID: 2919043267028672090}
   wallCollider: {fileID: 5357988804628771163}
   useAutoFire: 1
 --- !u!114 &2037978067026455746
@@ -982,11 +964,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbfcc97cfe14b0b4991c1aba145ff6ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bulletPooling: {fileID: 2683349994792768806}
-  effectPool: {fileID: 210626297532153865}
   anglePatternBullet: {fileID: -5814235743389041899, guid: 5704d5e047b21014b83a73011ad895cb,
     type: 3}
-  bulletParent: {fileID: 2166552862952356285}
   wallCollider: {fileID: 5357988804628771163}
   fireAngle: 0
 --- !u!114 &4317184076511200338
@@ -1001,10 +980,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c41f3a39f7a0934cb9374bcf6c0a620, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bulletPooling: {fileID: 2683349994792768806}
-  effectPool: {fileID: 210626297532153865}
   rangePatternBullet: {fileID: 0}
-  bulletParent: {fileID: 1359283471417940586}
   wallCollider: {fileID: 5357988804628771163}
   fireAngle: 0
 --- !u!1 &5089889423873597652
@@ -1096,7 +1072,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5098133853083185360}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -1146,7 +1122,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -1166,7 +1142,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   normalBulletPrefab: {fileID: 3506624416693514196, guid: 25e49bb6edf45f2448bc57beabb37c24,
     type: 3}
-  bulletParent: {fileID: 8700159607488267589}
   mapCenter: {fileID: 3378599634796905273}
   wallCollider: {fileID: 2926523189867158994}
   plusAngle: 70
@@ -1186,7 +1161,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   guidedBulletPrefab: {fileID: 3514438348378433874, guid: f5c642e1e1a7fd5448a948c1b823ce08,
     type: 3}
-  bulletParent: {fileID: 2919043267028672090}
   wallCollider: {fileID: 2926523189867158994}
   useAutoFire: 1
 --- !u!114 &8533692819106360156
@@ -1214,10 +1188,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c41f3a39f7a0934cb9374bcf6c0a620, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bulletPooling: {fileID: 2683349994792768806}
-  effectPool: {fileID: 210626297532153865}
   rangePatternBullet: {fileID: 0}
-  bulletParent: {fileID: 1996177251712743555}
   wallCollider: {fileID: 2926523189867158994}
   fireAngle: 0
 --- !u!114 &7019009448904098124
@@ -1232,11 +1203,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbfcc97cfe14b0b4991c1aba145ff6ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bulletPooling: {fileID: 2683349994792768806}
-  effectPool: {fileID: 210626297532153865}
   anglePatternBullet: {fileID: -5814235743389041899, guid: 5704d5e047b21014b83a73011ad895cb,
     type: 3}
-  bulletParent: {fileID: 2166552862952356285}
   wallCollider: {fileID: 2926523189867158994}
   fireAngle: 0
 --- !u!1 &5289963468282589678
@@ -1463,10 +1431,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 77b2863f88d238f4da75391ff5c99a81, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  csvFile: {fileID: 4900000, guid: c79c8b4ffafa1534d87d89a837476c3f, type: 3}
   patternCSVFile: {fileID: 4900000, guid: 34dbc705fd4076d47a64d7def772e905, type: 3}
+  nonPatternCSVFile: {fileID: 0}
   patternData: []
-  patternBulletData: []
+  nonPatternData: []
+  BPM: 0
 --- !u!1 &6654719288181944040
 GameObject:
   m_ObjectHideFlags: 0
