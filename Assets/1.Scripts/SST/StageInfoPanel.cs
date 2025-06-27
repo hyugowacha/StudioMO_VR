@@ -40,7 +40,7 @@ public class StageInfoPanel : MonoBehaviour
         playButton.onClick.AddListener(() => OnClickPlayButton(data));
     }
 
-    private int SetStars(int bsetScore, int clearValue, int addValue)
+    private int SetStars(int bestScore, int clearValue, int addValue)
     {
         int starCount = 0;
 
@@ -53,22 +53,24 @@ public class StageInfoPanel : MonoBehaviour
         }
 
         // ▼ clearValue값보다 미만이라면 별 모두 빈 이미지로 표시
-        if (bsetScore < clearValue)
+        if (bestScore < clearValue)
         {
             for (int i = 0; i < emptyStars.Length; i++)
             {
                 emptyStars[i].gameObject.SetActive(true);
+                filledStars[i].gameObject.SetActive(false);
+                perfectStars[i].gameObject.SetActive(false);
             }
         }
         // ▼ clearValue 이상이라면 일반 별 이미지 한개 채우기
-        else if (clearValue <= bsetScore)
+        else if (clearValue <= bestScore && bestScore < clearValue + addValue)
         {
             filledStars[0].gameObject.SetActive(true);
             emptyStars[1].gameObject.SetActive(true);
             starCount = 1;
         }
         // clearValue + addValue점이라면 퍼펙트 별 이미지 두개 채우기
-        else if(clearValue + addValue <= bsetScore)
+        else if(clearValue + addValue <= bestScore)
         {
             for (int i = 0; i < emptyStars.Length; i++)
             {
