@@ -1,6 +1,9 @@
+using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.SearchService;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using static MapEffectSpawner;
 public enum mapName
 {
@@ -56,7 +59,6 @@ public class MapEffectSpawner : MonoBehaviour
     private Transform[] spawnPoint_Labyrinth;
 
     private float beatInterval;
-    private float elapsedTime;
     private float lastBeatTime = 0f;
 
     private GameObject[] currentEffects;
@@ -66,46 +68,53 @@ public class MapEffectSpawner : MonoBehaviour
     void Start()
     {
         beatInterval = 60f / bpm;
-        elapsedTime = 0f;
-
-        foreach(var data in stageData.stageInfoList)
+        if (SceneManager.GetActiveScene().name == StageManager.SceneName)
         {
-            if(data.linkedStageData == StageData.current)
+            foreach (var data in stageData.stageInfoList)
             {
-                switch(data.stagePanelType)
+                if (data.linkedStageData == StageData.current)
                 {
-                    case StagePanelType.Beach:
-                        currentMap = mapName.Sea;
-                        currentEffects = sea;
-                        effectProb = 14.0f;
-                        break;
+                    switch (data.stagePanelType)
+                    {
+                        case StagePanelType.Beach:
+                            currentMap = mapName.Sea;
+                            currentEffects = sea;
+                            effectProb = 14.0f;
+                            break;
 
-                    case StagePanelType.NorthPole:
-                        currentMap = mapName.Glacier;
-                        currentEffects = glacier;
-                        effectProb = 10.0f;
-                        break;
+                        case StagePanelType.NorthPole:
+                            currentMap = mapName.Glacier;
+                            currentEffects = glacier;
+                            effectProb = 10.0f;
+                            break;
 
-                    case StagePanelType.Desert:
-                        currentMap = mapName.Desert;
-                        currentEffects = desert;
-                        effectProb = 7.0f;
-                        break;
+                        case StagePanelType.Desert:
+                            currentMap = mapName.Desert;
+                            currentEffects = desert;
+                            effectProb = 7.0f;
+                            break;
 
-                    case StagePanelType.Volcano:
-                        currentMap = mapName.Lava;
-                        currentEffects = lava;
-                        effectProb = 9f;
-                        break;
+                        case StagePanelType.Volcano:
+                            currentMap = mapName.Lava;
+                            currentEffects = lava;
+                            effectProb = 9f;
+                            break;
 
-                    case StagePanelType.Dungeon:
-                        currentMap = mapName.Labyrinth;
-                        currentEffects = labyrinth;
-                        effectProb = 6f;
-                        break;
+                        case StagePanelType.Dungeon:
+                            currentMap = mapName.Labyrinth;
+                            currentEffects = labyrinth;
+                            effectProb = 6f;
+                            break;
 
+                    }
                 }
             }
+        }
+        else
+        {
+            currentMap = mapName.Sea;
+            currentEffects = sea;
+            effectProb = 14.0f;
         }
     }
 
@@ -114,7 +123,7 @@ public class MapEffectSpawner : MonoBehaviour
         if (!nowPlayingMusic.isPlaying) return;
 
         float musicTime = nowPlayingMusic.time;
-        float beatTime = 60f / bpm;
+        float beatTime = beatInterval;
 
         while(musicTime > lastBeatTime + beatTime - 0.5f)
         {
