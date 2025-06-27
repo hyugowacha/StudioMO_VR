@@ -12,6 +12,10 @@ public class MapEffectSpawner : MonoBehaviour
     [Header("현재 맵 종류")]
     public mapName currentMap = mapName.Sea;
 
+    [SerializeField, Header("현재 스테이지 데이터")]
+    private StageInfoDataSet stageData;
+
+
     [SerializeField, Header("바다 맵 이펙트 목록")]
     private GameObject[] sea;
 
@@ -64,32 +68,44 @@ public class MapEffectSpawner : MonoBehaviour
         beatInterval = 60f / bpm;
         elapsedTime = 0f;
 
-        switch (currentMap)
+        foreach(var data in stageData.stageInfoList)
         {
-            case mapName.Sea:
-                currentEffects = sea;
-                effectProb = 14f;
-                break;
+            if(data.linkedStageData == StageData.current)
+            {
+                switch(data.stagePanelType)
+                {
+                    case StagePanelType.Beach:
+                        currentMap = mapName.Sea;
+                        currentEffects = sea;
+                        effectProb = 14.0f;
+                        break;
 
-            case mapName.Glacier:
-                currentEffects = glacier;
-                effectProb = 10f;
-                break;
+                    case StagePanelType.NorthPole:
+                        currentMap = mapName.Glacier;
+                        currentEffects = glacier;
+                        effectProb = 10.0f;
+                        break;
 
-            case mapName.Desert:
-                currentEffects = desert;
-                effectProb = 7f;
-                break;
+                    case StagePanelType.Desert:
+                        currentMap = mapName.Desert;
+                        currentEffects = desert;
+                        effectProb = 7.0f;
+                        break;
 
-            case mapName.Lava:
-                currentEffects = lava;
-                effectProb = 9f;
-                break;
+                    case StagePanelType.Volcano:
+                        currentMap = mapName.Lava;
+                        currentEffects = lava;
+                        effectProb = 9f;
+                        break;
 
-            case mapName.Labyrinth:
-                currentEffects = labyrinth;
-                effectProb = 6f;
-                break;
+                    case StagePanelType.Dungeon:
+                        currentMap = mapName.Labyrinth;
+                        currentEffects = labyrinth;
+                        effectProb = 6f;
+                        break;
+
+                }
+            }
         }
     }
 
