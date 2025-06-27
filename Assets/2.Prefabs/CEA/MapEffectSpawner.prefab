@@ -144,6 +144,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1473789631177756359}
   - component: {fileID: 8970787287779931487}
+  - component: {fileID: 4678325890855258741}
   m_Layer: 0
   m_Name: MapEffectSpawner
   m_TagString: Untagged
@@ -182,6 +183,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentMap: 0
+  stageData: {fileID: 0}
   sea:
   - {fileID: 5911893088733641442, guid: f6573a110c1967643a98d0efdba24be8, type: 3}
   - {fileID: 6261345114989098648, guid: f66e2be959a7d4e4e8b050df54d1af73, type: 3}
@@ -232,6 +234,28 @@ MonoBehaviour:
   - {fileID: 4497015113418892737}
   - {fileID: 2697959143501832585}
   - {fileID: 4883070008673581653}
+--- !u!114 &4678325890855258741
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1383722283700885220}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents: []
+  sceneViewId: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
 --- !u!1 &2222883652957025387
 GameObject:
   m_ObjectHideFlags: 0

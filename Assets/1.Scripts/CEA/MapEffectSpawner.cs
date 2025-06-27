@@ -1,15 +1,11 @@
 using Photon.Pun;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor.SearchService;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using static MapEffectSpawner;
 public enum mapName
 {
     Sea, Glacier, Desert, Lava, Labyrinth
 }
-public class MapEffectSpawner : MonoBehaviour
+public class MapEffectSpawner : MonoBehaviourPun, IPunObservable
 {
     #region 필드
     [Header("현재 맵 종류")]
@@ -68,11 +64,12 @@ public class MapEffectSpawner : MonoBehaviour
     void Start()
     {
         beatInterval = 60f / bpm;
-        if (SceneManager.GetActiveScene().name == StageManager.SceneName)
+        StageData stageData = StageData.current;
+        if (SceneManager.GetActiveScene().name == StageManager.SceneName && stageData != null)
         {
-            foreach (var data in stageData.stageInfoList)
+            foreach (var data in this.stageData.stageInfoList)
             {
-                if (data.linkedStageData == StageData.current)
+                if (data.linkedStageData == stageData)
                 {
                     switch (data.stagePanelType)
                     {
@@ -122,17 +119,25 @@ public class MapEffectSpawner : MonoBehaviour
     void Update()
     {
         if (!nowPlayingMusic.isPlaying) return;
-
-        float musicTime = nowPlayingMusic.time;
-        float beatTime = beatInterval;
-
-        while(musicTime > lastBeatTime + beatTime - 0.5f)
+        bool room = PhotonNetwork.InRoom;
+        if (room == false || photonView.IsMine == true)
         {
-            lastBeatTime += beatTime;
-            SpawnEffect();
+            float musicTime = nowPlayingMusic.time;
+            float beatTime = beatInterval;
+
+            while (musicTime > lastBeatTime + beatTime - 0.5f)
+            {
+                lastBeatTime += beatTime;
+                SpawnEffect();
+                if(room == true)
+                {
+                    photonView.RPC(nameof(SpawnEffect), RpcTarget.Others);
+                }
+            }
         }
     }
 
+    [PunRPC]
     void SpawnEffect()
     {
         if (currentMap == mapName.Sea || currentMap == mapName.Glacier || currentMap == mapName.Desert)
@@ -163,6 +168,18 @@ public class MapEffectSpawner : MonoBehaviour
             {
                 Instantiate(effect, point.position, Quaternion.identity);
             }
+        }
+    }
+
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        if (photonView.IsMine == true)
+        {
+            stream.SendNext(lastBeatTime);
+        }
+        else
+        {
+            lastBeatTime = (float)stream.ReceiveNext();
         }
     }
 }
