@@ -9913,6 +9913,7 @@ GameObject:
   - component: {fileID: 1819523630791561658}
   - component: {fileID: 688527928792375571}
   - component: {fileID: 5600978568750869273}
+  - component: {fileID: -5340165191136610085}
   m_Layer: 0
   m_Name: Water_Beam
   m_TagString: Untagged
@@ -14839,6 +14840,18 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
+--- !u!114 &-5340165191136610085
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5551718882146614446}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af27f2777aa93174bb9fd55c99d7c614, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &6019972053106292641
 GameObject:
   m_ObjectHideFlags: 0

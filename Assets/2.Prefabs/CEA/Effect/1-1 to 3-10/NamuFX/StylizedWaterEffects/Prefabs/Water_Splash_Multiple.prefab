@@ -4908,6 +4908,7 @@ GameObject:
   - component: {fileID: 3761897440272676332}
   - component: {fileID: 8566467169595368490}
   - component: {fileID: 9002170883795415261}
+  - component: {fileID: 7745729945248397010}
   m_Layer: 0
   m_Name: Water_Splash_Multiple
   m_TagString: Untagged
@@ -9810,6 +9811,18 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
+--- !u!114 &7745729945248397010
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2586947100091486788}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af27f2777aa93174bb9fd55c99d7c614, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3223074542395324969
 GameObject:
   m_ObjectHideFlags: 0

@@ -53,6 +53,7 @@ public class MapEffectSpawner : MonoBehaviour
 
     private float beatInterval;
     private float elapsedTime;
+    private float lastBeatTime = 0f;
 
     private GameObject[] currentEffects;
     #endregion
@@ -96,12 +97,12 @@ public class MapEffectSpawner : MonoBehaviour
     {
         if (!nowPlayingMusic.isPlaying) return;
 
-        float delta = Time.unscaledDeltaTime * SlowMotion.speed;
-        elapsedTime += delta;
+        float musicTime = nowPlayingMusic.time;
+        float beatTime = 60f / bpm;
 
-        if (elapsedTime >= beatInterval)
+        while(musicTime > lastBeatTime + beatTime - 0.5f)
         {
-            elapsedTime -= beatInterval;
+            lastBeatTime += beatTime;
             SpawnEffect();
         }
     }

@@ -29599,6 +29599,7 @@ GameObject:
   - component: {fileID: 2063073825448358526}
   - component: {fileID: 6878349921366690319}
   - component: {fileID: 7440301141536480867}
+  - component: {fileID: -193860803797287556}
   m_Layer: 0
   m_Name: Water_Ball_Explosion
   m_TagString: Untagged
@@ -34505,6 +34506,18 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
+--- !u!114 &-193860803797287556
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6261345114989098648}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af27f2777aa93174bb9fd55c99d7c614, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7308198377675203431
 GameObject:
   m_ObjectHideFlags: 0
