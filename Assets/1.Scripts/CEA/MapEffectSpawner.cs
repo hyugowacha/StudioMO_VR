@@ -107,6 +107,7 @@ public class MapEffectSpawner : MonoBehaviour
                             break;
 
                     }
+                    break;
                 }
             }
         }
