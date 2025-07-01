@@ -120,7 +120,7 @@ public class MapEffectSpawner : MonoBehaviourPun, IPunObservable
     {
         if (!nowPlayingMusic.isPlaying) return;
         bool room = PhotonNetwork.InRoom;
-        if (room == false || photonView.IsMine == true)
+        //if (room == false || photonView.IsMine == true)
         {
             float musicTime = nowPlayingMusic.time;
             float beatTime = beatInterval;
