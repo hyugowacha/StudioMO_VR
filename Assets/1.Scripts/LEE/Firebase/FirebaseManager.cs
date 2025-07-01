@@ -417,7 +417,7 @@ public class FirebaseManager : MonoBehaviourPunCallbacks
 
         if (string.IsNullOrEmpty(schoolName))
         {
-            LogWarning("모교 이름을 입력해주세요.");
+            LogWarning("별명을 입력해주세요.");
             return;
         }
 
@@ -425,11 +425,11 @@ public class FirebaseManager : MonoBehaviourPunCallbacks
         {
             if (!string.IsNullOrEmpty(resultID))
             {
-                Log($"<b>{schoolName}</b> 모교 이름으로 등록된 이메일(ID)은 <b>{resultID}</b> 입니다.");
+                Log($"<b>{schoolName}</b> 으로 등록된 이메일(ID)은 <b>{resultID}</b> 입니다.");
             }
             else
             {
-                LogWarning("해당 모교 이름으로 등록된 ID를 찾을 수 없습니다.");
+                LogWarning("해당 별명으로 등록된 ID를 찾을 수 없습니다.");
             }
         });
     }
@@ -469,7 +469,7 @@ public class FirebaseManager : MonoBehaviourPunCallbacks
 
         if (string.IsNullOrEmpty(id) || string.IsNullOrEmpty(schoolName))
         {
-            LogWarning("이메일(ID)과 모교 이름을 모두 입력해주세요.");
+            LogWarning("이메일(ID)과 별명을 모두 입력해주세요.");
             return;
         }
 
@@ -487,7 +487,7 @@ public class FirebaseManager : MonoBehaviourPunCallbacks
             }
             else
             {
-                LogWarning("ID와 모교 정보가 일치하지 않거나 메일 전송에 실패했습니다.");
+                LogWarning("ID와 별명 정보가 일치하지 않거나 메일 전송에 실패했습니다.");
             }
         });
     }
