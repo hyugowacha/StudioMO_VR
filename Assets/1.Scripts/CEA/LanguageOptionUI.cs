@@ -20,6 +20,7 @@ public class LanguageOptionUI : MonoBehaviour
         else
         {
             selectedLanguage = Translation.Language.Korean;
+            SaveLanguage();
         }
 
         Translation.Set(selectedLanguage);

@@ -489,6 +489,8 @@ public class MatchingSystem : MonoBehaviourPunCallbacks
     {
         Debug.Log("[MatchingSystem] 로비에 입장했습니다.");
 
+        // 
+
         if (hasEnteredLobbyOnce)
         {
             Debug.Log("로비 최초 진입 이후 -> UI 처리 생략");
