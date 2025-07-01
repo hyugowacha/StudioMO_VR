@@ -288,6 +288,10 @@ public class BattleManager : Manager, IPunObservable
                 }
                 if (count > 1)
                 {
+                    if(myCharacter != null)
+                    {
+                        PhotonNetwork.Destroy(myCharacter.gameObject);
+                    }
                     if (exit == false)
                     {
                         PhotonNetwork.IsMessageQueueRunning = false;
@@ -383,7 +387,7 @@ public class BattleManager : Manager, IPunObservable
     {
         if (hashtable != null)
         {
-            foreach (string key in hashtable.Keys)
+            foreach (object key in hashtable.Keys)
             {
                 switch (key)
                 {
@@ -661,10 +665,17 @@ public class BattleManager : Manager, IPunObservable
     private void DelayCall(float ready, float start, float end)
     {
         phasePanel?.Play(ready, start, end);
-        DOVirtual.DelayedCall(ready + start, () => {
+        StartCoroutine(DoDelayCall());
+        System.Collections.IEnumerator DoDelayCall()
+        {
+            yield return new WaitForSeconds(ready + start);
             audioSource?.Play();
             bulletPatternExecutor?.InitiallizeBeatTiming();
-        });
+        }
+        //DOVirtual.DelayedCall(ready + start, () => {
+        //    audioSource?.Play();
+        //    bulletPatternExecutor?.InitiallizeBeatTiming();
+        //});
     }
 
     private void DelayPlay(double value)
@@ -712,7 +723,11 @@ public class BattleManager : Manager, IPunObservable
             if (rankingPanel != null)
             {
                 (uint maxScore, (Character, Color)[] array) = rankingPanel.GetValue();
-                DOVirtual.DelayedCall(PhasePanel.EndDelay, () => {
+                StopAllCoroutines();
+                StartCoroutine(DoDelayOpen());
+                System.Collections.IEnumerator DoDelayOpen()
+                {
+                    yield return new WaitForSeconds(PhasePanel.EndDelay);
                     SetRayInteractor(true);
                     battleResultPanel?.Open(maxScore, array, () => {
 
@@ -727,7 +742,23 @@ public class BattleManager : Manager, IPunObservable
                         }
                     },
                     () => { statePanel?.Open(() => LoadMainLobbyScene(), () => statePanel.Close(), null); });
-                });
+                }
+                //DOVirtual.DelayedCall(PhasePanel.EndDelay, () => {
+                //    SetRayInteractor(true);
+                //    battleResultPanel?.Open(maxScore, array, () => {
+
+                //        Room room = PhotonNetwork.CurrentRoom;
+                //        if (room != null && room.PlayerCount > 1)
+                //        {
+                //            PhotonNetwork.LocalPlayer.SetCustomProperties(new Hashtable() { { Ready, false } });
+                //        }
+                //        else
+                //        {
+                //            statePanel?.Open(null);
+                //        }
+                //    },
+                //    () => { statePanel?.Open(() => LoadMainLobbyScene(), () => statePanel.Close(), null); });
+                //});
             }
         }
         else
