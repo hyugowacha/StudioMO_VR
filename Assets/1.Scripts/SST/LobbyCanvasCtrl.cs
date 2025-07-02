@@ -35,6 +35,7 @@ public class LobbyCanvasCtrl : MonoBehaviour
         stageSelectPanel.SetActive(false);
         versusPanel.SetActive(false);
         shopPanel.SetActive(false);
+        optionPanel.SetActive(true);
         optionPanel.SetActive(false);
 
         // 버튼 클릭 이벤트 연결
