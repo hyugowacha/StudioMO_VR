@@ -6,7 +6,6 @@ using DG.Tweening;
 using Photon.Pun;
 using Photon.Realtime;
 using ExitGames.Client.Photon;
-using static UnityEngine.Rendering.DebugUI;
 
 [RequireComponent(typeof(PhotonView))]
 public class BattleManager : Manager, IPunObservable
@@ -103,7 +102,6 @@ public class BattleManager : Manager, IPunObservable
             }
             else
             {
-                SlowMotion.Stop();
                 Initialize(room.Players);
                 SetDefaultSetting(room.CustomProperties);
             }
@@ -824,6 +822,7 @@ public class BattleManager : Manager, IPunObservable
             pickaxe.grip = false;
         }
         myCharacter?.SetSlowMotion(false);
+        SlowMotion.Stop();
         bulletPatternExecutor?.StopPlaying();
         SetFixedCanvas();
         pausePanel?.Close();
