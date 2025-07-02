@@ -6,6 +6,7 @@ using DG.Tweening;
 using Photon.Pun;
 using Photon.Realtime;
 using ExitGames.Client.Photon;
+using static UnityEngine.Rendering.DebugUI;
 
 [RequireComponent(typeof(PhotonView))]
 public class BattleManager : Manager, IPunObservable
@@ -117,6 +118,7 @@ public class BattleManager : Manager, IPunObservable
     public override void OnDisable()
     {
         base.OnDisable();
+        StopAllCoroutines();
         SetBinding(false);
     }
 
@@ -167,6 +169,95 @@ public class BattleManager : Manager, IPunObservable
             if (unmovable == true && pickaxe != null && pickaxe.grip == true)
             {
                 pickaxe.grip = false;
+                Room room = PhotonNetwork.CurrentRoom;
+                Hashtable hashtable = room != null ? room.CustomProperties : null;
+                IReadOnlyList<Character> list = Character.list;
+                int actor = PhotonNetwork.LocalPlayer.ActorNumber;
+                if (hashtable != null && list != null)
+                {
+                    for (int i = 0; i < list.Count; i++)
+                    {
+                        if (list[i] != null && list[i].photonView.OwnerActorNr == actor)
+                        {
+                            if(hashtable.ContainsKey(First) == true && hashtable[First] != null && int.TryParse(hashtable[First].ToString(), out int first))
+                            {
+                                if (first != actor)
+                                {
+                                    bool change = false;
+                                    for (int j = 0; j < list.Count; j++)
+                                    {
+                                        if (list[j] != null && list[j].photonView.OwnerActorNr == first && list[j].mineralCount < list[i].mineralCount)
+                                        {
+                                            if (hashtable.ContainsKey(Second) == true && hashtable[Second] != null && int.TryParse(hashtable[Second].ToString(), out int second) == true)
+                                            {
+                                                room.SetCustomProperties(new Hashtable() { { First, actor }, { Second, first }, { Third, second } });
+                                            }
+                                            else
+                                            {
+                                                room.SetCustomProperties(new Hashtable() { { First, actor }, { Second, first } });
+                                            }
+                                            change = true;
+                                            break;
+                                        }
+                                    }
+                                    if (change == false)
+                                    {
+                                        if (hashtable.ContainsKey(Second) == false || hashtable[Second] == null || int.TryParse(hashtable[Second].ToString(), out int second) == false)
+                                        {
+                                            room.SetCustomProperties(new Hashtable() { { Second, actor } });
+                                        }
+                                        else if (second != actor)
+                                        {
+                                            for (int j = 0; j < list.Count; j++)
+                                            {
+                                                if (list[j] != null && list[j].photonView.OwnerActorNr == second && list[j].mineralCount < list[i].mineralCount)
+                                                {
+                                                    room.SetCustomProperties(new Hashtable() { { Second, actor }, { Third, second } });
+                                                    change = true;
+                                                    break;
+                                                }
+                                            }
+                                            if (change == false)
+                                            {
+                                                if (hashtable.ContainsKey(Third) == false || hashtable[Third] == null || int.TryParse(hashtable[Third].ToString(), out int third) == false)
+                                                {
+                                                    room.SetCustomProperties(new Hashtable() { { Third, actor } });
+                                                }
+                                                else if (third != actor)
+                                                {
+                                                    for (int j = 0; j < list.Count; j++)
+                                                    {
+                                                        if (list[j] != null && list[j].photonView.OwnerActorNr == third && list[j].mineralCount < list[i].mineralCount)
+                                                        {
+                                                            room.SetCustomProperties(new Hashtable() { { Third, actor } });
+                                                            break;
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                else if(myCharacter.mineralCount == 0)
+                                {
+                                    room.SetCustomProperties(new Hashtable() { { First, null } });
+                                }
+                            }
+                        }
+                    }
+                }
+                StartCoroutine(DoPickaxeHold());
+                System.Collections.IEnumerator DoPickaxeHold()
+                {
+#if UNITY_EDITOR
+                    Debug.Log("그립 해제");
+#endif
+                    yield return new WaitWhile(() => myCharacter != null && (myCharacter.unmovable == true || myCharacter.unbeatable == true));
+#if UNITY_EDITOR
+                    Debug.Log("그립 재설정");
+#endif
+                    pickaxe.grip = true;
+                }
             }
             float full = SlowMotion.MaximumFillValue;
             float current = myCharacter.slowMotionTime;
@@ -229,6 +320,7 @@ public class BattleManager : Manager, IPunObservable
             else if (callbackContext.canceled)
             {
                 pickaxe.grip = false;
+                StopAllCoroutines();
             }
         }
     }
@@ -665,17 +757,18 @@ public class BattleManager : Manager, IPunObservable
     private void DelayCall(float ready, float start, float end)
     {
         phasePanel?.Play(ready, start, end);
-        StartCoroutine(DoDelayCall());
-        System.Collections.IEnumerator DoDelayCall()
-        {
-            yield return new WaitForSeconds(ready + start);
-            audioSource?.Play();
-            bulletPatternExecutor?.InitiallizeBeatTiming();
-        }
-        //DOVirtual.DelayedCall(ready + start, () => {
+        //StartCoroutine(DoDelayCall());
+        //System.Collections.IEnumerator DoDelayCall()
+        //{
+        //    yield return new WaitForSeconds(ready + start);
         //    audioSource?.Play();
         //    bulletPatternExecutor?.InitiallizeBeatTiming();
-        //});
+        //}
+        DOVirtual.DelayedCall(ready + start, () =>
+        {
+            audioSource?.Play();
+            bulletPatternExecutor?.InitiallizeBeatTiming();
+        });
     }
 
     private void DelayPlay(double value)
@@ -705,6 +798,7 @@ public class BattleManager : Manager, IPunObservable
 
     private void StopPlaying(bool done)
     {
+        StopAllCoroutines();
         if (pickaxe != null && pickaxe.grip == true)
         {
             pickaxe.grip = false;
@@ -723,27 +817,11 @@ public class BattleManager : Manager, IPunObservable
             if (rankingPanel != null)
             {
                 (uint maxScore, (Character, Color)[] array) = rankingPanel.GetValue();
-                StopAllCoroutines();
-                StartCoroutine(DoDelayOpen());
-                System.Collections.IEnumerator DoDelayOpen()
-                {
-                    yield return new WaitForSeconds(PhasePanel.EndDelay);
-                    SetRayInteractor(true);
-                    battleResultPanel?.Open(maxScore, array, () => {
-
-                        Room room = PhotonNetwork.CurrentRoom;
-                        if (room != null && room.PlayerCount > 1)
-                        {
-                            PhotonNetwork.LocalPlayer.SetCustomProperties(new Hashtable() { { Ready, false } });
-                        }
-                        else
-                        {
-                            statePanel?.Open(null);
-                        }
-                    },
-                    () => { statePanel?.Open(() => LoadMainLobbyScene(), () => statePanel.Close(), null); });
-                }
-                //DOVirtual.DelayedCall(PhasePanel.EndDelay, () => {
+                //StopAllCoroutines();
+                //StartCoroutine(DoDelayOpen());
+                //System.Collections.IEnumerator DoDelayOpen()
+                //{
+                //    yield return new WaitForSeconds(PhasePanel.EndDelay);
                 //    SetRayInteractor(true);
                 //    battleResultPanel?.Open(maxScore, array, () => {
 
@@ -758,7 +836,24 @@ public class BattleManager : Manager, IPunObservable
                 //        }
                 //    },
                 //    () => { statePanel?.Open(() => LoadMainLobbyScene(), () => statePanel.Close(), null); });
-                //});
+                //}
+                DOVirtual.DelayedCall(PhasePanel.EndDelay, () =>
+                {
+                    SetRayInteractor(true);
+                    battleResultPanel?.Open(maxScore, array, () =>
+                    {
+                        Room room = PhotonNetwork.CurrentRoom;
+                        if (room != null && room.PlayerCount > 1)
+                        {
+                            PhotonNetwork.LocalPlayer.SetCustomProperties(new Hashtable() { { Ready, false } });
+                        }
+                        else
+                        {
+                            statePanel?.Open(null);
+                        }
+                    },
+                    () => { statePanel?.Open(() => LoadMainLobbyScene(), () => statePanel.Close(), null); });
+                });
             }
         }
         else

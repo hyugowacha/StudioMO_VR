@@ -93,6 +93,7 @@ public class Character : MonoBehaviourPunCallbacks, IPunObservable
         }
     }
 
+    private static readonly float LossRate = 0.9f;
     private static readonly float KnockBackForce = 10f;
     private static readonly string HitParameter = "hit";
     private static readonly string SlowMotionParameter = "slowmotion";
@@ -253,6 +254,14 @@ public class Character : MonoBehaviourPunCallbacks, IPunObservable
     [PunRPC]
     private void ApplyBulletHit()
     {
+        float value = mineralCount * LossRate;
+        uint count = (uint)value;
+        int convert = ExtensionMethod.Convert(count);
+        SetMineral(convert);
+        if (PhotonNetwork.InRoom == true)
+        {
+            photonView.RPC(nameof(SetMineral), RpcTarget.Others, convert);
+        }
         RequestFainting(true, true);
         immuneTime = bulletStunDuration;
         if (SlowMotion.IsOwner(PhotonNetwork.LocalPlayer) == true)

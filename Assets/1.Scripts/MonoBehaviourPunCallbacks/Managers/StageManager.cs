@@ -120,6 +120,7 @@ public class StageManager : Manager
     public override void OnDisable()
     {
         base.OnDisable();
+        StopAllCoroutines();
         SetBinding(false);
     }
 
@@ -141,6 +142,11 @@ public class StageManager : Manager
                 {
                     myCharacter.SetSlowMotion(false); //시간이 끝나면 슬로우 모션 해제
                     totalScore = myCharacter.mineralCount;
+                }
+                StopAllCoroutines();
+                if(pickaxe != null && pickaxe.grip == true)
+                {
+                    pickaxe.grip = false;
                 }
                 SetFixedCanvas();
                 phasePanel?.Stop(PhasePanel.EndDelay);
@@ -206,6 +212,18 @@ public class StageManager : Manager
             if (unmovable == true && pickaxe != null && pickaxe.grip == true)
             {
                 pickaxe.grip = false;
+                StartCoroutine(DoPickaxeHold());
+                System.Collections.IEnumerator DoPickaxeHold()
+                {
+#if UNITY_EDITOR
+                    Debug.Log("그립 해제");
+#endif
+                    yield return new WaitWhile(() => myCharacter != null && (myCharacter.unmovable == true || myCharacter.unbeatable == true));
+#if UNITY_EDITOR
+                    Debug.Log("그립 재설정");
+#endif
+                    pickaxe.grip = true;
+                }
             }
             float full = SlowMotion.MaximumFillValue;
             float current = myCharacter.slowMotionTime;
@@ -268,6 +286,7 @@ public class StageManager : Manager
             else if (callbackContext.canceled)
             {
                 pickaxe.grip = false;
+                StopAllCoroutines();
             }
         }
     }
@@ -324,6 +343,11 @@ public class StageManager : Manager
     {
         audioSource?.Pause();
         stop = true;
+        StopAllCoroutines();
+        if(pickaxe != null && pickaxe.grip == true)
+        {
+            pickaxe.grip = false;
+        }
         SlowMotion.Pause();
         SetRayInteractor(true);
         SetFixedCanvas();

@@ -142,7 +142,6 @@ public abstract class Manager : MonoBehaviourPunCallbacks
     {
         base.OnDisable();
         SetInputActionReferences(false);
-        StopAllCoroutines();
     }
 
     private void SetInputActionReferences(bool value)
@@ -344,6 +343,9 @@ public abstract class Manager : MonoBehaviourPunCallbacks
                 {
                     if (SkinNames[i] == value)
                     {
+#if UNITY_EDITOR
+                        Debug.Log((Skin)i);
+#endif
                         return characters[i];
                     }
                 }
