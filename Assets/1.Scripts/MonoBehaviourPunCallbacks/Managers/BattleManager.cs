@@ -103,6 +103,7 @@ public class BattleManager : Manager, IPunObservable
             }
             else
             {
+                SlowMotion.Stop();
                 Initialize(room.Players);
                 SetDefaultSetting(room.CustomProperties);
             }
@@ -144,6 +145,10 @@ public class BattleManager : Manager, IPunObservable
     {
         if (remainingTime > 0 && remainingTime <= limitTime)
         {
+            if(pausePanel != null && pausePanel.gameObject.activeSelf == true)
+            {
+                return;
+            }    
             myCharacter?.UpdateMove(moveInput);
         }
     }
@@ -288,6 +293,10 @@ public class BattleManager : Manager, IPunObservable
 
     protected override void OnLeftFunction(InputAction.CallbackContext callbackContext)
     {
+        if (pausePanel != null && pausePanel.gameObject.activeSelf == true)
+        {
+            return;
+        }
         if (remainingTime > 0 && remainingTime <= limitTime)
         {
             if (callbackContext.performed == true)
@@ -311,6 +320,10 @@ public class BattleManager : Manager, IPunObservable
 
     protected override void OnRightFunction(InputAction.CallbackContext callbackContext)
     {
+        if(pausePanel != null && pausePanel.gameObject.activeSelf == true)
+        {
+            return;
+        }
         if (remainingTime > 0 && remainingTime <= limitTime && pickaxe != null)
         {
             if (callbackContext.performed == true && myCharacter != null && myCharacter.unmovable == false && myCharacter.unbeatable == false)
@@ -329,6 +342,13 @@ public class BattleManager : Manager, IPunObservable
     {
         if (callbackContext.performed == true && pausePanel != null && pausePanel.gameObject.activeSelf == false && remainingTime > 0 && remainingTime <= limitTime)
         {
+            StopAllCoroutines();
+            if(pickaxe != null && pickaxe.grip == true)
+            {
+                pickaxe.grip = false;
+            }
+            slowMotionTween.Kill();
+            myCharacter?.SetSlowMotion(false);
             SetRayInteractor(true);
             SetFixedCanvas();
             pausePanel.Open(() => SetRayInteractor(false), () => SetTurnMode(true), () => SetTurnMode(false), CheckTurnMode());

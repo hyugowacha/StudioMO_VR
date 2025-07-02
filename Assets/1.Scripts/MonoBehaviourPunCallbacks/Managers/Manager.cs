@@ -321,6 +321,10 @@ public abstract class Manager : MonoBehaviourPunCallbacks
 
     protected void LoadMainLobbyScene()
     {
+        if(PhotonNetwork.InRoom == true)
+        {
+            PhotonNetwork.LeaveRoom();
+        }
         SceneManager.LoadScene(MainLobbySceneName);
     }
 
