@@ -59,7 +59,7 @@ public abstract class Manager : MonoBehaviourPunCallbacks
 
     private static readonly string TurnMode = "TurnMode";
     private static readonly string MainLobbySceneName = "MainLobbyScene";
-    private static readonly string EquippedSkin = "EquippedSkin ";
+    private static readonly string EquippedSkin = "EquippedSkin";
     private static readonly string[] SkinNames = new string[(int)Skin.End] { "SkinData_Libee", "SkinData_Cat", "SkinData_Bunny", "SkinData_Fish", "SkinData_Cactus", "SkinData_Penguin", "SkinData_Mole" };
 
 #if UNITY_EDITOR
@@ -142,6 +142,7 @@ public abstract class Manager : MonoBehaviourPunCallbacks
     {
         base.OnDisable();
         SetInputActionReferences(false);
+        StopAllCoroutines();
     }
 
     private void SetInputActionReferences(bool value)
@@ -339,7 +340,7 @@ public abstract class Manager : MonoBehaviourPunCallbacks
             if (hashtable != null && hashtable.ContainsKey(EquippedSkin) == true && hashtable[EquippedSkin] != null)
             {
                 string value = hashtable[EquippedSkin].ToString();
-                for (int i = 0; i < (int)Skin.Ribee; i++)
+                for (int i = 0; i < (int)Skin.End; i++)
                 {
                     if (SkinNames[i] == value)
                     {
