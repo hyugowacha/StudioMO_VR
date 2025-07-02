@@ -6,7 +6,6 @@ using DG.Tweening;
 using Photon.Pun;
 using Photon.Realtime;
 using ExitGames.Client.Photon;
-using static UnityEngine.Rendering.DebugUI;
 
 [RequireComponent(typeof(PhotonView))]
 public class BattleManager : Manager, IPunObservable
@@ -144,6 +143,10 @@ public class BattleManager : Manager, IPunObservable
     {
         if (remainingTime > 0 && remainingTime <= limitTime)
         {
+            if(pausePanel != null && pausePanel.gameObject.activeSelf == true)
+            {
+                return;
+            }    
             myCharacter?.UpdateMove(moveInput);
         }
     }
@@ -288,6 +291,10 @@ public class BattleManager : Manager, IPunObservable
 
     protected override void OnLeftFunction(InputAction.CallbackContext callbackContext)
     {
+        if (pausePanel != null && pausePanel.gameObject.activeSelf == true)
+        {
+            return;
+        }
         if (remainingTime > 0 && remainingTime <= limitTime)
         {
             if (callbackContext.performed == true)
@@ -311,6 +318,10 @@ public class BattleManager : Manager, IPunObservable
 
     protected override void OnRightFunction(InputAction.CallbackContext callbackContext)
     {
+        if(pausePanel != null && pausePanel.gameObject.activeSelf == true)
+        {
+            return;
+        }
         if (remainingTime > 0 && remainingTime <= limitTime && pickaxe != null)
         {
             if (callbackContext.performed == true && myCharacter != null && myCharacter.unmovable == false && myCharacter.unbeatable == false)
@@ -329,6 +340,13 @@ public class BattleManager : Manager, IPunObservable
     {
         if (callbackContext.performed == true && pausePanel != null && pausePanel.gameObject.activeSelf == false && remainingTime > 0 && remainingTime <= limitTime)
         {
+            StopAllCoroutines();
+            if(pickaxe != null && pickaxe.grip == true)
+            {
+                pickaxe.grip = false;
+            }
+            slowMotionTween.Kill();
+            myCharacter?.SetSlowMotion(false);
             SetRayInteractor(true);
             SetFixedCanvas();
             pausePanel.Open(() => SetRayInteractor(false), () => SetTurnMode(true), () => SetTurnMode(false), CheckTurnMode());
@@ -804,6 +822,7 @@ public class BattleManager : Manager, IPunObservable
             pickaxe.grip = false;
         }
         myCharacter?.SetSlowMotion(false);
+        SlowMotion.Stop();
         bulletPatternExecutor?.StopPlaying();
         SetFixedCanvas();
         pausePanel?.Close();

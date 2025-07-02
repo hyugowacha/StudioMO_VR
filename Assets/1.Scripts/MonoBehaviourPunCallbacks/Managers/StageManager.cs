@@ -30,6 +30,7 @@ public class StageManager : Manager
 
     [Header("캔버스 내용들"), SerializeField]
     private AudioSource audioSource;                            //배경음악 오디오 소스
+    [SerializeField]
     private bool stop = true;                                   //게임 진행이 가능한지 여부를 알려주는 변수
     [SerializeField]
     private PhasePanel phasePanel;                              //진행 단계 표시 패널
@@ -37,6 +38,7 @@ public class StageManager : Manager
     private PausePanel pausePanel;                              //일시정지 패널
     [SerializeField]
     private TimerPanel timerPanel;                              //남은 시간 표시 패널
+    [SerializeField]
     private float remainingTime = 0.0f;                         //남은 시간
     [SerializeField]
     private float limitTime = 0.0f;                             //제한 시간
@@ -102,9 +104,13 @@ public class StageManager : Manager
             }
             bulletPatternLoader?.RefineData();
             remainingTime = limitTime;
+            SlowMotion.Stop();
             phasePanel?.Play(PhasePanel.ReadyDelay, PhasePanel.StartDelay, PhasePanel.EndDelay);
             DOVirtual.DelayedCall(PhasePanel.ReadyDelay + PhasePanel.StartDelay, () => { 
-                stop = false; 
+                stop = false;
+#if UNITY_EDITOR
+                Debug.Log("시작");
+#endif
                 audioSource?.Play();
                 bulletPatternExecutor?.InitiallizeBeatTiming();
             });
