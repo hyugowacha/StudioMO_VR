@@ -10,7 +10,7 @@ public class LanguageOptionUI : MonoBehaviour
     [Header("전체 언어 UI 처리 스크립트")]
     public AllLanguage allLanguage; // 인스펙터에서 연결!!
 
-    private void Start()
+    private void Awake()
     {
         if (PlayerPrefs.HasKey(Translation.Preferences))
         {
@@ -20,7 +20,6 @@ public class LanguageOptionUI : MonoBehaviour
         else
         {
             selectedLanguage = Translation.Language.Korean;
-            SaveLanguage();
         }
 
         Translation.Set(selectedLanguage);
