@@ -25,8 +25,19 @@
 
     패턴형 탄막 CSV파일을 파싱하여 데이터 리스트에 저장하는 스크립트
 
-    <img width="615" height="319" alt="image" src="https://github.com/user-attachments/assets/51c536f8-c089-4221-9b0c-1b2b5e55f929" />
+    + CSV 파일에서 탄막 패턴 데이터를 읽어와 다른 곳에서 사용될 수 있도록 List로 파싱하는 역할을 함
+
+    <img width="753" height="194" alt="image" src="https://github.com/user-attachments/assets/feafbc43-c0bd-4812-9cdb-69901957a11c" />
+
+    <img width="573" height="87" alt="image" src="https://github.com/user-attachments/assets/244f2663-9a1a-4e09-9aa7-235119413b8d" />
+    
+    CSV의 첫번째 줄(헤더)을 기반으로 열의 개수를 파악 후
+    
+    beat_timing(발사 시점), Bullet_preset_ID(판막 패턴 유형), generate_preset(생성 위치), Bullet_amount(총알 발사량), fire_angle(발사각), Bullet_angle(각도형 패턴), Bullet_range(거리형 패턴)
+
+    순서로 값을 읽어와 BulletSpawnData 형태로 만들어 패턴 데이터 리스트에 저장함
 
     
+
 
     
