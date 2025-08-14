@@ -21,11 +21,12 @@
 + ### 탄막 시스템
   <img width="963" height="469" alt="image" src="https://github.com/user-attachments/assets/31386768-d428-4b0e-99f4-c6309b5fc8d5" />
 
-  + ### BulletPatternLoader
+   + ### BulletPatternLoader.CS
 
-    패턴형 탄막 CSV파일을 파싱하여 데이터 리스트에 저장하는 스크립트
+    패턴형 탄막 CSV파일을 파싱하여 데이터 리스트에 저장함
 
-    + CSV 파일에서 탄막 패턴 데이터를 읽어와 다른 곳에서 사용될 수 있도록 List로 파싱하는 역할을 함
+     CSV 파일에서 탄막 패턴 데이터를 읽어와 다른 곳에서 사용될 수 있도록 List로 파싱하는 역할을 함
+    
 
     <img width="753" height="194" alt="image" src="https://github.com/user-attachments/assets/feafbc43-c0bd-4812-9cdb-69901957a11c" />
 
@@ -36,6 +37,51 @@
     beat_timing(발사 시점), Bullet_preset_ID(판막 패턴 유형), generate_preset(생성 위치), Bullet_amount(총알 발사량), fire_angle(발사각), Bullet_angle(각도형 패턴), Bullet_range(거리형 패턴)
 
     순서로 값을 읽어와 BulletSpawnData 형태로 만들어 패턴 데이터 리스트에 저장함
+
+   + ### BulletPatternExecutor.CS
+     
+    <img width="290" height="158" alt="image" src="https://github.com/user-attachments/assets/5687319d-9ca7-4e7a-b5c6-cc4e3bfa9e3b" />
+
+   
+     CSV 데이터에 맞춰 탄막 패턴을 실행하는 컨트롤러
+
+     BulletPatternLoader로부터 CSV 데이터를 로드받은 후 비트형 탄막과 패턴형 탄막을 분리하여 각자 실행함
+     
+    + #### void ProcessPatternTiming
+     
+     -> 게임 시작 시간을 기반으로 그 시간이 되었을 때 탄막 실행
+
+    + #### void ExecutePattern
+     
+     -> bulletPresetID(탄막 패턴의 배치를 결정하는 방식을 구분하기 위한 ID)에 따라 각자 다른 탄막 스폰
+
+     bulletPresetID가 1일 경우 SpawnPatternAngle(각도형 패턴 탄막 스폰) 메서드 실행, 2일 경우 SpawnPatternRange(거리형 패턴 탄막 스폰) 메서드 실행
+
+   + ### (Angle/Range)PatternSpawner.CS
+     
+     <img width="308" height="296" alt="image" src="https://github.com/user-attachments/assets/d633a620-947d-4c8b-a364-ec9917d1757c" />
+
+     벽(사이드) 위치와 발사 프리셋(preset ID)에 따라 탄막 발사 위치를 계산하고, 지정 각도로 패턴형 탄막을 생성함
+
+    + #### void CalculateSpawnPosition
+
+     -> 각 사이드(1~4)에 대해 9개의 프리셋 위치를 계산함
+
+     Mathf.Lerp(min, max, t)를 통해 벽의 양 끝(min~max) 사이를 균등 간격으로 나눈 후 spawnPositions딕셔너리에 사이드별 스폰 위치를 저장함
+
+  + #### void FireAnglePatternBullet
+
+    -> 특정 프리셋 좌표에서 지정 각도·간격으로 탄막 발사
+    
+    spawnPositions에서 발사 위치를 가져온 후 사이드 방향에 따라 기본 벡터를 설정함  
+
+
+
+     
+
+      
+   
+      
 
     
 
