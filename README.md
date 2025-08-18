@@ -21,7 +21,7 @@
 + ### 탄막 시스템
   <img width="963" height="469" alt="image" src="https://github.com/user-attachments/assets/31386768-d428-4b0e-99f4-c6309b5fc8d5" />
 
-   + ### BulletPatternLoader.CS
+   + ### BulletPatternLoader.cs
 
     패턴형 탄막 CSV파일을 파싱하여 데이터 리스트에 저장함
 
@@ -38,7 +38,7 @@
 
     순서로 값을 읽어와 BulletSpawnData 형태로 만들어 패턴 데이터 리스트에 저장함
 
-   + ### BulletPatternExecutor.CS
+   + ### BulletPatternExecutor.cs
      
     <img width="290" height="158" alt="image" src="https://github.com/user-attachments/assets/5687319d-9ca7-4e7a-b5c6-cc4e3bfa9e3b" />
 
@@ -57,7 +57,7 @@
 
      bulletPresetID가 1일 경우 SpawnPatternAngle(각도형 패턴 탄막 스폰) 메서드 실행, 2일 경우 SpawnPatternRange(거리형 패턴 탄막 스폰) 메서드 실행
 
-   + ### (Angle/Range)PatternSpawner.CS
+   + ### (Angle/Range)PatternSpawner.cs
      
      <img width="308" height="296" alt="image" src="https://github.com/user-attachments/assets/d633a620-947d-4c8b-a364-ec9917d1757c" />
 
@@ -69,12 +69,49 @@
 
      Mathf.Lerp(min, max, t)를 통해 벽의 양 끝(min~max) 사이를 균등 간격으로 나눈 후 spawnPositions딕셔너리에 사이드별 스폰 위치를 저장함
 
-  + #### void FireAnglePatternBullet
+    + #### void FireAnglePatternBullet
 
     -> 특정 프리셋 좌표에서 지정 각도·간격으로 탄막 발사
     
-    spawnPositions에서 발사 위치를 가져온 후 사이드 방향에 따라 기본 벡터를 설정함  
+    spawnPositions에서 발사 위치를 가져온 후 사이드 방향에 따라 기본 벡터를 설정함
 
+--------
+
++ ### 옵션 UI
+  
+<img width="799" height="373" alt="image" src="https://github.com/user-attachments/assets/9631df61-9732-4616-bdcb-435b0ac2599e" />
+
+   + ### PlayerOptionUI.cs
+
+     플레이어의 스킨 변경 관련, 회전 방법 변경 메서드를 포함하는 클래스
+
+     + #### void SelectSkin
+    
+       -> 플레이어의 프로필 사진 변경사항을 적용시키는 메서드. ScriptableObject로 스킨 데이터를 관리
+
+     + #### void ChangeTurnMethod
+    
+       -> ‘스냅’ 또는 ‘부드러운 회전’(스무스) 중 선택. Input System 설정을 기반으로 처리
+
+   + ### AudioOptionUI.cs
+
+     게임의 오디오 관련 요소를 조정할 수 있는 기능을 포함한 클래스
+     
+     + #### void BGMController / SFXController
+     
+       -> AudioMixer와 연동하여 게임의 배경음악/효과음을 조정하게 하는 메서드
+
+       슬라이더를 통해 볼륨 값을 받아올 수 있음
+  
+   + ### LanguageOptionUI.cs
+
+     플레이어의 사용 언어를 변경할 수 있는 기능을 포함한 클래스
+
+     + #### void BGMController / SFXController
+
+     <img width="709" height="172" alt="image" src="https://github.com/user-attachments/assets/4c9c51ce-9df0-4be9-b986-a15cd1ca98e6" />
+
+     플레이어 관련 정보는 PlayerPrefs로 저장되며, Save 버튼을 누를 시 변경 사항이 최종적으로 저장됨
 
 
      
