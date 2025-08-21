@@ -51,17 +51,17 @@
      BulletPatternLoader로부터 CSV 데이터를 로드받은 후 비트형 탄막과 패턴형 탄막을 분리하여 각자 실행함
   
      
-    - #### void ProcessPatternTiming
+    + #### void ProcessPatternTiming
      
-     -> 게임 시작 시간을 기반으로 그 시간이 되었을 때 탄막 실행
+     게임 시작 시간을 기반으로 그 시간이 되었을 때 탄막 실행
 
-    - #### void ExecutePattern
+    + #### void ExecutePattern
      
       bulletPresetID(탄막 패턴의 배치를 결정하는 방식을 구분하기 위한 ID)에 따라 각자 다른 탄막 스폰
 
-       -ID = 1 -> SpawnPatternAngle(각도형 패턴 탄막 스폰) 메서드 실행
+       + ID = 1 -> SpawnPatternAngle(각도형 패턴 탄막 스폰) 메서드 실행
 
-       -ID = 2 -> SpawnPatternRange(거리형 패턴 탄막 스폰) 메서드 실행
+       + ID = 2 -> SpawnPatternRange(거리형 패턴 탄막 스폰) 메서드 실행
 
    + ### (Angle/Range)PatternSpawner.cs
      
@@ -148,7 +148,7 @@ VR 플레이어의 커스터마이즈 및 환경 설정 기능
 
 + #### UI/UX : Unity UI, ScriptableObject 기반 스킨 시스템
 
-     
++ #### VFX: ParticleSystem    
 
      
 
